@@ -31,15 +31,21 @@ export function PokemonSlot({ pokemon, playerId, slot, variant }: Props) {
   const [addingNew, setAddingNew] = useState(false);
   const [dragOver, setDragOver] = useState(false);
   const [contextMenu, setContextMenu] = useState<{ x: number; y: number } | null>(null);
-  const longPressTimer = useRef<ReturnType<typeof setTimeout> | undefined>(undefined);
-  const longPressTriggered = useRef(false);
-  const dragProps = useDragSwap(playerId, slot);
 
+  // Mobile: long press refs
+  const mobileLongPressTimer = useRef<ReturnType<typeof setTimeout> | undefined>(undefined);
+  const mobileLongPressTriggered = useRef(false);
+
+  // Desktop: touch long press via pointer events (hold still 600ms = context menu)
+  const desktopPressTimer = useRef<ReturnType<typeof setTimeout> | undefined>(undefined);
+  const desktopPressStart = useRef<{ x: number; y: number } | null>(null);
+
+  const dragProps = useDragSwap(playerId, slot);
   const update = (changes: Partial<PokemonSlotType>) => updatePokemon(playerId, slot, changes);
   const isKO = pokemon.currentDamage >= pokemon.maxHP && pokemon.maxHP > 0;
   const currentHP = Math.max(0, pokemon.maxHP - pokemon.currentDamage);
 
-  // ── Mobile: simplified card, tap → modal, long press → remove ───────────
+  // ── Mobile: tap → modal, long press → remove ────────────────────────────
   if (isMobile) {
     const cardClass = isKO
       ? theme.cardKO
@@ -47,29 +53,32 @@ export function PokemonSlot({ pokemon, playerId, slot, variant }: Props) {
         ? (pokemon.name ? theme.cardActive : theme.cardActiveEmpty)
         : (pokemon.name ? theme.card : theme.cardEmpty);
 
-    const handleTouchStart = () => {
-      longPressTriggered.current = false;
+    const handleTouchStart = (e: React.TouchEvent) => {
+      e.preventDefault(); // prevent browser long-press callout / text selection
+      mobileLongPressTriggered.current = false;
       if (!pokemon.name) return;
-      longPressTimer.current = setTimeout(() => {
-        longPressTriggered.current = true;
+      mobileLongPressTimer.current = setTimeout(() => {
+        mobileLongPressTriggered.current = true;
         clearPokemon(playerId, slot);
         navigator.vibrate?.(60);
       }, 600);
     };
-    const handleTouchMove = () => clearTimeout(longPressTimer.current);
-    const handleTouchEnd = () => clearTimeout(longPressTimer.current);
-    const handleClick = () => {
-      if (longPressTriggered.current) { longPressTriggered.current = false; return; }
-      setShowModal(true);
+    const handleTouchMove = () => clearTimeout(mobileLongPressTimer.current);
+    const handleTouchEnd = () => {
+      clearTimeout(mobileLongPressTimer.current);
+      if (!mobileLongPressTriggered.current) {
+        setShowModal(true); // short tap → open modal
+      }
+      mobileLongPressTriggered.current = false;
     };
 
     return (
       <>
         <button
-          onClick={handleClick}
           onTouchStart={handleTouchStart}
           onTouchMove={handleTouchMove}
           onTouchEnd={handleTouchEnd}
+          onClick={() => setShowModal(true)} // fallback for non-touch
           className={`flex flex-col gap-1 p-1.5 rounded-xl border h-full w-full select-none active:opacity-80 transition-opacity overflow-hidden ${cardClass}`}
         >
           <div className={`text-xs font-semibold truncate ${pokemon.name ? (variant === 'active' ? theme.activeText : theme.cardText) : theme.cardEmptyText}`}>
@@ -102,29 +111,54 @@ export function PokemonSlot({ pokemon, playerId, slot, variant }: Props) {
   }
   // ── End mobile ──────────────────────────────────────────────────────────
 
-  const handleDragOver = (e: React.DragEvent) => {
-    dragProps.onDragOver(e);
-    setDragOver(true);
-  };
-  const handleDrop = (e: React.DragEvent) => {
-    setDragOver(false);
-    dragProps.onDrop(e);
-  };
+  const handleDragOver = (e: React.DragEvent) => { dragProps.onDragOver(e); setDragOver(true); };
+  const handleDrop = (e: React.DragEvent) => { setDragOver(false); dragProps.onDrop(e); };
   const handleDragLeave = () => setDragOver(false);
 
+  // Right-click → context menu (mouse)
   const handleContextMenu = (e: React.MouseEvent) => {
     if (!pokemon.name) return;
     e.preventDefault();
-    // Adjust so menu doesn't overflow bottom/right edge
     const x = Math.min(e.clientX, window.innerWidth - 180);
     const y = Math.min(e.clientY, window.innerHeight - 60);
     setContextMenu({ x, y });
   };
 
-  // Context menu overlay (shared between bench & active)
+  // Touch long press → context menu (tablet finger)
+  const handlePointerDown = (e: React.PointerEvent) => {
+    if (e.pointerType !== 'touch' || !pokemon.name) return;
+    desktopPressStart.current = { x: e.clientX, y: e.clientY };
+    desktopPressTimer.current = setTimeout(() => {
+      if (!desktopPressStart.current) return;
+      const x = Math.min(desktopPressStart.current.x, window.innerWidth - 180);
+      const y = Math.min(desktopPressStart.current.y, window.innerHeight - 60);
+      setContextMenu({ x, y });
+      navigator.vibrate?.(60);
+      desktopPressStart.current = null;
+    }, 600);
+  };
+  const handlePointerMove = (e: React.PointerEvent) => {
+    if (!desktopPressStart.current) return;
+    const dx = e.clientX - desktopPressStart.current.x;
+    const dy = e.clientY - desktopPressStart.current.y;
+    if (dx * dx + dy * dy > 15 * 15) { // moved >15px = dragging, cancel long press
+      clearTimeout(desktopPressTimer.current);
+      desktopPressStart.current = null;
+    }
+  };
+  const handlePointerUp = () => {
+    clearTimeout(desktopPressTimer.current);
+    desktopPressStart.current = null;
+  };
+
+  // Shared context menu overlay
   const contextMenuEl = contextMenu ? (
     <>
-      <div className="fixed inset-0 z-[70]" onClick={() => setContextMenu(null)} onContextMenu={e => { e.preventDefault(); setContextMenu(null); }} />
+      <div
+        className="fixed inset-0 z-[70]"
+        onClick={() => setContextMenu(null)}
+        onContextMenu={e => { e.preventDefault(); setContextMenu(null); }}
+      />
       <div
         className="fixed z-[71] bg-gray-800 border border-gray-600 rounded-xl shadow-2xl overflow-hidden min-w-[170px]"
         style={{ left: contextMenu.x, top: contextMenu.y }}
@@ -154,11 +188,13 @@ export function PokemonSlot({ pokemon, playerId, slot, variant }: Props) {
           onDrop={handleDrop}
           onDragLeave={handleDragLeave}
           onContextMenu={handleContextMenu}
+          onPointerDown={handlePointerDown}
+          onPointerMove={handlePointerMove}
+          onPointerUp={handlePointerUp}
           className={`flex flex-col gap-0.5 p-1.5 rounded-xl border h-full w-full transition-all cursor-grab active:cursor-grabbing select-none overflow-hidden ${
             isKO ? theme.cardKO : dragOver ? theme.cardDrag : pokemon.name ? theme.card : theme.cardEmpty
           }`}
         >
-          {/* Name */}
           {editingName ? (
             <PokemonNameInput
               autoFocus
@@ -192,11 +228,7 @@ export function PokemonSlot({ pokemon, playerId, slot, variant }: Props) {
                     compact
                   />
                 </div>
-                <StatusBadge
-                  status={pokemon.status}
-                  onChange={status => update({ status })}
-                  compact
-                />
+                <StatusBadge status={pokemon.status} onChange={status => update({ status })} compact />
               </div>
               <EnergyTracker
                 energies={pokemon.energies}
@@ -241,11 +273,13 @@ export function PokemonSlot({ pokemon, playerId, slot, variant }: Props) {
         onDrop={handleDrop}
         onDragLeave={handleDragLeave}
         onContextMenu={handleContextMenu}
+        onPointerDown={handlePointerDown}
+        onPointerMove={handlePointerMove}
+        onPointerUp={handlePointerUp}
         className={`flex flex-col gap-0.5 p-1.5 rounded-xl border h-full w-full transition-all cursor-grab active:cursor-grabbing select-none overflow-hidden ${
           isKO ? theme.cardKO : dragOver ? theme.cardDrag : pokemon.name ? theme.cardActive : theme.cardActiveEmpty
         }`}
       >
-        {/* Name + Status */}
         {editingName ? (
           <PokemonNameInput
             autoFocus
