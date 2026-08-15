@@ -84,14 +84,13 @@ export function PokemonSlot({ pokemon, playerId, slot, variant }: Props) {
   const handleDrop = (e: React.DragEvent) => { setDragOver(false); dragProps.onDrop(e); };
   const handleDragLeave = () => setDragOver(false);
 
-  // Small always-visible ✕ button shown when card has a pokemon
-  const removeBtn = pokemon.name ? (
+  // Small remove button placed below ability tracker
+  const removeBtn = (
     <button
       onClick={e => { e.stopPropagation(); clearPokemon(playerId, slot); }}
-      className="flex-shrink-0 w-4 h-4 flex items-center justify-center rounded text-gray-600 hover:text-red-400 hover:bg-red-950/60 transition-colors text-[10px] leading-none"
-      title="Remove"
-    >✕</button>
-  ) : null;
+      className="w-full text-[9px] text-gray-600 hover:text-red-400 transition-colors leading-none pt-0.5 text-center"
+    >✕ remove</button>
+  );
 
   if (variant === 'bench') {
     const commitName = () => {
@@ -122,15 +121,12 @@ export function PokemonSlot({ pokemon, playerId, slot, variant }: Props) {
               className="bg-transparent text-xs text-gray-100 outline-none w-full font-semibold"
             />
           ) : (
-            <div className="flex items-center gap-0.5 min-w-0">
-              <button
-                onClick={() => { if (!pokemon.name) setAddingNew(true); setEditingName(true); }}
-                className={`text-xs font-semibold text-left hover:text-white truncate flex-1 ${theme.cardText}`}
-              >
-                {pokemon.name || <span className={theme.cardEmptyText}>+ Add Pokémon</span>}
-              </button>
-              {removeBtn}
-            </div>
+            <button
+              onClick={() => { if (!pokemon.name) setAddingNew(true); setEditingName(true); }}
+              className={`text-xs font-semibold text-left hover:text-white truncate w-full ${theme.cardText}`}
+            >
+              {pokemon.name || <span className={theme.cardEmptyText}>+ Add Pokémon</span>}
+            </button>
           )}
 
           {pokemon.name && (
@@ -161,6 +157,7 @@ export function PokemonSlot({ pokemon, playerId, slot, variant }: Props) {
                 onToggleAttack={() => update({ attackUsed: !pokemon.attackUsed })}
                 compact
               />
+              {removeBtn}
             </>
           )}
         </div>
@@ -212,7 +209,6 @@ export function PokemonSlot({ pokemon, playerId, slot, variant }: Props) {
             >
               {pokemon.name || <span className={theme.activeEmptyText}>+ Active</span>}
             </button>
-            {removeBtn}
             <StatusBadge status={pokemon.status} onChange={status => update({ status })} compact />
           </div>
         )}
@@ -244,6 +240,7 @@ export function PokemonSlot({ pokemon, playerId, slot, variant }: Props) {
               onToggleAttack={() => update({ attackUsed: !pokemon.attackUsed })}
               compact
             />
+            {removeBtn}
           </>
         )}
       </div>
