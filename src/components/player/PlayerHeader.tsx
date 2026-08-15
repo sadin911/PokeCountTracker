@@ -10,7 +10,7 @@ interface Props {
 
 export function PlayerHeader({ playerId, isCurrentTurn }: Props) {
   const player = useGameStore(s => s[playerId]);
-  const { toggleSupporter, setPrizeCards, setPlayerName } = useGameStore();
+  const { setPrizeCards, setPlayerName } = useGameStore();
   const [editingName, setEditingName] = useState(false);
   const theme = useTheme();
 
@@ -58,18 +58,6 @@ export function PlayerHeader({ playerId, isCurrentTurn }: Props) {
         </div>
         <span className="text-xs font-mono text-gray-400 w-3">{player.prizeCards}</span>
       </div>
-
-      {/* Supporter toggle */}
-      <button
-        onClick={() => toggleSupporter(playerId)}
-        className={`text-xs font-bold px-2 py-1 rounded-lg border transition-all ${
-          player.supporterUsed
-            ? 'bg-gray-800 text-gray-500 border-gray-600 line-through'
-            : 'bg-green-900/50 text-green-300 border-green-600 hover:bg-green-800/50'
-        }`}
-      >
-        {player.supporterUsed ? '✓ Supporter' : '★ Supporter'}
-      </button>
     </div>
   );
 }

@@ -36,6 +36,7 @@ export interface PlayerState {
   activePokemon: PokemonSlot;
   bench: [PokemonSlot, PokemonSlot, PokemonSlot, PokemonSlot, PokemonSlot];
   supporterUsed: boolean;
+  energyAttached: boolean; // once-per-turn energy attachment
   prizeCards: number;
 }
 
