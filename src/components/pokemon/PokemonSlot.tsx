@@ -1,4 +1,4 @@
-import { useState, useRef } from 'react';
+import { useState } from 'react';
 import type { PokemonSlot as PokemonSlotType, PlayerId, SlotKey, EnergyType } from '../../types/game';
 import { useGameStore } from '../../store/gameStore';
 import { useTheme } from '../../hooks/useTheme';
@@ -30,22 +30,13 @@ export function PokemonSlot({ pokemon, playerId, slot, variant }: Props) {
   const [editingName, setEditingName] = useState(false);
   const [addingNew, setAddingNew] = useState(false);
   const [dragOver, setDragOver] = useState(false);
-  const [contextMenu, setContextMenu] = useState<{ x: number; y: number } | null>(null);
-
-  // Mobile: long press refs
-  const mobileLongPressTimer = useRef<ReturnType<typeof setTimeout> | undefined>(undefined);
-  const mobileLongPressTriggered = useRef(false);
-
-  // Desktop: touch long press via pointer events (hold still 600ms = context menu)
-  const desktopPressTimer = useRef<ReturnType<typeof setTimeout> | undefined>(undefined);
-  const desktopPressStart = useRef<{ x: number; y: number } | null>(null);
-
   const dragProps = useDragSwap(playerId, slot);
+
   const update = (changes: Partial<PokemonSlotType>) => updatePokemon(playerId, slot, changes);
   const isKO = pokemon.currentDamage >= pokemon.maxHP && pokemon.maxHP > 0;
   const currentHP = Math.max(0, pokemon.maxHP - pokemon.currentDamage);
 
-  // ── Mobile: tap → modal, long press → remove ────────────────────────────
+  // ── Mobile: tap → modal (Remove button is inside the modal) ─────────────
   if (isMobile) {
     const cardClass = isKO
       ? theme.cardKO
@@ -53,32 +44,10 @@ export function PokemonSlot({ pokemon, playerId, slot, variant }: Props) {
         ? (pokemon.name ? theme.cardActive : theme.cardActiveEmpty)
         : (pokemon.name ? theme.card : theme.cardEmpty);
 
-    const handleTouchStart = (e: React.TouchEvent) => {
-      e.preventDefault(); // prevent browser long-press callout / text selection
-      mobileLongPressTriggered.current = false;
-      if (!pokemon.name) return;
-      mobileLongPressTimer.current = setTimeout(() => {
-        mobileLongPressTriggered.current = true;
-        clearPokemon(playerId, slot);
-        navigator.vibrate?.(60);
-      }, 600);
-    };
-    const handleTouchMove = () => clearTimeout(mobileLongPressTimer.current);
-    const handleTouchEnd = () => {
-      clearTimeout(mobileLongPressTimer.current);
-      if (!mobileLongPressTriggered.current) {
-        setShowModal(true); // short tap → open modal
-      }
-      mobileLongPressTriggered.current = false;
-    };
-
     return (
       <>
         <button
-          onTouchStart={handleTouchStart}
-          onTouchMove={handleTouchMove}
-          onTouchEnd={handleTouchEnd}
-          onClick={() => setShowModal(true)} // fallback for non-touch
+          onClick={() => setShowModal(true)}
           className={`flex flex-col gap-1 p-1.5 rounded-xl border h-full w-full select-none active:opacity-80 transition-opacity overflow-hidden ${cardClass}`}
         >
           <div className={`text-xs font-semibold truncate ${pokemon.name ? (variant === 'active' ? theme.activeText : theme.cardText) : theme.cardEmptyText}`}>
@@ -115,62 +84,13 @@ export function PokemonSlot({ pokemon, playerId, slot, variant }: Props) {
   const handleDrop = (e: React.DragEvent) => { setDragOver(false); dragProps.onDrop(e); };
   const handleDragLeave = () => setDragOver(false);
 
-  // Right-click → context menu (mouse)
-  const handleContextMenu = (e: React.MouseEvent) => {
-    if (!pokemon.name) return;
-    e.preventDefault();
-    const x = Math.min(e.clientX, window.innerWidth - 180);
-    const y = Math.min(e.clientY, window.innerHeight - 60);
-    setContextMenu({ x, y });
-  };
-
-  // Touch long press → context menu (tablet finger)
-  const handlePointerDown = (e: React.PointerEvent) => {
-    if (e.pointerType !== 'touch' || !pokemon.name) return;
-    desktopPressStart.current = { x: e.clientX, y: e.clientY };
-    desktopPressTimer.current = setTimeout(() => {
-      if (!desktopPressStart.current) return;
-      const x = Math.min(desktopPressStart.current.x, window.innerWidth - 180);
-      const y = Math.min(desktopPressStart.current.y, window.innerHeight - 60);
-      setContextMenu({ x, y });
-      navigator.vibrate?.(60);
-      desktopPressStart.current = null;
-    }, 600);
-  };
-  const handlePointerMove = (e: React.PointerEvent) => {
-    if (!desktopPressStart.current) return;
-    const dx = e.clientX - desktopPressStart.current.x;
-    const dy = e.clientY - desktopPressStart.current.y;
-    if (dx * dx + dy * dy > 15 * 15) { // moved >15px = dragging, cancel long press
-      clearTimeout(desktopPressTimer.current);
-      desktopPressStart.current = null;
-    }
-  };
-  const handlePointerUp = () => {
-    clearTimeout(desktopPressTimer.current);
-    desktopPressStart.current = null;
-  };
-
-  // Shared context menu overlay
-  const contextMenuEl = contextMenu ? (
-    <>
-      <div
-        className="fixed inset-0 z-[70]"
-        onClick={() => setContextMenu(null)}
-        onContextMenu={e => { e.preventDefault(); setContextMenu(null); }}
-      />
-      <div
-        className="fixed z-[71] bg-gray-800 border border-gray-600 rounded-xl shadow-2xl overflow-hidden min-w-[170px]"
-        style={{ left: contextMenu.x, top: contextMenu.y }}
-      >
-        <button
-          className="w-full px-4 py-3 text-left text-sm text-red-400 hover:bg-red-950/60 flex items-center gap-2 transition-colors"
-          onClick={() => { clearPokemon(playerId, slot); setContextMenu(null); }}
-        >
-          <span className="text-xs">✕</span> Remove Pokémon
-        </button>
-      </div>
-    </>
+  // Small always-visible ✕ button shown when card has a pokemon
+  const removeBtn = pokemon.name ? (
+    <button
+      onClick={e => { e.stopPropagation(); clearPokemon(playerId, slot); }}
+      className="flex-shrink-0 w-4 h-4 flex items-center justify-center rounded text-gray-600 hover:text-red-400 hover:bg-red-950/60 transition-colors text-[10px] leading-none"
+      title="Remove"
+    >✕</button>
   ) : null;
 
   if (variant === 'bench') {
@@ -187,10 +107,6 @@ export function PokemonSlot({ pokemon, playerId, slot, variant }: Props) {
           onDragOver={handleDragOver}
           onDrop={handleDrop}
           onDragLeave={handleDragLeave}
-          onContextMenu={handleContextMenu}
-          onPointerDown={handlePointerDown}
-          onPointerMove={handlePointerMove}
-          onPointerUp={handlePointerUp}
           className={`flex flex-col gap-0.5 p-1.5 rounded-xl border h-full w-full transition-all cursor-grab active:cursor-grabbing select-none overflow-hidden ${
             isKO ? theme.cardKO : dragOver ? theme.cardDrag : pokemon.name ? theme.card : theme.cardEmpty
           }`}
@@ -206,12 +122,15 @@ export function PokemonSlot({ pokemon, playerId, slot, variant }: Props) {
               className="bg-transparent text-xs text-gray-100 outline-none w-full font-semibold"
             />
           ) : (
-            <button
-              onClick={() => { if (!pokemon.name) setAddingNew(true); setEditingName(true); }}
-              className={`text-xs font-semibold text-left hover:text-white truncate w-full ${theme.cardText}`}
-            >
-              {pokemon.name || <span className={theme.cardEmptyText}>+ Add Pokémon</span>}
-            </button>
+            <div className="flex items-center gap-0.5 min-w-0">
+              <button
+                onClick={() => { if (!pokemon.name) setAddingNew(true); setEditingName(true); }}
+                className={`text-xs font-semibold text-left hover:text-white truncate flex-1 ${theme.cardText}`}
+              >
+                {pokemon.name || <span className={theme.cardEmptyText}>+ Add Pokémon</span>}
+              </button>
+              {removeBtn}
+            </div>
           )}
 
           {pokemon.name && (
@@ -253,7 +172,6 @@ export function PokemonSlot({ pokemon, playerId, slot, variant }: Props) {
             onClose={() => setShowHPPicker(false)}
           />
         )}
-        {contextMenuEl}
       </>
     );
   }
@@ -272,10 +190,6 @@ export function PokemonSlot({ pokemon, playerId, slot, variant }: Props) {
         onDragOver={handleDragOver}
         onDrop={handleDrop}
         onDragLeave={handleDragLeave}
-        onContextMenu={handleContextMenu}
-        onPointerDown={handlePointerDown}
-        onPointerMove={handlePointerMove}
-        onPointerUp={handlePointerUp}
         className={`flex flex-col gap-0.5 p-1.5 rounded-xl border h-full w-full transition-all cursor-grab active:cursor-grabbing select-none overflow-hidden ${
           isKO ? theme.cardKO : dragOver ? theme.cardDrag : pokemon.name ? theme.cardActive : theme.cardActiveEmpty
         }`}
@@ -298,6 +212,7 @@ export function PokemonSlot({ pokemon, playerId, slot, variant }: Props) {
             >
               {pokemon.name || <span className={theme.activeEmptyText}>+ Active</span>}
             </button>
+            {removeBtn}
             <StatusBadge status={pokemon.status} onChange={status => update({ status })} compact />
           </div>
         )}
@@ -340,7 +255,6 @@ export function PokemonSlot({ pokemon, playerId, slot, variant }: Props) {
           onClose={() => setShowHPPicker(false)}
         />
       )}
-      {contextMenuEl}
     </>
   );
 }
