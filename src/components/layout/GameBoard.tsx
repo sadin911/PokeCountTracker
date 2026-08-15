@@ -2,10 +2,15 @@ import { useGameStore } from '../../store/gameStore';
 import { useTheme } from '../../hooks/useTheme';
 import { PlayerBoard } from '../player/PlayerBoard';
 import { CenterDivider } from './CenterDivider';
+import { MiniGameBoard } from '../mini/MiniGameBoard';
 
 export function GameBoard() {
   const displayMode = useGameStore(s => s.displayMode);
   const theme = useTheme();
+
+  if (displayMode === 'mini') {
+    return <MiniGameBoard />;
+  }
 
   if (displayMode === 'landscape') {
     return (

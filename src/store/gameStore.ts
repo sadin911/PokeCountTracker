@@ -55,7 +55,7 @@ function setSlot(player: PlayerState, slot: SlotKey, pokemon: PokemonSlot): Play
   return { ...player, bench };
 }
 
-type DisplayMode = 'faceToFace' | 'spectator' | 'landscape';
+export type DisplayMode = 'faceToFace' | 'spectator' | 'landscape' | 'mini';
 
 interface GameStore extends GameState {
   displayMode: DisplayMode;

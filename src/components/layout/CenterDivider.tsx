@@ -15,12 +15,14 @@ const MODE_LABELS: Record<string, string> = {
   faceToFace: '⇅ Face-to-Face',
   spectator:  '↓ Same Side',
   landscape:  '⟺ Landscape',
+  mini:       '⊞ Mini',
 };
 
 const MODE_CYCLE: Record<string, string> = {
   faceToFace: 'spectator',
   spectator:  'landscape',
-  landscape:  'faceToFace',
+  landscape:  'mini',
+  mini:       'faceToFace',
 };
 
 function ThemePanel({ themeId, onSelect, onClose, open }: {
