@@ -71,7 +71,6 @@ export function PokemonSlot({ pokemon, playerId, slot, variant }: Props) {
             pokemon={pokemon}
             playerId={playerId}
             slot={slot}
-            variant={variant}
             onClose={() => setShowModal(false)}
           />
         )}

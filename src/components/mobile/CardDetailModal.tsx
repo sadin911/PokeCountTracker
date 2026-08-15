@@ -11,11 +11,10 @@ interface Props {
   pokemon: PokemonSlotType;
   playerId: PlayerId;
   slot: SlotKey;
-  variant: 'active' | 'bench';
   onClose: () => void;
 }
 
-export function CardDetailModal({ pokemon, playerId, slot, variant, onClose }: Props) {
+export function CardDetailModal({ pokemon, playerId, slot, onClose }: Props) {
   const { updatePokemon, setEnergyCount } = useGameStore();
   const [showHPPicker, setShowHPPicker] = useState(false);
   const [editingName, setEditingName] = useState(!pokemon.name);
