@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useGameStore } from '../../store/gameStore';
 import { useTheme } from '../../hooks/useTheme';
@@ -78,12 +78,30 @@ function ThemePanel({ themeId, onSelect, onClose, open }: {
   );
 }
 
+function useFullscreen() {
+  const [isFs, setIsFs] = useState(!!document.fullscreenElement);
+  useEffect(() => {
+    const onChange = () => setIsFs(!!document.fullscreenElement);
+    document.addEventListener('fullscreenchange', onChange);
+    return () => document.removeEventListener('fullscreenchange', onChange);
+  }, []);
+  const toggle = () => {
+    if (document.fullscreenElement) {
+      document.exitFullscreen();
+    } else {
+      document.documentElement.requestFullscreen();
+    }
+  };
+  return { isFs, toggle };
+}
+
 export function CenterDivider({ orientation = 'horizontal' }: Props) {
   const { currentTurn, turnNumber, player1, player2, resetGame, displayMode, setDisplayMode, theme: themeId, setTheme } = useGameStore();
   const theme = useTheme();
   const [showEndTurn, setShowEndTurn] = useState(false);
   const [showReset, setShowReset] = useState(false);
   const [showThemePanel, setShowThemePanel] = useState(false);
+  const { isFs, toggle: toggleFs } = useFullscreen();
 
   const currentPlayerName = currentTurn === 'player1' ? player1.name : player2.name;
   const nextMode = MODE_CYCLE[displayMode] as typeof displayMode;
@@ -115,6 +133,11 @@ export function CenterDivider({ orientation = 'horizontal' }: Props) {
                 onClick={() => setShowThemePanel(true)}
                 className={`text-[9px] ${theme.centerText} hover:text-gray-300 transition-colors`}
               >🎨</button>
+              <button
+                onClick={toggleFs}
+                className={`text-[9px] ${theme.centerText} hover:text-gray-300 transition-colors`}
+                title={isFs ? 'Exit fullscreen' : 'Enter fullscreen'}
+              >{isFs ? '⊡' : '⛶'}</button>
             </div>
           </div>
           <DiceRoller compact />
@@ -161,6 +184,12 @@ export function CenterDivider({ orientation = 'horizontal' }: Props) {
               className={`text-[10px] ${theme.centerText} hover:text-gray-300 transition-colors`}
               title="Change theme"
             >🎨</button>
+            <span className={`${theme.centerText} text-[10px]`}>·</span>
+            <button
+              onClick={toggleFs}
+              className={`text-[10px] ${theme.centerText} hover:text-gray-300 transition-colors`}
+              title={isFs ? 'Exit fullscreen' : 'Enter fullscreen'}
+            >{isFs ? '⊡' : '⛶'}</button>
           </div>
         </div>
 
