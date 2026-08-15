@@ -4,45 +4,56 @@ const BASE = 'https://api.tcgdex.net/v2/th';
 
 async function fetchJSON(url) {
   const res = await fetch(url);
-  if (!res.ok) throw new Error(`HTTP ${res.status} for ${url}`);
+  if (!res.ok) throw new Error(`HTTP ${res.status}`);
   return res.json();
 }
 
-async function runBatch(tasks, concurrency = 6) {
-  const results = [];
+async function runBatch(tasks, concurrency = 15) {
   for (let i = 0; i < tasks.length; i += concurrency) {
-    const batch = await Promise.allSettled(tasks.slice(i, i + concurrency).map(fn => fn()));
-    results.push(...batch);
+    await Promise.allSettled(tasks.slice(i, i + concurrency).map(fn => fn()));
   }
-  return results;
 }
 
 async function main() {
-  console.log('Fetching Thai set list from TCGdex...');
+  // Step 1: Collect one representative card ID per unique name
+  console.log('Fetching sets...');
   const sets = await fetchJSON(`${BASE}/sets`);
-  console.log(`Found ${sets.length} sets`);
-
-  const names = new Set();
+  const nameToCardId = new Map(); // name → last seen card id
   let populated = 0;
 
-  const tasks = sets.map(set => async () => {
+  await runBatch(sets.map(set => async () => {
     try {
       const data = await fetchJSON(`${BASE}/sets/${set.id}`);
-      if (data.cards && data.cards.length > 0) {
-        data.cards.forEach(card => { if (card.name) names.add(card.name.trim()); });
+      if (data.cards?.length > 0) {
+        data.cards.forEach(c => { if (c.name && c.id) nameToCardId.set(c.name.trim(), c.id); });
         populated++;
-        process.stdout.write(`\r  ${populated} sets done, ${names.size} unique names...`);
+        process.stdout.write(`\r  ${populated} sets, ${nameToCardId.size} unique names...`);
       }
+    } catch {}
+  }), 6);
+
+  console.log(`\n${nameToCardId.size} unique names from ${populated} sets`);
+
+  // Step 2: Fetch HP for each representative card
+  console.log('Fetching HP data per card...');
+  const entries = Array.from(nameToCardId.entries());
+  const result = new Map();
+  let fetched = 0;
+
+  await runBatch(entries.map(([name, cardId]) => async () => {
+    try {
+      const card = await fetchJSON(`${BASE}/cards/${cardId}`);
+      result.set(name, { name, hp: card.hp ?? null });
     } catch {
-      // skip unavailable sets
+      result.set(name, { name, hp: null });
     }
-  });
+    fetched++;
+    if (fetched % 100 === 0) process.stdout.write(`\r  ${fetched}/${entries.length} cards...`);
+  }), 20);
 
-  await runBatch(tasks, 6);
-  console.log(`\nTotal: ${names.size} unique Thai card names from ${populated} sets`);
+  console.log(`\nDone! ${result.size} entries`);
 
-  const sorted = Array.from(names).sort((a, b) => a.localeCompare(b, 'th'));
-
+  const sorted = Array.from(result.values()).sort((a, b) => a.name.localeCompare(b.name, 'th'));
   mkdirSync('./src/data', { recursive: true });
   writeFileSync('./src/data/pokemonNames.json', JSON.stringify(sorted));
   console.log('Saved → src/data/pokemonNames.json');

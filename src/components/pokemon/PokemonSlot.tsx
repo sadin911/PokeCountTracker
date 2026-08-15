@@ -114,6 +114,7 @@ export function PokemonSlot({ pokemon, playerId, slot, variant }: Props) {
               autoFocus
               value={pokemon.name}
               onChange={name => update({ name })}
+              onSelectSuggestion={hp => { if (hp) update({ maxHP: hp, currentDamage: 0 }); }}
               onCommit={commitName}
               placeholder="Pokémon name"
               className="bg-transparent text-xs text-gray-100 outline-none w-full font-semibold"
@@ -199,6 +200,7 @@ export function PokemonSlot({ pokemon, playerId, slot, variant }: Props) {
             autoFocus
             value={pokemon.name}
             onChange={name => update({ name })}
+            onSelectSuggestion={hp => { if (hp) update({ maxHP: hp, currentDamage: 0 }); }}
             onCommit={commitActiveName}
             placeholder="Pokémon name"
             className="bg-transparent text-xs text-gray-100 outline-none w-full font-semibold"

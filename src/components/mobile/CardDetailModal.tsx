@@ -60,6 +60,7 @@ export function CardDetailModal({ pokemon, playerId, slot, onClose }: Props) {
                 autoFocus
                 value={pokemon.name}
                 onChange={name => update({ name })}
+                onSelectSuggestion={hp => { if (hp) update({ maxHP: hp, currentDamage: 0 }); }}
                 onCommit={() => { if (pokemon.name.trim()) setEditingName(false); }}
                 placeholder="Enter Pokémon name…"
                 className="bg-gray-800 text-white text-lg font-bold outline-none rounded-xl px-3 py-2 w-full"
