@@ -1,0 +1,36 @@
+@import "tailwindcss";
+
+@layer base {
+  :root {
+    color-scheme: dark;
+  }
+
+  html, body, #root {
+    height: 100%;
+  }
+
+  body {
+    @apply bg-gray-950 text-gray-100 overflow-hidden;
+    font-family: system-ui, -apple-system, sans-serif;
+  }
+
+  #root {
+    height: 100%;
+    /* Portrait letterbox: cap to 3:4 ratio, centre with auto margins */
+    width: 100%;
+    max-width: calc(100dvh * 0.75);
+    margin-left: auto;
+    margin-right: auto;
+    overflow: hidden;
+  }
+
+  /* Landscape mode: full width, no letterbox */
+  html[data-display-mode="landscape"] #root {
+    max-width: none;
+  }
+
+  * {
+    -webkit-tap-highlight-color: transparent;
+    touch-action: manipulation;
+  }
+}

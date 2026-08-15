@@ -1,0 +1,73 @@
+import { useState } from 'react';
+import type { PlayerId } from '../../types/game';
+import { useGameStore } from '../../store/gameStore';
+
+interface Props {
+  playerId: PlayerId;
+  isCurrentTurn: boolean;
+}
+
+export function PlayerHeader({ playerId, isCurrentTurn }: Props) {
+  const player = useGameStore(s => s[playerId]);
+  const { toggleSupporter, setPrizeCards, setPlayerName } = useGameStore();
+  const [editingName, setEditingName] = useState(false);
+
+  return (
+    <div className={`flex items-center gap-2 px-3 py-1.5 rounded-xl transition-colors ${
+      isCurrentTurn ? 'bg-blue-900/40 border border-blue-600/50' : 'bg-gray-800/50 border border-gray-700/50'
+    }`}>
+      {/* Turn indicator */}
+      <div className={`w-2.5 h-2.5 rounded-full flex-shrink-0 ${isCurrentTurn ? 'bg-blue-400 animate-pulse' : 'bg-gray-600'}`} />
+
+      {/* Player name */}
+      {editingName ? (
+        <input
+          autoFocus
+          className="bg-transparent text-sm font-bold text-white outline-none flex-1"
+          value={player.name}
+          onChange={e => setPlayerName(playerId, e.target.value)}
+          onBlur={() => setEditingName(false)}
+          onKeyDown={e => e.key === 'Enter' && setEditingName(false)}
+        />
+      ) : (
+        <button onClick={() => setEditingName(true)} className="flex-1 text-left">
+          <span className={`text-sm font-bold ${isCurrentTurn ? 'text-blue-300' : 'text-gray-300'}`}>
+            {player.name}
+          </span>
+          {isCurrentTurn && <span className="ml-2 text-xs text-blue-400 font-normal">YOUR TURN</span>}
+        </button>
+      )}
+
+      {/* Prize cards */}
+      <div className="flex items-center gap-1">
+        <span className="text-xs text-gray-500">Prize:</span>
+        <div className="flex gap-0.5">
+          {Array.from({ length: 6 }).map((_, i) => (
+            <button
+              key={i}
+              onClick={() => setPrizeCards(playerId, i < player.prizeCards ? i : i + 1)}
+              className={`w-3 h-3 rounded-sm border transition-colors ${
+                i < player.prizeCards
+                  ? 'bg-yellow-500 border-yellow-400'
+                  : 'bg-gray-700 border-gray-600'
+              }`}
+            />
+          ))}
+        </div>
+        <span className="text-xs font-mono text-gray-400 w-3">{player.prizeCards}</span>
+      </div>
+
+      {/* Supporter toggle */}
+      <button
+        onClick={() => toggleSupporter(playerId)}
+        className={`text-xs font-bold px-2 py-1 rounded-lg border transition-all ${
+          player.supporterUsed
+            ? 'bg-gray-800 text-gray-500 border-gray-600 line-through'
+            : 'bg-green-900/50 text-green-300 border-green-600 hover:bg-green-800/50'
+        }`}
+      >
+        {player.supporterUsed ? '✓ Supporter' : '★ Supporter'}
+      </button>
+    </div>
+  );
+}
