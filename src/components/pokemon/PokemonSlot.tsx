@@ -12,6 +12,7 @@ import { AbilityTracker } from './AbilityTracker';
 import { useDragSwap } from '../../hooks/useDragSwap';
 import { CardDetailModal } from '../mobile/CardDetailModal';
 import { STATUS_INFO } from '../../constants/statusConditions';
+import { PokemonNameInput } from './PokemonNameInput';
 
 interface Props {
   pokemon: PokemonSlotType;
@@ -90,6 +91,12 @@ export function PokemonSlot({ pokemon, playerId, slot, variant }: Props) {
   const handleDragLeave = () => setDragOver(false);
 
   if (variant === 'bench') {
+    const commitName = () => {
+      if (addingNew && !pokemon.name.trim()) update({ name: 'Pokémon' });
+      setAddingNew(false);
+      setEditingName(false);
+    };
+
     return (
       <>
         <div
@@ -103,24 +110,13 @@ export function PokemonSlot({ pokemon, playerId, slot, variant }: Props) {
         >
           {/* Name */}
           {editingName ? (
-            <input
+            <PokemonNameInput
               autoFocus
-              className="bg-transparent text-xs text-gray-100 outline-none w-full font-semibold"
               value={pokemon.name}
-              onChange={e => update({ name: e.target.value })}
-              onBlur={() => {
-                if (addingNew && !pokemon.name.trim()) update({ name: 'Pokémon' });
-                setAddingNew(false);
-                setEditingName(false);
-              }}
-              onKeyDown={e => {
-                if (e.key === 'Enter') {
-                  if (addingNew && !pokemon.name.trim()) update({ name: 'Pokémon' });
-                  setAddingNew(false);
-                  setEditingName(false);
-                }
-              }}
+              onChange={name => update({ name })}
+              onCommit={commitName}
               placeholder="Pokémon name"
+              className="bg-transparent text-xs text-gray-100 outline-none w-full font-semibold"
             />
           ) : (
             <button
@@ -180,6 +176,12 @@ export function PokemonSlot({ pokemon, playerId, slot, variant }: Props) {
   }
 
   // Active slot — same compact size as bench, blue border to distinguish
+  const commitActiveName = () => {
+    if (addingNew && !pokemon.name.trim()) update({ name: 'Pokémon' });
+    setAddingNew(false);
+    setEditingName(false);
+  };
+
   return (
     <>
       <div
@@ -193,24 +195,13 @@ export function PokemonSlot({ pokemon, playerId, slot, variant }: Props) {
       >
         {/* Name + Status */}
         {editingName ? (
-          <input
+          <PokemonNameInput
             autoFocus
-            className="bg-transparent text-xs text-gray-100 outline-none w-full font-semibold"
             value={pokemon.name}
-            onChange={e => update({ name: e.target.value })}
-            onBlur={() => {
-              if (addingNew && !pokemon.name.trim()) update({ name: 'Pokémon' });
-              setAddingNew(false);
-              setEditingName(false);
-            }}
-            onKeyDown={e => {
-              if (e.key === 'Enter') {
-                if (addingNew && !pokemon.name.trim()) update({ name: 'Pokémon' });
-                setAddingNew(false);
-                setEditingName(false);
-              }
-            }}
+            onChange={name => update({ name })}
+            onCommit={commitActiveName}
             placeholder="Pokémon name"
+            className="bg-transparent text-xs text-gray-100 outline-none w-full font-semibold"
           />
         ) : (
           <div className="flex items-center gap-1 min-w-0">

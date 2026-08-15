@@ -3,6 +3,7 @@ import { motion } from 'framer-motion';
 import type { PlayerId, SlotKey, PokemonSlot as PokemonSlotType, EnergyType } from '../../types/game';
 import { useGameStore } from '../../store/gameStore';
 import { HPPresetPicker } from '../pokemon/HPPresetPicker';
+import { PokemonNameInput } from '../pokemon/PokemonNameInput';
 import { EnergyTracker } from '../pokemon/EnergyTracker';
 import { AbilityTracker } from '../pokemon/AbilityTracker';
 import { STATUS_INFO, STATUS_ORDER } from '../../constants/statusConditions';
@@ -55,14 +56,13 @@ export function CardDetailModal({ pokemon, playerId, slot, onClose }: Props) {
         <div className="flex items-center gap-3 px-5 py-3 border-b border-gray-800">
           <div className="flex-1 min-w-0">
             {editingName ? (
-              <input
+              <PokemonNameInput
                 autoFocus
-                className="bg-gray-800 text-white text-lg font-bold outline-none rounded-xl px-3 py-2 w-full"
                 value={pokemon.name}
+                onChange={name => update({ name })}
+                onCommit={() => { if (pokemon.name.trim()) setEditingName(false); }}
                 placeholder="Enter Pokémon name…"
-                onChange={e => update({ name: e.target.value })}
-                onBlur={() => { if (pokemon.name.trim()) setEditingName(false); }}
-                onKeyDown={e => { if (e.key === 'Enter' && pokemon.name.trim()) setEditingName(false); }}
+                className="bg-gray-800 text-white text-lg font-bold outline-none rounded-xl px-3 py-2 w-full"
               />
             ) : (
               <button onClick={() => setEditingName(true)} className="text-left w-full">
