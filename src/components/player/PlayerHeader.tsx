@@ -36,7 +36,7 @@ export function PlayerHeader({ playerId, isCurrentTurn }: Props) {
           <span className={`text-sm font-bold ${isCurrentTurn ? theme.headerNameOn : theme.headerNameOff}`}>
             {player.name}
           </span>
-          {isCurrentTurn && <span className={`ml-2 text-xs font-normal ${theme.headerTurnBadge}`}>YOUR TURN</span>}
+          {isCurrentTurn && <span className={`ml-1.5 text-sm ${theme.headerTurnBadge}`}>▶</span>}
         </button>
       )}
 
