@@ -13,10 +13,10 @@ export function TurnEnergyButton({ playerId }: Props) {
   return (
     <button
       onClick={() => toggle(playerId)}
-      className={`w-full h-full flex flex-col items-center justify-center gap-1.5 rounded-xl border-2 transition-all select-none active:scale-95
+      className={`w-full h-full flex flex-col items-center justify-center gap-1.5 rounded-xl transition-all select-none active:scale-95
         ${ready
-          ? 'bg-emerald-950/70 border-emerald-500/60 shadow-lg shadow-emerald-950/60'
-          : 'bg-gray-900/30 border-gray-700/30 opacity-40'
+          ? 'bg-emerald-950/70 shadow-lg shadow-emerald-950/60'
+          : 'bg-gray-900/30 opacity-40'
         }`}
     >
       {/* Energy orb icon */}
@@ -57,10 +57,10 @@ export function TurnSupporterButton({ playerId }: Props) {
   return (
     <button
       onClick={() => toggle(playerId)}
-      className={`w-full h-full flex flex-col items-center justify-center gap-1.5 rounded-xl border-2 transition-all select-none active:scale-95
+      className={`w-full h-full flex flex-col items-center justify-center gap-1.5 rounded-xl transition-all select-none active:scale-95
         ${ready
-          ? 'bg-amber-950/70 border-amber-500/60 shadow-lg shadow-amber-950/60'
-          : 'bg-gray-900/30 border-gray-700/30 opacity-40'
+          ? 'bg-amber-950/70 shadow-lg shadow-amber-950/60'
+          : 'bg-gray-900/30 opacity-40'
         }`}
     >
       {/* Card icon with star */}
