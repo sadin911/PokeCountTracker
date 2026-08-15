@@ -4,6 +4,34 @@ import { PlayerHeader } from './PlayerHeader';
 import { BenchRow } from './BenchRow';
 import { PokemonSlot } from '../pokemon/PokemonSlot';
 import { TurnEnergyButton, TurnSupporterButton } from './TurnTrackers';
+import { STATUS_INFO } from '../../constants/statusConditions';
+
+function StatusReminders({ playerId }: { playerId: PlayerId }) {
+  const player = useGameStore(s => s[playerId]);
+  const allPokemon = [player.activePokemon, ...player.bench];
+  const affected = allPokemon.filter(p => p.name && p.status !== 'none');
+  if (affected.length === 0) return null;
+
+  return (
+    <div className="flex flex-col gap-1 px-1 py-1 overflow-y-auto">
+      {affected.map(p => {
+        const si = STATUS_INFO[p.status];
+        return (
+          <div key={p.id} className={`flex items-start gap-2 px-2 py-1.5 rounded-lg bg-gray-800/50 border-l-2 ${si.borderColor}`}>
+            <span className="text-base leading-none mt-px flex-shrink-0">{si.emoji}</span>
+            <div className="min-w-0">
+              <div className="flex items-center gap-1 flex-wrap">
+                <span className="text-[10px] font-bold text-gray-200 truncate">{p.name}</span>
+                <span className={`text-[9px] font-bold px-1 rounded ${si.bgColor} ${si.color}`}>{si.label}</span>
+              </div>
+              <p className="text-[9px] text-gray-400 leading-snug mt-0.5">{si.rule}</p>
+            </div>
+          </div>
+        );
+      })}
+    </div>
+  );
+}
 
 interface Props {
   playerId: PlayerId;
@@ -43,6 +71,7 @@ export function PlayerBoard({ playerId, flipped = false }: Props) {
           <div className="flex-shrink-0">
             <BenchRow playerId={playerId} />
           </div>
+          <StatusReminders playerId={playerId} />
         </div>
         <div className="flex-shrink-0">
           <PlayerHeader playerId={playerId} isCurrentTurn={isCurrentTurn} />
@@ -66,7 +95,10 @@ export function PlayerBoard({ playerId, flipped = false }: Props) {
       <div className="flex-shrink-0">
         <BenchRow playerId={playerId} />
       </div>
-      <div className="mt-auto flex-shrink-0">
+      <div className="flex-1 min-h-0">
+        <StatusReminders playerId={playerId} />
+      </div>
+      <div className="flex-shrink-0">
         <PlayerHeader playerId={playerId} isCurrentTurn={isCurrentTurn} />
       </div>
     </div>
