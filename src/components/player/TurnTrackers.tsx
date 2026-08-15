@@ -13,18 +13,13 @@ export function TurnEnergyButton({ playerId }: Props) {
   return (
     <button
       onClick={() => toggle(playerId)}
-      className={`w-full h-full flex flex-col items-center justify-center gap-1.5 rounded-xl transition-all select-none active:scale-95
-        ${ready
-          ? 'bg-emerald-950/70 shadow-lg shadow-emerald-950/60'
-          : 'bg-gray-900/30 opacity-40'
-        }`}
+      className="w-full h-full flex flex-col items-center justify-center gap-1.5 select-none active:scale-95 transition-all"
     >
       {/* Energy orb icon */}
-      <div className={`relative flex items-center justify-center rounded-full transition-all
-        w-10 h-10
+      <div className={`relative flex items-center justify-center rounded-full transition-all w-10 h-10
         ${ready
-          ? 'bg-emerald-500/15 ring-2 ring-emerald-400/50 shadow-md shadow-emerald-500/20'
-          : 'bg-gray-800/60 ring-1 ring-gray-600/40'
+          ? 'bg-emerald-500/20 ring-2 ring-emerald-400/60 shadow-md shadow-emerald-500/30'
+          : 'bg-gray-800/40 ring-1 ring-gray-600/30'
         }`}
       >
         <span className={`text-2xl leading-none ${ready ? '' : 'grayscale opacity-30'}`}>⚡</span>
@@ -33,7 +28,6 @@ export function TurnEnergyButton({ playerId }: Props) {
         )}
       </div>
 
-      {/* Labels */}
       <div className="text-center leading-tight">
         <div className={`text-[9px] font-black tracking-widest uppercase ${ready ? 'text-emerald-300' : 'text-gray-600'}`}>
           Energy
@@ -43,8 +37,7 @@ export function TurnEnergyButton({ playerId }: Props) {
         </div>
       </div>
 
-      {/* Pulse dot */}
-      <div className={`w-1.5 h-1.5 rounded-full ${ready ? 'bg-emerald-400 animate-pulse' : 'bg-gray-600'}`} />
+      <div className={`w-1.5 h-1.5 rounded-full ${ready ? 'bg-emerald-400 animate-pulse' : 'bg-gray-600/40'}`} />
     </button>
   );
 }
@@ -57,18 +50,13 @@ export function TurnSupporterButton({ playerId }: Props) {
   return (
     <button
       onClick={() => toggle(playerId)}
-      className={`w-full h-full flex flex-col items-center justify-center gap-1.5 rounded-xl transition-all select-none active:scale-95
-        ${ready
-          ? 'bg-amber-950/70 shadow-lg shadow-amber-950/60'
-          : 'bg-gray-900/30 opacity-40'
-        }`}
+      className="w-full h-full flex flex-col items-center justify-center gap-1.5 select-none active:scale-95 transition-all"
     >
       {/* Card icon with star */}
-      <div className={`relative flex items-center justify-center rounded-lg border-2 transition-all
-        w-10 h-10
+      <div className={`relative flex items-center justify-center rounded-lg border-2 transition-all w-10 h-10
         ${ready
-          ? 'bg-amber-500/15 border-amber-400/50 shadow-md shadow-amber-500/20'
-          : 'bg-gray-800/60 border-gray-600/40'
+          ? 'bg-amber-500/20 border-amber-400/60 shadow-md shadow-amber-500/30'
+          : 'bg-gray-800/40 border-gray-600/30'
         }`}
       >
         <span className={`text-2xl leading-none ${ready ? 'text-amber-300' : 'grayscale opacity-30'}`}>★</span>
@@ -77,7 +65,6 @@ export function TurnSupporterButton({ playerId }: Props) {
         )}
       </div>
 
-      {/* Labels */}
       <div className="text-center leading-tight">
         <div className={`text-[9px] font-black tracking-widest uppercase ${ready ? 'text-amber-300' : 'text-gray-600'}`}>
           Supporter
@@ -87,8 +74,7 @@ export function TurnSupporterButton({ playerId }: Props) {
         </div>
       </div>
 
-      {/* Pulse dot */}
-      <div className={`w-1.5 h-1.5 rounded-full ${ready ? 'bg-amber-400 animate-pulse' : 'bg-gray-600'}`} />
+      <div className={`w-1.5 h-1.5 rounded-full ${ready ? 'bg-amber-400 animate-pulse' : 'bg-gray-600/40'}`} />
     </button>
   );
 }
