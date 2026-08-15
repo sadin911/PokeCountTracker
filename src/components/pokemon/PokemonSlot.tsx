@@ -84,12 +84,12 @@ export function PokemonSlot({ pokemon, playerId, slot, variant }: Props) {
   const handleDrop = (e: React.DragEvent) => { setDragOver(false); dragProps.onDrop(e); };
   const handleDragLeave = () => setDragOver(false);
 
-  // Small remove button placed below ability tracker
+  // Remove button — same compact style as AbilityTracker buttons
   const removeBtn = (
     <button
       onClick={e => { e.stopPropagation(); clearPokemon(playerId, slot); }}
-      className="w-full text-[9px] text-gray-600 hover:text-red-400 transition-colors leading-none pt-0.5 text-center"
-    >✕ remove</button>
+      className="w-full text-[10px] px-1.5 py-0.5 rounded font-bold border transition-colors bg-red-900/30 text-red-500 border-red-800 hover:bg-red-800/50"
+    >✕ Remove</button>
   );
 
   if (variant === 'bench') {
