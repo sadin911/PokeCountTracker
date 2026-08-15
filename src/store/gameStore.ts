@@ -66,6 +66,7 @@ interface GameStore extends GameState {
 
   // Pokemon mutations
   updatePokemon: (player: PlayerId, slot: SlotKey, changes: Partial<PokemonSlot>) => void;
+  clearPokemon: (player: PlayerId, slot: SlotKey) => void;
   setEnergyCount: (player: PlayerId, slot: SlotKey, type: EnergyType, count: number) => void;
   swapSlots: (player: PlayerId, from: SlotKey, to: SlotKey) => void;
 
@@ -99,6 +100,13 @@ export const useGameStore = create<GameStore>()(
           const current = getSlot(player, slot);
           const updated = { ...current, ...changes };
           return { [playerId]: setSlot(player, slot, updated) };
+        }),
+
+      clearPokemon: (playerId, slot) =>
+        set((state) => {
+          const player = state[playerId];
+          const current = getSlot(player, slot);
+          return { [playerId]: setSlot(player, slot, makePokemon(current.id)) };
         }),
 
       setEnergyCount: (playerId, slot, type, count) =>

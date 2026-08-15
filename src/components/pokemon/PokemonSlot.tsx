@@ -22,7 +22,7 @@ interface Props {
 }
 
 export function PokemonSlot({ pokemon, playerId, slot, variant }: Props) {
-  const { updatePokemon, setEnergyCount } = useGameStore();
+  const { updatePokemon, clearPokemon, setEnergyCount } = useGameStore();
   const theme = useTheme();
   const isMobile = useIsMobile();
   const [showHPPicker, setShowHPPicker] = useState(false);
@@ -104,7 +104,7 @@ export function PokemonSlot({ pokemon, playerId, slot, variant }: Props) {
           onDragOver={handleDragOver}
           onDrop={handleDrop}
           onDragLeave={handleDragLeave}
-          className={`flex flex-col gap-0.5 p-1.5 rounded-xl border h-full w-full transition-all cursor-grab active:cursor-grabbing select-none overflow-hidden ${
+          className={`group flex flex-col gap-0.5 p-1.5 rounded-xl border h-full w-full transition-all cursor-grab active:cursor-grabbing select-none overflow-hidden ${
             isKO ? theme.cardKO : dragOver ? theme.cardDrag : pokemon.name ? theme.card : theme.cardEmpty
           }`}
         >
@@ -120,12 +120,21 @@ export function PokemonSlot({ pokemon, playerId, slot, variant }: Props) {
               className="bg-transparent text-xs text-gray-100 outline-none w-full font-semibold"
             />
           ) : (
-            <button
-              onClick={() => { if (!pokemon.name) setAddingNew(true); setEditingName(true); }}
-              className={`text-xs font-semibold text-left hover:text-white truncate w-full ${theme.cardText}`}
-            >
-              {pokemon.name || <span className={theme.cardEmptyText}>+ Add Pokémon</span>}
-            </button>
+            <div className="flex items-center gap-0.5 min-w-0">
+              <button
+                onClick={() => { if (!pokemon.name) setAddingNew(true); setEditingName(true); }}
+                className={`text-xs font-semibold text-left hover:text-white truncate flex-1 ${theme.cardText}`}
+              >
+                {pokemon.name || <span className={theme.cardEmptyText}>+ Add Pokémon</span>}
+              </button>
+              {pokemon.name && (
+                <button
+                  onClick={e => { e.stopPropagation(); clearPokemon(playerId, slot); }}
+                  className="opacity-0 group-hover:opacity-100 flex-shrink-0 w-4 h-4 flex items-center justify-center rounded text-gray-500 hover:text-red-400 hover:bg-red-950/50 transition-all text-[9px] leading-none"
+                  title="Remove Pokémon"
+                >✕</button>
+              )}
+            </div>
           )}
 
           {pokemon.name && (
@@ -190,7 +199,7 @@ export function PokemonSlot({ pokemon, playerId, slot, variant }: Props) {
         onDragOver={handleDragOver}
         onDrop={handleDrop}
         onDragLeave={handleDragLeave}
-        className={`flex flex-col gap-0.5 p-1.5 rounded-xl border h-full w-full transition-all cursor-grab active:cursor-grabbing select-none overflow-hidden ${
+        className={`group flex flex-col gap-0.5 p-1.5 rounded-xl border h-full w-full transition-all cursor-grab active:cursor-grabbing select-none overflow-hidden ${
           isKO ? theme.cardKO : dragOver ? theme.cardDrag : pokemon.name ? theme.cardActive : theme.cardActiveEmpty
         }`}
       >
@@ -213,6 +222,13 @@ export function PokemonSlot({ pokemon, playerId, slot, variant }: Props) {
             >
               {pokemon.name || <span className={theme.activeEmptyText}>+ Active</span>}
             </button>
+            {pokemon.name && (
+              <button
+                onClick={e => { e.stopPropagation(); clearPokemon(playerId, slot); }}
+                className="opacity-0 group-hover:opacity-100 flex-shrink-0 w-4 h-4 flex items-center justify-center rounded text-gray-500 hover:text-red-400 hover:bg-red-950/50 transition-all text-[9px] leading-none"
+                title="Remove Pokémon"
+              >✕</button>
+            )}
             <StatusBadge status={pokemon.status} onChange={status => update({ status })} compact />
           </div>
         )}

@@ -16,7 +16,7 @@ interface Props {
 }
 
 export function CardDetailModal({ pokemon, playerId, slot, onClose }: Props) {
-  const { updatePokemon, setEnergyCount } = useGameStore();
+  const { updatePokemon, clearPokemon, setEnergyCount } = useGameStore();
   const [showHPPicker, setShowHPPicker] = useState(false);
   const [editingName, setEditingName] = useState(!pokemon.name);
 
@@ -190,6 +190,16 @@ export function CardDetailModal({ pokemon, playerId, slot, onClose }: Props) {
                 onToggleAttack={() => update({ attackUsed: !pokemon.attackUsed })}
               />
             </div>
+          )}
+
+          {/* Remove */}
+          {pokemon.name && (
+            <button
+              onClick={() => { clearPokemon(playerId, slot); onClose(); }}
+              className="w-full py-3.5 rounded-2xl border border-red-900/60 bg-red-950/40 text-red-400 text-sm font-semibold active:scale-95 transition-transform"
+            >
+              Remove Pokémon
+            </button>
           )}
 
           {/* Safe area bottom pad */}
