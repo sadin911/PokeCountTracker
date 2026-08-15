@@ -2,6 +2,7 @@ import { useState } from 'react';
 import type { PokemonSlot as PokemonSlotType, PlayerId, SlotKey, EnergyType } from '../../types/game';
 import { useGameStore } from '../../store/gameStore';
 import { useTheme } from '../../hooks/useTheme';
+import { useIsMobile } from '../../hooks/useIsMobile';
 import { HPBar } from './HPBar';
 import { HPPresetPicker } from './HPPresetPicker';
 import { DamageCounter } from './DamageCounter';
@@ -9,6 +10,8 @@ import { StatusBadge } from './StatusBadge';
 import { EnergyTracker } from './EnergyTracker';
 import { AbilityTracker } from './AbilityTracker';
 import { useDragSwap } from '../../hooks/useDragSwap';
+import { CardDetailModal } from '../mobile/CardDetailModal';
+import { STATUS_INFO } from '../../constants/statusConditions';
 
 interface Props {
   pokemon: PokemonSlotType;
@@ -20,7 +23,9 @@ interface Props {
 export function PokemonSlot({ pokemon, playerId, slot, variant }: Props) {
   const { updatePokemon, setEnergyCount } = useGameStore();
   const theme = useTheme();
+  const isMobile = useIsMobile();
   const [showHPPicker, setShowHPPicker] = useState(false);
+  const [showModal, setShowModal] = useState(false);
   const [editingName, setEditingName] = useState(false);
   const [addingNew, setAddingNew] = useState(false);
   const [dragOver, setDragOver] = useState(false);
@@ -28,6 +33,52 @@ export function PokemonSlot({ pokemon, playerId, slot, variant }: Props) {
 
   const update = (changes: Partial<PokemonSlotType>) => updatePokemon(playerId, slot, changes);
   const isKO = pokemon.currentDamage >= pokemon.maxHP && pokemon.maxHP > 0;
+  const currentHP = Math.max(0, pokemon.maxHP - pokemon.currentDamage);
+
+  // ── Mobile: simplified card, tap → full modal ──────────────────────────
+  if (isMobile) {
+    const cardClass = isKO
+      ? theme.cardKO
+      : variant === 'active'
+        ? (pokemon.name ? theme.cardActive : theme.cardActiveEmpty)
+        : (pokemon.name ? theme.card : theme.cardEmpty);
+
+    return (
+      <>
+        <button
+          onClick={() => setShowModal(true)}
+          className={`flex flex-col gap-1 p-1.5 rounded-xl border h-full w-full select-none active:opacity-80 transition-opacity overflow-hidden ${cardClass}`}
+        >
+          <div className={`text-xs font-semibold truncate ${pokemon.name ? (variant === 'active' ? theme.activeText : theme.cardText) : theme.cardEmptyText}`}>
+            {pokemon.name || (variant === 'active' ? '+ Active' : '+ Add')}
+          </div>
+          {pokemon.name && (
+            <>
+              <HPBar maxHP={pokemon.maxHP} currentDamage={pokemon.currentDamage} />
+              <div className="flex items-center justify-between">
+                <span className={`text-[10px] font-bold font-mono ${isKO ? 'text-red-400 animate-pulse' : 'text-gray-300'}`}>
+                  {isKO ? 'KO!' : `${currentHP}HP`}
+                </span>
+                {pokemon.status !== 'none' && (
+                  <span className="text-[10px] leading-none">{STATUS_INFO[pokemon.status].emoji}</span>
+                )}
+              </div>
+            </>
+          )}
+        </button>
+        {showModal && (
+          <CardDetailModal
+            pokemon={pokemon}
+            playerId={playerId}
+            slot={slot}
+            variant={variant}
+            onClose={() => setShowModal(false)}
+          />
+        )}
+      </>
+    );
+  }
+  // ── End mobile ──────────────────────────────────────────────────────────
 
   const handleDragOver = (e: React.DragEvent) => {
     dragProps.onDragOver(e);
