@@ -1,6 +1,7 @@
 import { create } from 'zustand';
 import { persist } from 'zustand/middleware';
 import type { GameState, PlayerState, PokemonSlot, PlayerId, SlotKey, EnergyType, StatusCondition } from '../types/game';
+import type { ThemeId } from '../constants/themes';
 
 function makePokemon(id: string): PokemonSlot {
   return {
@@ -59,6 +60,9 @@ interface GameStore extends GameState {
   displayMode: DisplayMode;
   setDisplayMode: (mode: DisplayMode) => void;
 
+  theme: ThemeId;
+  setTheme: (theme: ThemeId) => void;
+
   // Pokemon mutations
   updatePokemon: (player: PlayerId, slot: SlotKey, changes: Partial<PokemonSlot>) => void;
   setEnergyCount: (player: PlayerId, slot: SlotKey, type: EnergyType, count: number) => void;
@@ -83,6 +87,9 @@ export const useGameStore = create<GameStore>()(
 
       displayMode: 'faceToFace' as DisplayMode,
       setDisplayMode: (mode) => set({ displayMode: mode }),
+
+      theme: 'midnight' as ThemeId,
+      setTheme: (theme) => set({ theme }),
 
       updatePokemon: (playerId, slot, changes) =>
         set((state) => {

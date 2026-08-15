@@ -1,5 +1,8 @@
 import { useState } from 'react';
+import { motion, AnimatePresence } from 'framer-motion';
 import { useGameStore } from '../../store/gameStore';
+import { useTheme } from '../../hooks/useTheme';
+import { THEMES, THEME_ORDER, type ThemeId } from '../../constants/themes';
 import { CoinFlip } from '../tools/CoinFlip';
 import { DiceRoller } from '../tools/DiceRoller';
 import { EndTurnModal } from './EndTurnModal';
@@ -20,10 +23,67 @@ const MODE_CYCLE: Record<string, string> = {
   landscape:  'faceToFace',
 };
 
+function ThemePanel({ themeId, onSelect, onClose, open }: {
+  themeId: string;
+  onSelect: (id: ThemeId) => void;
+  onClose: () => void;
+  open: boolean;
+}) {
+  return (
+    <AnimatePresence>
+      {open && (
+        <motion.div
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          exit={{ opacity: 0 }}
+          className="fixed inset-0 z-50 flex items-center justify-center bg-black/70 backdrop-blur-sm"
+          onClick={onClose}
+        >
+          <motion.div
+            initial={{ scale: 0.85, opacity: 0 }}
+            animate={{ scale: 1, opacity: 1 }}
+            exit={{ scale: 0.85, opacity: 0 }}
+            transition={{ type: 'spring', damping: 20, stiffness: 300 }}
+            className="bg-gray-900 border border-gray-700 rounded-2xl p-5 shadow-2xl"
+            onClick={e => e.stopPropagation()}
+          >
+            <p className="text-xs text-gray-400 mb-4 text-center font-semibold tracking-widest uppercase">Choose Theme</p>
+            <div className="flex gap-3">
+              {THEME_ORDER.map(id => {
+                const t = THEMES[id];
+                const active = themeId === id;
+                return (
+                  <button
+                    key={id}
+                    onClick={() => onSelect(id)}
+                    className={`flex flex-col items-center gap-2 p-3 rounded-xl border transition-all ${
+                      active ? 'border-white/60 bg-white/10 scale-105' : 'border-gray-700 hover:border-gray-500'
+                    }`}
+                  >
+                    <div
+                      className="w-12 h-12 rounded-xl border border-white/20 shadow-lg"
+                      style={{ background: t.preview }}
+                    />
+                    <span className="text-xl">{t.emoji}</span>
+                    <span className={`text-[10px] font-bold ${active ? 'text-white' : 'text-gray-400'}`}>{t.name}</span>
+                    {active && <span className="text-[8px] text-green-400 font-bold">ACTIVE</span>}
+                  </button>
+                );
+              })}
+            </div>
+          </motion.div>
+        </motion.div>
+      )}
+    </AnimatePresence>
+  );
+}
+
 export function CenterDivider({ orientation = 'horizontal' }: Props) {
-  const { currentTurn, turnNumber, player1, player2, resetGame, displayMode, setDisplayMode } = useGameStore();
+  const { currentTurn, turnNumber, player1, player2, resetGame, displayMode, setDisplayMode, theme: themeId, setTheme } = useGameStore();
+  const theme = useTheme();
   const [showEndTurn, setShowEndTurn] = useState(false);
   const [showReset, setShowReset] = useState(false);
+  const [showThemePanel, setShowThemePanel] = useState(false);
 
   const currentPlayerName = currentTurn === 'player1' ? player1.name : player2.name;
   const nextMode = MODE_CYCLE[displayMode] as typeof displayMode;
@@ -44,13 +104,17 @@ export function CenterDivider({ orientation = 'horizontal' }: Props) {
             <div className="flex flex-col items-center gap-0.5">
               <button
                 onClick={() => setShowReset(true)}
-                className="text-[9px] text-gray-600 hover:text-gray-400 transition-colors"
+                className={`text-[9px] ${theme.centerText} hover:text-gray-300 transition-colors`}
               >↺</button>
               <button
                 onClick={() => setDisplayMode(nextMode)}
                 title={MODE_LABELS[nextMode]}
-                className="text-[9px] text-gray-600 hover:text-gray-400 transition-colors"
+                className={`text-[9px] ${theme.centerText} hover:text-gray-300 transition-colors`}
               >⟺</button>
+              <button
+                onClick={() => setShowThemePanel(true)}
+                className={`text-[9px] ${theme.centerText} hover:text-gray-300 transition-colors`}
+              >🎨</button>
             </div>
           </div>
           <DiceRoller compact />
@@ -60,6 +124,7 @@ export function CenterDivider({ orientation = 'horizontal' }: Props) {
           <EndTurnModal currentPlayer={currentTurn} onClose={() => setShowEndTurn(false)} />
         )}
         {showReset && <ResetModal onConfirm={() => { resetGame(); setShowReset(false); }} onClose={() => setShowReset(false)} />}
+        <ThemePanel themeId={themeId} onSelect={(id) => { setTheme(id); setShowThemePanel(false); }} onClose={() => setShowThemePanel(false)} open={showThemePanel} />
       </>
     );
   }
@@ -82,14 +147,20 @@ export function CenterDivider({ orientation = 'horizontal' }: Props) {
           <div className="flex items-center justify-center gap-1.5">
             <button
               onClick={() => setShowReset(true)}
-              className="text-[10px] text-gray-600 hover:text-gray-400 transition-colors"
+              className={`text-[10px] ${theme.centerText} hover:text-gray-300 transition-colors`}
             >↺ Reset</button>
-            <span className="text-gray-700 text-[10px]">·</span>
+            <span className={`${theme.centerText} text-[10px]`}>·</span>
             <button
               onClick={() => setDisplayMode(nextMode)}
               title={`Switch to ${MODE_LABELS[nextMode]}`}
-              className="text-[10px] text-gray-600 hover:text-gray-400 transition-colors"
+              className={`text-[10px] ${theme.centerText} hover:text-gray-300 transition-colors`}
             >{MODE_LABELS[displayMode]}</button>
+            <span className={`${theme.centerText} text-[10px]`}>·</span>
+            <button
+              onClick={() => setShowThemePanel(true)}
+              className={`text-[10px] ${theme.centerText} hover:text-gray-300 transition-colors`}
+              title="Change theme"
+            >🎨</button>
           </div>
         </div>
 
@@ -100,6 +171,7 @@ export function CenterDivider({ orientation = 'horizontal' }: Props) {
         <EndTurnModal currentPlayer={currentTurn} onClose={() => setShowEndTurn(false)} />
       )}
       {showReset && <ResetModal onConfirm={() => { resetGame(); setShowReset(false); }} onClose={() => setShowReset(false)} />}
+      <ThemePanel themeId={themeId} onSelect={(id) => { setTheme(id); setShowThemePanel(false); }} onClose={() => setShowThemePanel(false)} open={showThemePanel} />
     </>
   );
 }

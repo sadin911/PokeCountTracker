@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import type { PokemonSlot as PokemonSlotType, PlayerId, SlotKey, EnergyType } from '../../types/game';
 import { useGameStore } from '../../store/gameStore';
+import { useTheme } from '../../hooks/useTheme';
 import { HPBar } from './HPBar';
 import { HPPresetPicker } from './HPPresetPicker';
 import { DamageCounter } from './DamageCounter';
@@ -18,6 +19,7 @@ interface Props {
 
 export function PokemonSlot({ pokemon, playerId, slot, variant }: Props) {
   const { updatePokemon, setEnergyCount } = useGameStore();
+  const theme = useTheme();
   const [showHPPicker, setShowHPPicker] = useState(false);
   const [editingName, setEditingName] = useState(false);
   const [addingNew, setAddingNew] = useState(false);
@@ -46,13 +48,7 @@ export function PokemonSlot({ pokemon, playerId, slot, variant }: Props) {
           onDrop={handleDrop}
           onDragLeave={handleDragLeave}
           className={`flex flex-col gap-0.5 p-1.5 rounded-xl border h-full w-full transition-all cursor-grab active:cursor-grabbing select-none overflow-hidden ${
-            isKO
-              ? 'bg-red-950/60 border-red-700'
-              : dragOver
-              ? 'bg-blue-900/40 border-blue-400 ring-2 ring-blue-400'
-              : pokemon.name
-              ? 'bg-gray-800/70 border-gray-600 hover:border-gray-500'
-              : 'bg-gray-800/30 border-gray-700/50 border-dashed hover:border-gray-600'
+            isKO ? theme.cardKO : dragOver ? theme.cardDrag : pokemon.name ? theme.card : theme.cardEmpty
           }`}
         >
           {/* Name */}
@@ -79,9 +75,9 @@ export function PokemonSlot({ pokemon, playerId, slot, variant }: Props) {
           ) : (
             <button
               onClick={() => { if (!pokemon.name) setAddingNew(true); setEditingName(true); }}
-              className="text-xs font-semibold text-left text-gray-200 hover:text-white truncate w-full"
+              className={`text-xs font-semibold text-left hover:text-white truncate w-full ${theme.cardText}`}
             >
-              {pokemon.name || <span className="text-gray-600">+ Add Pokémon</span>}
+              {pokemon.name || <span className={theme.cardEmptyText}>+ Add Pokémon</span>}
             </button>
           )}
 
@@ -142,13 +138,7 @@ export function PokemonSlot({ pokemon, playerId, slot, variant }: Props) {
         onDrop={handleDrop}
         onDragLeave={handleDragLeave}
         className={`flex flex-col gap-0.5 p-1.5 rounded-xl border h-full w-full transition-all cursor-grab active:cursor-grabbing select-none overflow-hidden ${
-          isKO
-            ? 'bg-red-950/60 border-red-600'
-            : dragOver
-            ? 'bg-blue-900/40 border-blue-400 ring-2 ring-blue-400'
-            : pokemon.name
-            ? 'bg-gray-800/80 border-blue-500/50 ring-1 ring-blue-500/20'
-            : 'bg-gray-800/30 border-blue-500/30 border-dashed'
+          isKO ? theme.cardKO : dragOver ? theme.cardDrag : pokemon.name ? theme.cardActive : theme.cardActiveEmpty
         }`}
       >
         {/* Name + Status */}
@@ -176,9 +166,9 @@ export function PokemonSlot({ pokemon, playerId, slot, variant }: Props) {
           <div className="flex items-center gap-1 min-w-0">
             <button
               onClick={() => { if (!pokemon.name) setAddingNew(true); setEditingName(true); }}
-              className="text-xs font-semibold text-left text-blue-200 hover:text-white truncate flex-1"
+              className={`text-xs font-semibold text-left hover:text-white truncate flex-1 ${theme.activeText}`}
             >
-              {pokemon.name || <span className="text-blue-500/60">+ Active</span>}
+              {pokemon.name || <span className={theme.activeEmptyText}>+ Active</span>}
             </button>
             <StatusBadge status={pokemon.status} onChange={status => update({ status })} compact />
           </div>
