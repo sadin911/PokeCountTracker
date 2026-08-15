@@ -24,7 +24,12 @@ function StatusReminders({ playerId }: { playerId: PlayerId }) {
                 <span className="text-[10px] font-bold text-gray-200 truncate">{p.name}</span>
                 <span className={`text-[9px] font-bold px-1 rounded ${si.bgColor} ${si.color}`}>{si.label}</span>
               </div>
-              <p className="text-[9px] text-gray-400 leading-snug mt-0.5">{si.rule}</p>
+              {si.rule && <p className="text-[9px] text-gray-300 leading-snug mt-0.5">{si.rule}</p>}
+              {si.cure && (
+                <p className="text-[9px] text-gray-500 leading-snug mt-0.5">
+                  <span className="text-green-600 font-bold">Cure: </span>{si.cure}
+                </p>
+              )}
             </div>
           </div>
         );
