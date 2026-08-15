@@ -3,21 +3,55 @@ import { useGameStore } from '../../store/gameStore';
 import { PlayerHeader } from './PlayerHeader';
 import { BenchRow } from './BenchRow';
 import { PokemonSlot } from '../pokemon/PokemonSlot';
+import { TurnEnergyButton, TurnSupporterButton } from './TurnTrackers';
 
 interface Props {
   playerId: PlayerId;
   flipped?: boolean;
 }
 
-export function PlayerBoard({ playerId, flipped = false }: Props) {
+function ActiveSection({ playerId }: { playerId: PlayerId }) {
   const active = useGameStore(s => s[playerId].activePokemon);
+  return (
+    <div className="grid grid-cols-5 gap-1.5">
+      <div className="col-span-2">
+        <TurnEnergyButton playerId={playerId} />
+      </div>
+      <div className="aspect-[63/88]">
+        <PokemonSlot pokemon={active} playerId={playerId} slot="active" variant="active" />
+      </div>
+      <div className="col-span-2">
+        <TurnSupporterButton playerId={playerId} />
+      </div>
+    </div>
+  );
+}
+
+export function PlayerBoard({ playerId, flipped = false }: Props) {
   const currentTurn = useGameStore(s => s.currentTurn);
   const displayMode = useGameStore(s => s.displayMode);
   const isCurrentTurn = currentTurn === playerId;
 
-  // faceToFace: P1 rotated 180° so both players face each other across the device
-  // spectator: P1 reversed (flex-col-reverse) so both halves read top-to-bottom from same side
-  // landscape: P1 not flipped at all (each player reads their own half left-to-right)
+  // Landscape: both panels side-by-side, content centered vertically
+  if (displayMode === 'landscape') {
+    return (
+      <div className="flex flex-col h-full overflow-hidden p-1">
+        <div className="flex-1 flex flex-col justify-center gap-1.5 min-h-0">
+          <div className="flex-shrink-0">
+            <ActiveSection playerId={playerId} />
+          </div>
+          <div className="flex-shrink-0">
+            <BenchRow playerId={playerId} />
+          </div>
+        </div>
+        <div className="flex-shrink-0">
+          <PlayerHeader playerId={playerId} isCurrentTurn={isCurrentTurn} />
+        </div>
+      </div>
+    );
+  }
+
+  // faceToFace / spectator: P1 rotated, content toward center divider
   const layoutClass = flipped
     ? displayMode === 'faceToFace'
       ? 'flex-col rotate-180'
@@ -26,23 +60,12 @@ export function PlayerBoard({ playerId, flipped = false }: Props) {
 
   return (
     <div className={`flex gap-1.5 h-full overflow-hidden ${layoutClass}`}>
-      {/* Active — same card size as bench, centered in grid-cols-5 */}
       <div className="flex-shrink-0">
-        <div className="grid grid-cols-5 gap-1.5">
-          <div /><div />
-          <div className="aspect-[63/88]">
-            <PokemonSlot pokemon={active} playerId={playerId} slot="active" variant="active" />
-          </div>
-          <div /><div />
-        </div>
+        <ActiveSection playerId={playerId} />
       </div>
-
-      {/* Bench — 5 cards same size as active */}
       <div className="flex-shrink-0">
         <BenchRow playerId={playerId} />
       </div>
-
-      {/* Header — pushed to outer edge */}
       <div className="mt-auto flex-shrink-0">
         <PlayerHeader playerId={playerId} isCurrentTurn={isCurrentTurn} />
       </div>

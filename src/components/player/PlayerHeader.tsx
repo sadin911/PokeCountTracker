@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import type { PlayerId } from '../../types/game';
 import { useGameStore } from '../../store/gameStore';
+import { useTheme } from '../../hooks/useTheme';
 
 interface Props {
   playerId: PlayerId;
@@ -9,15 +10,16 @@ interface Props {
 
 export function PlayerHeader({ playerId, isCurrentTurn }: Props) {
   const player = useGameStore(s => s[playerId]);
-  const { toggleSupporter, setPrizeCards, setPlayerName } = useGameStore();
+  const { setPrizeCards, setPlayerName } = useGameStore();
   const [editingName, setEditingName] = useState(false);
+  const theme = useTheme();
 
   return (
     <div className={`flex items-center gap-2 px-3 py-1.5 rounded-xl transition-colors ${
-      isCurrentTurn ? 'bg-blue-900/40 border border-blue-600/50' : 'bg-gray-800/50 border border-gray-700/50'
+      isCurrentTurn ? theme.headerOn : theme.headerOff
     }`}>
       {/* Turn indicator */}
-      <div className={`w-2.5 h-2.5 rounded-full flex-shrink-0 ${isCurrentTurn ? 'bg-blue-400 animate-pulse' : 'bg-gray-600'}`} />
+      <div className={`w-2.5 h-2.5 rounded-full flex-shrink-0 ${isCurrentTurn ? `${theme.headerDot} animate-pulse` : theme.headerDotOff}`} />
 
       {/* Player name */}
       {editingName ? (
@@ -31,10 +33,10 @@ export function PlayerHeader({ playerId, isCurrentTurn }: Props) {
         />
       ) : (
         <button onClick={() => setEditingName(true)} className="flex-1 text-left">
-          <span className={`text-sm font-bold ${isCurrentTurn ? 'text-blue-300' : 'text-gray-300'}`}>
+          <span className={`text-sm font-bold ${isCurrentTurn ? theme.headerNameOn : theme.headerNameOff}`}>
             {player.name}
           </span>
-          {isCurrentTurn && <span className="ml-2 text-xs text-blue-400 font-normal">YOUR TURN</span>}
+          {isCurrentTurn && <span className={`ml-1.5 text-sm ${theme.headerTurnBadge}`}>▶</span>}
         </button>
       )}
 
@@ -56,18 +58,6 @@ export function PlayerHeader({ playerId, isCurrentTurn }: Props) {
         </div>
         <span className="text-xs font-mono text-gray-400 w-3">{player.prizeCards}</span>
       </div>
-
-      {/* Supporter toggle */}
-      <button
-        onClick={() => toggleSupporter(playerId)}
-        className={`text-xs font-bold px-2 py-1 rounded-lg border transition-all ${
-          player.supporterUsed
-            ? 'bg-gray-800 text-gray-500 border-gray-600 line-through'
-            : 'bg-green-900/50 text-green-300 border-green-600 hover:bg-green-800/50'
-        }`}
-      >
-        {player.supporterUsed ? '✓ Supporter' : '★ Supporter'}
-      </button>
     </div>
   );
 }

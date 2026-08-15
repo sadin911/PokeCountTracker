@@ -1,6 +1,7 @@
 import { create } from 'zustand';
 import { persist } from 'zustand/middleware';
 import type { GameState, PlayerState, PokemonSlot, PlayerId, SlotKey, EnergyType, StatusCondition } from '../types/game';
+import type { ThemeId } from '../constants/themes';
 
 function makePokemon(id: string): PokemonSlot {
   return {
@@ -27,6 +28,7 @@ function makePlayer(name: string, prefix: string): PlayerState {
       makePokemon(`${prefix}-bench-4`),
     ] as PlayerState['bench'],
     supporterUsed: false,
+    energyAttached: false,
     prizeCards: 6,
   };
 }
@@ -59,6 +61,9 @@ interface GameStore extends GameState {
   displayMode: DisplayMode;
   setDisplayMode: (mode: DisplayMode) => void;
 
+  theme: ThemeId;
+  setTheme: (theme: ThemeId) => void;
+
   // Pokemon mutations
   updatePokemon: (player: PlayerId, slot: SlotKey, changes: Partial<PokemonSlot>) => void;
   setEnergyCount: (player: PlayerId, slot: SlotKey, type: EnergyType, count: number) => void;
@@ -66,6 +71,7 @@ interface GameStore extends GameState {
 
   // Player mutations
   toggleSupporter: (player: PlayerId) => void;
+  toggleEnergyAttached: (player: PlayerId) => void;
   setPrizeCards: (player: PlayerId, count: number) => void;
   setPlayerName: (player: PlayerId, name: string) => void;
 
@@ -83,6 +89,9 @@ export const useGameStore = create<GameStore>()(
 
       displayMode: 'faceToFace' as DisplayMode,
       setDisplayMode: (mode) => set({ displayMode: mode }),
+
+      theme: 'midnight' as ThemeId,
+      setTheme: (theme) => set({ theme }),
 
       updatePokemon: (playerId, slot, changes) =>
         set((state) => {
@@ -117,10 +126,12 @@ export const useGameStore = create<GameStore>()(
 
       toggleSupporter: (playerId) =>
         set((state) => ({
-          [playerId]: {
-            ...state[playerId],
-            supporterUsed: !state[playerId].supporterUsed,
-          },
+          [playerId]: { ...state[playerId], supporterUsed: !state[playerId].supporterUsed },
+        })),
+
+      toggleEnergyAttached: (playerId) =>
+        set((state) => ({
+          [playerId]: { ...state[playerId], energyAttached: !state[playerId].energyAttached },
         })),
 
       setPrizeCards: (playerId, count) =>
@@ -150,6 +161,7 @@ export const useGameStore = create<GameStore>()(
           const updatedPlayer: PlayerState = {
             ...currentPlayer,
             supporterUsed: false,
+            energyAttached: false,
             activePokemon: resetPokemon(currentPlayer.activePokemon),
             bench: currentPlayer.bench.map(resetPokemon) as PlayerState['bench'],
           };
