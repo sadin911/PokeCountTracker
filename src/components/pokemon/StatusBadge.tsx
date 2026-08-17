@@ -1,4 +1,5 @@
-import { useState } from 'react';
+import { useState, useRef } from 'react';
+import { createPortal } from 'react-dom';
 import type { StatusCondition } from '../../types/game';
 import { STATUS_INFO, STATUS_ORDER } from '../../constants/statusConditions';
 
@@ -10,22 +11,37 @@ interface Props {
 
 export function StatusBadge({ status, onChange, compact = false }: Props) {
   const [open, setOpen] = useState(false);
+  const [dropPos, setDropPos] = useState({ top: 0, left: 0 });
+  const btnRef = useRef<HTMLButtonElement>(null);
   const info = STATUS_INFO[status];
+
+  const handleOpen = () => {
+    if (!open && btnRef.current) {
+      const rect = btnRef.current.getBoundingClientRect();
+      const left = Math.min(rect.left, window.innerWidth - 180);
+      setDropPos({ top: rect.bottom + 4, left: Math.max(4, left) });
+    }
+    setOpen(o => !o);
+  };
 
   return (
     <div className="relative">
       <button
-        onClick={() => setOpen(o => !o)}
+        ref={btnRef}
+        onClick={handleOpen}
         className={`flex items-center gap-1 rounded-full px-2 py-0.5 border text-xs font-semibold transition-colors ${info.bgColor} ${info.color} ${info.borderColor}`}
       >
         <span>{info.emoji}</span>
         {!compact && <span>{info.label}</span>}
       </button>
 
-      {open && (
+      {open && createPortal(
         <>
           <div className="fixed inset-0 z-40" onClick={() => setOpen(false)} />
-          <div className="absolute z-50 top-full mt-1 left-0 bg-gray-800 border border-gray-600 rounded-xl shadow-2xl overflow-hidden w-44">
+          <div
+            className="fixed z-50 bg-gray-800 border border-gray-600 rounded-xl shadow-2xl overflow-hidden w-44"
+            style={{ top: dropPos.top, left: dropPos.left }}
+          >
             {STATUS_ORDER.map(cond => {
               const si = STATUS_INFO[cond];
               return (
@@ -42,7 +58,8 @@ export function StatusBadge({ status, onChange, compact = false }: Props) {
               );
             })}
           </div>
-        </>
+        </>,
+        document.body
       )}
     </div>
   );

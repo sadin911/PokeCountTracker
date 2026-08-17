@@ -157,8 +157,8 @@ export const useGameStore = create<GameStore>()(
           const currentPlayerId = state.currentTurn;
           const nextPlayerId: PlayerId = currentPlayerId === 'player1' ? 'player2' : 'player1';
           const currentPlayer = state[currentPlayerId];
+          const nextPlayer = state[nextPlayerId];
 
-          // Reset current player's turn-based toggles and remove Paralysis from their Active
           const resetPokemon = (p: PokemonSlot): PokemonSlot => ({
             ...p,
             abilityUsed: false,
@@ -166,7 +166,7 @@ export const useGameStore = create<GameStore>()(
             status: p.status === 'paralyzed' ? 'none' : p.status,
           });
 
-          const updatedPlayer: PlayerState = {
+          const updatedCurrentPlayer: PlayerState = {
             ...currentPlayer,
             supporterUsed: false,
             energyAttached: false,
@@ -174,8 +174,16 @@ export const useGameStore = create<GameStore>()(
             bench: currentPlayer.bench.map(resetPokemon) as PlayerState['bench'],
           };
 
+          // Reset next player's Nrg/Sup so they always start their turn fresh
+          const updatedNextPlayer: PlayerState = {
+            ...nextPlayer,
+            supporterUsed: false,
+            energyAttached: false,
+          };
+
           return {
-            [currentPlayerId]: updatedPlayer,
+            [currentPlayerId]: updatedCurrentPlayer,
+            [nextPlayerId]: updatedNextPlayer,
             currentTurn: nextPlayerId,
             turnNumber: state.turnNumber + 1,
           };
