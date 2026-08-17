@@ -8,31 +8,44 @@ import { CoinFlip } from '../tools/CoinFlip';
 import { DiceRoller } from '../tools/DiceRoller';
 import { EndTurnModal } from '../layout/EndTurnModal';
 
-function MiniPlayerSection({ playerId }: { playerId: PlayerId }) {
+// DOM order: [Active][Bench][Header]
+// P2 (no flip): Active at top → closest to center ✓   Header at bottom ✓
+// P1 (flipped):  rotate-180 reverses → Header at top ✓   Active at bottom → closest to center ✓
+function MiniPlayerSection({ playerId, flipped }: { playerId: PlayerId; flipped?: boolean }) {
   const player = useGameStore(s => s[playerId]);
   const currentTurn = useGameStore(s => s.currentTurn);
   const isCurrentTurn = currentTurn === playerId;
 
   return (
-    <div className="flex flex-col h-full gap-1">
+    <div className={`flex flex-col h-full gap-1 ${flipped ? 'rotate-180' : ''}`}>
+      {/* Active — front row, closest to center/opponent */}
+      <div className="flex-1 min-h-0 flex justify-center">
+        <div className="w-1/5 h-full">
+          <MiniPokemonCard
+            pokemon={player.activePokemon}
+            playerId={playerId}
+            slot="active"
+            isActive
+          />
+        </div>
+      </div>
+
+      {/* Bench — 5 cards behind Active */}
+      <div className="flex-1 min-h-0 flex gap-1">
+        {player.bench.map((p, i) => (
+          <div key={i} className="flex-1 min-w-0 h-full">
+            <MiniPokemonCard
+              pokemon={p}
+              playerId={playerId}
+              slot={i as 0 | 1 | 2 | 3 | 4}
+            />
+          </div>
+        ))}
+      </div>
+
+      {/* Header — outermost edge, furthest from opponent */}
       <div className="flex-shrink-0">
         <PlayerHeader playerId={playerId} isCurrentTurn={isCurrentTurn} />
-      </div>
-      <div className="flex-1 min-h-0 grid grid-cols-6 gap-1">
-        <MiniPokemonCard
-          pokemon={player.activePokemon}
-          playerId={playerId}
-          slot="active"
-          isActive
-        />
-        {player.bench.map((p, i) => (
-          <MiniPokemonCard
-            key={i}
-            pokemon={p}
-            playerId={playerId}
-            slot={i as 0 | 1 | 2 | 3 | 4}
-          />
-        ))}
       </div>
     </div>
   );
@@ -142,9 +155,9 @@ export function MiniGameBoard() {
 
   return (
     <div className="flex flex-col h-full overflow-hidden p-2 gap-1" style={{ background: theme.appBg }}>
-      {/* P1 — rotated so they can read from the opposite side of the table */}
-      <div className="flex-1 min-h-0 rotate-180">
-        <MiniPlayerSection playerId="player1" />
+      {/* P1 — flipped so P1 can read from the opposite end of the table */}
+      <div className="flex-1 min-h-0">
+        <MiniPlayerSection playerId="player1" flipped />
       </div>
 
       {/* Shared center zone */}
