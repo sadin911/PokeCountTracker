@@ -15,14 +15,14 @@ const MODE_LABELS: Record<string, string> = {
   faceToFace: '⇅ Face-to-Face',
   spectator:  '↓ Same Side',
   landscape:  '⟺ Landscape',
-  mini:       '⊞ Mini',
 };
 
+// Mini is excluded from the cycle — it has its own dedicated button
 const MODE_CYCLE: Record<string, string> = {
   faceToFace: 'spectator',
   spectator:  'landscape',
-  landscape:  'mini',
-  mini:       'faceToFace',
+  landscape:  'faceToFace',
+  mini:       'faceToFace', // fallback if somehow in mini
 };
 
 function ThemePanel({ themeId, onSelect, onClose, open }: {
@@ -132,6 +132,11 @@ export function CenterDivider({ orientation = 'horizontal' }: Props) {
                 className={`text-[9px] ${theme.centerText} hover:text-gray-300 transition-colors`}
               >⟺</button>
               <button
+                onClick={() => setDisplayMode('mini')}
+                className="text-[9px] px-1 py-0.5 rounded bg-indigo-700/60 border border-indigo-500/60 text-indigo-300 hover:bg-indigo-600/60 transition-colors font-bold"
+                title="Mini mode"
+              >⊞</button>
+              <button
                 onClick={() => setShowThemePanel(true)}
                 className={`text-[9px] ${theme.centerText} hover:text-gray-300 transition-colors`}
               >🎨</button>
@@ -179,7 +184,13 @@ export function CenterDivider({ orientation = 'horizontal' }: Props) {
               onClick={() => setDisplayMode(nextMode)}
               title={`Switch to ${MODE_LABELS[nextMode]}`}
               className={`text-[10px] ${theme.centerText} hover:text-gray-300 transition-colors`}
-            >{MODE_LABELS[displayMode]}</button>
+            >{MODE_LABELS[displayMode] ?? '⇅ Face-to-Face'}</button>
+            <span className={`${theme.centerText} text-[10px]`}>·</span>
+            <button
+              onClick={() => setDisplayMode('mini')}
+              className="text-[10px] px-1.5 py-0.5 rounded-md bg-indigo-700/60 border border-indigo-500/60 text-indigo-300 hover:bg-indigo-600/60 transition-colors font-bold"
+              title="Switch to Mini mode"
+            >⊞ Mini</button>
             <span className={`${theme.centerText} text-[10px]`}>·</span>
             <button
               onClick={() => setShowThemePanel(true)}

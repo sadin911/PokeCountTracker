@@ -85,11 +85,12 @@ export function PlayerBoard({ playerId, flipped = false }: Props) {
     );
   }
 
-  // faceToFace / spectator: P1 rotated, content toward center divider
+  // faceToFace: P1 rotated 180° so each player reads from their own side
+  // spectator (same side): both sections use same flex-col order — no rotation, no reversal
   const layoutClass = flipped
     ? displayMode === 'faceToFace'
       ? 'flex-col rotate-180'
-      : 'flex-col-reverse'
+      : 'flex-col'
     : 'flex-col';
 
   return (

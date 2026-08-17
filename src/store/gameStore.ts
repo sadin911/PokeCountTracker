@@ -88,7 +88,7 @@ export const useGameStore = create<GameStore>()(
     (set) => ({
       ...initialState(),
 
-      displayMode: 'faceToFace' as DisplayMode,
+      displayMode: 'mini' as DisplayMode,
       setDisplayMode: (mode) => set({ displayMode: mode }),
 
       theme: 'midnight' as ThemeId,
