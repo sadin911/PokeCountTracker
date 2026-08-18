@@ -193,7 +193,7 @@ export const useGameStore = create<GameStore>()(
     }),
     {
       name: 'pokecounttracker-game',
-      version: 0,
+      version: 1,
     }
   )
 );
