@@ -279,35 +279,11 @@ function MiniSharedZone({ faceToFace, onToggleFaceToFace }: { faceToFace: boolea
   const [showReset, setShowReset] = useState(false);
   const currentPlayerName = currentTurn === 'player1' ? player1.name : player2.name;
 
-  const TrackerPair = ({ pid, label }: { pid: PlayerId; label: string }) => {
-    const p = pid === 'player1' ? player1 : player2;
-    return (
-      <div className="flex flex-col items-center gap-0.5">
-        <span className="text-[8px] text-gray-600 font-bold">{label}</span>
-        <button
-          onClick={() => toggleEnergyAttached(pid)}
-          className={`px-2 py-0.5 rounded text-[9px] font-black border transition-colors ${
-            !p.energyAttached
-              ? 'bg-emerald-900/40 border-emerald-700/60 text-emerald-400'
-              : 'bg-gray-800/40 border-gray-700/40 text-gray-600 line-through'
-          }`}
-        >⚡Nrg</button>
-        <button
-          onClick={() => toggleSupporter(pid)}
-          className={`px-2 py-0.5 rounded text-[9px] font-black border transition-colors ${
-            !p.supporterUsed
-              ? 'bg-amber-900/40 border-amber-700/60 text-amber-400'
-              : 'bg-gray-800/40 border-gray-700/40 text-gray-600 line-through'
-          }`}
-        >★ Sup</button>
-      </div>
-    );
-  };
+  const currentPlayer = currentTurn === 'player1' ? player1 : player2;
 
   return (
     <>
       <div className={`flex items-center gap-2 px-2 py-1.5 border-t border-b ${theme.centerBorder} ${theme.centerBg}`}>
-        <TrackerPair pid="player1" label="P1" />
         <CoinFlip compact />
         <div className="flex-1 flex flex-col items-center gap-0.5 min-w-0">
           <div className="flex items-center gap-1.5 w-full">
@@ -340,7 +316,24 @@ function MiniSharedZone({ faceToFace, onToggleFaceToFace }: { faceToFace: boolea
           </div>
         </div>
         <DiceRoller compact />
-        <TrackerPair pid="player2" label="P2" />
+        <div className="flex flex-col items-center gap-1 flex-shrink-0">
+          <button
+            onClick={() => toggleEnergyAttached(currentTurn)}
+            className={`px-3 py-1.5 rounded-lg text-[11px] font-black border transition-colors ${
+              !currentPlayer.energyAttached
+                ? 'bg-emerald-900/50 border-emerald-700/70 text-emerald-300 shadow-sm shadow-emerald-900/30'
+                : 'bg-gray-800/50 border-gray-700/40 text-gray-600 line-through'
+            }`}
+          >⚡ Nrg</button>
+          <button
+            onClick={() => toggleSupporter(currentTurn)}
+            className={`px-3 py-1.5 rounded-lg text-[11px] font-black border transition-colors ${
+              !currentPlayer.supporterUsed
+                ? 'bg-amber-900/50 border-amber-700/70 text-amber-300 shadow-sm shadow-amber-900/30'
+                : 'bg-gray-800/50 border-gray-700/40 text-gray-600 line-through'
+            }`}
+          >★ Sup</button>
+        </div>
       </div>
 
       {showEndTurn && (
