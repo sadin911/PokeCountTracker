@@ -114,15 +114,12 @@ export function CoinFlip({ compact = false }: { compact?: boolean }) {
 
   const flip = () => {
     if (flipping) return;
+    const outcome = Math.random() < 0.5 ? 'heads' : 'tails';
+    setResult(outcome);
     setFlipping(true);
     setShowOverlay(true);
-    setResult(null);
     setKey(k => k + 1);
-    setTimeout(() => {
-      const outcome = Math.random() < 0.5 ? 'heads' : 'tails';
-      setResult(outcome);
-      setFlipping(false);
-    }, 900);
+    setTimeout(() => setFlipping(false), 900);
   };
 
   const isHeads = result === 'heads';
@@ -139,31 +136,23 @@ export function CoinFlip({ compact = false }: { compact?: boolean }) {
             onClick={() => { if (!flipping) setShowOverlay(false); }}
           >
             <div className="flex flex-col items-center gap-10">
-              {/* Coin */}
-              <AnimatePresence mode="wait">
-                {flipping ? (
-                  <motion.div
-                    key={`spin-${key}`}
-                    className="text-[140px] leading-none"
-                    animate={{ rotateY: [0, 360, 720, 1080] }}
-                    transition={{ duration: 0.85, ease: 'easeInOut' }}
-                    exit={{ opacity: 0 }}
-                  >
-                    🪙
-                  </motion.div>
-                ) : result ? (
-                  <motion.div
-                    key={`face-${result}-${key}`}
-                    initial={{ rotateY: 90, scale: 0.7 }}
-                    animate={{ rotateY: 0, scale: 1 }}
-                    transition={{ type: 'spring', damping: 14, stiffness: 220 }}
-                  >
-                    <CoinFace side={result} size={220} />
-                  </motion.div>
-                ) : (
-                  <motion.div key="idle" className="text-[140px] leading-none">🪙</motion.div>
-                )}
-              </AnimatePresence>
+              {/* Coin — same face during spin and after landing */}
+              <motion.div
+                key={`coin-${key}`}
+                animate={flipping
+                  ? { rotateY: [0, 360, 720, 1080], scale: 1 }
+                  : { rotateY: 0, scale: [1, 1.08, 1] }
+                }
+                transition={flipping
+                  ? { duration: 0.85, ease: 'easeInOut' }
+                  : { duration: 0.35, ease: 'easeOut' }
+                }
+              >
+                {result
+                  ? <CoinFace side={result} size={220} />
+                  : <div className="text-[140px] leading-none">🪙</div>
+                }
+              </motion.div>
 
               {/* Result text */}
               <AnimatePresence mode="wait">
