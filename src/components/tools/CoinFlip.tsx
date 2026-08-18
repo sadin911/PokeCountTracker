@@ -4,87 +4,104 @@ import { motion, AnimatePresence } from 'framer-motion';
 function CoinFace({ side, size = 200 }: { side: 'heads' | 'tails'; size?: number }) {
   const h = side === 'heads';
   const gid = `cg-${side}`;
-  const stars = [0, 72, 144, 216, 288];
-  const dots  = [0, 60, 120, 180, 240, 300];
 
   return (
     <svg width={size} height={size} viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg">
       <defs>
         <radialGradient id={gid} cx="38%" cy="30%" r="70%">
-          <stop offset="0%"   stopColor={h ? '#fef9c3' : '#f1f5f9'} />
-          <stop offset="45%"  stopColor={h ? '#fbbf24' : '#94a3b8'} />
-          <stop offset="100%" stopColor={h ? '#92400e' : '#334155'} />
+          <stop offset="0%"   stopColor={h ? '#fef9c3' : '#1e3a5f'} />
+          <stop offset="50%"  stopColor={h ? '#fbbf24' : '#1e40af'} />
+          <stop offset="100%" stopColor={h ? '#92400e' : '#0c1a3a'} />
         </radialGradient>
-        <radialGradient id={`${gid}-hi`} cx="30%" cy="25%" r="45%">
-          <stop offset="0%"   stopColor="rgba(255,255,255,0.55)" />
+        <radialGradient id={`${gid}-hi`} cx="28%" cy="22%" r="42%">
+          <stop offset="0%"   stopColor="rgba(255,255,255,0.5)" />
           <stop offset="100%" stopColor="rgba(255,255,255,0)" />
         </radialGradient>
       </defs>
 
       {/* Drop shadow */}
-      <ellipse cx="100" cy="197" rx="78" ry="7" fill="rgba(0,0,0,0.45)" />
+      <ellipse cx="100" cy="196" rx="78" ry="7" fill="rgba(0,0,0,0.45)" />
 
-      {/* Outer edge */}
-      <circle cx="100" cy="97" r="92" fill={h ? '#78350f' : '#0f172a'} />
+      {/* Outer rim */}
+      <circle cx="100" cy="96" r="92" fill={h ? '#78350f' : '#0f172a'} />
 
-      {/* Main face */}
-      <circle cx="100" cy="97" r="88" fill={`url(#${gid})`} />
+      {/* Main coin face */}
+      <circle cx="100" cy="96" r="88" fill={`url(#${gid})`} />
 
-      {/* Milled edge notches */}
-      {Array.from({ length: 40 }).map((_, i) => {
-        const a = (i / 40) * Math.PI * 2;
+      {/* Milled edge */}
+      {Array.from({ length: 44 }).map((_, i) => {
+        const a = (i / 44) * Math.PI * 2;
         return (
           <line key={i}
-            x1={100 + 82 * Math.cos(a)} y1={97 + 82 * Math.sin(a)}
-            x2={100 + 89 * Math.cos(a)} y2={97 + 89 * Math.sin(a)}
-            stroke={h ? '#92400e' : '#1e293b'} strokeWidth="2.8"
+            x1={100 + 82 * Math.cos(a)} y1={96 + 82 * Math.sin(a)}
+            x2={100 + 89 * Math.cos(a)} y2={96 + 89 * Math.sin(a)}
+            stroke={h ? '#92400e' : '#1e3a5f'} strokeWidth="2.6"
           />
         );
       })}
 
-      {/* Re-cover face over notch overlap */}
-      <circle cx="100" cy="97" r="81" fill={`url(#${gid})`} />
+      {/* Re-cover notch overlap */}
+      <circle cx="100" cy="96" r="81" fill={`url(#${gid})`} />
 
-      {/* Inner decorative ring */}
-      <circle cx="100" cy="97" r="73" fill="none"
-        stroke={h ? '#b4530955' : '#47556955'} strokeWidth="2" strokeDasharray="6 3" />
+      {h ? (
+        /* ── HEADS: Pikachu face ── */
+        <>
+          {/* Left ear (black tip) */}
+          <polygon points="60,68 45,18 78,55" fill="#1a1a1a" />
+          {/* Left ear (yellow body) */}
+          <polygon points="63,68 50,24 76,56" fill="#fbbf24" />
 
-      {/* Shadow letter (depth) */}
-      <text x="102" y="100" dominantBaseline="central" textAnchor="middle"
-        fontSize="90" fontWeight="900" fontFamily="Georgia,serif"
-        fill={h ? '#78350f' : '#0f172a'} opacity="0.3">
-        {h ? 'H' : 'T'}
-      </text>
-      {/* Main letter */}
-      <text x="100" y="97" dominantBaseline="central" textAnchor="middle"
-        fontSize="90" fontWeight="900" fontFamily="Georgia,serif"
-        fill={h ? '#fef9c3' : '#f1f5f9'}>
-        {h ? 'H' : 'T'}
-      </text>
+          {/* Right ear (black tip) */}
+          <polygon points="140,68 155,18 122,55" fill="#1a1a1a" />
+          {/* Right ear (yellow body) */}
+          <polygon points="137,68 150,24 124,56" fill="#fbbf24" />
 
-      {/* Decorations around ring */}
-      {h
-        ? stars.map((deg, i) => {
-            const rad = (deg - 90) * Math.PI / 180;
-            return (
-              <text key={i}
-                x={100 + 57 * Math.cos(rad)} y={97 + 57 * Math.sin(rad)}
-                dominantBaseline="central" textAnchor="middle"
-                fontSize="13" fill="#b45309">★</text>
-            );
-          })
-        : dots.map((deg, i) => {
-            const rad = (deg - 90) * Math.PI / 180;
-            return (
-              <circle key={i}
-                cx={100 + 57 * Math.cos(rad)} cy={97 + 57 * Math.sin(rad)}
-                r="5" fill={i % 2 === 0 ? '#334155' : '#475569'} />
-            );
-          })
-      }
+          {/* Face */}
+          <circle cx="100" cy="108" r="54" fill="#fde68a" />
+
+          {/* Eyes */}
+          <ellipse cx="81"  cy="96" rx="8" ry="9" fill="#1a1a1a" />
+          <ellipse cx="119" cy="96" rx="8" ry="9" fill="#1a1a1a" />
+          <circle cx="84"   cy="92" r="2.5" fill="white" />
+          <circle cx="122"  cy="92" r="2.5" fill="white" />
+
+          {/* Red cheeks */}
+          <ellipse cx="68"  cy="114" rx="14" ry="10" fill="#f87171" opacity="0.85" />
+          <ellipse cx="132" cy="114" rx="14" ry="10" fill="#f87171" opacity="0.85" />
+
+          {/* Nose */}
+          <ellipse cx="100" cy="106" rx="3.5" ry="2.5" fill="#92400e" />
+
+          {/* Mouth */}
+          <path d="M 89 116 Q 100 126 111 116"
+            stroke="#92400e" strokeWidth="2.5" fill="none" strokeLinecap="round" />
+        </>
+      ) : (
+        /* ── TAILS: Pikachu lightning-bolt tail ── */
+        <>
+          {/* Brown tail base */}
+          <ellipse cx="100" cy="158" rx="14" ry="9" fill="#78350f" />
+
+          {/* Lightning bolt tail */}
+          <polygon
+            points="118,32 82,105 108,105 80,170 145,92 114,92 145,32"
+            fill="#fbbf24"
+          />
+          {/* Inner highlight on bolt */}
+          <polygon
+            points="120,42 90,100 110,100 86,158 135,100 110,100 138,42"
+            fill="#fef3c7" opacity="0.35"
+          />
+          {/* Bolt outline */}
+          <polygon
+            points="118,32 82,105 108,105 80,170 145,92 114,92 145,32"
+            fill="none" stroke="#92400e" strokeWidth="2.5" strokeLinejoin="round"
+          />
+        </>
+      )}
 
       {/* Specular highlight */}
-      <circle cx="100" cy="97" r="81" fill={`url(#${gid}-hi)`} />
+      <circle cx="100" cy="96" r="81" fill={`url(#${gid}-hi)`} />
     </svg>
   );
 }
@@ -112,7 +129,6 @@ export function CoinFlip({ compact = false }: { compact?: boolean }) {
 
   return (
     <>
-      {/* Full-screen result overlay */}
       <AnimatePresence>
         {showOverlay && (
           <motion.div
@@ -122,8 +138,8 @@ export function CoinFlip({ compact = false }: { compact?: boolean }) {
             className="fixed inset-0 z-50 flex items-center justify-center bg-black/85 backdrop-blur-sm cursor-pointer select-none"
             onClick={() => { if (!flipping) setShowOverlay(false); }}
           >
-            <div className="flex flex-col items-center gap-8">
-              {/* Coin: spinning emoji while flipping, SVG face after landing */}
+            <div className="flex flex-col items-center gap-10">
+              {/* Coin */}
               <AnimatePresence mode="wait">
                 {flipping ? (
                   <motion.div
@@ -131,7 +147,7 @@ export function CoinFlip({ compact = false }: { compact?: boolean }) {
                     className="text-[140px] leading-none"
                     animate={{ rotateY: [0, 360, 720, 1080] }}
                     transition={{ duration: 0.85, ease: 'easeInOut' }}
-                    exit={{ opacity: 0, scale: 0.8 }}
+                    exit={{ opacity: 0 }}
                   >
                     🪙
                   </motion.div>
@@ -142,33 +158,30 @@ export function CoinFlip({ compact = false }: { compact?: boolean }) {
                     animate={{ rotateY: 0, scale: 1 }}
                     transition={{ type: 'spring', damping: 14, stiffness: 220 }}
                   >
-                    <CoinFace side={result} size={210} />
+                    <CoinFace side={result} size={220} />
                   </motion.div>
                 ) : (
-                  <motion.div key="idle" className="text-[140px] leading-none">
-                    🪙
-                  </motion.div>
+                  <motion.div key="idle" className="text-[140px] leading-none">🪙</motion.div>
                 )}
               </AnimatePresence>
 
-              {/* Result badge */}
+              {/* Result text */}
               <AnimatePresence mode="wait">
                 {result && !flipping && (
                   <motion.div
                     key={result}
-                    initial={{ scale: 0.3, opacity: 0 }}
-                    animate={{ scale: 1, opacity: 1 }}
-                    transition={{ type: 'spring', damping: 12, stiffness: 200 }}
-                    className={`text-[10rem] font-black leading-none w-52 h-52 flex items-center justify-center rounded-full border-4 ${
+                    initial={{ y: 16, opacity: 0 }}
+                    animate={{ y: 0, opacity: 1 }}
+                    transition={{ type: 'spring', damping: 16, stiffness: 260 }}
+                    className={`text-4xl font-black px-10 py-3 rounded-2xl border-2 tracking-widest ${
                       isHeads
-                        ? 'bg-green-900/90 text-green-300 border-green-500 shadow-[0_0_60px_rgba(34,197,94,0.4)]'
-                        : 'bg-red-900/90 text-red-300 border-red-500 shadow-[0_0_60px_rgba(239,68,68,0.4)]'
+                        ? 'bg-green-900/90 text-green-300 border-green-500 shadow-[0_0_40px_rgba(34,197,94,0.35)]'
+                        : 'bg-red-900/90 text-red-300 border-red-500 shadow-[0_0_40px_rgba(239,68,68,0.35)]'
                     }`}
                   >
-                    {isHeads ? 'H' : 'T'}
+                    {isHeads ? 'HEADS' : 'TAILS'}
                   </motion.div>
                 )}
-
                 {flipping && (
                   <motion.div
                     key="flipping"
