@@ -59,13 +59,13 @@ export function CoinFlip({ compact = false }: { compact?: boolean }) {
                     initial={{ scale: 0.3, opacity: 0 }}
                     animate={{ scale: 1, opacity: 1 }}
                     transition={{ type: 'spring', damping: 12, stiffness: 200 }}
-                    className={`text-6xl font-black px-10 py-5 rounded-3xl border-2 ${
+                    className={`text-[10rem] font-black leading-none w-52 h-52 flex items-center justify-center rounded-full border-4 ${
                       isHeads
-                        ? 'bg-green-900/90 text-green-300 border-green-500 shadow-[0_0_50px_rgba(34,197,94,0.35)]'
-                        : 'bg-red-900/90 text-red-300 border-red-500 shadow-[0_0_50px_rgba(239,68,68,0.35)]'
+                        ? 'bg-green-900/90 text-green-300 border-green-500 shadow-[0_0_60px_rgba(34,197,94,0.4)]'
+                        : 'bg-red-900/90 text-red-300 border-red-500 shadow-[0_0_60px_rgba(239,68,68,0.4)]'
                     }`}
                   >
-                    {isHeads ? '✓ HEADS' : '✕ TAILS'}
+                    {isHeads ? 'H' : 'T'}
                   </motion.div>
                 )}
 
