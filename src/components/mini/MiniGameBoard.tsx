@@ -14,10 +14,13 @@ type DragState =
   | { type: 'pending'; slot: SlotKey; startX: number; startY: number }
   | { type: 'dragging'; source: SlotKey; target: SlotKey | null };
 
-// DOM order: [Active][Bench][Header]
-// P2 (no flip): Active at top → closest to center ✓   Header at bottom ✓
-// P1 (flipped):  rotate-180 reverses → Header at top ✓   Active at bottom → closest to center ✓
-function MiniPlayerSection({ playerId, flipped }: { playerId: PlayerId; flipped?: boolean }) {
+// orientation='normal'    → Active→Bench→Header  (P2, readable from bottom)
+// orientation='reversed'  → Header→Bench→Active  (P1 same-side, readable from bottom, active near center)
+// orientation='faceToFace'→ Active→Bench→Header + rotate-180  (P1 face-to-face, reads from top)
+function MiniPlayerSection({ playerId, orientation = 'normal' }: {
+  playerId: PlayerId;
+  orientation?: 'normal' | 'reversed' | 'faceToFace';
+}) {
   const player = useGameStore(s => s[playerId]);
   const currentTurn = useGameStore(s => s.currentTurn);
   const { swapSlots } = useGameStore();
@@ -204,49 +207,68 @@ function MiniPlayerSection({ playerId, flipped }: { playerId: PlayerId; flipped?
         } as React.HTMLAttributes<HTMLDivElement>
       : {};
 
-  return (
-    <div className={`flex flex-col h-full gap-1 ${flipped ? 'rotate-180' : ''}`}>
-      {/* Active — front row, closest to center/opponent */}
-      {/* Outer: drop target spans full area. Inner: drag source is card-sized only → correct drag image */}
-      <div className="flex-1 min-h-0 flex justify-center" {...activeDropProps}>
-        <div className="w-1/5 h-full" {...activeDragSourceProps}>
+  const activeSection = (
+    <div className="flex-1 min-h-0 flex justify-center" {...activeDropProps}>
+      <div className="w-1/5 h-full" {...activeDragSourceProps}>
+        <MiniPokemonCard
+          pokemon={player.activePokemon}
+          playerId={playerId}
+          slot="active"
+          isActive
+          {...cardProps('active')}
+        />
+      </div>
+    </div>
+  );
+
+  const benchSection = (
+    <div className="flex-1 min-h-0 flex gap-1">
+      {player.bench.map((p, i) => (
+        <div
+          key={i}
+          className="flex-1 min-w-0 h-full"
+          {...wrapperDragProps(i as SlotKey, p.name !== '')}
+        >
           <MiniPokemonCard
-            pokemon={player.activePokemon}
+            pokemon={p}
             playerId={playerId}
-            slot="active"
-            isActive
-            {...cardProps('active')}
+            slot={i as 0 | 1 | 2 | 3 | 4}
+            {...cardProps(i as SlotKey)}
           />
         </div>
-      </div>
+      ))}
+    </div>
+  );
 
-      {/* Bench — 5 cards behind Active */}
-      <div className="flex-1 min-h-0 flex gap-1">
-        {player.bench.map((p, i) => (
-          <div
-            key={i}
-            className="flex-1 min-w-0 h-full"
-            {...wrapperDragProps(i as SlotKey, p.name !== '')}
-          >
-            <MiniPokemonCard
-              pokemon={p}
-              playerId={playerId}
-              slot={i as 0 | 1 | 2 | 3 | 4}
-              {...cardProps(i as SlotKey)}
-            />
-          </div>
-        ))}
-      </div>
+  const headerSection = (
+    <div className="flex-shrink-0">
+      <PlayerHeader playerId={playerId} isCurrentTurn={isCurrentTurn} />
+    </div>
+  );
 
-      {/* Header — outermost edge, furthest from opponent */}
-      <div className="flex-shrink-0">
-        <PlayerHeader playerId={playerId} isCurrentTurn={isCurrentTurn} />
+  // reversed: Header→Bench→Active so active is nearest center without rotation
+  // faceToFace: rotate-180 with Active→Bench→Header (visually Header→Bench→Active)
+  // normal: Active→Bench→Header (P2 default)
+  if (orientation === 'reversed') {
+    return (
+      <div className="flex flex-col h-full gap-1">
+        {headerSection}
+        {benchSection}
+        {activeSection}
       </div>
+    );
+  }
+
+  return (
+    <div className={`flex flex-col h-full gap-1 ${orientation === 'faceToFace' ? 'rotate-180' : ''}`}>
+      {activeSection}
+      {benchSection}
+      {headerSection}
     </div>
   );
 }
 
-function MiniSharedZone() {
+function MiniSharedZone({ faceToFace, onToggleFaceToFace }: { faceToFace: boolean; onToggleFaceToFace: () => void }) {
   const {
     currentTurn, turnNumber, player1, player2,
     resetGame, setDisplayMode,
@@ -302,6 +324,16 @@ function MiniSharedZone() {
             >↺ Reset</button>
             <span className={`text-[9px] ${theme.centerText}`}>·</span>
             <button
+              onClick={onToggleFaceToFace}
+              className={`text-[9px] px-1.5 py-0.5 rounded border transition-colors ${
+                faceToFace
+                  ? 'bg-blue-700/60 border-blue-500/60 text-blue-300'
+                  : `${theme.centerText} border-transparent hover:text-gray-300`
+              }`}
+              title={faceToFace ? 'Switch to same-side' : 'Switch to face-to-face'}
+            >⇅ {faceToFace ? 'FtF' : 'Side'}</button>
+            <span className={`text-[9px] ${theme.centerText}`}>·</span>
+            <button
               onClick={() => setDisplayMode('faceToFace')}
               className={`text-[9px] ${theme.centerText} hover:text-gray-300 transition-colors`}
             >⊞ Mini ×</button>
@@ -335,14 +367,18 @@ function MiniSharedZone() {
 
 export function MiniGameBoard() {
   const theme = useTheme();
+  const [faceToFace, setFaceToFace] = useState(false);
   return (
     <div className="flex flex-col h-full overflow-hidden p-2 gap-1" style={{ background: theme.appBg }}>
       <div className="flex-1 min-h-0">
-        <MiniPlayerSection playerId="player1" flipped />
+        <MiniPlayerSection
+          playerId="player1"
+          orientation={faceToFace ? 'faceToFace' : 'reversed'}
+        />
       </div>
-      <MiniSharedZone />
+      <MiniSharedZone faceToFace={faceToFace} onToggleFaceToFace={() => setFaceToFace(f => !f)} />
       <div className="flex-1 min-h-0">
-        <MiniPlayerSection playerId="player2" />
+        <MiniPlayerSection playerId="player2" orientation="normal" />
       </div>
     </div>
   );
