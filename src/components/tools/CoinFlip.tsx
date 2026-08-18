@@ -110,16 +110,24 @@ export function CoinFlip({ compact = false }: { compact?: boolean }) {
   const [result, setResult] = useState<'heads' | 'tails' | null>(null);
   const [flipping, setFlipping] = useState(false);
   const [showOverlay, setShowOverlay] = useState(false);
-  const [key, setKey] = useState(0);
+  // Tracks cumulative rotation so each flip continues from where it stopped
+  const [spinTarget, setSpinTarget] = useState(0);
 
   const flip = () => {
     if (flipping) return;
-    const outcome = Math.random() < 0.5 ? 'heads' : 'tails';
+    const outcome: 'heads' | 'tails' = Math.random() < 0.5 ? 'heads' : 'tails';
     setResult(outcome);
     setFlipping(true);
     setShowOverlay(true);
-    setKey(k => k + 1);
-    setTimeout(() => setFlipping(false), 900);
+    setSpinTarget(prev => {
+      // heads = 0° mod 360°, tails = 180° mod 360°
+      const faceAngle = outcome === 'heads' ? 0 : 180;
+      const currentMod = ((prev % 360) + 360) % 360;
+      let toTarget = (faceAngle - currentMod + 360) % 360;
+      if (toTarget === 0) toTarget = 360; // ensure at least one rotation to face
+      return prev + 4 * 360 + toTarget;   // 4 full rotations + final arc to face
+    });
+    setTimeout(() => setFlipping(false), 1000);
   };
 
   const isHeads = result === 'heads';
@@ -136,29 +144,32 @@ export function CoinFlip({ compact = false }: { compact?: boolean }) {
             onClick={() => { if (!flipping) setShowOverlay(false); }}
           >
             <div className="flex flex-col items-center gap-10">
-              {/* Coin — same face during spin and after landing */}
-              <motion.div
-                key={`coin-${key}`}
-                animate={flipping
-                  ? { rotateY: [0, 360, 720, 1080], scale: 1 }
-                  : { rotateY: 0, scale: [1, 1.08, 1] }
-                }
-                transition={flipping
-                  ? { duration: 0.85, ease: 'easeInOut' }
-                  : { duration: 0.35, ease: 'easeOut' }
-                }
-              >
-                {result
-                  ? <CoinFace side={result} size={220} />
-                  : <div className="text-[140px] leading-none">🪙</div>
-                }
-              </motion.div>
+              {/* True 3D coin — Pikachu face front, lightning tail back */}
+              <div style={{ perspective: 700 }}>
+                <motion.div
+                  style={{ transformStyle: 'preserve-3d', width: 220, height: 220, position: 'relative' }}
+                  animate={{ rotateY: spinTarget }}
+                  transition={flipping
+                    ? { duration: 1.0, ease: [0.25, 0.46, 0.45, 0.94] }
+                    : { duration: 0 }
+                  }
+                >
+                  {/* Front: heads (Pikachu face) */}
+                  <div style={{ position: 'absolute', inset: 0, backfaceVisibility: 'hidden' }}>
+                    <CoinFace side="heads" size={220} />
+                  </div>
+                  {/* Back: tails (lightning tail) — pre-rotated 180° */}
+                  <div style={{ position: 'absolute', inset: 0, backfaceVisibility: 'hidden', transform: 'rotateY(180deg)' }}>
+                    <CoinFace side="tails" size={220} />
+                  </div>
+                </motion.div>
+              </div>
 
               {/* Result text */}
               <AnimatePresence mode="wait">
                 {result && !flipping && (
                   <motion.div
-                    key={result}
+                    key={`${result}-${spinTarget}`}
                     initial={{ y: 16, opacity: 0 }}
                     animate={{ y: 0, opacity: 1 }}
                     transition={{ type: 'spring', damping: 16, stiffness: 260 }}
