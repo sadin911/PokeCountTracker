@@ -298,25 +298,23 @@ function MiniSharedZone({ faceToFace, onToggleFaceToFace }: { faceToFace: boolea
               className="flex-1 py-1 px-1.5 bg-blue-700 hover:bg-blue-600 active:bg-blue-800 border border-blue-500 rounded-lg text-white text-[9px] font-black transition-all"
             >End {currentPlayerName} →</button>
           </div>
-          <div className="flex items-center gap-1">
+          <div className="flex items-center gap-1.5 mt-0.5">
             <button
               onClick={() => setShowReset(true)}
-              className={`text-[8px] ${theme.centerText} hover:text-gray-300 transition-colors`}
-            >↺</button>
-            <span className={`text-[8px] ${theme.centerText}`}>·</span>
+              className={`px-2 py-1 rounded-md text-[10px] font-bold border ${theme.centerText} border-gray-700/50 hover:text-gray-200 hover:border-gray-500 transition-colors`}
+            >↺ Reset</button>
             <button
               onClick={onToggleFaceToFace}
-              className={`text-[8px] px-1 py-0.5 rounded border transition-colors ${
+              className={`px-2 py-1 rounded-md text-[10px] font-bold border transition-colors ${
                 faceToFace
                   ? 'bg-blue-700/60 border-blue-500/60 text-blue-300'
-                  : `${theme.centerText} border-transparent hover:text-gray-300`
+                  : `${theme.centerText} border-gray-700/50 hover:text-gray-200 hover:border-gray-500`
               }`}
             >⇅ {faceToFace ? 'FtF' : 'Side'}</button>
-            <span className={`text-[8px] ${theme.centerText}`}>·</span>
             <button
               onClick={() => setDisplayMode('faceToFace')}
-              className={`text-[8px] ${theme.centerText} hover:text-gray-300 transition-colors`}
-            >⊞×</button>
+              className={`px-2 py-1 rounded-md text-[10px] font-bold border ${theme.centerText} border-gray-700/50 hover:text-gray-200 hover:border-gray-500 transition-colors`}
+            >⊞ Exit</button>
           </div>
         </div>
         {/* Right: big shared Nrg + Sup */}
