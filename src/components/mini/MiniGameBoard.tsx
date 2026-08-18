@@ -284,52 +284,56 @@ function MiniSharedZone({ faceToFace, onToggleFaceToFace }: { faceToFace: boolea
   return (
     <>
       <div className={`flex items-center gap-2 px-2 py-1.5 border-t border-b ${theme.centerBorder} ${theme.centerBg}`}>
-        <CoinFlip compact />
+        {/* Left: coin + dice stacked */}
+        <div className="flex flex-col items-center gap-1 flex-shrink-0">
+          <CoinFlip compact />
+          <DiceRoller compact />
+        </div>
+        {/* Center: smaller End Turn + options */}
         <div className="flex-1 flex flex-col items-center gap-0.5 min-w-0">
-          <div className="flex items-center gap-1.5 w-full">
-            <span className="text-[10px] text-gray-500 font-mono flex-shrink-0">T{turnNumber}</span>
+          <div className="flex items-center gap-1 w-full">
+            <span className="text-[9px] text-gray-500 font-mono flex-shrink-0">T{turnNumber}</span>
             <button
               onClick={() => setShowEndTurn(true)}
-              className="flex-1 py-1.5 px-2 bg-blue-700 hover:bg-blue-600 active:bg-blue-800 border border-blue-500 rounded-xl text-white text-[11px] font-black transition-all shadow-lg shadow-blue-900/40"
-            >End {currentPlayerName}'s Turn →</button>
+              className="flex-1 py-1 px-1.5 bg-blue-700 hover:bg-blue-600 active:bg-blue-800 border border-blue-500 rounded-lg text-white text-[9px] font-black transition-all"
+            >End {currentPlayerName} →</button>
           </div>
           <div className="flex items-center gap-1">
             <button
               onClick={() => setShowReset(true)}
-              className={`text-[9px] ${theme.centerText} hover:text-gray-300 transition-colors`}
-            >↺ Reset</button>
-            <span className={`text-[9px] ${theme.centerText}`}>·</span>
+              className={`text-[8px] ${theme.centerText} hover:text-gray-300 transition-colors`}
+            >↺</button>
+            <span className={`text-[8px] ${theme.centerText}`}>·</span>
             <button
               onClick={onToggleFaceToFace}
-              className={`text-[9px] px-1.5 py-0.5 rounded border transition-colors ${
+              className={`text-[8px] px-1 py-0.5 rounded border transition-colors ${
                 faceToFace
                   ? 'bg-blue-700/60 border-blue-500/60 text-blue-300'
                   : `${theme.centerText} border-transparent hover:text-gray-300`
               }`}
-              title={faceToFace ? 'Switch to same-side' : 'Switch to face-to-face'}
             >⇅ {faceToFace ? 'FtF' : 'Side'}</button>
-            <span className={`text-[9px] ${theme.centerText}`}>·</span>
+            <span className={`text-[8px] ${theme.centerText}`}>·</span>
             <button
               onClick={() => setDisplayMode('faceToFace')}
-              className={`text-[9px] ${theme.centerText} hover:text-gray-300 transition-colors`}
-            >⊞ Mini ×</button>
+              className={`text-[8px] ${theme.centerText} hover:text-gray-300 transition-colors`}
+            >⊞×</button>
           </div>
         </div>
-        <DiceRoller compact />
-        <div className="flex flex-col items-center gap-1 flex-shrink-0">
+        {/* Right: big shared Nrg + Sup */}
+        <div className="flex flex-col gap-1 flex-shrink-0">
           <button
             onClick={() => toggleEnergyAttached(currentTurn)}
-            className={`px-3 py-1.5 rounded-lg text-[11px] font-black border transition-colors ${
+            className={`px-4 py-2 rounded-xl text-sm font-black border-2 transition-colors ${
               !currentPlayer.energyAttached
-                ? 'bg-emerald-900/50 border-emerald-700/70 text-emerald-300 shadow-sm shadow-emerald-900/30'
+                ? 'bg-emerald-900/60 border-emerald-600 text-emerald-300 shadow-md shadow-emerald-900/40'
                 : 'bg-gray-800/50 border-gray-700/40 text-gray-600 line-through'
             }`}
           >⚡ Nrg</button>
           <button
             onClick={() => toggleSupporter(currentTurn)}
-            className={`px-3 py-1.5 rounded-lg text-[11px] font-black border transition-colors ${
+            className={`px-4 py-2 rounded-xl text-sm font-black border-2 transition-colors ${
               !currentPlayer.supporterUsed
-                ? 'bg-amber-900/50 border-amber-700/70 text-amber-300 shadow-sm shadow-amber-900/30'
+                ? 'bg-amber-900/60 border-amber-600 text-amber-300 shadow-md shadow-amber-900/40'
                 : 'bg-gray-800/50 border-gray-700/40 text-gray-600 line-through'
             }`}
           >★ Sup</button>
