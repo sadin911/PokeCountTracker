@@ -98,7 +98,7 @@ function useFullscreen() {
 }
 
 export function CenterDivider({ orientation = 'horizontal' }: Props) {
-  const { currentTurn, turnNumber, player1, player2, resetGame, displayMode, setDisplayMode, theme: themeId, setTheme } = useGameStore();
+  const { currentTurn, turnNumber, player1, player2, resetGame, displayMode, setDisplayMode, theme: themeId, setTheme, setGameMode } = useGameStore();
   const theme = useTheme();
   const [showEndTurn, setShowEndTurn] = useState(false);
   const [showReset, setShowReset] = useState(false);
@@ -191,6 +191,12 @@ export function CenterDivider({ orientation = 'horizontal' }: Props) {
               className="text-[10px] px-1.5 py-0.5 rounded-md bg-indigo-700/60 border border-indigo-500/60 text-indigo-300 hover:bg-indigo-600/60 transition-colors font-bold"
               title="Switch to Mini mode"
             >⊞ Mini</button>
+            <span className={`${theme.centerText} text-[10px]`}>·</span>
+            <button
+              onClick={() => setGameMode('lorcana')}
+              className="text-[10px] px-1.5 py-0.5 rounded-md bg-amber-800/60 border border-amber-600/60 text-amber-300 hover:bg-amber-700/60 transition-colors font-bold"
+              title="Switch to Lorcana mode"
+            >🪄 Lorcana</button>
             <span className={`${theme.centerText} text-[10px]`}>·</span>
             <button
               onClick={() => setShowThemePanel(true)}

@@ -271,7 +271,7 @@ function MiniPlayerSection({ playerId, orientation = 'normal' }: {
 function MiniSharedZone({ faceToFace, onToggleFaceToFace }: { faceToFace: boolean; onToggleFaceToFace: () => void }) {
   const {
     currentTurn, turnNumber, player1, player2,
-    resetGame, setDisplayMode,
+    resetGame, setDisplayMode, setGameMode,
     toggleEnergyAttached, toggleSupporter,
   } = useGameStore();
   const theme = useTheme();
@@ -315,6 +315,10 @@ function MiniSharedZone({ faceToFace, onToggleFaceToFace }: { faceToFace: boolea
               onClick={() => setDisplayMode('faceToFace')}
               className={`px-2 py-1 rounded-md text-[10px] font-bold border ${theme.centerText} border-gray-700/50 hover:text-gray-200 hover:border-gray-500 transition-colors`}
             >⊞ Exit</button>
+            <button
+              onClick={() => setGameMode('lorcana')}
+              className="px-2 py-1 rounded-md text-[10px] font-bold border bg-amber-800/60 border-amber-600/60 text-amber-300 hover:bg-amber-700/60 transition-colors"
+            >🪄</button>
           </div>
         </div>
         {/* Right: big shared Nrg + Sup */}

@@ -56,10 +56,14 @@ function setSlot(player: PlayerState, slot: SlotKey, pokemon: PokemonSlot): Play
 }
 
 export type DisplayMode = 'faceToFace' | 'spectator' | 'landscape' | 'mini';
+export type GameMode = 'pokemon' | 'lorcana';
 
 interface GameStore extends GameState {
   displayMode: DisplayMode;
   setDisplayMode: (mode: DisplayMode) => void;
+
+  gameMode: GameMode;
+  setGameMode: (mode: GameMode) => void;
 
   theme: ThemeId;
   setTheme: (theme: ThemeId) => void;
@@ -90,6 +94,9 @@ export const useGameStore = create<GameStore>()(
 
       displayMode: 'mini' as DisplayMode,
       setDisplayMode: (mode) => set({ displayMode: mode }),
+
+      gameMode: 'pokemon' as GameMode,
+      setGameMode: (mode) => set({ gameMode: mode }),
 
       theme: 'midnight' as ThemeId,
       setTheme: (theme) => set({ theme }),

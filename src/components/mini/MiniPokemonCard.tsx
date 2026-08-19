@@ -158,11 +158,11 @@ export function MiniPokemonCard({
         <div className="flex items-center gap-0.5 flex-shrink-0">
           <StatusBadge status={pokemon.status} onChange={status => update({ status })} compact />
           <button
-            onClick={() => addDamage(-10)}
+            onClick={() => addDamage(10)}
             className="flex-1 py-0.5 rounded bg-gray-700/60 border border-gray-600/40 text-red-300 text-[9px] font-black active:scale-95 transition-transform"
           >−10</button>
           <button
-            onClick={() => addDamage(10)}
+            onClick={() => addDamage(-10)}
             className="flex-1 py-0.5 rounded bg-gray-700/60 border border-gray-600/40 text-green-300 text-[9px] font-black active:scale-95 transition-transform"
           >+10</button>
         </div>
