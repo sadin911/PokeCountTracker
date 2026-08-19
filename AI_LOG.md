@@ -18,3 +18,7 @@
 [2026-08-19 10:47] Major | Antigravity | Edit | src/components/pokemon/HPPresetPicker.tsx - added 🔍 card zoom preview
 [2026-08-19 10:47] Major | Antigravity | Edit | src/components/pokemon/EvolutionModal.tsx - added 🔍 evolution card zoom
 [2026-08-19 10:47] Major | Antigravity | Edit | src/components/mini/MiniPokemonCard.tsx - added 🔍 zoom for active/bench card
+[2026-08-19 10:50] Major | Antigravity | Command | git tag v1.5.0 - tagged complete multi-mode version
+[2026-08-19 10:51] Major | Antigravity | Delete | src/components/player/PlayerBoard.tsx, CenterDivider.tsx, BenchRow.tsx
+[2026-08-19 10:51] Major | Antigravity | Edit | src/components/mini/MiniGameBoard.tsx - integrated theme & fullscreen
+[2026-08-19 10:51] Major | Antigravity | Edit | src/components/layout/GameBoard.tsx - streamlined to pure Mini mode
