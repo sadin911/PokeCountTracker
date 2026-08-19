@@ -28,6 +28,7 @@ export interface PokemonSlot {
   abilityUsed: boolean;
   attackUsed: boolean;
   imageUrl?: string;
+  officialImageUrl?: string;
   types?: string[];
 }
 

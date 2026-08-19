@@ -48,6 +48,7 @@ export function MiniPokemonCard({
       currentDamage: 0,
       name: card?.name || (pokemon.name ? pokemon.name : 'Pokémon'),
       imageUrl: card?.imageUrl !== undefined ? card.imageUrl : pokemon.imageUrl,
+      officialImageUrl: card?.officialImageUrl !== undefined ? card.officialImageUrl : pokemon.officialImageUrl,
       types: card?.types !== undefined ? card.types : pokemon.types,
     });
     setShowPicker(false);
@@ -58,6 +59,7 @@ export function MiniPokemonCard({
       name: card.name,
       maxHP: card.hp,
       imageUrl: card.imageUrl,
+      officialImageUrl: card.officialImageUrl,
       types: card.types,
       status: 'none', // Clears all status conditions upon evolution per TCG rules
       abilityUsed: false,
@@ -253,6 +255,7 @@ export function MiniPokemonCard({
       {showZoom && pokemon.imageUrl && (
         <CardImagePreviewModal
           imageUrl={pokemon.imageUrl}
+          officialImageUrl={pokemon.officialImageUrl || null}
           cardName={pokemon.name}
           onClose={() => setShowZoom(false)}
         />

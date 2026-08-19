@@ -10,6 +10,7 @@ export interface CardMatchResult {
   name: string;
   hp: number;
   imageUrl?: string;
+  officialImageUrl?: string;
   types?: string[];
   stage?: string;
   setName?: string;
@@ -140,6 +141,7 @@ export function HPPresetPicker({ currentMaxHP, onSelect, onClose }: Props) {
       name: card.name,
       hp: card.hp,
       imageUrl: card.imageUrl || card.imageUrlHigh || undefined,
+      officialImageUrl: card.officialImageUrl || undefined,
       types: card.types || [],
       stage: card.stage,
       setName: card.set?.name,
@@ -324,6 +326,11 @@ export function HPPresetPicker({ currentMaxHP, onSelect, onClose }: Props) {
                             <img
                               src={card.imageUrl}
                               alt={card.name}
+                              onError={e => {
+                                if (card.officialImageUrl && e.currentTarget.src !== card.officialImageUrl) {
+                                  e.currentTarget.src = card.officialImageUrl;
+                                }
+                              }}
                               className="w-full h-full object-cover object-top group-hover:scale-105 transition-transform duration-200"
                               loading="lazy"
                             />
@@ -427,6 +434,7 @@ export function HPPresetPicker({ currentMaxHP, onSelect, onClose }: Props) {
       {previewCard && (
         <CardImagePreviewModal
           imageUrl={previewCard.imageUrl || previewCard.imageUrlHigh || null}
+          officialImageUrl={previewCard.officialImageUrl || null}
           cardName={previewCard.name}
           onClose={() => setPreviewCard(null)}
           onSelect={() => {

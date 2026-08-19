@@ -22,3 +22,7 @@
 [2026-08-19 10:51] Major | Antigravity | Delete | src/components/player/PlayerBoard.tsx, CenterDivider.tsx, BenchRow.tsx
 [2026-08-19 10:51] Major | Antigravity | Edit | src/components/mini/MiniGameBoard.tsx - integrated theme & fullscreen
 [2026-08-19 10:51] Major | Antigravity | Edit | src/components/layout/GameBoard.tsx - streamlined to pure Mini mode
+[2026-08-19 10:52] Major | Antigravity | Command | git tag v2.0.0 - tagged consolidated pure Mini Card version
+[2026-08-19 10:56] Major | Antigravity | Write | scripts/convert-to-webp.mjs - converted 9,144 PNGs to WebP (-77% size)
+[2026-08-19 10:58] Major | Antigravity | Write | scripts/add-official-fallback-urls.mjs - added official CDN fallback
+[2026-08-19 11:02] Major | Antigravity | Edit | src/components/pokemon/ - added onError CDN fallback in all image modals

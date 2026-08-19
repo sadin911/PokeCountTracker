@@ -9,6 +9,7 @@ interface CardEntry {
   image?: string;
   imageUrl?: string | null;
   imageUrlHigh?: string | null;
+  officialImageUrl?: string | null;
   category?: string;
   set?: { id?: string; name: string };
   types?: string[];
@@ -118,6 +119,11 @@ export function PokemonNameInput({
                     <img
                       src={imgUrl}
                       alt={entry.name}
+                      onError={e => {
+                        if (entry.officialImageUrl && e.currentTarget.src !== entry.officialImageUrl) {
+                          e.currentTarget.src = entry.officialImageUrl;
+                        }
+                      }}
                       className="w-full h-full object-contain rounded bg-gray-950 hover:ring-2 hover:ring-blue-400 transition-all"
                       loading="lazy"
                     />
@@ -143,20 +149,23 @@ export function PokemonNameInput({
 
                 {entry.hp && (
                   <span className={`text-xs font-mono ml-2 flex-shrink-0 px-1.5 py-0.5 rounded font-semibold ${
-                    i === highlighted ? 'bg-green-600/40 text-green-300' : 'bg-gray-800 text-gray-400'
+                    entry.hp >= 250 ? 'bg-red-950 text-red-300' :
+                    entry.hp >= 150 ? 'bg-yellow-950 text-yellow-300' :
+                    'bg-gray-700 text-gray-300'
                   }`}>
                     {entry.hp} HP
                   </span>
                 )}
 
+                {/* Direct 🔍 Zoom Button */}
                 {imgUrl && (
                   <button
                     type="button"
-                    onClick={e => {
+                    onMouseDown={e => {
                       e.stopPropagation();
                       setPreviewCard(entry);
                     }}
-                    className="opacity-0 group-hover:opacity-100 p-1 hover:bg-gray-600 rounded text-xs transition-opacity"
+                    className="ml-1.5 p-1 rounded-md bg-gray-700/60 hover:bg-blue-600 text-gray-300 hover:text-white text-xs transition-colors flex-shrink-0"
                     title="ขยายภาพการ์ด"
                   >
                     🔍
@@ -171,6 +180,7 @@ export function PokemonNameInput({
       {previewCard && (
         <CardImagePreviewModal
           imageUrl={previewCard.imageUrl || previewCard.imageUrlHigh || (previewCard.image ? `${previewCard.image}/high.webp` : null)}
+          officialImageUrl={previewCard.officialImageUrl || null}
           cardName={previewCard.name}
           onClose={() => setPreviewCard(null)}
           onSelect={() => {

@@ -4,12 +4,13 @@ import { motion, AnimatePresence } from 'framer-motion';
 
 interface Props {
   imageUrl: string | null;
+  officialImageUrl?: string | null;
   cardName?: string;
   onClose: () => void;
   onSelect?: () => void;
 }
 
-export function CardImagePreviewModal({ imageUrl, cardName, onClose, onSelect }: Props) {
+export function CardImagePreviewModal({ imageUrl, officialImageUrl, cardName, onClose, onSelect }: Props) {
   useEffect(() => {
     const handleKeyDown = (e: KeyboardEvent) => {
       if (e.key === 'Escape') onClose();
@@ -39,6 +40,11 @@ export function CardImagePreviewModal({ imageUrl, cardName, onClose, onSelect }:
             <img
               src={imageUrl}
               alt={cardName || 'Pokemon Card'}
+              onError={e => {
+                if (officialImageUrl && (e.currentTarget.src !== officialImageUrl)) {
+                  e.currentTarget.src = officialImageUrl;
+                }
+              }}
               className="w-full h-full object-contain"
             />
 

@@ -187,6 +187,11 @@ export function EvolutionModal({ pokemon, onSelectEvolution, onClose }: Props) {
                         <img
                           src={card.imageUrl}
                           alt={card.name}
+                          onError={e => {
+                            if (card.officialImageUrl && e.currentTarget.src !== card.officialImageUrl) {
+                              e.currentTarget.src = card.officialImageUrl;
+                            }
+                          }}
                           className="w-full h-full object-cover object-top group-hover:scale-105 transition-transform duration-200"
                           loading="lazy"
                         />
@@ -280,6 +285,7 @@ export function EvolutionModal({ pokemon, onSelectEvolution, onClose }: Props) {
       {previewCard && (
         <CardImagePreviewModal
           imageUrl={previewCard.imageUrl || previewCard.imageUrlHigh || null}
+          officialImageUrl={previewCard.officialImageUrl || null}
           cardName={previewCard.name}
           onClose={() => setPreviewCard(null)}
           onSelect={() => {
