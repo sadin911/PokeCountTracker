@@ -5,6 +5,8 @@ import { useTheme } from '../../hooks/useTheme';
 import { useIsMobile } from '../../hooks/useIsMobile';
 import { HPBar } from './HPBar';
 import { HPPresetPicker } from './HPPresetPicker';
+import { EvolutionModal } from './EvolutionModal';
+import { CardImagePreviewModal } from './CardImagePreviewModal';
 import { DamageCounter } from './DamageCounter';
 import { StatusBadge } from './StatusBadge';
 import { EnergyTracker } from './EnergyTracker';
@@ -26,6 +28,8 @@ export function PokemonSlot({ pokemon, playerId, slot, variant }: Props) {
   const theme = useTheme();
   const isMobile = useIsMobile();
   const [showHPPicker, setShowHPPicker] = useState(false);
+  const [showEvoModal, setShowEvoModal] = useState(false);
+  const [showZoom, setShowZoom] = useState(false);
   const [showModal, setShowModal] = useState(false);
   const [editingName, setEditingName] = useState(false);
   const [addingNew, setAddingNew] = useState(false);
@@ -240,6 +244,24 @@ export function PokemonSlot({ pokemon, playerId, slot, variant }: Props) {
               onToggleAttack={() => update({ attackUsed: !pokemon.attackUsed })}
               compact
             />
+            <div className="flex items-center gap-1">
+              <button
+                onClick={() => setShowEvoModal(true)}
+                className="text-[10px] text-purple-300 bg-purple-950/70 border border-purple-800/70 rounded-lg px-2 py-0.5 hover:bg-purple-900 active:scale-95 flex items-center gap-1 font-bold shadow-sm"
+                title="พัฒนาร่าง (Evolve)"
+              >
+                <span>🧬</span> พัฒนาร่าง
+              </button>
+              {pokemon.imageUrl && (
+                <button
+                  onClick={() => setShowZoom(true)}
+                  className="text-[10px] text-blue-300 bg-blue-950/70 border border-blue-800/70 rounded-lg px-2 py-0.5 hover:bg-blue-900 active:scale-95 flex items-center gap-1 font-bold shadow-sm"
+                  title="ขยายภาพการ์ด"
+                >
+                  <span>🔍</span> ขยายภาพ
+                </button>
+              )}
+            </div>
             {removeBtn}
           </>
         )}
@@ -248,8 +270,44 @@ export function PokemonSlot({ pokemon, playerId, slot, variant }: Props) {
       {showHPPicker && (
         <HPPresetPicker
           currentMaxHP={pokemon.maxHP}
-          onSelect={hp => { update({ maxHP: hp, currentDamage: 0 }); setShowHPPicker(false); }}
+          onSelect={(hp, card) => {
+            update({
+              maxHP: hp,
+              currentDamage: 0,
+              ...(card?.name ? { name: card.name } : {}),
+              ...(card?.imageUrl !== undefined ? { imageUrl: card.imageUrl } : {}),
+              ...(card?.types !== undefined ? { types: card.types } : {}),
+            });
+            setShowHPPicker(false);
+          }}
           onClose={() => setShowHPPicker(false)}
+        />
+      )}
+
+      {showEvoModal && (
+        <EvolutionModal
+          pokemon={pokemon}
+          onSelectEvolution={card => {
+            update({
+              name: card.name,
+              maxHP: card.hp,
+              imageUrl: card.imageUrl,
+              types: card.types,
+              status: 'none',
+              abilityUsed: false,
+              attackUsed: false,
+            });
+            setShowEvoModal(false);
+          }}
+          onClose={() => setShowEvoModal(false)}
+        />
+      )}
+
+      {showZoom && pokemon.imageUrl && (
+        <CardImagePreviewModal
+          imageUrl={pokemon.imageUrl}
+          cardName={pokemon.name}
+          onClose={() => setShowZoom(false)}
         />
       )}
     </>

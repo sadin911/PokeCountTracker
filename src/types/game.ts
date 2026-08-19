@@ -27,6 +27,8 @@ export interface PokemonSlot {
   energies: Partial<Record<EnergyType, number>>;
   abilityUsed: boolean;
   attackUsed: boolean;
+  imageUrl?: string;
+  types?: string[];
 }
 
 export type PlayerId = 'player1' | 'player2';

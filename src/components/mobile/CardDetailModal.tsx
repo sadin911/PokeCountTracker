@@ -3,6 +3,8 @@ import { motion } from 'framer-motion';
 import type { PlayerId, SlotKey, PokemonSlot as PokemonSlotType, EnergyType } from '../../types/game';
 import { useGameStore } from '../../store/gameStore';
 import { HPPresetPicker } from '../pokemon/HPPresetPicker';
+import { EvolutionModal } from '../pokemon/EvolutionModal';
+import { CardImagePreviewModal } from '../pokemon/CardImagePreviewModal';
 import { PokemonNameInput } from '../pokemon/PokemonNameInput';
 import { EnergyTracker } from '../pokemon/EnergyTracker';
 import { AbilityTracker } from '../pokemon/AbilityTracker';
@@ -18,6 +20,8 @@ interface Props {
 export function CardDetailModal({ pokemon, playerId, slot, onClose }: Props) {
   const { updatePokemon, clearPokemon, setEnergyCount } = useGameStore();
   const [showHPPicker, setShowHPPicker] = useState(false);
+  const [showEvoModal, setShowEvoModal] = useState(false);
+  const [showZoom, setShowZoom] = useState(false);
   const [editingName, setEditingName] = useState(!pokemon.name);
 
   const update = (changes: Partial<PokemonSlotType>) => updatePokemon(playerId, slot, changes);
@@ -83,13 +87,30 @@ export function CardDetailModal({ pokemon, playerId, slot, onClose }: Props) {
           {/* HP */}
           <div>
             <div className="flex items-center justify-between mb-2">
-              <span className="text-xs text-gray-500 font-semibold uppercase tracking-wider">HP</span>
-              <button
-                onClick={() => setShowHPPicker(true)}
-                className="text-xs text-gray-400 border border-gray-700 rounded-lg px-2.5 py-1.5 hover:text-white hover:border-gray-500 active:bg-gray-800"
-              >
-                Max {pokemon.maxHP} ✎
-              </button>
+              <span className="text-xs text-gray-500 font-semibold uppercase tracking-wider">HP & วิวัฒนาการ</span>
+              <div className="flex items-center gap-2">
+                {pokemon.imageUrl && (
+                  <button
+                    onClick={() => setShowZoom(true)}
+                    className="text-xs text-blue-300 bg-blue-950/80 border border-blue-700/80 rounded-xl px-2.5 py-1.5 hover:bg-blue-900 active:scale-95 flex items-center gap-1 font-bold shadow-sm"
+                    title="ขยายภาพการ์ด"
+                  >
+                    <span>🔍</span> ขยายภาพ
+                  </button>
+                )}
+                <button
+                  onClick={() => setShowEvoModal(true)}
+                  className="text-xs text-purple-300 bg-purple-950/80 border border-purple-700/80 rounded-xl px-2.5 py-1.5 hover:bg-purple-900 active:scale-95 flex items-center gap-1 font-bold shadow-sm"
+                >
+                  <span>🧬</span> พัฒนาร่าง
+                </button>
+                <button
+                  onClick={() => setShowHPPicker(true)}
+                  className="text-xs text-gray-300 bg-gray-800 border border-gray-700 rounded-xl px-2.5 py-1.5 hover:text-white hover:border-gray-500 active:bg-gray-750"
+                >
+                  Max {pokemon.maxHP} ✎
+                </button>
+              </div>
             </div>
             <div className="h-4 bg-gray-800 rounded-full overflow-hidden mb-2">
               <div
@@ -210,8 +231,44 @@ export function CardDetailModal({ pokemon, playerId, slot, onClose }: Props) {
       {showHPPicker && (
         <HPPresetPicker
           currentMaxHP={pokemon.maxHP}
-          onSelect={hp => { update({ maxHP: hp, currentDamage: 0 }); setShowHPPicker(false); }}
+          onSelect={(hp, card) => {
+            update({
+              maxHP: hp,
+              currentDamage: 0,
+              ...(card?.name ? { name: card.name } : {}),
+              ...(card?.imageUrl !== undefined ? { imageUrl: card.imageUrl } : {}),
+              ...(card?.types !== undefined ? { types: card.types } : {}),
+            });
+            setShowHPPicker(false);
+          }}
           onClose={() => setShowHPPicker(false)}
+        />
+      )}
+
+      {showEvoModal && (
+        <EvolutionModal
+          pokemon={pokemon}
+          onSelectEvolution={card => {
+            update({
+              name: card.name,
+              maxHP: card.hp,
+              imageUrl: card.imageUrl,
+              types: card.types,
+              status: 'none',
+              abilityUsed: false,
+              attackUsed: false,
+            });
+            setShowEvoModal(false);
+          }}
+          onClose={() => setShowEvoModal(false)}
+        />
+      )}
+
+      {showZoom && pokemon.imageUrl && (
+        <CardImagePreviewModal
+          imageUrl={pokemon.imageUrl}
+          cardName={pokemon.name}
+          onClose={() => setShowZoom(false)}
         />
       )}
     </div>

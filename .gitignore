@@ -63,3 +63,7 @@ coverage
 
 # Claude / Agent local configs (optional)
 .claude/settings.local.json
+
+# Local dataset & downloaded card images (large binaries)
+public/card-images/
+data/
