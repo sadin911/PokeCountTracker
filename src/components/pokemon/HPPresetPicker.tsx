@@ -21,19 +21,36 @@ export interface CardMatchResult {
 
 interface Props {
   currentMaxHP: number;
+  initialType?: EnergyType | null;
   onSelect: (hp: number, card?: CardMatchResult) => void;
   onClose: () => void;
 }
 
 type StageFilter = 'ALL' | 'BASIC' | 'EVO' | 'EX';
 
-export function HPPresetPicker({ currentMaxHP, onSelect, onClose }: Props) {
+export function HPPresetPicker({ currentMaxHP, initialType, onSelect, onClose }: Props) {
   const [custom, setCustom] = useState('');
   const [selectedHP, setSelectedHP] = useState<number | null>(null);
-  const [selectedType, setSelectedType] = useState<EnergyType | 'ALL'>('ALL');
+  const [selectedType, setSelectedType] = useState<EnergyType | 'ALL'>(() => {
+    if (initialType) return initialType;
+    try {
+      const saved = localStorage.getItem('pokecount_last_selected_type');
+      if (saved && (saved === 'ALL' || ENERGY_TYPES.some(t => t.type === saved))) {
+        return saved as EnergyType | 'ALL';
+      }
+    } catch (e) {}
+    return 'ALL';
+  });
   const [selectedStage, setSelectedStage] = useState<StageFilter>('ALL');
   const [searchFilter, setSearchFilter] = useState('');
   const [previewCard, setPreviewCard] = useState<any | null>(null);
+
+  const handleTypeSelect = (type: EnergyType | 'ALL') => {
+    setSelectedType(type);
+    try {
+      localStorage.setItem('pokecount_last_selected_type', type);
+    } catch (e) {}
+  };
 
   // Find and organize matching cards when selectedHP is chosen
   const matchingCards = useMemo(() => {
@@ -138,6 +155,12 @@ export function HPPresetPicker({ currentMaxHP, onSelect, onClose }: Props) {
   };
 
   const handleCardChosen = (card: any) => {
+    if (card.types && card.types.length > 0) {
+      try {
+        localStorage.setItem('pokecount_last_selected_type', card.types[0]);
+      } catch (e) {}
+    }
+
     onSelect(selectedHP || card.hp, {
       name: card.name,
       hp: card.hp,
@@ -241,7 +264,7 @@ export function HPPresetPicker({ currentMaxHP, onSelect, onClose }: Props) {
             {/* 1. Horizontal Energy Type Chips (1-Tap Fast Filter) */}
             <div className="flex items-center gap-1.5 overflow-x-auto pb-2 scrollbar-none flex-shrink-0">
               <button
-                onClick={() => setSelectedType('ALL')}
+                onClick={() => handleTypeSelect('ALL')}
                 className={`px-2.5 py-1 rounded-xl text-[11px] font-bold flex-shrink-0 transition-all active:scale-95 ${
                   selectedType === 'ALL'
                     ? 'bg-blue-600 text-white shadow-md'
@@ -255,7 +278,7 @@ export function HPPresetPicker({ currentMaxHP, onSelect, onClose }: Props) {
                 return (
                   <button
                     key={t.type}
-                    onClick={() => setSelectedType(isSel ? 'ALL' : t.type)}
+                    onClick={() => handleTypeSelect(isSel ? 'ALL' : t.type)}
                     className={`flex items-center gap-1 px-2 py-1 rounded-xl text-[11px] font-bold flex-shrink-0 transition-all active:scale-95 ${
                       isSel
                         ? `${t.bgColor} ${t.color} ring-2 ring-blue-400 shadow-md`

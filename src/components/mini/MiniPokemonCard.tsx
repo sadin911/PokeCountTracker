@@ -242,7 +242,12 @@ export function MiniPokemonCard({
       </div>
 
       {showPicker && (
-        <HPPresetPicker currentMaxHP={pokemon.maxHP} onSelect={onPickHP} onClose={() => setShowPicker(false)} />
+        <HPPresetPicker
+          currentMaxHP={pokemon.maxHP}
+          initialType={firstType || undefined}
+          onSelect={onPickHP}
+          onClose={() => setShowPicker(false)}
+        />
       )}
 
       {showEvoModal && (
