@@ -1,6 +1,7 @@
 import { useState, useRef, useEffect, useCallback } from 'react';
 import rawData from '../../data/pokemonNames.json';
 import { CardImagePreviewModal } from './CardImagePreviewModal';
+import { resolveCardImageUrl, handleCardImageError } from '../../utils/cardImage';
 
 interface CardEntry {
   id?: string;
@@ -117,13 +118,9 @@ export function PokemonNameInput({
                 >
                   {imgUrl ? (
                     <img
-                      src={imgUrl}
+                      src={resolveCardImageUrl(imgUrl)}
                       alt={entry.name}
-                      onError={e => {
-                        if (entry.officialImageUrl && e.currentTarget.src !== entry.officialImageUrl) {
-                          e.currentTarget.src = entry.officialImageUrl;
-                        }
-                      }}
+                      onError={e => handleCardImageError(e, imgUrl, entry.officialImageUrl)}
                       className="w-full h-full object-contain rounded bg-gray-950 hover:ring-2 hover:ring-blue-400 transition-all"
                       loading="lazy"
                     />

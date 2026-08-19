@@ -5,6 +5,7 @@ import pokemonCardData from '../../data/pokemonNames.json';
 import { ENERGY_TYPES, ENERGY_MAP } from '../../constants/energyTypes';
 import type { EnergyType } from '../../types/game';
 import { CardImagePreviewModal } from './CardImagePreviewModal';
+import { resolveCardImageUrl, handleCardImageError } from '../../utils/cardImage';
 
 export interface CardMatchResult {
   name: string;
@@ -324,13 +325,9 @@ export function HPPresetPicker({ currentMaxHP, onSelect, onClose }: Props) {
                         <div className="w-full aspect-[3/4] bg-gray-950 rounded-xl overflow-hidden mb-1.5 flex items-center justify-center border border-gray-700/50 group-hover:border-blue-400/60 relative">
                           {card.imageUrl ? (
                             <img
-                              src={card.imageUrl}
+                              src={resolveCardImageUrl(card.imageUrl)}
                               alt={card.name}
-                              onError={e => {
-                                if (card.officialImageUrl && e.currentTarget.src !== card.officialImageUrl) {
-                                  e.currentTarget.src = card.officialImageUrl;
-                                }
-                              }}
+                              onError={e => handleCardImageError(e, card.imageUrl, card.officialImageUrl)}
                               className="w-full h-full object-cover object-top group-hover:scale-105 transition-transform duration-200"
                               loading="lazy"
                             />

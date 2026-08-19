@@ -7,6 +7,7 @@ import { EvolutionModal } from '../pokemon/EvolutionModal';
 import { CardImagePreviewModal } from '../pokemon/CardImagePreviewModal';
 import { ENERGY_MAP } from '../../constants/energyTypes';
 import type { EnergyType } from '../../types/game';
+import { resolveCardImageUrl } from '../../utils/cardImage';
 
 interface Props {
   pokemon: PokemonSlotType;
@@ -128,7 +129,7 @@ export function MiniPokemonCard({
         {pokemon.imageUrl && (
           <div
             className="absolute inset-0 bg-cover bg-top opacity-15 pointer-events-none filter blur-[0.5px]"
-            style={{ backgroundImage: `url(${pokemon.imageUrl})` }}
+            style={{ backgroundImage: `url(${resolveCardImageUrl(pokemon.imageUrl)})` }}
           />
         )}
 

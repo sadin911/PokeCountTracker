@@ -1,6 +1,7 @@
 import { useEffect } from 'react';
 import { createPortal } from 'react-dom';
 import { motion, AnimatePresence } from 'framer-motion';
+import { resolveCardImageUrl, handleCardImageError } from '../../utils/cardImage';
 
 interface Props {
   imageUrl: string | null;
@@ -21,6 +22,8 @@ export function CardImagePreviewModal({ imageUrl, officialImageUrl, cardName, on
 
   if (!imageUrl) return null;
 
+  const resolvedUrl = resolveCardImageUrl(imageUrl);
+
   return createPortal(
     <AnimatePresence>
       <div
@@ -38,13 +41,9 @@ export function CardImagePreviewModal({ imageUrl, officialImageUrl, cardName, on
           {/* Card Image Container with Shadow */}
           <div className="relative w-full max-w-[320px] sm:max-w-[360px] aspect-[2.5/3.5] rounded-2xl overflow-hidden shadow-[0_0_50px_rgba(0,0,0,0.9)] border border-gray-700/80 bg-gray-950 flex items-center justify-center">
             <img
-              src={imageUrl}
+              src={resolvedUrl}
               alt={cardName || 'Pokemon Card'}
-              onError={e => {
-                if (officialImageUrl && (e.currentTarget.src !== officialImageUrl)) {
-                  e.currentTarget.src = officialImageUrl;
-                }
-              }}
+              onError={e => handleCardImageError(e, imageUrl, officialImageUrl)}
               className="w-full h-full object-contain"
             />
 
