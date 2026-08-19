@@ -27,3 +27,4 @@
 [2026-08-19 10:58] Major | Antigravity | Write | scripts/add-official-fallback-urls.mjs - added official CDN fallback
 [2026-08-19 11:02] Major | Antigravity | Edit | src/components/pokemon/ - added onError CDN fallback in all image modals
 [2026-08-19 11:34] Major | Antigravity | Write | scripts/upload-to-r2.mjs - uploaded 9,144 WebP cards to Cloudflare R2
+[2026-08-19 11:47] Major | Antigravity | Command | git push origin main --tags - deployed v1.5.0 & v2.0.0 to GitHub
