@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { View, Text, TouchableOpacity, ScrollView } from 'react-native';
+import { View, Text, TouchableOpacity } from 'react-native';
 import * as Haptics from 'expo-haptics';
 import type { PokemonSlot as PokemonSlotType, PlayerId, SlotKey } from '../../types/game';
 import { useGameStore } from '../../store/gameStore';
@@ -19,7 +19,7 @@ export function PokemonSlot({ pokemon, playerId, slot, isActive, size = 'small' 
   const update = (changes: Partial<PokemonSlotType>) => updatePokemon(playerId, slot, changes);
   const addDamage = (amt: number) => {
     const next = Math.max(0, pokemon.currentDamage + amt);
-    if (next >= pokemon.maxHP && pokemon.maxHP > 0) Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Heavy);
+    if (next >= pokemon.maxHP && pokemon.maxHP > 0 && pokemon.currentDamage < pokemon.maxHP) Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Heavy);
     update({ currentDamage: next });
   };
 

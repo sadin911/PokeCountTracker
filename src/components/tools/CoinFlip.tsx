@@ -21,7 +21,7 @@ export function CoinFlip({ compact = false }: { compact?: boolean }) {
   };
 
   const animStyle = useAnimatedStyle(() => ({
-    transform: [{ rotateY: `${rotateY.value % 360}deg` }],
+    transform: [{ rotateY: `${rotateY.value}deg` }],
   }));
 
   return (
