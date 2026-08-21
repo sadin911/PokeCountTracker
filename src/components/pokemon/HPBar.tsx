@@ -1,29 +1,13 @@
+import { View } from 'react-native';
 
-interface Props {
-  maxHP: number;
-  currentDamage: number;
-}
+interface Props { current: number; max: number; }
 
-export function HPBar({ maxHP, currentDamage }: Props) {
-  const currentHP = Math.max(0, maxHP - currentDamage);
-  const pct = maxHP > 0 ? (currentHP / maxHP) * 100 : 0;
-
-  const barColor =
-    pct > 50 ? 'bg-green-500' :
-    pct > 25 ? 'bg-yellow-500' :
-    'bg-red-500';
-
+export function HPBar({ current, max }: Props) {
+  const pct = max > 0 ? Math.max(0, Math.min(1, current / max)) : 1;
+  const color = pct > 0.5 ? 'bg-green-500' : pct > 0.25 ? 'bg-yellow-500' : 'bg-red-500';
   return (
-    <div className="flex items-center gap-1.5 w-full">
-      <div className="flex-1 h-2.5 bg-gray-700 rounded-full overflow-hidden">
-        <div
-          className={`h-full rounded-full transition-all duration-300 ${barColor}`}
-          style={{ width: `${pct}%` }}
-        />
-      </div>
-      <span className="text-xs text-gray-300 font-mono whitespace-nowrap">
-        {currentHP}/{maxHP}
-      </span>
-    </div>
+    <View className="h-1.5 bg-gray-700/60 rounded-full overflow-hidden">
+      <View className={`h-full rounded-full ${color}`} style={{ width: `${pct * 100}%` }} />
+    </View>
   );
 }
