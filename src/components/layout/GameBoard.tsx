@@ -4,11 +4,14 @@ import { useGameStore } from '../../store/gameStore';
 import { useTheme } from '../../hooks/useTheme';
 import { PlayerBoard } from '../player/PlayerBoard';
 import { CenterDivider } from './CenterDivider';
+import { MiniGameBoard } from '../mini/MiniGameBoard';
 
 export function GameBoard() {
   const insets = useSafeAreaInsets();
   const theme = useTheme();
-  const currentTurn = useGameStore((s) => s.currentTurn);
+  const { currentTurn, displayMode } = useGameStore((s) => ({ currentTurn: s.currentTurn, displayMode: s.displayMode }));
+
+  if (displayMode === 'mini') return <MiniGameBoard />;
 
   return (
     <View className={`flex-1 ${theme.appBg}`} style={{ paddingTop: insets.top, paddingBottom: insets.bottom }}>
