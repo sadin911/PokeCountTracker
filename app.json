@@ -1,0 +1,14 @@
+{
+  "expo": {
+    "name": "PokéCount",
+    "slug": "pokecounttracker",
+    "version": "1.0.0",
+    "orientation": "default",
+    "scheme": "pokecounttracker",
+    "platforms": ["ios"],
+    "ios": {
+      "supportsTablet": true,
+      "bundleIdentifier": "com.sadin.pokecounttracker"
+    }
+  }
+}
