@@ -1,5 +1,6 @@
 import { create } from 'zustand';
-import { persist } from 'zustand/middleware';
+import { persist, createJSONStorage } from 'zustand/middleware';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 import type { GameState, PlayerState, PokemonSlot, PlayerId, SlotKey, EnergyType, StatusCondition } from '../types/game';
 import type { ThemeId } from '../constants/themes';
 
@@ -201,6 +202,7 @@ export const useGameStore = create<GameStore>()(
     {
       name: 'pokecounttracker-game',
       version: 1,
+      storage: createJSONStorage(() => AsyncStorage),
     }
   )
 );

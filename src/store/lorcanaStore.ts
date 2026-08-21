@@ -1,5 +1,6 @@
 import { create } from 'zustand';
-import { persist } from 'zustand/middleware';
+import { persist, createJSONStorage } from 'zustand/middleware';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 import type { PlayerId } from '../types/game';
 
 export interface LorcanaPlayer {
@@ -79,6 +80,7 @@ export const useLorcanaStore = create<LorcanaStore>()(
     {
       name: 'lorcana-tracker-game',
       version: 1,
+      storage: createJSONStorage(() => AsyncStorage),
     }
   )
 );

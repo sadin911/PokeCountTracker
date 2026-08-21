@@ -10,12 +10,15 @@
     "app/**/*.ts",
     "app/**/*.tsx",
     "expo-env.d.ts",
-    ".expo/types/**/*.d.ts"
+    ".expo/types/**/*.d.ts",
+    "src/types/**/*",
+    "src/constants/**/*",
+    "src/store/**/*",
+    "src/hooks/**/*"
   ],
   "exclude": [
     "node_modules",
     "dist",
-    "src",
     "vite.config.ts",
     "scripts"
   ]
