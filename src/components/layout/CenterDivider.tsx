@@ -3,6 +3,8 @@ import { View, Text, TouchableOpacity, Modal } from 'react-native';
 import * as Haptics from 'expo-haptics';
 import { useGameStore } from '../../store/gameStore';
 import { useTheme } from '../../hooks/useTheme';
+import { CoinFlip } from '../tools/CoinFlip';
+import { DiceRoller } from '../tools/DiceRoller';
 
 export function CenterDivider() {
   const theme = useTheme();
@@ -18,6 +20,10 @@ export function CenterDivider() {
 
   return (
     <View className={`px-3 py-2 border-t border-b ${theme.centerBorder} ${theme.centerBg}`}>
+      <View className="flex-row items-center gap-2 mb-1.5">
+        <CoinFlip compact />
+        <DiceRoller compact />
+      </View>
       <View className="flex-row items-center gap-2">
         {/* Left: turn indicator + reset */}
         <View className="gap-0.5">
