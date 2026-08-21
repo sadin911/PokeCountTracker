@@ -15,7 +15,7 @@ export function GameBoard() {
 
   return (
     <View className={`flex-1 ${theme.appBg}`} style={{ paddingTop: insets.top, paddingBottom: insets.bottom }}>
-      <PlayerBoard playerId="player1" isCurrentTurn={currentTurn === 'player1'} flipped />
+      <PlayerBoard playerId="player1" isCurrentTurn={currentTurn === 'player1'} flipped={displayMode === 'faceToFace'} />
       <CenterDivider />
       <PlayerBoard playerId="player2" isCurrentTurn={currentTurn === 'player2'} />
     </View>
