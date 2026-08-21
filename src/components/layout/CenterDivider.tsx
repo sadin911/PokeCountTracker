@@ -50,6 +50,12 @@ export function CenterDivider() {
             <Text className={`text-xs font-bold ${theme.centerText}`}>⇅ Side</Text>
           </TouchableOpacity>
           <TouchableOpacity
+            onPress={() => setDisplayMode('mini')}
+            className="px-1.5 py-0.5 rounded-md border border-gray-700/50"
+          >
+            <Text className={`text-xs font-bold ${theme.centerText}`}>⊞ Mini</Text>
+          </TouchableOpacity>
+          <TouchableOpacity
             onPress={() => setGameMode('lorcana')}
             className="px-1.5 py-0.5 rounded-md bg-amber-700/60 border border-amber-500/60"
           >
