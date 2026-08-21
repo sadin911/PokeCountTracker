@@ -9,7 +9,6 @@ export function DiceRoller({ compact = false }: { compact?: boolean }) {
   const [result, setResult] = useState<number | null>(null);
   const [rolling, setRolling] = useState(false);
   const scale = useSharedValue(1);
-  const opacity = useSharedValue(1);
 
   const roll = () => {
     if (rolling) return;
