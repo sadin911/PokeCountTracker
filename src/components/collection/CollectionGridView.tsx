@@ -56,7 +56,30 @@ export function CollectionGridView({ cards, currentSetProgress }: Props) {
   }, [hasMore, cards.length]);
 
   const handleQuickAdd = (card: any) => {
-    incrementVariant(card.id, 'normal');
+    const name = (card.name || '').toLowerCase();
+    const setId = (card.set?.id || '').toUpperCase();
+    const colNum = (card.collectorNumber || card.localId || '').toUpperCase();
+
+    if (setId === 'PROMO' || colNum.includes('PROMO') || colNum.startsWith('P-')) {
+      incrementVariant(card.id, 'promo');
+    } else if (
+      name.includes(' ex') ||
+      name.includes('ex') ||
+      name.includes('vmax') ||
+      name.includes('vstar') ||
+      name.includes(' v') ||
+      name.includes('radiant') ||
+      colNum.includes('MUR') ||
+      colNum.includes('SAR') ||
+      colNum.includes('UR') ||
+      colNum.includes('HR') ||
+      colNum.includes('SR') ||
+      colNum.includes('AR')
+    ) {
+      incrementVariant(card.id, 'holo');
+    } else {
+      incrementVariant(card.id, 'normal');
+    }
   };
 
   return (
