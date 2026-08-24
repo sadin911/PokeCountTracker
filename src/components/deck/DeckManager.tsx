@@ -1,0 +1,320 @@
+import { useState, useMemo, useEffect } from 'react';
+import { useDeckStore } from '../../store/deckStore';
+import { useCollectionStore } from '../../store/collectionStore';
+import { useAuthStore } from '../../store/authStore';
+import { DeckHeader } from './DeckHeader';
+import { DeckEditor } from './DeckEditor';
+import { MissingCardsModal } from './MissingCardsModal';
+import { DeckImportExportModal } from './DeckImportExportModal';
+import { calculateMissingCards } from '../../utils/deckCalculator';
+import { resolveCardImageUrl, handleCardImageError } from '../../utils/cardImage';
+import pokemonCardData from '../../data/pokemonNames.json';
+
+export function DeckManager() {
+  const decks = useDeckStore((s) => s.decks);
+  const activeDeckId = useDeckStore((s) => s.activeDeckId);
+  const createDeck = useDeckStore((s) => s.createDeck);
+  const deleteDeck = useDeckStore((s) => s.deleteDeck);
+  const duplicateDeck = useDeckStore((s) => s.duplicateDeck);
+  const loadUserDecksFromCloud = useDeckStore((s) => s.loadUserDecksFromCloud);
+
+  const activeProfileId = useCollectionStore((s) => s.activeProfileId);
+  const profile = useCollectionStore((s) => s.profiles[activeProfileId]);
+  const userCollectionCards = profile?.cards || {};
+
+  const user = useAuthStore((s) => s.user);
+
+  // Sync / load cloud decks on mount if logged in
+  useEffect(() => {
+    if (user?.uid) {
+      loadUserDecksFromCloud(user.uid);
+    }
+  }, [user?.uid]);
+
+  const [editingDeckId, setEditingDeckId] = useState<string | null>(null);
+  const [selectedMissingDeckId, setSelectedMissingDeckId] = useState<string | null>(null);
+  const [showImportExport, setShowImportExport] = useState(false);
+  const [showNewDeckModal, setShowNewDeckModal] = useState(false);
+  const [newDeckName, setNewDeckName] = useState('');
+
+  // Card lookup map
+  const cardDataMap = useMemo(() => {
+    const map = new Map<string, any>();
+    (pokemonCardData as any[]).forEach((c) => map.set(c.id, c));
+    return map;
+  }, []);
+
+  const deckList = useMemo(() => {
+    return Object.values(decks).sort((a, b) => b.updatedAt - a.updatedAt);
+  }, [decks]);
+
+  const handleCreateNewDeck = () => {
+    const name = newDeckName.trim() || `Deck #${deckList.length + 1}`;
+    const id = createDeck(name);
+    setNewDeckName('');
+    setShowNewDeckModal(false);
+    setEditingDeckId(id);
+  };
+
+  const editingDeck = editingDeckId ? decks[editingDeckId] : null;
+  const missingDeck = selectedMissingDeckId ? decks[selectedMissingDeckId] : null;
+
+  return (
+    <div className="min-h-screen bg-slate-950 text-slate-100 flex flex-col font-sans selection:bg-indigo-500 selection:text-white">
+      {/* Top Header */}
+      <DeckHeader
+        isEditing={!!editingDeck}
+        onBackToDecks={() => setEditingDeckId(null)}
+        onOpenImportExport={() => setShowImportExport(true)}
+      />
+
+      {/* Main Content: If editing, show Editor; otherwise show Deck List */}
+      {editingDeck ? (
+        <DeckEditor
+          deck={editingDeck}
+          onBackToDecks={() => setEditingDeckId(null)}
+        />
+      ) : (
+        <div className="flex-1 p-4 sm:p-6 lg:p-8 max-w-7xl mx-auto w-full space-y-6">
+          {/* Hero Banner & Stats */}
+          <div className="bg-gradient-to-r from-indigo-950 via-slate-900 to-purple-950 border border-indigo-500/30 rounded-3xl p-6 sm:p-8 shadow-2xl flex flex-col md:flex-row items-center justify-between gap-6">
+            <div className="space-y-2 text-center md:text-left">
+              <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-indigo-500/20 border border-indigo-500/40 text-indigo-300 text-xs font-black uppercase tracking-wider">
+                <span>🃏</span>
+                <span>Deck Manager</span>
+              </div>
+              <h2 className="text-2xl sm:text-3xl font-black text-white">
+                คลังเด็คการ์ดของคุณ ({deckList.length} เด็ค)
+              </h2>
+              <p className="text-xs sm:text-sm text-slate-300 max-w-xl">
+                สร้าง จัดการ และตรวจสอบความพร้อมของการ์ดในเด็คเทียบกับสมุดสะสมของคุณได้ทันที
+              </p>
+            </div>
+
+            {/* Actions: Create & Import */}
+            <div className="flex items-center gap-3 w-full sm:w-auto">
+              <button
+                onClick={() => setShowImportExport(true)}
+                className="flex-1 sm:flex-none px-4 py-3 rounded-2xl bg-slate-800 hover:bg-slate-700 text-slate-200 border border-slate-600 font-bold text-xs sm:text-sm shadow-md transition-all flex items-center justify-center gap-2 hover:scale-105 active:scale-95"
+              >
+                <span>📥</span>
+                <span>นำเข้าเด็ค</span>
+              </button>
+
+              <button
+                onClick={() => setShowNewDeckModal(true)}
+                className="flex-1 sm:flex-none px-5 py-3 rounded-2xl bg-gradient-to-r from-indigo-500 via-purple-500 to-pink-500 hover:from-indigo-400 hover:to-pink-400 text-white font-black text-xs sm:text-sm shadow-xl shadow-purple-500/20 transition-all flex items-center justify-center gap-2 hover:scale-105 active:scale-95"
+              >
+                <span>➕</span>
+                <span>สร้างเด็คใหม่</span>
+              </button>
+            </div>
+          </div>
+
+          {/* Deck Cards Grid */}
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5">
+            {deckList.map((deck) => {
+              const totalCards = Object.values(deck.cards).reduce((acc, c) => acc + c.count, 0);
+              const missingReport = calculateMissingCards(deck, cardDataMap, userCollectionCards);
+              const coverImg = deck.coverImageUrl
+                ? resolveCardImageUrl(deck.coverImageUrl)
+                : null;
+
+              return (
+                <div
+                  key={deck.id}
+                  className="bg-slate-900/90 border border-slate-800 hover:border-indigo-500/50 rounded-3xl p-5 shadow-xl transition-all duration-300 flex flex-col justify-between group hover:shadow-2xl hover:shadow-indigo-500/10"
+                >
+                  <div>
+                    {/* Top Row: Cover Thumbnail + Info */}
+                    <div className="flex items-start gap-4">
+                      <div
+                        onClick={() => setEditingDeckId(deck.id)}
+                        className="w-20 h-28 rounded-2xl overflow-hidden bg-slate-950 border border-slate-700 shadow-md cursor-pointer shrink-0 group-hover:scale-105 transition-transform flex items-center justify-center relative"
+                      >
+                        {coverImg ? (
+                          <img
+                            src={coverImg}
+                            alt={deck.name}
+                            className="w-full h-full object-cover"
+                            onError={(e) => handleCardImageError(e, deck.coverImageUrl)}
+                          />
+                        ) : (
+                          <span className="text-3xl opacity-40">🃏</span>
+                        )}
+                        <div className="absolute top-1 right-1 px-1.5 py-0.5 rounded bg-slate-900/90 text-slate-300 font-mono text-[9px] font-bold">
+                          {totalCards}/60
+                        </div>
+                      </div>
+
+                      <div className="flex-1 min-w-0">
+                        <div className="flex items-center justify-between">
+                          <span className="text-[10px] text-slate-400 font-mono">
+                            {new Date(deck.updatedAt).toLocaleDateString('th-TH')}
+                          </span>
+                        </div>
+                        <h3
+                          onClick={() => setEditingDeckId(deck.id)}
+                          className="text-base font-black text-white hover:text-indigo-300 cursor-pointer truncate mt-1"
+                        >
+                          {deck.name}
+                        </h3>
+                        <p className="text-xs text-slate-400 line-clamp-2 mt-1">
+                          {deck.description || 'ไม่มีคำอธิบาย'}
+                        </p>
+                      </div>
+                    </div>
+
+                    {/* Progress Bar & Missing Status */}
+                    <div className="mt-4 pt-3 border-t border-slate-800 space-y-2">
+                      <div className="flex items-center justify-between text-xs">
+                        <span className="text-slate-400 font-medium">ความพร้อมของการ์ด:</span>
+                        <span
+                          className={`font-black ${
+                            missingReport.isComplete ? 'text-emerald-400' : 'text-amber-400'
+                          }`}
+                        >
+                          {missingReport.completionPercentage}%
+                        </span>
+                      </div>
+                      <div className="w-full h-2 rounded-full bg-slate-950 overflow-hidden shadow-inner">
+                        <div
+                          className="h-full rounded-full bg-gradient-to-r from-indigo-500 via-purple-500 to-emerald-500 transition-all duration-300"
+                          style={{ width: `${missingReport.completionPercentage}%` }}
+                        />
+                      </div>
+
+                      <div className="flex items-center justify-between text-[11px] pt-1">
+                        <span
+                          className={`font-bold ${
+                            totalCards === 60 ? 'text-emerald-400' : 'text-slate-400'
+                          }`}
+                        >
+                          {totalCards === 60 ? '✅ ครบ 60 ใบ' : `${totalCards} / 60 ใบ`}
+                        </span>
+
+                        {missingReport.totalCardsMissing > 0 ? (
+                          <span className="text-rose-400 font-bold flex items-center gap-1">
+                            <span>⚠️ ขาด {missingReport.totalCardsMissing} ใบ</span>
+                          </span>
+                        ) : totalCards > 0 ? (
+                          <span className="text-emerald-400 font-bold">✨ มีการ์ดครบ 100%</span>
+                        ) : (
+                          <span className="text-slate-500">เด็คว่าง</span>
+                        )}
+                      </div>
+                    </div>
+                  </div>
+
+                  {/* Actions Footer */}
+                  <div className="mt-5 pt-3 border-t border-slate-800 flex items-center justify-between gap-2">
+                    <button
+                      onClick={() => setEditingDeckId(deck.id)}
+                      className="flex-1 py-2 px-3 rounded-xl bg-indigo-600 hover:bg-indigo-500 text-white font-black text-xs shadow-md transition-all flex items-center justify-center gap-1.5"
+                    >
+                      <span>✏️</span>
+                      <span>จัดเด็ค</span>
+                    </button>
+
+                    <button
+                      onClick={() => setSelectedMissingDeckId(deck.id)}
+                      className="py-2 px-3 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-200 font-bold text-xs border border-slate-700 transition-all flex items-center gap-1"
+                      title="คำนวณการ์ดที่ขาดและสร้าง Shopping List"
+                    >
+                      <span>🧮</span>
+                      <span>การ์ดที่ขาด</span>
+                    </button>
+
+                    <button
+                      onClick={() => duplicateDeck(deck.id)}
+                      className="p-2 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-400 hover:text-slate-200 border border-slate-700 transition-all text-xs"
+                      title="คัดลอกเด็คนี้"
+                    >
+                      📑
+                    </button>
+
+                    <button
+                      onClick={() => {
+                        if (window.confirm(`คุณต้องการลบเด็ค "${deck.name}" ใช่หรือไม่?`)) {
+                          deleteDeck(deck.id);
+                        }
+                      }}
+                      className="p-2 rounded-xl bg-slate-800 hover:bg-rose-500/20 text-slate-400 hover:text-rose-300 border border-slate-700 transition-all text-xs"
+                      title="ลบเด็คนี้"
+                    >
+                      🗑️
+                    </button>
+                  </div>
+                </div>
+              );
+            })}
+          </div>
+        </div>
+      )}
+
+      {/* New Deck Modal */}
+      {showNewDeckModal && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/80 backdrop-blur-md animate-fade-in">
+          <div className="w-full max-w-md bg-slate-900 border border-slate-700 rounded-3xl p-6 shadow-2xl space-y-4">
+            <div className="flex items-center justify-between">
+              <h3 className="text-base font-black text-white flex items-center gap-2">
+                <span>➕ สร้างเด็คใหม่</span>
+              </h3>
+              <button
+                onClick={() => setShowNewDeckModal(false)}
+                className="text-slate-400 hover:text-white font-bold"
+              >
+                ✕
+              </button>
+            </div>
+
+            <div>
+              <label className="text-xs font-bold text-slate-300 block mb-1.5">ชื่อเด็ค:</label>
+              <input
+                type="text"
+                placeholder="เช่น Charizard ex Tera, Gardevoir ex..."
+                value={newDeckName}
+                onChange={(e) => setNewDeckName(e.target.value)}
+                onKeyDown={(e) => e.key === 'Enter' && handleCreateNewDeck()}
+                autoFocus
+                className="w-full px-4 py-2.5 bg-slate-950 border border-slate-700 rounded-xl text-sm text-white focus:outline-none focus:border-indigo-500 shadow-inner"
+              />
+            </div>
+
+            <div className="flex justify-end gap-2 pt-2">
+              <button
+                onClick={() => setShowNewDeckModal(false)}
+                className="px-4 py-2 rounded-xl text-xs font-bold text-slate-400 hover:text-white"
+              >
+                ยกเลิก
+              </button>
+              <button
+                onClick={handleCreateNewDeck}
+                className="px-5 py-2 rounded-xl bg-gradient-to-r from-indigo-500 to-purple-500 text-white font-black text-xs shadow-lg"
+              >
+                สร้างเด็ค
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* Missing Cards Modal */}
+      {missingDeck && (
+        <MissingCardsModal
+          deck={missingDeck}
+          cardDataMap={cardDataMap}
+          onClose={() => setSelectedMissingDeckId(null)}
+        />
+      )}
+
+      {/* Import / Export Modal */}
+      {showImportExport && (
+        <DeckImportExportModal
+          onClose={() => setShowImportExport(false)}
+          activeDeckId={activeDeckId}
+        />
+      )}
+    </div>
+  );
+}

@@ -40,3 +40,5 @@
 [2026-08-24 16:50] Major | Antigravity | Write | src/components/collection/ - added Full Color viewing toggle mode and smooth interactive hover zoom elevation effect on card tiles
 [2026-08-24 16:53] Minor | Antigravity | Write | src/components/collection/CollectionTracker.tsx - added smooth floating 'Back to Top' button
 [2026-08-24 16:56] Major | Antigravity | Command | git tag v2.3.0 - tagged Advanced Rarity Filters, Full Color View Mode, Hover Zoom, and Back to Top release
+[2026-08-24 17:02] Major | Antigravity | Write | src/components/deck/ & src/store/deckStore.ts - built PokéDeck Builder & Missing Cards Collection Calculator with dedicated URL subpath /deck, multi-deck management, 60-card rules, missing card shopping list, and PTCGL import/export
+[2026-08-24 17:03] Major | Antigravity | Command | git tag v2.4.0 - tagged PokéDeck Builder & Missing Cards Calculator release

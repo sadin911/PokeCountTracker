@@ -3,6 +3,7 @@ import { useGameStore, type GameMode } from './store/gameStore';
 import { GameBoard } from './components/layout/GameBoard';
 import { LorcanaGameBoard } from './components/lorcana/LorcanaGameBoard';
 import { CollectionTracker } from './components/collection/CollectionTracker';
+import { DeckManager } from './components/deck/DeckManager';
 
 // Helper to determine mode from URL pathname, hash, or query params
 function getModeFromURL(): GameMode {
@@ -12,6 +13,14 @@ function getModeFromURL(): GameMode {
   const modeParam = search.get('mode')?.toLowerCase();
   const rawSearch = window.location.search.toLowerCase();
 
+  if (
+    path.includes('/deck') ||
+    hash.includes('deck') ||
+    modeParam === 'deck' ||
+    rawSearch.includes('deck')
+  ) {
+    return 'deck';
+  }
   if (
     path.includes('/collection') ||
     hash.includes('collection') ||
@@ -35,7 +44,9 @@ function updateURLForMode(mode: GameMode) {
   const base = import.meta.env.BASE_URL.replace(/\/+$/, '') || '';
   let targetPath = base ? `${base}/` : '/';
 
-  if (mode === 'collection') {
+  if (mode === 'deck') {
+    targetPath = `${base}/deck`;
+  } else if (mode === 'collection') {
     targetPath = `${base}/collection`;
   } else if (mode === 'lorcana') {
     targetPath = `${base}/lorcana`;
@@ -81,6 +92,7 @@ function App() {
     document.documentElement.dataset.gameMode = gameMode;
   }, [displayMode, gameMode]);
 
+  if (gameMode === 'deck') return <DeckManager />;
   if (gameMode === 'collection') return <CollectionTracker />;
   if (gameMode === 'lorcana') return <LorcanaGameBoard />;
   return <GameBoard />;

@@ -29,13 +29,15 @@
     max-width: none;
   }
 
-  /* Collection mode: 100% full screen, full width, and scrollable */
-  html[data-game-mode="collection"] body {
+  /* Collection & Deck mode: 100% full screen, full width, and scrollable */
+  html[data-game-mode="collection"] body,
+  html[data-game-mode="deck"] body {
     overflow-y: auto;
     overflow-x: hidden;
   }
 
-  html[data-game-mode="collection"] #root {
+  html[data-game-mode="collection"] #root,
+  html[data-game-mode="deck"] #root {
     max-width: none;
     width: 100%;
     margin: 0;

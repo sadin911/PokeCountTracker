@@ -1,0 +1,256 @@
+import { useState, useMemo } from 'react';
+import { useCollectionStore } from '../../store/collectionStore';
+import { calculateMissingCards, generateShoppingListText } from '../../utils/deckCalculator';
+import { resolveCardImageUrl, handleCardImageError } from '../../utils/cardImage';
+import type { Deck } from '../../types/deck';
+
+interface Props {
+  deck: Deck;
+  cardDataMap: Map<string, any>;
+  onClose: () => void;
+}
+
+export function MissingCardsModal({ deck, cardDataMap, onClose }: Props) {
+  const activeProfileId = useCollectionStore((s) => s.activeProfileId);
+  const profile = useCollectionStore((s) => s.profiles[activeProfileId]);
+  const userCollectionCards = profile?.cards || {};
+
+  const [filterTab, setFilterTab] = useState<'missing' | 'complete' | 'all'>('missing');
+  const [copied, setCopied] = useState(false);
+
+  const report = useMemo(() => {
+    return calculateMissingCards(deck, cardDataMap, userCollectionCards);
+  }, [deck, cardDataMap, userCollectionCards]);
+
+  const handleCopyShoppingList = () => {
+    const text = generateShoppingListText(deck.name, report);
+    navigator.clipboard.writeText(text);
+    setCopied(true);
+    setTimeout(() => setCopied(false), 2500);
+  };
+
+  const displayedItems =
+    filterTab === 'missing'
+      ? report.missingItems
+      : filterTab === 'complete'
+      ? report.completeItems
+      : [...report.missingItems, ...report.completeItems];
+
+  return (
+    <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/80 backdrop-blur-md animate-fade-in">
+      <div className="relative w-full max-w-3xl bg-slate-900 border border-slate-700 rounded-3xl shadow-2xl overflow-hidden flex flex-col max-h-[90vh]">
+        {/* Header */}
+        <div className="px-6 py-4 border-b border-slate-800 flex items-center justify-between bg-slate-950/60">
+          <div className="flex items-center gap-3">
+            <div className="w-9 h-9 rounded-xl bg-gradient-to-tr from-amber-500 to-rose-500 flex items-center justify-center text-white text-lg font-bold shadow-md">
+              🧮
+            </div>
+            <div>
+              <h3 className="text-base sm:text-lg font-black text-white flex items-center gap-2">
+                <span>คำนวณการ์ดที่ขาด:</span>
+                <span className="text-amber-400">{deck.name}</span>
+              </h3>
+              <p className="text-xs text-slate-400">
+                เปรียบเทียบกับสมุดสะสมโปรไฟล์ "{profile?.name || 'My Collection'}"
+              </p>
+            </div>
+          </div>
+          <button
+            onClick={onClose}
+            className="w-8 h-8 rounded-full bg-slate-800 hover:bg-slate-700 text-slate-400 hover:text-white flex items-center justify-center font-bold transition-all"
+          >
+            ✕
+          </button>
+        </div>
+
+        {/* Progress & Summary Bar */}
+        <div className="p-6 bg-slate-950/40 border-b border-slate-800 space-y-4">
+          <div className="grid grid-cols-3 gap-3 text-center">
+            <div className="p-3 rounded-2xl bg-slate-800/80 border border-slate-700">
+              <div className="text-[10px] sm:text-xs text-slate-400 font-bold uppercase">ต้องใช้ทั้งหมด</div>
+              <div className="text-lg sm:text-2xl font-black text-white mt-0.5">
+                {report.totalCardsNeeded} <span className="text-xs font-normal text-slate-400">ใบ</span>
+              </div>
+            </div>
+
+            <div className="p-3 rounded-2xl bg-emerald-500/10 border border-emerald-500/30">
+              <div className="text-[10px] sm:text-xs text-emerald-400 font-bold uppercase">มีในคอลเลกชัน</div>
+              <div className="text-lg sm:text-2xl font-black text-emerald-300 mt-0.5">
+                {report.totalCardsOwned} <span className="text-xs font-normal text-emerald-400">ใบ</span>
+              </div>
+            </div>
+
+            <div
+              className={`p-3 rounded-2xl border ${
+                report.totalCardsMissing > 0
+                  ? 'bg-rose-500/10 border-rose-500/30'
+                  : 'bg-emerald-500/15 border-emerald-500/40'
+              }`}
+            >
+              <div
+                className={`text-[10px] sm:text-xs font-bold uppercase ${
+                  report.totalCardsMissing > 0 ? 'text-rose-400' : 'text-emerald-400'
+                }`}
+              >
+                {report.totalCardsMissing > 0 ? 'ขาดอีก' : 'สถานะ'}
+              </div>
+              <div
+                className={`text-lg sm:text-2xl font-black mt-0.5 ${
+                  report.totalCardsMissing > 0 ? 'text-rose-300' : 'text-emerald-300'
+                }`}
+              >
+                {report.totalCardsMissing > 0 ? (
+                  <>
+                    {report.totalCardsMissing}{' '}
+                    <span className="text-xs font-normal text-rose-400">ใบ</span>
+                  </>
+                ) : (
+                  'ครบ 100% ✨'
+                )}
+              </div>
+            </div>
+          </div>
+
+          {/* Progress Bar */}
+          <div className="space-y-1.5">
+            <div className="flex justify-between text-xs font-extrabold">
+              <span className="text-slate-300">ความพร้อมของเด็ค</span>
+              <span className="text-amber-400">{report.completionPercentage}%</span>
+            </div>
+            <div className="w-full h-3 rounded-full bg-slate-800 overflow-hidden shadow-inner p-0.5">
+              <div
+                className="h-full rounded-full bg-gradient-to-r from-amber-500 to-emerald-500 transition-all duration-500 shadow-lg"
+                style={{ width: `${report.completionPercentage}%` }}
+              />
+            </div>
+          </div>
+
+          {/* Action Row: Tabs & Copy Button */}
+          <div className="flex flex-col sm:flex-row items-stretch sm:items-center justify-between gap-3 pt-2">
+            <div className="flex items-center gap-1.5 bg-slate-900 p-1 rounded-xl border border-slate-800">
+              <button
+                onClick={() => setFilterTab('missing')}
+                className={`px-3 py-1.5 rounded-lg text-xs font-black transition-all ${
+                  filterTab === 'missing'
+                    ? 'bg-rose-600 text-white shadow-md'
+                    : 'text-slate-400 hover:text-slate-200'
+                }`}
+              >
+                ขาด ({report.missingItems.length})
+              </button>
+              <button
+                onClick={() => setFilterTab('complete')}
+                className={`px-3 py-1.5 rounded-lg text-xs font-black transition-all ${
+                  filterTab === 'complete'
+                    ? 'bg-emerald-600 text-white shadow-md'
+                    : 'text-slate-400 hover:text-slate-200'
+                }`}
+              >
+                ครบแล้ว ({report.completeItems.length})
+              </button>
+              <button
+                onClick={() => setFilterTab('all')}
+                className={`px-3 py-1.5 rounded-lg text-xs font-black transition-all ${
+                  filterTab === 'all'
+                    ? 'bg-indigo-600 text-white shadow-md'
+                    : 'text-slate-400 hover:text-slate-200'
+                }`}
+              >
+                ทั้งหมด ({report.missingItems.length + report.completeItems.length})
+              </button>
+            </div>
+
+            <button
+              onClick={handleCopyShoppingList}
+              className={`px-4 py-2 rounded-xl text-xs font-black transition-all flex items-center justify-center gap-2 shadow-lg ${
+                copied
+                  ? 'bg-emerald-500 text-slate-950 scale-105'
+                  : 'bg-gradient-to-r from-amber-500 to-amber-600 hover:from-amber-400 hover:to-amber-500 text-slate-950 hover:scale-105 active:scale-95'
+              }`}
+            >
+              <span>{copied ? '✅' : '📋'}</span>
+              <span>{copied ? 'คัดลอกรายการแล้ว!' : 'คัดลอกรายการการ์ดที่ขาด'}</span>
+            </button>
+          </div>
+        </div>
+
+        {/* Card List Items */}
+        <div className="flex-1 overflow-y-auto p-6 space-y-2.5">
+          {displayedItems.length === 0 ? (
+            <div className="py-12 text-center text-slate-400 space-y-2">
+              <span className="text-4xl">✨</span>
+              <p className="text-sm font-bold text-slate-300">
+                {filterTab === 'missing'
+                  ? 'ยินดีด้วย! คุณมีการ์ดในเด็คนี้ครบ 100% แล้ว'
+                  : 'ไม่มีรายการการ์ดในหมวดนี้'}
+              </p>
+            </div>
+          ) : (
+            displayedItems.map((item) => {
+              const imgUrl = resolveCardImageUrl(item.imageUrl);
+              const isMissing = item.missingCount > 0;
+
+              return (
+                <div
+                  key={item.cardId}
+                  className={`p-3 rounded-2xl border transition-all flex items-center justify-between gap-3 ${
+                    isMissing
+                      ? 'bg-slate-900/90 border-rose-500/30 hover:border-rose-500/60'
+                      : 'bg-slate-900/60 border-emerald-500/30 hover:border-emerald-500/60'
+                  }`}
+                >
+                  <div className="flex items-center gap-3 min-w-0">
+                    <div className="w-12 h-16 rounded-lg overflow-hidden bg-slate-950 shrink-0 shadow-md">
+                      <img
+                        src={imgUrl}
+                        alt={item.name}
+                        className="w-full h-full object-cover"
+                        onError={(e) => handleCardImageError(e, item.imageUrl)}
+                      />
+                    </div>
+                    <div className="min-w-0">
+                      <div className="flex items-center gap-1.5 text-[10px] text-slate-400 font-mono">
+                        <span className="px-1.5 py-0.5 rounded bg-slate-800 font-bold text-amber-400">
+                          {item.setId}
+                        </span>
+                        <span>{item.collectorNumber}</span>
+                      </div>
+                      <h4 className="text-xs sm:text-sm font-bold text-white truncate mt-0.5">
+                        {item.name}
+                      </h4>
+                      <p className="text-[11px] text-slate-400">
+                        {item.category === 'Pokemon' ? '👾 โปเกมอน' : item.category === 'Trainer' ? '🎒 เทรนเนอร์' : '⚡ พลังงาน'}
+                      </p>
+                    </div>
+                  </div>
+
+                  {/* Quantity Badges */}
+                  <div className="flex items-center gap-3 shrink-0">
+                    <div className="text-right text-xs">
+                      <div className="text-slate-400 text-[10px]">ในเด็ค / มีแล้ว</div>
+                      <div className="font-mono font-bold text-slate-200">
+                        <span className="text-amber-400 font-black">{item.countNeeded}</span> / {item.countOwned}
+                      </div>
+                    </div>
+
+                    {isMissing ? (
+                      <span className="px-3 py-1.5 rounded-xl bg-rose-500/20 border border-rose-500/50 text-rose-300 font-black text-xs sm:text-sm shadow-sm flex items-center gap-1">
+                        <span>ขาดอีก</span>
+                        <span className="text-rose-400 font-extrabold text-base">{item.missingCount}</span>
+                        <span>ใบ</span>
+                      </span>
+                    ) : (
+                      <span className="px-3 py-1.5 rounded-xl bg-emerald-500/20 border border-emerald-500/50 text-emerald-300 font-black text-xs shadow-sm">
+                        ครบแล้ว ✅
+                      </span>
+                    )}
+                  </div>
+                </div>
+              );
+            })
+          )}
+        </div>
+      </div>
+    </div>
+  );
+}
