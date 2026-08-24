@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import { CollectionCardItem } from './CollectionCardItem';
 import { CardCollectionModal } from './CardCollectionModal';
 import { useCollectionStore } from '../../store/collectionStore';
@@ -19,6 +19,7 @@ export function CollectionGridView({ cards, currentSetProgress }: Props) {
 
   const [selectedCard, setSelectedCard] = useState<any | null>(null);
   const [displayLimit, setDisplayLimit] = useState(ITEMS_PER_PAGE);
+  const sentinelRef = useRef<HTMLDivElement | null>(null);
 
   // Reset pagination when card list changes
   useEffect(() => {
@@ -27,6 +28,32 @@ export function CollectionGridView({ cards, currentSetProgress }: Props) {
 
   const displayedCards = cards.slice(0, displayLimit);
   const hasMore = displayLimit < cards.length;
+
+  // Auto Infinite Scroll with IntersectionObserver
+  useEffect(() => {
+    if (!hasMore) return;
+
+    const observer = new IntersectionObserver(
+      (entries) => {
+        const [entry] = entries;
+        if (entry.isIntersecting) {
+          setDisplayLimit((prev) => Math.min(prev + ITEMS_PER_PAGE, cards.length));
+        }
+      },
+      {
+        root: null,
+        rootMargin: '400px', // Trigger before reaching the absolute bottom
+        threshold: 0.1,
+      }
+    );
+
+    const el = sentinelRef.current;
+    if (el) observer.observe(el);
+
+    return () => {
+      if (el) observer.unobserve(el);
+    };
+  }, [hasMore, cards.length]);
 
   const handleQuickAdd = (card: any) => {
     incrementVariant(card.id, 'normal');
@@ -104,15 +131,20 @@ export function CollectionGridView({ cards, currentSetProgress }: Props) {
             })}
           </div>
 
-          {/* Load More Button */}
-          {hasMore && (
-            <div className="pt-6 pb-12 text-center">
-              <button
-                onClick={() => setDisplayLimit((prev) => prev + ITEMS_PER_PAGE)}
-                className="px-8 py-3 rounded-2xl bg-slate-800 hover:bg-slate-700 text-slate-100 font-extrabold text-xs sm:text-sm border border-slate-700 shadow-xl transition-all hover:scale-105 active:scale-95"
-              >
-                โหลดการ์ดเพิ่มเติม (กำลังแสดง {displayedCards.length} / {cards.length} ใบ)
-              </button>
+          {/* Auto Load Sentinel & Indicator */}
+          {hasMore ? (
+            <div
+              ref={sentinelRef}
+              className="py-10 text-center flex flex-col items-center justify-center gap-2 text-slate-400"
+            >
+              <div className="w-7 h-7 border-3 border-amber-500/30 border-t-amber-500 rounded-full animate-spin" />
+              <p className="text-xs font-semibold text-slate-400">
+                กำลังโหลดการ์ดเพิ่มเติม... ({displayedCards.length} / {cards.length} ใบ)
+              </p>
+            </div>
+          ) : (
+            <div className="py-10 text-center text-slate-500 text-xs font-semibold">
+              ✨ แสดงการ์ดครบทั้งหมด {cards.length.toLocaleString()} ใบแล้ว
             </div>
           )}
         </>
