@@ -13,6 +13,68 @@ import type {
   SetProgress,
 } from '../../types/collection';
 
+// Helper to determine Card Rarity Class
+export function getCardRarityClass(card: any): string {
+  const name = card.name || '';
+  const setId = (card.set?.id || '').toUpperCase();
+  const col = (card.collectorNumber || card.localId || '').toUpperCase();
+
+  // 1. Promo
+  if (setId.includes('-P') || setId.includes('PROMO') || col.includes('PROMO') || col.startsWith('P-')) {
+    return 'PROMO';
+  }
+
+  // 2. Secret Rare / Super Rare (Collector number > Total e.g. 155/154, 075/073 or SAR/UR/SR/HR/AR/MUR/CSR/CHR)
+  const match = col.match(/(\d+)[-/](\d+)/);
+  if (match && parseInt(match[1], 10) > parseInt(match[2], 10)) {
+    return 'SECRET';
+  }
+  if (
+    col.includes('MUR') ||
+    col.includes('UR') ||
+    col.includes('SAR') ||
+    col.includes('HR') ||
+    col.includes('SR') ||
+    col.includes('AR') ||
+    col.includes('CSR') ||
+    col.includes('CHR')
+  ) {
+    return 'SECRET';
+  }
+
+  // 3. Pokemon ex (Mega / Tera / ex)
+  if (name.includes('ex') || name.includes('EX')) {
+    return 'EX';
+  }
+
+  // 4. VMAX
+  if (name.includes('VMAX')) {
+    return 'VMAX';
+  }
+
+  // 5. VSTAR
+  if (name.includes('VSTAR')) {
+    return 'VSTAR';
+  }
+
+  // 6. Pokemon V
+  if (/(?:[\u0E00-\u0E7F]|\s)V(?:$|[\s\(\[\{【])/i.test(name) || name.endsWith('V')) {
+    return 'V';
+  }
+
+  // 7. Radiant / Ace Spec
+  if (
+    name.includes('ส่องประกาย') ||
+    name.includes('Radiant') ||
+    name.includes('ACE SPEC') ||
+    name.includes('เอซสเปก')
+  ) {
+    return 'SECRET';
+  }
+
+  return 'REGULAR';
+}
+
 export function CollectionTracker() {
   const activeProfileId = useCollectionStore((s) => s.activeProfileId);
   const profiles = useCollectionStore((s) => s.profiles);
@@ -35,6 +97,7 @@ export function CollectionTracker() {
   const [selectedType, setSelectedType] = useState<string>('ALL');
   const [selectedCategory, setSelectedCategory] = useState<string>('ALL');
   const [selectedStage, setSelectedStage] = useState<string>('ALL');
+  const [selectedRarity, setSelectedRarity] = useState<string>('ALL');
   const [sortBy, setSortBy] = useState<CollectionSortBy>('number');
   const [sortOrder, setSortOrder] = useState<SortOrder>('asc');
 
@@ -154,6 +217,12 @@ export function CollectionTracker() {
       // Stage Filter
       if (selectedStage !== 'ALL' && card.stage !== selectedStage) return false;
 
+      // Rarity Class Filter
+      if (selectedRarity !== 'ALL') {
+        const cardRarity = getCardRarityClass(card);
+        if (cardRarity !== selectedRarity) return false;
+      }
+
       // Type Filter
       if (selectedType !== 'ALL') {
         const types = card.types || [];
@@ -199,6 +268,7 @@ export function CollectionTracker() {
     selectedSet,
     selectedCategory,
     selectedStage,
+    selectedRarity,
     selectedType,
     search,
     sortBy,
@@ -225,6 +295,8 @@ export function CollectionTracker() {
         onCategoryChange={setSelectedCategory}
         selectedStage={selectedStage}
         onStageChange={setSelectedStage}
+        selectedRarity={selectedRarity}
+        onRarityChange={setSelectedRarity}
         sortBy={sortBy}
         sortOrder={sortOrder}
         onSortChange={(sb, so) => {

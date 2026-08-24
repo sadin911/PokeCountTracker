@@ -28,12 +28,26 @@ interface Props {
   selectedStage: string;
   onStageChange: (val: string) => void;
 
+  selectedRarity: string;
+  onRarityChange: (val: string) => void;
+
   sortBy: CollectionSortBy;
   sortOrder: SortOrder;
   onSortChange: (sortBy: CollectionSortBy, sortOrder: SortOrder) => void;
 
   totalFiltered: number;
 }
+
+export const RARITY_CLASSES = [
+  { id: 'ALL', label: 'ทุกระดับความหายาก (All Classes)' },
+  { id: 'SECRET', label: '⭐ Secret Rare (SAR / UR / SR / HR / ลับเกินเลข)' },
+  { id: 'EX', label: '👑 โปเกมอน ex / เมก้า ex (Pokémon ex)' },
+  { id: 'VMAX', label: '🔥 โปเกมอน VMAX' },
+  { id: 'VSTAR', label: '🌟 โปเกมอน VSTAR' },
+  { id: 'V', label: '⚡ โปเกมอน V' },
+  { id: 'PROMO', label: '🎁 การ์ดโปรโม (Promo)' },
+  { id: 'REGULAR', label: '⚪ โปเกมอนทั่วไป (Common / Rare)' },
+];
 
 const STATUS_TABS: { key: CollectionStatusFilter; label: string; icon: string }[] = [
   { key: 'all', label: 'ทั้งหมด (All)', icon: '🎴' },
@@ -71,6 +85,8 @@ export function CollectionFilterBar({
   onCategoryChange,
   selectedStage,
   onStageChange,
+  selectedRarity,
+  onRarityChange,
   sortBy,
   sortOrder,
   onSortChange,
@@ -144,10 +160,23 @@ export function CollectionFilterBar({
         </div>
       </div>
 
-      {/* Bottom Row: Energy Type Chips + Category & Stage Filter + Sort */}
+      {/* Bottom Row: Rarity Class + Category + Stage + Energy Type Chips + Sort */}
       <div className="flex flex-wrap items-center justify-between gap-3 pt-2 border-t border-slate-800/70 text-xs">
-        {/* Category & Stage Dropdowns */}
+        {/* Dropdowns */}
         <div className="flex items-center gap-2 flex-wrap">
+          {/* Rarity Class Selector */}
+          <select
+            value={selectedRarity}
+            onChange={(e) => onRarityChange(e.target.value)}
+            className="px-3 py-1.5 bg-slate-950 border border-amber-500/50 text-amber-300 rounded-lg text-xs font-bold focus:outline-none focus:border-amber-400 shadow-inner"
+          >
+            {RARITY_CLASSES.map((r) => (
+              <option key={r.id} value={r.id}>
+                {r.label}
+              </option>
+            ))}
+          </select>
+
           {/* Category */}
           <select
             value={selectedCategory}

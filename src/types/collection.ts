@@ -33,6 +33,16 @@ export type CollectionStatusFilter = 'all' | 'owned' | 'missing' | 'wishlist' | 
 export type CollectionSortBy = 'number' | 'name' | 'hp' | 'quantity';
 export type SortOrder = 'asc' | 'desc';
 
+export type CardRarityClass =
+  | 'ALL'
+  | 'SECRET'
+  | 'EX'
+  | 'VMAX'
+  | 'VSTAR'
+  | 'V'
+  | 'PROMO'
+  | 'REGULAR';
+
 export interface SetProgress {
   setId: string;
   setName: string;

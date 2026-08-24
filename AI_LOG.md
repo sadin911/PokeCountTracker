@@ -35,3 +35,4 @@
 [2026-08-24 15:45] Major | Antigravity | Write | src/utils/firebase.ts & src/store/authStore.ts - integrated Google Authentication and Cloud Firestore NoSQL Sync
 [2026-08-24 15:48] Major | Antigravity | Command | git tag v2.2.0 - tagged Google Auth & Firestore Cloud Sync release
 [2026-08-24 15:53] Minor | Antigravity | Fix | public/404.html & index.html - fixed direct URL access (404 error) on GitHub Pages for /collection and /lorcana
+[2026-08-24 16:15] Major | Antigravity | Write | src/components/collection/ - added Card Rarity Class filter (Secret Rare, ex, VMAX, VSTAR, V, Promo, Regular)
