@@ -4,6 +4,7 @@ import { useCollectionStore } from '../../store/collectionStore';
 import { calculateDeckStats, calculateMissingCards } from '../../utils/deckCalculator';
 import { resolveCardImageUrl, handleCardImageError } from '../../utils/cardImage';
 import { MissingCardsModal } from './MissingCardsModal';
+import { CardImagePreviewModal } from '../pokemon/CardImagePreviewModal';
 import { RARITY_CLASSES } from '../collection/CollectionFilterBar';
 import pokemonCardData from '../../data/pokemonNames.json';
 import type { Deck } from '../../types/deck';
@@ -57,6 +58,7 @@ export function DeckEditor({ deck, onBackToDecks }: Props) {
   const [deckName, setDeckName] = useState(deck.name);
   const [isEditingName, setIsEditingName] = useState(false);
   const [showMissingModal, setShowMissingModal] = useState(false);
+  const [previewCard, setPreviewCard] = useState<any | null>(null);
 
   // Catalog Filters
   const [search, setSearch] = useState('');
@@ -303,6 +305,7 @@ export function DeckEditor({ deck, onBackToDecks }: Props) {
                           onAdd={() => addCardToDeck(deck.id, cardId, 1)}
                           onRemove={() => removeCardFromDeck(deck.id, cardId)}
                           onSetCover={(img) => setDeckCover(deck.id, cardId, img)}
+                          onPreview={() => setPreviewCard(card || { id: cardId, name: cardId })}
                         />
                       ))}
                     </div>
@@ -327,6 +330,7 @@ export function DeckEditor({ deck, onBackToDecks }: Props) {
                           onAdd={() => addCardToDeck(deck.id, cardId, 1)}
                           onRemove={() => removeCardFromDeck(deck.id, cardId)}
                           onSetCover={(img) => setDeckCover(deck.id, cardId, img)}
+                          onPreview={() => setPreviewCard(card || { id: cardId, name: cardId })}
                         />
                       ))}
                     </div>
@@ -351,6 +355,7 @@ export function DeckEditor({ deck, onBackToDecks }: Props) {
                           onAdd={() => addCardToDeck(deck.id, cardId, 1)}
                           onRemove={() => removeCardFromDeck(deck.id, cardId)}
                           onSetCover={(img) => setDeckCover(deck.id, cardId, img)}
+                          onPreview={() => setPreviewCard(card || { id: cardId, name: cardId })}
                         />
                       ))}
                     </div>
@@ -499,7 +504,7 @@ export function DeckEditor({ deck, onBackToDecks }: Props) {
                     }`}
                   >
                     <div
-                      onClick={() => addCardToDeck(deck.id, card.id, 1)}
+                      onClick={() => setPreviewCard(card)}
                       className="relative w-full aspect-[2.5/3.5] rounded-lg overflow-hidden cursor-pointer bg-slate-950 shadow-inner group-hover:scale-[1.03] transition-transform duration-200"
                     >
                       <img
@@ -509,6 +514,19 @@ export function DeckEditor({ deck, onBackToDecks }: Props) {
                         className="w-full h-full object-cover"
                         onError={(e) => handleCardImageError(e, card.imageUrl, card.officialImageUrl)}
                       />
+
+                      {/* Zoom Icon Overlay on Top-Left */}
+                      <button
+                        type="button"
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          setPreviewCard(card);
+                        }}
+                        className="absolute top-1.5 left-1.5 w-6 h-6 rounded-md bg-black/70 hover:bg-indigo-600 text-white text-[11px] flex items-center justify-center opacity-80 group-hover:opacity-100 transition-all shadow-md"
+                        title="ดูรูปขยายใหญ่ (Zoom)"
+                      >
+                        🔍
+                      </button>
 
                       {/* Count in Deck Badge */}
                       {countInDeck > 0 && (
@@ -525,19 +543,19 @@ export function DeckEditor({ deck, onBackToDecks }: Props) {
                           e.stopPropagation();
                           addCardToDeck(deck.id, card.id, 1);
                         }}
-                        className="absolute bottom-1.5 right-1.5 px-2 py-1 rounded-lg bg-indigo-600 hover:bg-indigo-500 text-white font-black text-xs shadow-lg flex items-center gap-1 opacity-0 group-hover:opacity-100 transition-opacity"
+                        className="absolute bottom-1.5 right-1.5 px-2.5 py-1 rounded-lg bg-indigo-600 hover:bg-indigo-500 text-white font-black text-xs shadow-lg flex items-center gap-1 opacity-0 group-hover:opacity-100 transition-opacity"
                         title="เพิ่มการ์ดเข้าเด็ค (+1)"
                       >
                         <span>+ ใส่เด็ค</span>
                       </button>
                     </div>
 
-                    <div className="mt-1.5">
+                    <div className="mt-1.5 cursor-pointer" onClick={() => setPreviewCard(card)}>
                       <div className="flex items-center justify-between text-[10px] text-slate-400 font-mono">
                         <span className="truncate max-w-[60%]">{card.set?.id || 'PROMO'}</span>
                         <span>{card.collectorNumber || card.localId}</span>
                       </div>
-                      <h4 className="text-xs font-bold truncate text-slate-200 mt-0.5" title={card.name}>
+                      <h4 className="text-xs font-bold truncate text-slate-200 mt-0.5 hover:text-indigo-300" title={card.name}>
                         {card.name}
                       </h4>
                     </div>
@@ -564,6 +582,17 @@ export function DeckEditor({ deck, onBackToDecks }: Props) {
           onClose={() => setShowMissingModal(false)}
         />
       )}
+
+      {/* Card High-Res Preview Modal */}
+      {previewCard && (
+        <CardImagePreviewModal
+          imageUrl={previewCard.imageUrl}
+          officialImageUrl={previewCard.officialImageUrl}
+          cardName={previewCard.name}
+          onClose={() => setPreviewCard(null)}
+          onSelect={() => addCardToDeck(deck.id, previewCard.id, 1)}
+        />
+      )}
     </div>
   );
 }
@@ -578,6 +607,7 @@ function DeckCardRow({
   onAdd,
   onRemove,
   onSetCover,
+  onPreview,
 }: {
   cardId: string;
   count: number;
@@ -587,6 +617,7 @@ function DeckCardRow({
   onAdd: () => void;
   onRemove: () => void;
   onSetCover: (img: string) => void;
+  onPreview: () => void;
 }) {
   const variants = userOwned?.variants || { normal: 0, holo: 0, reverse: 0, promo: 0 };
   const totalOwned = variants.normal + variants.holo + variants.reverse + variants.promo;
@@ -601,8 +632,8 @@ function DeckCardRow({
           : 'bg-slate-950/50 border-slate-800 hover:border-slate-700'
       }`}
     >
-      <div className="flex items-center gap-2.5 min-w-0 flex-1">
-        <div className="w-9 h-12 rounded-md overflow-hidden bg-slate-900 shrink-0 shadow-sm relative">
+      <div className="flex items-center gap-2.5 min-w-0 flex-1 cursor-pointer" onClick={onPreview}>
+        <div className="w-9 h-12 rounded-md overflow-hidden bg-slate-900 shrink-0 shadow-sm relative group-hover:ring-1 group-hover:ring-indigo-400 transition-all">
           <img
             src={imgUrl}
             alt={card?.name || cardId}
@@ -621,7 +652,7 @@ function DeckCardRow({
             <span className="text-amber-400 font-bold">{card?.set?.id || 'PROMO'}</span>
             <span>{card?.collectorNumber || card?.localId}</span>
           </div>
-          <h5 className="text-xs font-bold text-slate-200 truncate leading-snug" title={card?.name}>
+          <h5 className="text-xs font-bold text-slate-200 truncate leading-snug hover:text-indigo-300 transition-colors" title={card?.name}>
             {card?.name || cardId}
           </h5>
           <div className="flex items-center gap-2 text-[10px] mt-0.5">
@@ -638,7 +669,7 @@ function DeckCardRow({
       </div>
 
       {/* Actions: + / - / Cover */}
-      <div className="flex items-center gap-1.5 shrink-0">
+      <div className="flex items-center gap-1.5 shrink-0" onClick={(e) => e.stopPropagation()}>
         <button
           type="button"
           onClick={() => onSetCover(imgUrl || '')}
