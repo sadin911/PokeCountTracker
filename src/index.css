@@ -29,6 +29,22 @@
     max-width: none;
   }
 
+  /* Collection mode: 100% full screen, full width, and scrollable */
+  html[data-game-mode="collection"] body {
+    overflow-y: auto;
+    overflow-x: hidden;
+  }
+
+  html[data-game-mode="collection"] #root {
+    max-width: none;
+    width: 100%;
+    margin: 0;
+    overflow-y: auto;
+    overflow-x: hidden;
+    height: auto;
+    min-height: 100%;
+  }
+
   * {
     -webkit-tap-highlight-color: transparent;
     touch-action: manipulation;

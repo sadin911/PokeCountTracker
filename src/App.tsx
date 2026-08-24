@@ -67,7 +67,8 @@ function App() {
 
   useEffect(() => {
     document.documentElement.dataset.displayMode = displayMode;
-  }, [displayMode]);
+    document.documentElement.dataset.gameMode = gameMode;
+  }, [displayMode, gameMode]);
 
   if (gameMode === 'collection') return <CollectionTracker />;
   if (gameMode === 'lorcana') return <LorcanaGameBoard />;
