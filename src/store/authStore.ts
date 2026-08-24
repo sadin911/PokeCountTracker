@@ -1,6 +1,7 @@
 import { create } from 'zustand';
 import { onAuthStateChanged, type User } from 'firebase/auth';
 import { auth, signInWithGoogle, logOut } from '../utils/firebase';
+import { useCollectionStore } from './collectionStore';
 
 interface AuthState {
   user: User | null;
@@ -15,6 +16,9 @@ export const useAuthStore = create<AuthState>((set) => {
   // Setup persistent auth state listener
   onAuthStateChanged(auth, (user) => {
     set({ user, loading: false, error: null });
+    if (!user) {
+      useCollectionStore.getState().resetToGuest();
+    }
   });
 
   return {
