@@ -30,3 +30,5 @@
 [2026-08-19 11:47] Major | Antigravity | Command | git push origin main --tags - deployed v1.5.0 & v2.0.0 to GitHub
 [2026-08-19 11:51] Major | Antigravity | Fix | .gitignore & src/data/evolutionLines.json - fixed CI build missing file
 [2026-08-19 12:02] Major | Antigravity | Edit | src/components/pokemon/HPPresetPicker.tsx - added persistent last-used Energy Type memory
+[2026-08-24 14:15] Major | Antigravity | Write | src/components/collection/ - built PokéCollection Tracker with Multi-Profile, Variant tracking, Full-Screen view, and Set Search
+[2026-08-24 15:05] Major | Antigravity | Command | git tag v2.1.0 - tagged Collection Tracker release
