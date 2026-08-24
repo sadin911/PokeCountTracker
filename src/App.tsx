@@ -10,11 +10,22 @@ function getModeFromURL(): GameMode {
   const hash = window.location.hash.toLowerCase();
   const search = new URLSearchParams(window.location.search);
   const modeParam = search.get('mode')?.toLowerCase();
+  const rawSearch = window.location.search.toLowerCase();
 
-  if (path.includes('/collection') || hash.includes('collection') || modeParam === 'collection') {
+  if (
+    path.includes('/collection') ||
+    hash.includes('collection') ||
+    modeParam === 'collection' ||
+    rawSearch.includes('collection')
+  ) {
     return 'collection';
   }
-  if (path.includes('/lorcana') || hash.includes('lorcana') || modeParam === 'lorcana') {
+  if (
+    path.includes('/lorcana') ||
+    hash.includes('lorcana') ||
+    modeParam === 'lorcana' ||
+    rawSearch.includes('lorcana')
+  ) {
     return 'lorcana';
   }
   return 'pokemon';
