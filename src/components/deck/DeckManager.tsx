@@ -6,6 +6,7 @@ import { DeckHeader } from './DeckHeader';
 import { DeckEditor } from './DeckEditor';
 import { MissingCardsModal } from './MissingCardsModal';
 import { DeckImportExportModal } from './DeckImportExportModal';
+import { DeckCoverPickerModal } from './DeckCoverPickerModal';
 import { calculateMissingCards } from '../../utils/deckCalculator';
 import { resolveCardImageUrl, handleCardImageError } from '../../utils/cardImage';
 import pokemonCardData from '../../data/pokemonNames.json';
@@ -16,6 +17,7 @@ export function DeckManager() {
   const createDeck = useDeckStore((s) => s.createDeck);
   const deleteDeck = useDeckStore((s) => s.deleteDeck);
   const duplicateDeck = useDeckStore((s) => s.duplicateDeck);
+  const setDeckCover = useDeckStore((s) => s.setDeckCover);
   const loadUserDecksFromCloud = useDeckStore((s) => s.loadUserDecksFromCloud);
 
   const activeProfileId = useCollectionStore((s) => s.activeProfileId);
@@ -33,6 +35,7 @@ export function DeckManager() {
 
   const [editingDeckId, setEditingDeckId] = useState<string | null>(null);
   const [selectedMissingDeckId, setSelectedMissingDeckId] = useState<string | null>(null);
+  const [selectedCoverDeckId, setSelectedCoverDeckId] = useState<string | null>(null);
   const [showImportExport, setShowImportExport] = useState(false);
   const [showNewDeckModal, setShowNewDeckModal] = useState(false);
   const [newDeckName, setNewDeckName] = useState('');
@@ -58,6 +61,7 @@ export function DeckManager() {
 
   const editingDeck = editingDeckId ? decks[editingDeckId] : null;
   const missingDeck = selectedMissingDeckId ? decks[selectedMissingDeckId] : null;
+  const coverDeck = selectedCoverDeckId ? decks[selectedCoverDeckId] : null;
 
   return (
     <div className="min-h-screen bg-slate-950 text-slate-100 flex flex-col font-sans selection:bg-indigo-500 selection:text-white">
@@ -129,8 +133,9 @@ export function DeckManager() {
                     {/* Top Row: Cover Thumbnail + Info */}
                     <div className="flex items-start gap-4">
                       <div
-                        onClick={() => setEditingDeckId(deck.id)}
-                        className="w-20 h-28 rounded-2xl overflow-hidden bg-slate-950 border border-slate-700 shadow-md cursor-pointer shrink-0 group-hover:scale-105 transition-transform flex items-center justify-center relative"
+                        onClick={() => setSelectedCoverDeckId(deck.id)}
+                        className="w-20 h-28 rounded-2xl overflow-hidden bg-slate-950 border border-slate-700 shadow-md cursor-pointer shrink-0 group-hover:scale-105 transition-transform flex items-center justify-center relative group/cover"
+                        title="คลิกเพื่อเปลี่ยนรูปหน้าปกเด็ค"
                       >
                         {coverImg ? (
                           <img
@@ -145,6 +150,12 @@ export function DeckManager() {
                         <div className="absolute top-1 right-1 px-1.5 py-0.5 rounded bg-slate-900/90 text-slate-300 font-mono text-[9px] font-bold">
                           {totalCards}/60
                         </div>
+
+                        {/* Hover Overlay to Change Cover */}
+                        <div className="absolute inset-0 bg-black/70 opacity-0 group-hover/cover:opacity-100 transition-opacity flex flex-col items-center justify-center text-[10px] text-amber-300 font-bold p-1 text-center">
+                          <span>🖼️</span>
+                          <span>เปลี่ยนรูปปก</span>
+                        </div>
                       </div>
 
                       <div className="flex-1 min-w-0">
@@ -152,6 +163,15 @@ export function DeckManager() {
                           <span className="text-[10px] text-slate-400 font-mono">
                             {new Date(deck.updatedAt).toLocaleDateString('th-TH')}
                           </span>
+                          <button
+                            type="button"
+                            onClick={() => setSelectedCoverDeckId(deck.id)}
+                            className="text-[11px] text-slate-400 hover:text-amber-300 font-semibold transition-colors flex items-center gap-1"
+                            title="เลือกรูปการ์ดหน้าปกเด็ค"
+                          >
+                            <span>🖼️</span>
+                            <span>เปลี่ยนรูปปก</span>
+                          </button>
                         </div>
                         <h3
                           onClick={() => setEditingDeckId(deck.id)}
@@ -305,6 +325,15 @@ export function DeckManager() {
           deck={missingDeck}
           cardDataMap={cardDataMap}
           onClose={() => setSelectedMissingDeckId(null)}
+        />
+      )}
+
+      {/* Deck Cover Picker Modal */}
+      {coverDeck && (
+        <DeckCoverPickerModal
+          deck={coverDeck}
+          onSelectCover={(cardId, imageUrl) => setDeckCover(coverDeck.id, cardId, imageUrl)}
+          onClose={() => setSelectedCoverDeckId(null)}
         />
       )}
 

@@ -5,6 +5,7 @@ import { calculateDeckStats, calculateMissingCards } from '../../utils/deckCalcu
 import { resolveCardImageUrl, handleCardImageError } from '../../utils/cardImage';
 import { MissingCardsModal } from './MissingCardsModal';
 import { CardImagePreviewModal } from '../pokemon/CardImagePreviewModal';
+import { DeckCoverPickerModal } from './DeckCoverPickerModal';
 import { RARITY_CLASSES } from '../collection/CollectionFilterBar';
 import pokemonCardData from '../../data/pokemonNames.json';
 import type { Deck } from '../../types/deck';
@@ -58,6 +59,7 @@ export function DeckEditor({ deck, onBackToDecks }: Props) {
   const [deckName, setDeckName] = useState(deck.name);
   const [isEditingName, setIsEditingName] = useState(false);
   const [showMissingModal, setShowMissingModal] = useState(false);
+  const [showCoverModal, setShowCoverModal] = useState(false);
   const [previewCard, setPreviewCard] = useState<any | null>(null);
 
   // Catalog Filters
@@ -173,40 +175,72 @@ export function DeckEditor({ deck, onBackToDecks }: Props) {
       {/* LEFT COLUMN: Deck 60 Cards & Stats */}
       <div className="w-full xl:w-[480px] 2xl:w-[540px] bg-slate-900/90 border-r border-slate-800 p-4 sm:p-6 flex flex-col justify-between shrink-0">
         <div className="space-y-4">
-          {/* Deck Header & Title */}
-          <div className="flex items-center justify-between gap-3 pb-3 border-b border-slate-800">
-            <div className="flex-1 min-w-0">
-              {isEditingName ? (
-                <div className="flex items-center gap-2">
-                  <input
-                    type="text"
-                    value={deckName}
-                    onChange={(e) => setDeckName(e.target.value)}
-                    onKeyDown={(e) => e.key === 'Enter' && handleSaveName()}
-                    autoFocus
-                    className="w-full px-3 py-1 bg-slate-950 border border-indigo-500 rounded-lg text-sm font-bold text-white focus:outline-none"
+          {/* Deck Header & Title + Cover preview */}
+          <div className="flex items-start justify-between gap-3 pb-3 border-b border-slate-800">
+            <div className="flex items-center gap-3 flex-1 min-w-0">
+              {/* Cover Thumbnail Clickable */}
+              <div
+                onClick={() => setShowCoverModal(true)}
+                className="w-12 h-16 rounded-xl overflow-hidden bg-slate-950 border border-slate-700 shadow-md cursor-pointer shrink-0 hover:scale-105 transition-transform flex items-center justify-center relative group/cover"
+                title="คลิกเพื่อเปลี่ยนรูปหน้าปกเด็ค"
+              >
+                {deck.coverImageUrl ? (
+                  <img
+                    src={resolveCardImageUrl(deck.coverImageUrl)}
+                    alt={deck.name}
+                    className="w-full h-full object-cover"
+                    onError={(e) => handleCardImageError(e, deck.coverImageUrl)}
                   />
+                ) : (
+                  <span className="text-xl opacity-40">🃏</span>
+                )}
+                <div className="absolute inset-0 bg-black/60 opacity-0 group-hover/cover:opacity-100 transition-opacity flex items-center justify-center text-[8px] text-amber-300 font-bold text-center">
+                  เปลี่ยนปก
+                </div>
+              </div>
+
+              <div className="flex-1 min-w-0">
+                {isEditingName ? (
+                  <div className="flex items-center gap-2">
+                    <input
+                      type="text"
+                      value={deckName}
+                      onChange={(e) => setDeckName(e.target.value)}
+                      onKeyDown={(e) => e.key === 'Enter' && handleSaveName()}
+                      autoFocus
+                      className="w-full px-3 py-1 bg-slate-950 border border-indigo-500 rounded-lg text-sm font-bold text-white focus:outline-none"
+                    />
+                    <button
+                      onClick={handleSaveName}
+                      className="px-3 py-1 bg-indigo-600 hover:bg-indigo-500 rounded-lg text-xs font-bold text-white"
+                    >
+                      บันทึก
+                    </button>
+                  </div>
+                ) : (
+                  <div className="flex items-center gap-2 group cursor-pointer" onClick={() => setIsEditingName(true)}>
+                    <h2 className="text-base sm:text-lg font-black text-white truncate">{deck.name}</h2>
+                    <span className="text-xs text-slate-400 group-hover:text-indigo-400">✏️</span>
+                  </div>
+                )}
+                <div className="flex items-center gap-2 mt-0.5">
                   <button
-                    onClick={handleSaveName}
-                    className="px-3 py-1 bg-indigo-600 hover:bg-indigo-500 rounded-lg text-xs font-bold text-white"
+                    type="button"
+                    onClick={() => setShowCoverModal(true)}
+                    className="text-[10px] text-amber-400 hover:text-amber-300 font-bold flex items-center gap-1"
                   >
-                    บันทึก
+                    <span>🖼️</span>
+                    <span>เปลี่ยนรูปปก</span>
                   </button>
+                  <span className="text-slate-600">•</span>
+                  <span className="text-[10px] text-slate-400 truncate">{deck.description || 'เด็คมาตรฐาน'}</span>
                 </div>
-              ) : (
-                <div className="flex items-center gap-2 group cursor-pointer" onClick={() => setIsEditingName(true)}>
-                  <h2 className="text-lg sm:text-xl font-black text-white truncate">{deck.name}</h2>
-                  <span className="text-xs text-slate-400 group-hover:text-indigo-400">✏️</span>
-                </div>
-              )}
-              <p className="text-[11px] text-slate-400 mt-0.5">
-                {deck.description || 'คลิกที่ชื่อเพื่อแก้ไขชื่อเด็ค'}
-              </p>
+              </div>
             </div>
 
             <button
               onClick={onBackToDecks}
-              className="px-3 py-1.5 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-300 text-xs font-bold border border-slate-700 transition-all"
+              className="px-3 py-1.5 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-300 text-xs font-bold border border-slate-700 transition-all shrink-0"
             >
               ← ปิดเด็ค
             </button>
@@ -580,6 +614,15 @@ export function DeckEditor({ deck, onBackToDecks }: Props) {
           deck={deck}
           cardDataMap={cardDataMap}
           onClose={() => setShowMissingModal(false)}
+        />
+      )}
+
+      {/* Deck Cover Picker Modal */}
+      {showCoverModal && (
+        <DeckCoverPickerModal
+          deck={deck}
+          onSelectCover={(cardId, imageUrl) => setDeckCover(deck.id, cardId, imageUrl)}
+          onClose={() => setShowCoverModal(false)}
         />
       )}
 
