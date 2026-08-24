@@ -149,13 +149,14 @@ export function CollectionTracker() {
         if (!types.includes(selectedType)) return false;
       }
 
-      // Search Query
+      // Search Query (Card Name, Collector Number, Set ID, Set Name)
       if (search.trim()) {
         const q = search.trim().toLowerCase();
         const nameMatch = (card.name || '').toLowerCase().includes(q);
         const numMatch = (card.collectorNumber || card.localId || '').toLowerCase().includes(q);
-        const setMatch = (card.set?.id || '').toLowerCase().includes(q);
-        if (!nameMatch && !numMatch && !setMatch) return false;
+        const setIdMatch = (card.set?.id || '').toLowerCase().includes(q);
+        const setNameMatch = (card.set?.name || '').toLowerCase().includes(q);
+        if (!nameMatch && !numMatch && !setIdMatch && !setNameMatch) return false;
       }
 
       return true;

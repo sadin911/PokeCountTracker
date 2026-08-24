@@ -87,7 +87,7 @@ export function CollectionFilterBar({
             <span className="absolute left-3.5 top-1/2 -translate-y-1/2 text-slate-400 text-sm">🔍</span>
             <input
               type="text"
-              placeholder="ค้นหาชื่อการ์ดภาษาไทย หรือเลขการ์ด..."
+              placeholder="ค้นหาชื่อการ์ด, เลขการ์ด หรือชื่อชุดการ์ด (เช่น อัคคีสีคราม, ทริปเปิล, SV1a)..."
               value={search}
               onChange={(e) => onSearchChange(e.target.value)}
               className="w-full pl-9 pr-8 py-2.5 bg-slate-950 border border-slate-700/90 rounded-xl text-xs sm:text-sm text-white placeholder-slate-500 focus:outline-none focus:border-amber-500 transition-all shadow-inner"
