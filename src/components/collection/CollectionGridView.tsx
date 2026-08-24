@@ -9,7 +9,7 @@ interface Props {
   currentSetProgress?: SetProgress | null;
 }
 
-const ITEMS_PER_PAGE = 48;
+const ITEMS_PER_PAGE = 60;
 
 export function CollectionGridView({ cards, currentSetProgress }: Props) {
   const activeProfileId = useCollectionStore((s) => s.activeProfileId);
@@ -33,35 +33,35 @@ export function CollectionGridView({ cards, currentSetProgress }: Props) {
   };
 
   return (
-    <div className="flex-1 p-3 sm:p-5 max-w-7xl mx-auto w-full space-y-4">
+    <div className="flex-1 p-4 sm:p-6 lg:p-8 w-full space-y-4">
       {/* Set Progress Header (If specific set is selected) */}
       {currentSetProgress && (
-        <div className="bg-gradient-to-r from-slate-900 via-slate-800 to-slate-900 border border-slate-700/80 rounded-2xl p-4 shadow-xl flex flex-col sm:flex-row items-center justify-between gap-3">
-          <div className="space-y-1 w-full sm:w-auto">
-            <div className="flex items-center gap-2">
-              <span className="px-2 py-0.5 rounded-md bg-amber-500 text-slate-950 font-black text-xs">
+        <div className="bg-gradient-to-r from-slate-900 via-slate-800/90 to-slate-900 border border-slate-700/80 rounded-2xl p-5 shadow-2xl flex flex-col md:flex-row items-center justify-between gap-4">
+          <div className="space-y-1.5 w-full md:w-auto">
+            <div className="flex items-center gap-2.5 flex-wrap">
+              <span className="px-2.5 py-1 rounded-lg bg-amber-500 text-slate-950 font-black text-xs shadow-md shadow-amber-500/20">
                 {currentSetProgress.setId}
               </span>
-              <h2 className="text-sm sm:text-base font-extrabold text-white">
+              <h2 className="text-base sm:text-lg font-black text-white">
                 {currentSetProgress.setName}
               </h2>
             </div>
-            <p className="text-xs text-slate-400">
-              สะสมได้แล้ว <span className="text-amber-400 font-bold">{currentSetProgress.uniqueOwned}</span> จากทั้งหมด{' '}
-              <span className="text-slate-200 font-bold">{currentSetProgress.totalCards}</span> แบบ (รวม{' '}
-              {currentSetProgress.totalCount} ใบ)
+            <p className="text-xs sm:text-sm text-slate-300">
+              สะสมได้แล้ว <span className="text-amber-400 font-extrabold">{currentSetProgress.uniqueOwned}</span> จากทั้งหมด{' '}
+              <span className="text-slate-100 font-extrabold">{currentSetProgress.totalCards}</span> แบบ (รวม{' '}
+              <span className="text-cyan-300 font-bold">{currentSetProgress.totalCount}</span> ใบ)
             </p>
           </div>
 
           {/* Progress Bar & Percentage Pill */}
-          <div className="w-full sm:w-72 flex items-center gap-3">
-            <div className="flex-1 bg-slate-950 rounded-full h-3.5 p-0.5 overflow-hidden border border-slate-700">
+          <div className="w-full md:w-80 flex items-center gap-3.5">
+            <div className="flex-1 bg-slate-950 rounded-full h-4 p-0.5 overflow-hidden border border-slate-700 shadow-inner">
               <div
-                className="bg-gradient-to-r from-amber-500 via-rose-500 to-emerald-400 h-full rounded-full transition-all duration-500"
+                className="bg-gradient-to-r from-amber-500 via-rose-500 to-emerald-400 h-full rounded-full transition-all duration-500 shadow-sm"
                 style={{ width: `${currentSetProgress.percentage}%` }}
               />
             </div>
-            <span className="text-xs font-black text-amber-300 min-w-[45px] text-right">
+            <span className="text-sm font-black text-amber-300 min-w-[50px] text-right">
               {currentSetProgress.percentage}%
             </span>
           </div>
@@ -70,17 +70,17 @@ export function CollectionGridView({ cards, currentSetProgress }: Props) {
 
       {/* Empty State */}
       {cards.length === 0 ? (
-        <div className="py-16 text-center space-y-3 bg-slate-900/40 rounded-2xl border border-dashed border-slate-800">
-          <span className="text-4xl">🔍</span>
-          <h3 className="text-base font-bold text-slate-300">ไม่พบการ์ดที่ตรงกับเงื่อนไขการค้นหา</h3>
-          <p className="text-xs text-slate-500 max-w-sm mx-auto">
-            ลองปรับเปลี่ยนคำค้นหา หรือเปลี่ยนตัวกรองสถานะ/หมวดหมู่เพื่อดูการ์ดอื่น ๆ
+        <div className="py-20 text-center space-y-3 bg-slate-900/40 rounded-3xl border border-dashed border-slate-800">
+          <span className="text-5xl">🔍</span>
+          <h3 className="text-lg font-bold text-slate-200">ไม่พบการ์ดที่ตรงกับเงื่อนไขการค้นหา</h3>
+          <p className="text-xs text-slate-500 max-w-md mx-auto">
+            ลองเปลี่ยนคำค้นหา หรือเลือกชุดการ์ด / ธาตุ / สถานะอื่นเพื่อดูการ์ด
           </p>
         </div>
       ) : (
         <>
-          {/* Card Grid */}
-          <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6 gap-2.5 sm:gap-3.5">
+          {/* Card Grid - Full Screen Multi-Columns */}
+          <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6 xl:grid-cols-8 2xl:grid-cols-10 gap-3 sm:gap-4">
             {displayedCards.map((card) => {
               const entry = profile?.cards[card.id];
               const variants: CardVariantCount = entry?.variants || {
@@ -106,12 +106,12 @@ export function CollectionGridView({ cards, currentSetProgress }: Props) {
 
           {/* Load More Button */}
           {hasMore && (
-            <div className="pt-4 pb-8 text-center">
+            <div className="pt-6 pb-12 text-center">
               <button
                 onClick={() => setDisplayLimit((prev) => prev + ITEMS_PER_PAGE)}
-                className="px-6 py-2.5 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-200 font-bold text-xs border border-slate-700 shadow-md transition-all"
+                className="px-8 py-3 rounded-2xl bg-slate-800 hover:bg-slate-700 text-slate-100 font-extrabold text-xs sm:text-sm border border-slate-700 shadow-xl transition-all hover:scale-105 active:scale-95"
               >
-                โหลดการ์ดเพิ่มเติม ({displayedCards.length} / {cards.length} ใบ)
+                โหลดการ์ดเพิ่มเติม (กำลังแสดง {displayedCards.length} / {cards.length} ใบ)
               </button>
             </div>
           )}
