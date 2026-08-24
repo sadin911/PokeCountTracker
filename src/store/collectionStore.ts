@@ -1,5 +1,7 @@
 import { create } from 'zustand';
 import { persist } from 'zustand/middleware';
+import { doc, setDoc, getDocs, deleteDoc, collection } from 'firebase/firestore';
+import { db, auth } from '../utils/firebase';
 import type {
   CardVariantKey,
   CardCondition,
@@ -7,9 +9,13 @@ import type {
   CollectionProfile,
 } from '../types/collection';
 
+export type SyncStatus = 'idle' | 'syncing' | 'synced' | 'error';
+
 interface CollectionState {
   profiles: Record<string, CollectionProfile>;
   activeProfileId: string;
+  syncStatus: SyncStatus;
+  lastSyncedAt: number | null;
 
   // Profile management
   createProfile: (name: string, icon?: string) => string;
@@ -27,6 +33,11 @@ interface CollectionState {
     details: { condition?: CardCondition; note?: string }
   ) => void;
   clearCard: (cardId: string) => void;
+
+  // Cloud Sync Actions
+  loadUserFromCloud: (uid: string) => Promise<boolean>;
+  syncProfileToCloud: (profileId: string) => Promise<void>;
+  uploadLocalProfilesToCloud: (uid: string) => Promise<void>;
 
   // Backup & Restore
   exportCollectionJSON: () => string;
@@ -50,6 +61,19 @@ function emptyVariants() {
   return { normal: 0, holo: 0, reverse: 0, promo: 0 };
 }
 
+// Debounce timer for saving to Firestore
+let saveTimeout: any = null;
+
+function triggerCloudSync(get: () => CollectionState, profileId: string) {
+  const user = auth.currentUser;
+  if (!user) return;
+
+  if (saveTimeout) clearTimeout(saveTimeout);
+  saveTimeout = setTimeout(() => {
+    get().syncProfileToCloud(profileId);
+  }, 600);
+}
+
 export const useCollectionStore = create<CollectionState>()(
   persist(
     (set, get) => ({
@@ -57,6 +81,8 @@ export const useCollectionStore = create<CollectionState>()(
         [DEFAULT_PROFILE_ID]: createDefaultProfile(),
       },
       activeProfileId: DEFAULT_PROFILE_ID,
+      syncStatus: 'idle',
+      lastSyncedAt: null,
 
       createProfile: (name: string, icon = '📁') => {
         const id = `profile-${Date.now()}-${Math.random().toString(36).substring(2, 7)}`;
@@ -77,6 +103,8 @@ export const useCollectionStore = create<CollectionState>()(
           },
           activeProfileId: id,
         }));
+
+        triggerCloudSync(get, id);
         return id;
       },
 
@@ -103,9 +131,16 @@ export const useCollectionStore = create<CollectionState>()(
             },
           };
         });
+        triggerCloudSync(get, profileId);
       },
 
       deleteProfile: (profileId: string) => {
+        const user = auth.currentUser;
+        if (user) {
+          // Delete from Firestore
+          deleteDoc(doc(db, 'users', user.uid, 'binders', profileId)).catch(console.error);
+        }
+
         set((state) => {
           const profileIds = Object.keys(state.profiles);
           if (profileIds.length <= 1) return state; // Don't delete last profile
@@ -127,6 +162,8 @@ export const useCollectionStore = create<CollectionState>()(
 
       setVariantCount: (cardId: string, variant: CardVariantKey, count: number) => {
         const validCount = Math.max(0, Math.floor(count));
+        const activeId = get().activeProfileId;
+
         set((state) => {
           const profile = state.profiles[state.activeProfileId];
           if (!profile) return state;
@@ -166,6 +203,8 @@ export const useCollectionStore = create<CollectionState>()(
             },
           };
         });
+
+        triggerCloudSync(get, activeId);
       },
 
       incrementVariant: (cardId: string, variant: CardVariantKey) => {
@@ -183,6 +222,8 @@ export const useCollectionStore = create<CollectionState>()(
       },
 
       toggleWishlist: (cardId: string) => {
+        const activeId = get().activeProfileId;
+
         set((state) => {
           const profile = state.profiles[state.activeProfileId];
           if (!profile) return state;
@@ -218,9 +259,13 @@ export const useCollectionStore = create<CollectionState>()(
             },
           };
         });
+
+        triggerCloudSync(get, activeId);
       },
 
       setCardDetails: (cardId: string, details: { condition?: CardCondition; note?: string }) => {
+        const activeId = get().activeProfileId;
+
         set((state) => {
           const profile = state.profiles[state.activeProfileId];
           if (!profile) return state;
@@ -252,9 +297,13 @@ export const useCollectionStore = create<CollectionState>()(
             },
           };
         });
+
+        triggerCloudSync(get, activeId);
       },
 
       clearCard: (cardId: string) => {
+        const activeId = get().activeProfileId;
+
         set((state) => {
           const profile = state.profiles[state.activeProfileId];
           if (!profile || !profile.cards[cardId]) return state;
@@ -273,6 +322,80 @@ export const useCollectionStore = create<CollectionState>()(
             },
           };
         });
+
+        triggerCloudSync(get, activeId);
+      },
+
+      // Cloud Sync Implementation
+      syncProfileToCloud: async (profileId: string) => {
+        const user = auth.currentUser;
+        if (!user) return;
+
+        const profile = get().profiles[profileId];
+        if (!profile) return;
+
+        set({ syncStatus: 'syncing' });
+        try {
+          const docRef = doc(db, 'users', user.uid, 'binders', profileId);
+          await setDoc(docRef, profile, { merge: true });
+          set({ syncStatus: 'synced', lastSyncedAt: Date.now() });
+        } catch (err) {
+          console.error('Failed to sync binder to Firestore:', err);
+          set({ syncStatus: 'error' });
+        }
+      },
+
+      loadUserFromCloud: async (uid: string) => {
+        set({ syncStatus: 'syncing' });
+        try {
+          const bindersCol = collection(db, 'users', uid, 'binders');
+          const snap = await getDocs(bindersCol);
+
+          if (!snap.empty) {
+            const cloudProfiles: Record<string, CollectionProfile> = {};
+            snap.forEach((d) => {
+              const data = d.data() as CollectionProfile;
+              if (data && data.id) {
+                cloudProfiles[data.id] = data;
+              }
+            });
+
+            if (Object.keys(cloudProfiles).length > 0) {
+              const activeId = Object.keys(cloudProfiles)[0];
+              set({
+                profiles: cloudProfiles,
+                activeProfileId: activeId,
+                syncStatus: 'synced',
+                lastSyncedAt: Date.now(),
+              });
+              return true;
+            }
+          }
+
+          // If cloud has no binders yet, upload local guest data
+          await get().uploadLocalProfilesToCloud(uid);
+          set({ syncStatus: 'synced', lastSyncedAt: Date.now() });
+          return false;
+        } catch (err) {
+          console.error('Failed to load user binders from cloud:', err);
+          set({ syncStatus: 'error' });
+          return false;
+        }
+      },
+
+      uploadLocalProfilesToCloud: async (uid: string) => {
+        set({ syncStatus: 'syncing' });
+        try {
+          const { profiles } = get();
+          for (const [id, p] of Object.entries(profiles)) {
+            const docRef = doc(db, 'users', uid, 'binders', id);
+            await setDoc(docRef, p, { merge: true });
+          }
+          set({ syncStatus: 'synced', lastSyncedAt: Date.now() });
+        } catch (err) {
+          console.error('Failed to upload local binders to cloud:', err);
+          set({ syncStatus: 'error' });
+        }
       },
 
       exportCollectionJSON: () => {
@@ -321,6 +444,12 @@ export const useCollectionStore = create<CollectionState>()(
             profiles: importedProfiles,
             activeProfileId: newActive,
           });
+
+          // If logged in, sync all imported profiles to cloud
+          const user = auth.currentUser;
+          if (user) {
+            get().uploadLocalProfilesToCloud(user.uid);
+          }
 
           return { success: true, message: `Successfully imported ${Object.keys(importedProfiles).length} profile(s)!` };
         } catch (err: any) {

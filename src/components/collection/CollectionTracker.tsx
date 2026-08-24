@@ -1,6 +1,7 @@
-import { useState, useMemo } from 'react';
+import { useState, useMemo, useEffect } from 'react';
 import pokemonCardData from '../../data/pokemonNames.json';
 import { useCollectionStore } from '../../store/collectionStore';
+import { useAuthStore } from '../../store/authStore';
 import { CollectionHeader } from './CollectionHeader';
 import { CollectionFilterBar } from './CollectionFilterBar';
 import { CollectionGridView } from './CollectionGridView';
@@ -15,7 +16,17 @@ import type {
 export function CollectionTracker() {
   const activeProfileId = useCollectionStore((s) => s.activeProfileId);
   const profiles = useCollectionStore((s) => s.profiles);
+  const loadUserFromCloud = useCollectionStore((s) => s.loadUserFromCloud);
   const activeProfile = profiles[activeProfileId];
+
+  const user = useAuthStore((s) => s.user);
+
+  // Automatically sync/load user binders when logged in
+  useEffect(() => {
+    if (user?.uid) {
+      loadUserFromCloud(user.uid);
+    }
+  }, [user?.uid]);
 
   // Filters state
   const [selectedSet, setSelectedSet] = useState<string>('ALL');
