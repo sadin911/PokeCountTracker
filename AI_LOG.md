@@ -36,3 +36,4 @@
 [2026-08-24 15:48] Major | Antigravity | Command | git tag v2.2.0 - tagged Google Auth & Firestore Cloud Sync release
 [2026-08-24 15:53] Minor | Antigravity | Fix | public/404.html & index.html - fixed direct URL access (404 error) on GitHub Pages for /collection and /lorcana
 [2026-08-24 16:15] Major | Antigravity | Write | src/components/collection/ - added Card Rarity Class filter (Secret Rare, ex, VMAX, VSTAR, V, Promo, Regular)
+[2026-08-24 16:26] Major | Antigravity | Write | src/data/pokemonNames.json & src/components/collection/ - separated SAR, AR, SR, UR, EX, VMAX, VSTAR, V, Promo into distinct individual rarity filters

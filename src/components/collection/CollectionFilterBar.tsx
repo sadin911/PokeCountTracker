@@ -40,10 +40,13 @@ interface Props {
 
 export const RARITY_CLASSES = [
   { id: 'ALL', label: 'ทุกระดับความหายาก (All Classes)' },
-  { id: 'SECRET', label: '⭐ Secret Rare (SAR / UR / SR / HR / ลับเกินเลข)' },
-  { id: 'EX', label: '👑 โปเกมอน ex / เมก้า ex (Pokémon ex)' },
+  { id: 'SAR', label: '🌟 SAR (Special Art Rare)' },
+  { id: 'AR', label: '🎨 AR / CHR (Art Rare)' },
+  { id: 'SR', label: '💎 SR / CSR (Super Rare)' },
+  { id: 'UR', label: '👑 UR / MUR / HR (Gold & Rainbow)' },
+  { id: 'EX', label: '⚡ โปเกมอน ex / เมก้า ex (Pokémon ex)' },
   { id: 'VMAX', label: '🔥 โปเกมอน VMAX' },
-  { id: 'VSTAR', label: '🌟 โปเกมอน VSTAR' },
+  { id: 'VSTAR', label: '⭐ โปเกมอน VSTAR' },
   { id: 'V', label: '⚡ โปเกมอน V' },
   { id: 'PROMO', label: '🎁 การ์ดโปรโม (Promo)' },
   { id: 'REGULAR', label: '⚪ โปเกมอนทั่วไป (Common / Rare)' },

@@ -15,6 +15,8 @@ import type {
 
 // Helper to determine Card Rarity Class
 export function getCardRarityClass(card: any): string {
+  if (card.rarityCode) return card.rarityCode;
+
   const name = card.name || '';
   const setId = (card.set?.id || '').toUpperCase();
   const col = (card.collectorNumber || card.localId || '').toUpperCase();
@@ -24,53 +26,37 @@ export function getCardRarityClass(card: any): string {
     return 'PROMO';
   }
 
-  // 2. Secret Rare / Super Rare (Collector number > Total e.g. 155/154, 075/073 or SAR/UR/SR/HR/AR/MUR/CSR/CHR)
-  const match = col.match(/(\d+)[-/](\d+)/);
-  if (match && parseInt(match[1], 10) > parseInt(match[2], 10)) {
-    return 'SECRET';
-  }
-  if (
-    col.includes('MUR') ||
-    col.includes('UR') ||
-    col.includes('SAR') ||
-    col.includes('HR') ||
-    col.includes('SR') ||
-    col.includes('AR') ||
-    col.includes('CSR') ||
-    col.includes('CHR')
-  ) {
-    return 'SECRET';
+  // 2. Token / Code check
+  if (col.includes('SAR')) return 'SAR';
+  if (col.includes('AR') || col.includes('CHR')) return 'AR';
+  if (col.includes('UR') || col.includes('MUR') || col.includes('HR')) return 'UR';
+  if (col.includes('SR') || col.includes('CSR')) return 'SR';
+
+  // 3. Secret Rare Range Detection (num > total)
+  const match = col.match(/^0*(\d+)[-/]0*(\d+)/);
+  if (match) {
+    const num = parseInt(match[1], 10);
+    const total = parseInt(match[2], 10);
+    if (num > total) {
+      const diff = num - total;
+      if (setId.startsWith('SV') || setId.startsWith('MA')) {
+        if (!name.includes('ex') && !name.includes('EX') && card.category === 'Pokemon') {
+          return 'AR';
+        }
+        if (diff > 35) return 'UR';
+        if (diff > 15) return 'SAR';
+        return 'SR';
+      }
+      if (diff > 12) return 'UR';
+      return 'SR';
+    }
   }
 
-  // 3. Pokemon ex (Mega / Tera / ex)
-  if (name.includes('ex') || name.includes('EX')) {
-    return 'EX';
-  }
-
-  // 4. VMAX
-  if (name.includes('VMAX')) {
-    return 'VMAX';
-  }
-
-  // 5. VSTAR
-  if (name.includes('VSTAR')) {
-    return 'VSTAR';
-  }
-
-  // 6. Pokemon V
-  if (/(?:[\u0E00-\u0E7F]|\s)V(?:$|[\s\(\[\{【])/i.test(name) || name.endsWith('V')) {
-    return 'V';
-  }
-
-  // 7. Radiant / Ace Spec
-  if (
-    name.includes('ส่องประกาย') ||
-    name.includes('Radiant') ||
-    name.includes('ACE SPEC') ||
-    name.includes('เอซสเปก')
-  ) {
-    return 'SECRET';
-  }
+  // 4. Base set High Rarity:
+  if (name.includes('ex') || name.includes('EX')) return 'EX';
+  if (name.includes('VMAX')) return 'VMAX';
+  if (name.includes('VSTAR')) return 'VSTAR';
+  if (/(?:[\u0E00-\u0E7F]|\s)V(?:$|[\s\(\[\{【])/i.test(name) || name.endsWith('V')) return 'V';
 
   return 'REGULAR';
 }

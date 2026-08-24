@@ -35,7 +35,10 @@ export type SortOrder = 'asc' | 'desc';
 
 export type CardRarityClass =
   | 'ALL'
-  | 'SECRET'
+  | 'SAR'
+  | 'AR'
+  | 'SR'
+  | 'UR'
   | 'EX'
   | 'VMAX'
   | 'VSTAR'
