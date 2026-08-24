@@ -20,7 +20,7 @@ export function resolveCardImageUrl(path?: string | null): string | undefined {
 
 /**
  * Fallback error handler for card image loading.
- * Hierarchy: Local asset -> Cloudflare R2 CDN -> Official Pokemon Asia CDN
+ * Hierarchy: Local asset -> Cloudflare R2 CDN -> Generic Energy Fallback -> Official Pokemon Asia CDN
  */
 export function handleCardImageError(
   e: React.SyntheticEvent<HTMLImageElement>,
@@ -39,7 +39,16 @@ export function handleCardImageError(
     return;
   }
 
-  // 2. If Cloudflare R2 failed, fallback to Official Asia CDN
+  // 2. If it's a basic energy in SCF or custom set that failed on R2, fallback to SCE energy
+  if (cleanPath.includes('card-images/SCF/') && cleanPath.includes('พลังงานพื้นฐาน')) {
+    const sceFallback = `${R2_CDN_BASE}/${cleanPath.replace('card-images/SCF/', 'card-images/SCE/')}`;
+    if (target.src !== sceFallback) {
+      target.src = sceFallback;
+      return;
+    }
+  }
+
+  // 3. If Cloudflare R2 failed, fallback to Official Asia CDN
   if (officialImageUrl && target.src !== officialImageUrl) {
     target.src = officialImageUrl;
   }
