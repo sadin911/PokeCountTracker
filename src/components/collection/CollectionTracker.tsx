@@ -87,6 +87,30 @@ export function CollectionTracker() {
   const [sortBy, setSortBy] = useState<CollectionSortBy>('number');
   const [sortOrder, setSortOrder] = useState<SortOrder>('asc');
   const [showFullColor, setShowFullColor] = useState<boolean>(false);
+  const [showBackToTop, setShowBackToTop] = useState<boolean>(false);
+
+  // Track scrolling for Back to Top button
+  useEffect(() => {
+    const handleScroll = () => {
+      const scrollPos =
+        window.scrollY || document.documentElement.scrollTop || document.body.scrollTop || 0;
+      setShowBackToTop(scrollPos > 300);
+    };
+
+    window.addEventListener('scroll', handleScroll, { passive: true });
+    document.addEventListener('scroll', handleScroll, { passive: true });
+
+    return () => {
+      window.removeEventListener('scroll', handleScroll);
+      document.removeEventListener('scroll', handleScroll);
+    };
+  }, []);
+
+  const scrollToTop = () => {
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+    document.documentElement.scrollTo({ top: 0, behavior: 'smooth' });
+    document.body.scrollTo({ top: 0, behavior: 'smooth' });
+  };
 
   // 1. Build Sets List with Completion Counts
   const setsList = useMemo(() => {
@@ -301,6 +325,19 @@ export function CollectionTracker() {
         currentSetProgress={currentSetProgress}
         showFullColor={showFullColor}
       />
+
+      {/* Floating Back to Top Button */}
+      {showBackToTop && (
+        <button
+          type="button"
+          onClick={scrollToTop}
+          className="fixed bottom-6 right-6 z-40 px-4 py-2.5 rounded-full bg-slate-900/95 hover:bg-amber-500 text-amber-300 hover:text-slate-950 font-black text-xs sm:text-sm border border-amber-500/40 shadow-2xl backdrop-blur-md transition-all duration-300 hover:scale-110 active:scale-95 flex items-center gap-2 group ring-1 ring-white/15"
+          title="Scroll back to top"
+        >
+          <span className="text-base group-hover:-translate-y-0.5 transition-transform font-black">↑</span>
+          <span>Back to Top</span>
+        </button>
+      )}
     </div>
   );
 }

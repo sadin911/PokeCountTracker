@@ -38,3 +38,4 @@
 [2026-08-24 16:15] Major | Antigravity | Write | src/components/collection/ - added Card Rarity Class filter (Secret Rare, ex, VMAX, VSTAR, V, Promo, Regular)
 [2026-08-24 16:26] Major | Antigravity | Write | src/data/pokemonNames.json & src/components/collection/ - separated SAR, AR, SR, UR, EX, VMAX, VSTAR, V, Promo into distinct individual rarity filters
 [2026-08-24 16:50] Major | Antigravity | Write | src/components/collection/ - added Full Color viewing toggle mode and smooth interactive hover zoom elevation effect on card tiles
+[2026-08-24 16:53] Minor | Antigravity | Write | src/components/collection/CollectionTracker.tsx - added smooth floating 'Back to Top' button
