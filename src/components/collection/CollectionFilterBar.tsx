@@ -35,6 +35,9 @@ interface Props {
   sortOrder: SortOrder;
   onSortChange: (sortBy: CollectionSortBy, sortOrder: SortOrder) => void;
 
+  showFullColor: boolean;
+  onToggleFullColor: () => void;
+
   totalFiltered: number;
 }
 
@@ -93,6 +96,8 @@ export function CollectionFilterBar({
   sortBy,
   sortOrder,
   onSortChange,
+  showFullColor,
+  onToggleFullColor,
   totalFiltered,
 }: Props) {
   return (
@@ -235,10 +240,25 @@ export function CollectionFilterBar({
           </div>
         </div>
 
-        {/* Right: Sort & Filter Count */}
-        <div className="flex items-center gap-3">
+        {/* Right: Full Color Toggle + Sort + Filter Count */}
+        <div className="flex items-center gap-2.5 flex-wrap justify-end">
+          {/* Full Color Toggle Button */}
+          <button
+            type="button"
+            onClick={onToggleFullColor}
+            className={`px-3 py-1.5 rounded-lg text-xs font-bold transition-all flex items-center gap-1.5 shadow-sm border ${
+              showFullColor
+                ? 'bg-amber-500/20 border-amber-500/60 text-amber-300 ring-1 ring-amber-500/40 shadow-amber-500/10'
+                : 'bg-slate-950 border-slate-700/80 text-slate-400 hover:text-slate-200 hover:border-slate-600'
+            }`}
+            title={showFullColor ? 'คลิกเพื่อกลับไปโหมดปกติ (การ์ดที่ไม่มีเป็นสีจาง)' : 'คลิกเพื่อเปิดโหมดสีสดใสชัดเจนทุกใบ (เพื่อรับชม)'}
+          >
+            <span>{showFullColor ? '🎨' : '👁️'}</span>
+            <span>{showFullColor ? 'สีสดชัดทุกใบ (ON)' : 'โหมดชมการ์ดสีชัด'}</span>
+          </button>
+
           <div className="flex items-center gap-1.5 text-xs text-slate-400">
-            <span className="font-semibold">เรียงตาม:</span>
+            <span className="font-semibold hidden sm:inline">เรียงตาม:</span>
             <select
               value={sortBy}
               onChange={(e) => onSortChange(e.target.value as CollectionSortBy, sortOrder)}
@@ -254,12 +274,12 @@ export function CollectionFilterBar({
               className="px-2 py-1.5 rounded-lg bg-slate-800 hover:bg-slate-700 text-slate-200 text-xs font-black border border-slate-700"
               title="สลับลำดับ น้อยไปมาก / มากไปน้อย"
             >
-              {sortOrder === 'asc' ? '▲ น้อย→มาก' : '▼ มาก→น้อย'}
+              {sortOrder === 'asc' ? '▲' : '▼'}
             </button>
           </div>
 
-          <span className="text-xs font-black text-amber-400 pl-2 border-l border-slate-700">
-            แสดง {totalFiltered.toLocaleString()} ใบ
+          <span className="text-xs font-black text-amber-400 pl-2 border-l border-slate-700 whitespace-nowrap">
+            {totalFiltered.toLocaleString()} ใบ
           </span>
         </div>
       </div>

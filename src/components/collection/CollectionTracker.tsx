@@ -86,6 +86,7 @@ export function CollectionTracker() {
   const [selectedRarity, setSelectedRarity] = useState<string>('ALL');
   const [sortBy, setSortBy] = useState<CollectionSortBy>('number');
   const [sortOrder, setSortOrder] = useState<SortOrder>('asc');
+  const [showFullColor, setShowFullColor] = useState<boolean>(false);
 
   // 1. Build Sets List with Completion Counts
   const setsList = useMemo(() => {
@@ -289,11 +290,17 @@ export function CollectionTracker() {
           setSortBy(sb);
           setSortOrder(so);
         }}
+        showFullColor={showFullColor}
+        onToggleFullColor={() => setShowFullColor(!showFullColor)}
         totalFiltered={filteredCards.length}
       />
 
       {/* Main Binder Grid */}
-      <CollectionGridView cards={filteredCards} currentSetProgress={currentSetProgress} />
+      <CollectionGridView
+        cards={filteredCards}
+        currentSetProgress={currentSetProgress}
+        showFullColor={showFullColor}
+      />
     </div>
   );
 }

@@ -5,6 +5,7 @@ interface Props {
   card: any;
   variants: CardVariantCount;
   isWishlist?: boolean;
+  showFullColor?: boolean;
   onSelect: (card: any) => void;
   onQuickAdd: (card: any) => void;
   onToggleWishlist: (cardId: string) => void;
@@ -14,6 +15,7 @@ export function CollectionCardItem({
   card,
   variants,
   isWishlist,
+  showFullColor,
   onSelect,
   onQuickAdd,
   onToggleWishlist,
@@ -25,25 +27,27 @@ export function CollectionCardItem({
 
   return (
     <div
-      className={`group relative rounded-xl p-2 sm:p-2.5 transition-all duration-200 flex flex-col justify-between select-none ${
+      className={`group relative rounded-xl p-2 sm:p-2.5 transition-all duration-300 ease-out transform-gpu flex flex-col justify-between select-none hover:scale-[1.06] hover:-translate-y-1.5 hover:z-30 hover:shadow-2xl hover:shadow-black/80 ${
         isOwned
-          ? 'bg-slate-800/80 hover:bg-slate-700/80 border border-amber-500/40 shadow-lg shadow-black/40 ring-1 ring-amber-500/20'
+          ? 'bg-slate-800/90 hover:bg-slate-800 border border-amber-500/50 shadow-lg shadow-black/40 ring-1 ring-amber-500/30 hover:border-amber-400 hover:ring-2 hover:ring-amber-400/50'
+          : showFullColor
+          ? 'bg-slate-900/70 hover:bg-slate-800/80 border border-slate-700/80 hover:border-amber-500/50'
           : 'bg-slate-900/50 hover:bg-slate-800/60 border border-slate-800 hover:border-slate-700'
       }`}
     >
       {/* Card Image Box */}
       <div
         onClick={() => onSelect(card)}
-        className="relative w-full aspect-[2.5/3.5] rounded-lg overflow-hidden cursor-pointer bg-slate-950 shadow-inner group-hover:scale-[1.02] transition-transform duration-200"
+        className="relative w-full aspect-[2.5/3.5] rounded-lg overflow-hidden cursor-pointer bg-slate-950 shadow-inner group-hover:scale-[1.02] transition-transform duration-300 ease-out"
       >
         <img
           src={imgUrl}
           alt={card.name}
           loading="lazy"
           className={`w-full h-full object-cover transition-all duration-300 ${
-            isOwned
+            isOwned || showFullColor
               ? 'brightness-100 contrast-[105%]'
-              : 'grayscale-[85%] opacity-40 group-hover:opacity-75 group-hover:grayscale-[40%]'
+              : 'grayscale-[85%] opacity-40 group-hover:opacity-85 group-hover:grayscale-[20%]'
           }`}
           onError={(e) => handleCardImageError(e, card.imageUrl, card.officialImageUrl)}
         />

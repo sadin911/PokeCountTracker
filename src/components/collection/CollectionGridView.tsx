@@ -7,11 +7,12 @@ import type { CardVariantCount, SetProgress } from '../../types/collection';
 interface Props {
   cards: any[];
   currentSetProgress?: SetProgress | null;
+  showFullColor?: boolean;
 }
 
 const ITEMS_PER_PAGE = 60;
 
-export function CollectionGridView({ cards, currentSetProgress }: Props) {
+export function CollectionGridView({ cards, currentSetProgress, showFullColor }: Props) {
   const activeProfileId = useCollectionStore((s) => s.activeProfileId);
   const profile = useCollectionStore((s) => s.profiles[activeProfileId]);
   const incrementVariant = useCollectionStore((s) => s.incrementVariant);
@@ -146,6 +147,7 @@ export function CollectionGridView({ cards, currentSetProgress }: Props) {
                   card={card}
                   variants={variants}
                   isWishlist={entry?.isWishlist}
+                  showFullColor={showFullColor}
                   onSelect={(c) => setSelectedCard(c)}
                   onQuickAdd={handleQuickAdd}
                   onToggleWishlist={toggleWishlist}
