@@ -75,6 +75,11 @@ function LorcanaCenter({ faceToFace, onToggle }: CenterProps) {
               onClick={() => setGameMode('pokemon')}
               className="px-1.5 py-0.5 rounded-md bg-indigo-700/60 border border-indigo-500/60 text-indigo-300 hover:bg-indigo-600/60 transition-colors font-bold"
             >🎮 Pokémon</button>
+            <span className={theme.centerText}>·</span>
+            <button
+              onClick={() => setGameMode('collection')}
+              className="px-1.5 py-0.5 rounded-md bg-rose-700/60 border border-rose-500/60 text-rose-300 hover:bg-rose-600/60 transition-colors font-bold"
+            >📚 สมุดสะสม</button>
           </div>
         </div>
 
