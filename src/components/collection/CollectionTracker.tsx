@@ -254,6 +254,9 @@ export function CollectionTracker() {
     selectedStage !== 'ALL' ||
     selectedRarity !== 'ALL';
 
+  // Stable key identifying current filter/search/sort criteria
+  const filterKey = `${selectedSet}_${statusFilter}_${selectedType}_${selectedCategory}_${selectedStage}_${selectedRarity}_${sortBy}_${sortOrder}_${search.trim()}_${activeProfileId}`;
+
   return (
     <div className="min-h-screen bg-slate-950 text-slate-100 flex flex-col font-sans selection:bg-amber-500 selection:text-slate-950">
       {/* Top Header */}
@@ -291,6 +294,7 @@ export function CollectionTracker() {
         cards={filteredCards}
         currentSetProgress={currentSetProgress}
         showFullColor={showFullColor}
+        filterKey={filterKey}
       />
 
       {/* Floating Back to Top Button */}

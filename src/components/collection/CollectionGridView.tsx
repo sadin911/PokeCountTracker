@@ -8,11 +8,12 @@ interface Props {
   cards: any[];
   currentSetProgress?: SetProgress | null;
   showFullColor?: boolean;
+  filterKey?: string;
 }
 
 const ITEMS_PER_PAGE = 60;
 
-export function CollectionGridView({ cards, currentSetProgress, showFullColor }: Props) {
+export function CollectionGridView({ cards, currentSetProgress, showFullColor, filterKey }: Props) {
   const activeProfileId = useCollectionStore((s) => s.activeProfileId);
   const profile = useCollectionStore((s) => s.profiles[activeProfileId]);
   const incrementVariant = useCollectionStore((s) => s.incrementVariant);
@@ -22,10 +23,10 @@ export function CollectionGridView({ cards, currentSetProgress, showFullColor }:
   const [displayLimit, setDisplayLimit] = useState(ITEMS_PER_PAGE);
   const sentinelRef = useRef<HTMLDivElement | null>(null);
 
-  // Reset pagination when card list changes
+  // Reset pagination ONLY when search/filter/sort criteria change, NOT on card count or wishlist mutations
   useEffect(() => {
     setDisplayLimit(ITEMS_PER_PAGE);
-  }, [cards]);
+  }, [filterKey]);
 
   const displayedCards = cards.slice(0, displayLimit);
   const hasMore = displayLimit < cards.length;
