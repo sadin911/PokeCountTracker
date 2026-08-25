@@ -51,4 +51,5 @@
 [2026-08-25 18:15] Major | Antigravity | Edit | src/App.tsx & gameStore.ts - set collection as root default & configured subpaths
 [2026-08-25 18:17] Major | Antigravity | Command | git tag v2.5.0 - Searchable Set Filter, Collection Persistence & Subpath Routing
 [2026-08-25 18:23] Major | Antigravity | Write | src/hooks/useModalBackHandler.ts - handle browser/mobile Back to close modal
+[2026-08-25 18:34] Major | Antigravity | Fix | src/App.tsx & useModalBackHandler.ts - fixed popstate collision & URL preservation
 

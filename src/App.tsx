@@ -58,7 +58,7 @@ function getModeFromURL(): GameMode {
   return 'collection';
 }
 
-function updateURLForMode(mode: GameMode) {
+function updateURLForMode(mode: GameMode, replaceOnly: boolean = false) {
   const base = import.meta.env.BASE_URL.replace(/\/+$/, '') || '';
   let targetPath = `${base}/collection`;
 
@@ -72,8 +72,15 @@ function updateURLForMode(mode: GameMode) {
     targetPath = `${base}/lorcana`;
   }
 
-  if (window.location.pathname !== targetPath) {
-    window.history.pushState({ mode }, '', targetPath);
+  const currentPath = window.location.pathname.replace(/\/+$/, '');
+  const cleanTarget = targetPath.replace(/\/+$/, '');
+
+  if (currentPath !== cleanTarget) {
+    if (replaceOnly) {
+      window.history.replaceState({ mode }, '', targetPath);
+    } else {
+      window.history.pushState({ mode }, '', targetPath);
+    }
   }
 }
 
@@ -89,22 +96,31 @@ function App() {
       setGameMode(initialMode);
     }
 
-    const handlePopState = () => {
+    const handlePopState = (e: PopStateEvent) => {
+      // If this popstate event belongs to a modal, do NOT switch game mode!
+      if (e.state?.modalOpen) {
+        return;
+      }
+      const currentMode = getModeFromURL();
+      setGameMode(currentMode);
+    };
+
+    const handleHashChange = () => {
       const currentMode = getModeFromURL();
       setGameMode(currentMode);
     };
 
     window.addEventListener('popstate', handlePopState);
-    window.addEventListener('hashchange', handlePopState);
+    window.addEventListener('hashchange', handleHashChange);
     return () => {
       window.removeEventListener('popstate', handlePopState);
-      window.removeEventListener('hashchange', handlePopState);
+      window.removeEventListener('hashchange', handleHashChange);
     };
   }, []);
 
   // Sync URL when gameMode state changes
   useEffect(() => {
-    updateURLForMode(gameMode);
+    updateURLForMode(gameMode, false);
   }, [gameMode]);
 
   useEffect(() => {
