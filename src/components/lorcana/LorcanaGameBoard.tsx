@@ -125,9 +125,9 @@ export function LorcanaGameBoard() {
   const [faceToFace, setFaceToFace] = useState(true);
 
   return (
-    <div className="flex flex-col h-full w-full overflow-hidden" style={{ background: theme.appBg }}>
+    <div className="flex flex-col h-full w-full overflow-hidden p-2 sm:p-4" style={{ background: theme.appBg }}>
       {/* Player 1 — top half */}
-      <div className="flex-1 min-h-0">
+      <div className="flex-1 min-h-0 flex flex-col justify-center max-w-4xl mx-auto w-full">
         <LorcanaPlayerPanel
           playerId="player1"
           isCurrentTurn={lCurrentTurn === 'player1'}
@@ -136,12 +136,14 @@ export function LorcanaGameBoard() {
       </div>
 
       {/* Center divider */}
-      <div className="flex-shrink-0">
-        <LorcanaCenter faceToFace={faceToFace} onToggle={() => setFaceToFace(f => !f)} />
+      <div className="flex-shrink-0 w-full">
+        <div className="max-w-4xl mx-auto w-full">
+          <LorcanaCenter faceToFace={faceToFace} onToggle={() => setFaceToFace(f => !f)} />
+        </div>
       </div>
 
       {/* Player 2 — bottom half */}
-      <div className="flex-1 min-h-0">
+      <div className="flex-1 min-h-0 flex flex-col justify-center max-w-4xl mx-auto w-full">
         <LorcanaPlayerPanel
           playerId="player2"
           isCurrentTurn={lCurrentTurn === 'player2'}

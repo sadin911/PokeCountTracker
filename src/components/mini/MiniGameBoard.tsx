@@ -282,8 +282,8 @@ function MiniPlayerSection({ playerId, orientation = 'normal' }: {
       : {};
 
   const activeSection = (
-    <div className="flex-1 min-h-0 flex justify-center" {...activeDropProps}>
-      <div className="w-1/5 h-full" {...activeDragSourceProps}>
+    <div className="flex-1 min-h-0 flex justify-center py-0.5" {...activeDropProps}>
+      <div className="w-1/5 min-w-[90px] max-w-[200px] h-full" {...activeDragSourceProps}>
         <MiniPokemonCard
           pokemon={player.activePokemon}
           playerId={playerId}
@@ -296,11 +296,11 @@ function MiniPlayerSection({ playerId, orientation = 'normal' }: {
   );
 
   const benchSection = (
-    <div className="flex-1 min-h-0 flex gap-1">
+    <div className="flex-1 min-h-0 flex gap-1 justify-center py-0.5">
       {player.bench.map((p, i) => (
         <div
           key={i}
-          className="flex-1 min-w-0 h-full"
+          className="flex-1 min-w-[55px] max-w-[200px] h-full"
           {...wrapperDragProps(i as SlotKey, p.name !== '')}
         >
           <MiniPokemonCard
@@ -325,7 +325,7 @@ function MiniPlayerSection({ playerId, orientation = 'normal' }: {
   // normal: Active→Bench→Header (P2 default)
   if (orientation === 'reversed') {
     return (
-      <div className="flex flex-col h-full gap-1">
+      <div className="flex flex-col h-full gap-1 w-full max-w-5xl mx-auto">
         {headerSection}
         {benchSection}
         {activeSection}
@@ -334,7 +334,7 @@ function MiniPlayerSection({ playerId, orientation = 'normal' }: {
   }
 
   return (
-    <div className={`flex flex-col h-full gap-1 ${orientation === 'faceToFace' ? 'rotate-180' : ''}`}>
+    <div className={`flex flex-col h-full gap-1 w-full max-w-5xl mx-auto ${orientation === 'faceToFace' ? 'rotate-180' : ''}`}>
       {activeSection}
       {benchSection}
       {headerSection}
@@ -360,79 +360,81 @@ function MiniSharedZone({ faceToFace, onToggleFaceToFace }: { faceToFace: boolea
 
   return (
     <>
-      <div className={`flex items-center gap-2 px-2 py-1.5 border-t border-b ${theme.centerBorder} ${theme.centerBg}`}>
-        {/* Left: coin + dice stacked */}
-        <div className="flex flex-col items-center gap-1 flex-shrink-0">
-          <CoinFlip compact />
-          <DiceRoller compact />
-        </div>
-        {/* Center: smaller End Turn + options */}
-        <div className="flex-1 flex flex-col items-center gap-0.5 min-w-0">
-          <div className="flex items-center gap-1 w-full">
-            <span className="text-[9px] text-gray-500 font-mono flex-shrink-0">T{turnNumber}</span>
-            <button
-              onClick={() => setShowEndTurn(true)}
-              className="flex-1 py-1 px-1.5 bg-blue-700 hover:bg-blue-600 active:bg-blue-800 border border-blue-500 rounded-lg text-white text-[9px] font-black transition-all"
-            >End {currentPlayerName} →</button>
+      <div className={`w-full border-t border-b ${theme.centerBorder} ${theme.centerBg}`}>
+        <div className="flex items-center gap-2 px-2 py-1.5 max-w-5xl mx-auto w-full">
+          {/* Left: coin + dice stacked */}
+          <div className="flex flex-col items-center gap-1 flex-shrink-0">
+            <CoinFlip compact />
+            <DiceRoller compact />
           </div>
-          <div className="flex items-center gap-1.5 mt-0.5">
+          {/* Center: smaller End Turn + options */}
+          <div className="flex-1 flex flex-col items-center gap-0.5 min-w-0">
+            <div className="flex items-center gap-1 w-full">
+              <span className="text-[9px] text-gray-500 font-mono flex-shrink-0">T{turnNumber}</span>
+              <button
+                onClick={() => setShowEndTurn(true)}
+                className="flex-1 py-1 px-1.5 bg-blue-700 hover:bg-blue-600 active:bg-blue-800 border border-blue-500 rounded-lg text-white text-[9px] font-black transition-all"
+              >End {currentPlayerName} →</button>
+            </div>
+            <div className="flex items-center gap-1.5 mt-0.5">
+              <button
+                onClick={() => setShowReset(true)}
+                className={`px-2 py-1 rounded-md text-[10px] font-bold border ${theme.centerText} border-gray-700/50 hover:text-gray-200 hover:border-gray-500 transition-colors`}
+              >↺ Reset</button>
+              <button
+                onClick={onToggleFaceToFace}
+                className={`px-2 py-1 rounded-md text-[10px] font-bold border transition-colors ${
+                  faceToFace
+                    ? 'bg-blue-700/60 border-blue-500/60 text-blue-300'
+                    : `${theme.centerText} border-gray-700/50 hover:text-gray-200 hover:border-gray-500`
+                }`}
+              >⇅ {faceToFace ? 'FtF' : 'Side'}</button>
+              <button
+                onClick={() => setShowThemePanel(true)}
+                className={`px-2 py-1 rounded-md text-[10px] font-bold border ${theme.centerText} border-gray-700/50 hover:text-gray-200 hover:border-gray-500 transition-colors`}
+                title="Change theme"
+              >🎨</button>
+              <button
+                onClick={toggleFs}
+                className={`px-2 py-1 rounded-md text-[10px] font-bold border ${theme.centerText} border-gray-700/50 hover:text-gray-200 hover:border-gray-500 transition-colors`}
+                title={isFs ? 'Exit fullscreen' : 'Enter fullscreen'}
+              >{isFs ? '⊡' : '⛶'}</button>
+              <button
+                onClick={() => setGameMode('deck')}
+                className="hidden sm:inline-flex px-2 py-1 rounded-md text-[10px] font-bold border bg-purple-800/60 border-purple-500/60 text-purple-300 hover:bg-purple-700/60 transition-colors"
+                title="สลับไปยังระบบสร้างเด็ค (PokéDeck Builder)"
+              >🃏 เด็ค</button>
+              <button
+                onClick={() => setGameMode('collection')}
+                className="hidden sm:inline-flex px-2 py-1 rounded-md text-[10px] font-bold border bg-indigo-800/60 border-indigo-500/60 text-indigo-300 hover:bg-indigo-700/60 transition-colors"
+                title="สลับไปยังสมุดสะสมการ์ด (Card Collection Tracker)"
+              >📚 สมุดสะสม</button>
+              <button
+                onClick={() => setGameMode('lorcana')}
+                className="hidden sm:inline-flex px-2 py-1 rounded-md text-[10px] font-bold border bg-amber-800/60 border-amber-600/60 text-amber-300 hover:bg-amber-700/60 transition-colors"
+                title="Switch to Lorcana"
+              >🪄 Lorcana</button>
+            </div>
+          </div>
+          {/* Right: big shared Nrg + Sup */}
+          <div className="flex flex-col gap-1 flex-shrink-0">
             <button
-              onClick={() => setShowReset(true)}
-              className={`px-2 py-1 rounded-md text-[10px] font-bold border ${theme.centerText} border-gray-700/50 hover:text-gray-200 hover:border-gray-500 transition-colors`}
-            >↺ Reset</button>
-            <button
-              onClick={onToggleFaceToFace}
-              className={`px-2 py-1 rounded-md text-[10px] font-bold border transition-colors ${
-                faceToFace
-                  ? 'bg-blue-700/60 border-blue-500/60 text-blue-300'
-                  : `${theme.centerText} border-gray-700/50 hover:text-gray-200 hover:border-gray-500`
+              onClick={() => toggleEnergyAttached(currentTurn)}
+              className={`px-4 py-2 rounded-xl text-sm font-black border-2 transition-colors ${
+                !currentPlayer.energyAttached
+                  ? 'bg-emerald-900/60 border-emerald-600 text-emerald-300 shadow-md shadow-emerald-900/40'
+                  : 'bg-gray-800/50 border-gray-700/40 text-gray-600 line-through'
               }`}
-            >⇅ {faceToFace ? 'FtF' : 'Side'}</button>
+            >⚡ Nrg</button>
             <button
-              onClick={() => setShowThemePanel(true)}
-              className={`px-2 py-1 rounded-md text-[10px] font-bold border ${theme.centerText} border-gray-700/50 hover:text-gray-200 hover:border-gray-500 transition-colors`}
-              title="Change theme"
-            >🎨</button>
-            <button
-              onClick={toggleFs}
-              className={`px-2 py-1 rounded-md text-[10px] font-bold border ${theme.centerText} border-gray-700/50 hover:text-gray-200 hover:border-gray-500 transition-colors`}
-              title={isFs ? 'Exit fullscreen' : 'Enter fullscreen'}
-            >{isFs ? '⊡' : '⛶'}</button>
-            <button
-              onClick={() => setGameMode('deck')}
-              className="hidden sm:inline-flex px-2 py-1 rounded-md text-[10px] font-bold border bg-purple-800/60 border-purple-500/60 text-purple-300 hover:bg-purple-700/60 transition-colors"
-              title="สลับไปยังระบบสร้างเด็ค (PokéDeck Builder)"
-            >🃏 เด็ค</button>
-            <button
-              onClick={() => setGameMode('collection')}
-              className="hidden sm:inline-flex px-2 py-1 rounded-md text-[10px] font-bold border bg-indigo-800/60 border-indigo-500/60 text-indigo-300 hover:bg-indigo-700/60 transition-colors"
-              title="สลับไปยังสมุดสะสมการ์ด (Card Collection Tracker)"
-            >📚 สมุดสะสม</button>
-            <button
-              onClick={() => setGameMode('lorcana')}
-              className="hidden sm:inline-flex px-2 py-1 rounded-md text-[10px] font-bold border bg-amber-800/60 border-amber-600/60 text-amber-300 hover:bg-amber-700/60 transition-colors"
-              title="Switch to Lorcana"
-            >🪄 Lorcana</button>
+              onClick={() => toggleSupporter(currentTurn)}
+              className={`px-4 py-2 rounded-xl text-sm font-black border-2 transition-colors ${
+                !currentPlayer.supporterUsed
+                  ? 'bg-amber-900/60 border-amber-600 text-amber-300 shadow-md shadow-amber-900/40'
+                  : 'bg-gray-800/50 border-gray-700/40 text-gray-600 line-through'
+              }`}
+            >★ Sup</button>
           </div>
-        </div>
-        {/* Right: big shared Nrg + Sup */}
-        <div className="flex flex-col gap-1 flex-shrink-0">
-          <button
-            onClick={() => toggleEnergyAttached(currentTurn)}
-            className={`px-4 py-2 rounded-xl text-sm font-black border-2 transition-colors ${
-              !currentPlayer.energyAttached
-                ? 'bg-emerald-900/60 border-emerald-600 text-emerald-300 shadow-md shadow-emerald-900/40'
-                : 'bg-gray-800/50 border-gray-700/40 text-gray-600 line-through'
-            }`}
-          >⚡ Nrg</button>
-          <button
-            onClick={() => toggleSupporter(currentTurn)}
-            className={`px-4 py-2 rounded-xl text-sm font-black border-2 transition-colors ${
-              !currentPlayer.supporterUsed
-                ? 'bg-amber-900/60 border-amber-600 text-amber-300 shadow-md shadow-amber-900/40'
-                : 'bg-gray-800/50 border-gray-700/40 text-gray-600 line-through'
-            }`}
-          >★ Sup</button>
         </div>
       </div>
 
@@ -468,15 +470,15 @@ export function MiniGameBoard() {
   const theme = useTheme();
   const [faceToFace, setFaceToFace] = useState(false);
   return (
-    <div className="flex flex-col h-full overflow-hidden p-2 gap-1" style={{ background: theme.appBg }}>
-      <div className="flex-1 min-h-0">
+    <div className="flex flex-col h-full w-full overflow-hidden p-1.5 sm:p-3 gap-1" style={{ background: theme.appBg }}>
+      <div className="flex-1 min-h-0 w-full flex flex-col justify-center">
         <MiniPlayerSection
           playerId="player1"
           orientation={faceToFace ? 'faceToFace' : 'reversed'}
         />
       </div>
       <MiniSharedZone faceToFace={faceToFace} onToggleFaceToFace={() => setFaceToFace(f => !f)} />
-      <div className="flex-1 min-h-0">
+      <div className="flex-1 min-h-0 w-full flex flex-col justify-center">
         <MiniPlayerSection playerId="player2" orientation="normal" />
       </div>
     </div>

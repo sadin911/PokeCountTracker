@@ -114,11 +114,23 @@ function App() {
   }, [displayMode, gameMode]);
 
   return (
-    <div className="min-h-screen pb-16 md:pb-0">
+    <div className={`w-full ${
+      gameMode === 'pokemon' || gameMode === 'lorcana'
+        ? 'h-dvh h-screen overflow-hidden flex flex-col pb-16 md:pb-0'
+        : 'min-h-screen pb-16 md:pb-0'
+    }`}>
       {gameMode === 'deck' && <DeckManager />}
       {gameMode === 'collection' && <CollectionTracker />}
-      {gameMode === 'lorcana' && <LorcanaGameBoard />}
-      {gameMode === 'pokemon' && <GameBoard />}
+      {gameMode === 'lorcana' && (
+        <div className="flex-1 min-h-0 h-full w-full flex flex-col overflow-hidden">
+          <LorcanaGameBoard />
+        </div>
+      )}
+      {gameMode === 'pokemon' && (
+        <div className="flex-1 min-h-0 h-full w-full flex flex-col overflow-hidden">
+          <GameBoard />
+        </div>
+      )}
       <BottomNav />
     </div>
   );
