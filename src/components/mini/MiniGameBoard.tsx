@@ -399,15 +399,20 @@ function MiniSharedZone({ faceToFace, onToggleFaceToFace }: { faceToFace: boolea
               title={isFs ? 'Exit fullscreen' : 'Enter fullscreen'}
             >{isFs ? '⊡' : '⛶'}</button>
             <button
-              onClick={() => setGameMode('lorcana')}
-              className="px-2 py-1 rounded-md text-[10px] font-bold border bg-amber-800/60 border-amber-600/60 text-amber-300 hover:bg-amber-700/60 transition-colors"
-              title="Switch to Lorcana"
-            >🪄 Lorcana</button>
+              onClick={() => setGameMode('deck')}
+              className="px-2 py-1 rounded-md text-[10px] font-bold border bg-purple-800/60 border-purple-500/60 text-purple-300 hover:bg-purple-700/60 transition-colors"
+              title="สลับไปยังระบบสร้างเด็ค (PokéDeck Builder)"
+            >🃏 เด็ค</button>
             <button
               onClick={() => setGameMode('collection')}
               className="px-2 py-1 rounded-md text-[10px] font-bold border bg-indigo-800/60 border-indigo-500/60 text-indigo-300 hover:bg-indigo-700/60 transition-colors"
               title="สลับไปยังสมุดสะสมการ์ด (Card Collection Tracker)"
             >📚 สมุดสะสม</button>
+            <button
+              onClick={() => setGameMode('lorcana')}
+              className="px-2 py-1 rounded-md text-[10px] font-bold border bg-amber-800/60 border-amber-600/60 text-amber-300 hover:bg-amber-700/60 transition-colors"
+              title="Switch to Lorcana"
+            >🪄 Lorcana</button>
           </div>
         </div>
         {/* Right: big shared Nrg + Sup */}

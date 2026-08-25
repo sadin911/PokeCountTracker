@@ -7,6 +7,7 @@ import { MissingCardsModal } from './MissingCardsModal';
 import { CardImagePreviewModal } from '../pokemon/CardImagePreviewModal';
 import { DeckCoverPickerModal } from './DeckCoverPickerModal';
 import { RARITY_CLASSES } from '../collection/CollectionFilterBar';
+import { SearchableSetSelect } from '../common/SearchableSetSelect';
 import { getCardRarityClass } from '../../utils/rarity';
 import pokemonCardData from '../../data/pokemonNames.json';
 import type { Deck } from '../../types/deck';
@@ -443,21 +444,15 @@ export function DeckEditor({ deck, onBackToDecks }: Props) {
               )}
             </div>
 
-            {/* Set Dropdown */}
-            <div className="relative w-full md:w-64">
-              <select
-                value={selectedSet}
-                onChange={(e) => setSelectedSet(e.target.value)}
-                className="w-full px-3 py-2 bg-slate-950 border border-slate-700 rounded-xl text-xs sm:text-sm text-amber-300 font-bold focus:outline-none focus:border-indigo-500 truncate shadow-inner"
-              >
-                <option value="ALL">ทุกชุดการ์ด (All Sets)</option>
-                {setsList.map((s) => (
-                  <option key={s.id} value={s.id}>
-                    {s.id} - {s.name}
-                  </option>
-                ))}
-              </select>
-            </div>
+            {/* Searchable Set Dropdown */}
+            <SearchableSetSelect
+              sets={setsList}
+              selectedSet={selectedSet}
+              onSelectSet={setSelectedSet}
+              accentColor="indigo"
+              showProgress={false}
+              className="w-full md:w-64"
+            />
 
             {/* Rarity Dropdown */}
             <div className="relative w-full md:w-56">
