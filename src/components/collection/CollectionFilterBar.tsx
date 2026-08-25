@@ -1,12 +1,6 @@
 import { ENERGY_TYPES } from '../../constants/energyTypes';
 import type { CollectionStatusFilter, CollectionSortBy, SortOrder } from '../../types/collection';
-
-interface SetOption {
-  id: string;
-  name: string;
-  count: number;
-  owned: number;
-}
+import { SearchableSetSelect, type SetOption } from '../common/SearchableSetSelect';
 
 interface Props {
   sets: SetOption[];
@@ -131,24 +125,15 @@ export function CollectionFilterBar({
             )}
           </div>
 
-          {/* Set Selector Dropdown */}
-          <div className="relative w-full sm:w-96">
-            <select
-              value={selectedSet}
-              onChange={(e) => onSelectSet(e.target.value)}
-              className="w-full px-3.5 py-2.5 bg-slate-950 border border-slate-700/90 rounded-xl text-xs sm:text-sm text-amber-300 font-bold focus:outline-none focus:border-amber-500 truncate shadow-inner"
-            >
-              <option value="ALL">📦 ทุกชุดการ์ด (All 80+ Expansions)</option>
-              {sets.map((s) => {
-                const pct = s.count > 0 ? Math.round((s.owned / s.count) * 100) : 0;
-                return (
-                  <option key={s.id} value={s.id}>
-                    [{s.id}] {s.name} ({s.owned}/{s.count} • {pct}%)
-                  </option>
-                );
-              })}
-            </select>
-          </div>
+          {/* Searchable Set Selector Dropdown */}
+          <SearchableSetSelect
+            sets={sets}
+            selectedSet={selectedSet}
+            onSelectSet={onSelectSet}
+            accentColor="amber"
+            showProgress={true}
+            className="w-full sm:w-96"
+          />
         </div>
 
         {/* Status Filter Tabs */}

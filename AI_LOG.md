@@ -47,4 +47,5 @@
 [2026-08-25 18:00] Major | Antigravity | Bash | npm run dev - started dev server at localhost:5173
 [2026-08-25 18:02] Major | Antigravity | Git | merged feature/deck-builder into main and pushed
 [2026-08-25 18:10] Major | Antigravity | Edit | src/store/collectionStore.ts - persisted collection filter state in store & localStorage
+[2026-08-25 18:12] Major | Antigravity | Write | src/components/common/SearchableSetSelect.tsx - built searchable set filter
 
