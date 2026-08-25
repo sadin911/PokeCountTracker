@@ -600,7 +600,7 @@ export function DeckEditor({ deck, onBackToDecks }: Props) {
                           e.stopPropagation();
                           addCardToDeck(deck.id, card.id, 1);
                         }}
-                        className="absolute bottom-1.5 right-1.5 px-2.5 py-1 rounded-lg bg-indigo-600 hover:bg-indigo-500 text-white font-black text-xs shadow-lg flex items-center gap-1 opacity-0 group-hover:opacity-100 transition-opacity"
+                        className="absolute bottom-1.5 right-1.5 px-2 py-1 sm:px-2.5 rounded-lg bg-indigo-600 hover:bg-indigo-500 active:scale-95 text-white font-black text-[11px] sm:text-xs shadow-lg flex items-center gap-1 opacity-90 sm:opacity-100 xl:opacity-0 xl:group-hover:opacity-100 transition-all"
                         title="เพิ่มการ์ดเข้าเด็ค (+1)"
                       >
                         <span>+ ใส่เด็ค</span>

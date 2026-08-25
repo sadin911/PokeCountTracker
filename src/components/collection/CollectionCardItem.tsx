@@ -77,14 +77,14 @@ export function CollectionCardItem({
           ★
         </button>
 
-        {/* Quick +1 Add Overlay Button on Hover */}
+        {/* Quick +1 Add Overlay Button (Always visible on Mobile & Tablet, hover on Desktop) */}
         <button
           type="button"
           onClick={(e) => {
             e.stopPropagation();
             onQuickAdd(card);
           }}
-          className="absolute bottom-1.5 right-1.5 w-7 h-7 rounded-lg bg-indigo-600/90 hover:bg-indigo-500 text-white font-bold text-sm shadow-lg flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity"
+          className="absolute bottom-1.5 right-1.5 w-7 h-7 sm:w-8 sm:h-8 rounded-lg bg-indigo-600/95 hover:bg-indigo-500 active:scale-90 text-white font-black text-sm sm:text-base shadow-lg shadow-black/60 flex items-center justify-center transition-all opacity-90 sm:opacity-100 xl:opacity-0 xl:group-hover:opacity-100 hover:scale-110"
           title="แตะเพื่อเพิ่มจำนวน (+1 Normal)"
         >
           +

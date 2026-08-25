@@ -59,3 +59,4 @@
 [2026-08-25 19:14] Major | Antigravity | Command | git tag v2.6.1 & push - High-Visibility Vivid Color Hero Toggle Release
 [2026-08-25 19:24] Major | Antigravity | Edit | src/utils/firebase.ts - added explicit local persistence & popup resolver for iOS Safari
 [2026-08-26 01:10] Major | Antigravity | Fix | src/components/collection/ - fixed pagination reset on card actions to preserve scroll position
+[2026-08-26 01:18] Major | Antigravity | Edit | src/components/collection/CollectionCardItem.tsx - enabled always-visible Quick Add button on Tablet and Mobile
