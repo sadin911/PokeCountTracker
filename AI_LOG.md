@@ -52,3 +52,5 @@
 [2026-08-25 18:17] Major | Antigravity | Command | git tag v2.5.0 - Searchable Set Filter, Collection Persistence & Subpath Routing
 [2026-08-25 18:41] Major | Antigravity | Edit | src/components/ - enhanced prominent close buttons & ESC support in all modals
 [2026-08-25 18:42] Major | Antigravity | Command | git tag v2.5.1 - Prominent Modal Controls & Clean Reset Release
+[2026-08-25 18:54] Major | Antigravity | Git | checkout -b feature/mobile-ui-enhancement & drafted mobile plan
+[2026-08-25 18:59] Major | Antigravity | Write | src/components/ - built mobile BottomNav, quick rarity chips, collapsible filters & Deck tab switcher
