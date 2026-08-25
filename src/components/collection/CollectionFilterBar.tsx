@@ -158,8 +158,8 @@ export function CollectionFilterBar({
           />
         </div>
 
-        {/* Quick Total Count & Advanced Mobile Toggle Button */}
-        <div className="flex items-center justify-between lg:justify-end gap-2">
+        {/* Quick Total Count, Advanced Mobile Toggle, and Vivid Color Toggle */}
+        <div className="flex items-center justify-between lg:justify-end gap-2 flex-wrap sm:flex-nowrap">
           {/* Mobile Advanced Filters Toggle */}
           <button
             type="button"
@@ -179,23 +179,39 @@ export function CollectionFilterBar({
             )}
           </button>
 
-          {/* Full Color Toggle (Mobile & Desktop) */}
+          {/* High-Visibility Vivid Full-Color Toggle Button */}
           <button
             type="button"
             onClick={onToggleFullColor}
-            className={`px-2.5 sm:px-3 py-2 rounded-xl text-xs font-bold transition-all flex items-center gap-1 shadow-sm border ${
+            className={`px-3 sm:px-4 py-2 rounded-xl text-xs font-black transition-all flex items-center gap-2 shadow-lg cursor-pointer border ${
               showFullColor
-                ? 'bg-amber-500/20 border-amber-500/60 text-amber-300 ring-1 ring-amber-500/40'
-                : 'bg-slate-950 border-slate-700/80 text-slate-400 hover:text-slate-200'
+                ? 'bg-gradient-to-r from-fuchsia-600 via-pink-600 to-amber-500 text-white border-pink-400/80 shadow-pink-500/30 ring-2 ring-pink-400/50 scale-[1.02]'
+                : 'bg-gradient-to-r from-slate-900 via-slate-800 to-indigo-950/80 hover:from-purple-900/40 hover:to-indigo-900/40 text-purple-200 border-purple-500/60 hover:border-purple-400 shadow-purple-950/50'
             }`}
-            title={showFullColor ? 'คลิกเพื่อกลับไปโหมดปกติ' : 'โหมดสีสดใสชัดเจนทุกใบ'}
+            title={showFullColor ? 'คลิกเพื่อกลับไปโหมดปกติ (การ์ดที่ยังไม่มีจะแสดงเป็นสีจาง)' : 'คลิกเพื่อเปิดโหมดสีสดใสชัดเจนทุกใบ (เพื่อรับชมภาพการ์ด)'}
           >
-            <span>{showFullColor ? '🎨' : '👁️'}</span>
-            <span className="hidden xs:inline">{showFullColor ? 'สีสดทุกใบ' : 'โหมดสีชัด'}</span>
+            <span className={`text-sm sm:text-base ${showFullColor ? 'animate-bounce' : ''}`}>🎨</span>
+            <div className="flex flex-col text-left leading-tight">
+              <span className={`text-[11px] sm:text-xs font-black tracking-wide ${showFullColor ? 'text-yellow-200' : 'text-purple-200'}`}>
+                โหมดชมการ์ดสีสด
+              </span>
+              <span className="text-[9px] font-bold text-slate-300 hidden sm:inline">
+                {showFullColor ? '✨ สีสดชัดทุกใบ (ON)' : '👁️ ชมภาพสีชัด (OFF)'}
+              </span>
+            </div>
+            <span
+              className={`ml-1 px-1.5 py-0.5 rounded-md text-[10px] font-black uppercase ${
+                showFullColor
+                  ? 'bg-white/30 text-white shadow-sm'
+                  : 'bg-purple-950/90 text-purple-300 border border-purple-800'
+              }`}
+            >
+              {showFullColor ? 'ON' : 'OFF'}
+            </span>
           </button>
 
           {/* Total Count Badge */}
-          <span className="text-xs font-black text-amber-400 px-2 py-1 bg-slate-950 rounded-xl border border-slate-800 whitespace-nowrap">
+          <span className="text-xs font-black text-amber-400 px-2.5 py-2 bg-slate-950 rounded-xl border border-slate-800 whitespace-nowrap shadow-inner">
             {totalFiltered.toLocaleString()} ใบ
           </span>
         </div>

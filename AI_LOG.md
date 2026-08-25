@@ -55,3 +55,5 @@
 [2026-08-25 18:54] Major | Antigravity | Git | checkout -b feature/mobile-ui-enhancement & drafted mobile plan
 [2026-08-25 18:59] Major | Antigravity | Write | src/components/ - built mobile BottomNav, quick rarity chips, collapsible filters & Deck tab switcher
 [2026-08-25 19:00] Major | Antigravity | Command | git tag v2.6.0 & push - Mobile UI Overhaul Release
+[2026-08-25 19:12] Major | Antigravity | Edit | src/components/collection/CollectionFilterBar.tsx - redesigned Vivid Full Color button into high-visibility hero toggle
+[2026-08-25 19:14] Major | Antigravity | Command | git tag v2.6.1 & push - High-Visibility Vivid Color Hero Toggle Release
