@@ -49,4 +49,5 @@
 [2026-08-25 18:10] Major | Antigravity | Edit | src/store/collectionStore.ts - persisted collection filter state in store & localStorage
 [2026-08-25 18:12] Major | Antigravity | Write | src/components/common/SearchableSetSelect.tsx - built searchable set filter
 [2026-08-25 18:15] Major | Antigravity | Edit | src/App.tsx & gameStore.ts - set collection as root default & configured subpaths
+[2026-08-25 18:17] Major | Antigravity | Command | git tag v2.5.0 - Searchable Set Filter, Collection Persistence & Subpath Routing
 
