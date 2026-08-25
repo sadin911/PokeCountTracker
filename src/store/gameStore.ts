@@ -95,7 +95,7 @@ export const useGameStore = create<GameStore>()(
       displayMode: 'mini' as DisplayMode,
       setDisplayMode: (mode) => set({ displayMode: mode }),
 
-      gameMode: 'pokemon' as GameMode,
+      gameMode: 'collection' as GameMode,
       setGameMode: (mode) => set({ gameMode: mode }),
 
       theme: 'midnight' as ThemeId,

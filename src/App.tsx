@@ -22,12 +22,20 @@ function getModeFromURL(): GameMode {
     return 'deck';
   }
   if (
-    path.includes('/collection') ||
-    hash.includes('collection') ||
-    modeParam === 'collection' ||
-    rawSearch.includes('collection')
+    path.includes('/battle') ||
+    path.includes('/game') ||
+    path.includes('/pokemon') ||
+    path.includes('/play') ||
+    hash.includes('battle') ||
+    hash.includes('game') ||
+    hash.includes('pokemon') ||
+    modeParam === 'battle' ||
+    modeParam === 'pokemon' ||
+    modeParam === 'game' ||
+    rawSearch.includes('battle') ||
+    rawSearch.includes('pokemon')
   ) {
-    return 'collection';
+    return 'pokemon';
   }
   if (
     path.includes('/lorcana') ||
@@ -37,17 +45,29 @@ function getModeFromURL(): GameMode {
   ) {
     return 'lorcana';
   }
-  return 'pokemon';
+  if (
+    path.includes('/collection') ||
+    hash.includes('collection') ||
+    modeParam === 'collection' ||
+    rawSearch.includes('collection')
+  ) {
+    return 'collection';
+  }
+
+  // Default: Root URL or unmatched path defaults to Collection Tracker
+  return 'collection';
 }
 
 function updateURLForMode(mode: GameMode) {
   const base = import.meta.env.BASE_URL.replace(/\/+$/, '') || '';
-  let targetPath = base ? `${base}/` : '/';
+  let targetPath = `${base}/collection`;
 
   if (mode === 'deck') {
     targetPath = `${base}/deck`;
   } else if (mode === 'collection') {
     targetPath = `${base}/collection`;
+  } else if (mode === 'pokemon') {
+    targetPath = `${base}/battle`;
   } else if (mode === 'lorcana') {
     targetPath = `${base}/lorcana`;
   }

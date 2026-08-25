@@ -72,14 +72,19 @@ function LorcanaCenter({ faceToFace, onToggle }: CenterProps) {
             >{faceToFace ? '⇅ Face-to-Face' : '↓ Same Side'}</button>
             <span className={theme.centerText}>·</span>
             <button
-              onClick={() => setGameMode('pokemon')}
-              className="px-1.5 py-0.5 rounded-md bg-indigo-700/60 border border-indigo-500/60 text-indigo-300 hover:bg-indigo-600/60 transition-colors font-bold"
-            >🎮 Pokémon</button>
+              onClick={() => setGameMode('deck')}
+              className="px-1.5 py-0.5 rounded-md bg-purple-700/60 border border-purple-500/60 text-purple-300 hover:bg-purple-600/60 transition-colors font-bold"
+            >🃏 จัดเด็ค</button>
             <span className={theme.centerText}>·</span>
             <button
               onClick={() => setGameMode('collection')}
               className="px-1.5 py-0.5 rounded-md bg-rose-700/60 border border-rose-500/60 text-rose-300 hover:bg-rose-600/60 transition-colors font-bold"
             >📚 สมุดสะสม</button>
+            <span className={theme.centerText}>·</span>
+            <button
+              onClick={() => setGameMode('pokemon')}
+              className="px-1.5 py-0.5 rounded-md bg-indigo-700/60 border border-indigo-500/60 text-indigo-300 hover:bg-indigo-600/60 transition-colors font-bold"
+            >🎮 Battle</button>
           </div>
         </div>
 
