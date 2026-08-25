@@ -282,8 +282,8 @@ function MiniPlayerSection({ playerId, orientation = 'normal' }: {
       : {};
 
   const activeSection = (
-    <div className="flex-1 min-h-0 flex justify-center py-0.5" {...activeDropProps}>
-      <div className="w-1/5 min-w-[90px] max-w-[200px] h-full" {...activeDragSourceProps}>
+    <div className="flex-1 min-h-0 flex justify-center items-center py-0.5" {...activeDropProps}>
+      <div className="h-full max-h-full aspect-[63/88] flex justify-center items-center" {...activeDragSourceProps}>
         <MiniPokemonCard
           pokemon={player.activePokemon}
           playerId={playerId}
@@ -296,11 +296,11 @@ function MiniPlayerSection({ playerId, orientation = 'normal' }: {
   );
 
   const benchSection = (
-    <div className="flex-1 min-h-0 flex gap-1 justify-center py-0.5">
+    <div className="flex-1 min-h-0 flex gap-1 justify-center items-center py-0.5">
       {player.bench.map((p, i) => (
         <div
           key={i}
-          className="flex-1 min-w-[55px] max-w-[200px] h-full"
+          className="flex-1 min-w-0 h-full max-h-full flex justify-center items-center"
           {...wrapperDragProps(i as SlotKey, p.name !== '')}
         >
           <MiniPokemonCard
@@ -470,16 +470,18 @@ export function MiniGameBoard() {
   const theme = useTheme();
   const [faceToFace, setFaceToFace] = useState(false);
   return (
-    <div className="flex flex-col h-full w-full overflow-hidden p-1.5 sm:p-3 gap-1" style={{ background: theme.appBg }}>
-      <div className="flex-1 min-h-0 w-full flex flex-col justify-center">
-        <MiniPlayerSection
-          playerId="player1"
-          orientation={faceToFace ? 'faceToFace' : 'reversed'}
-        />
-      </div>
-      <MiniSharedZone faceToFace={faceToFace} onToggleFaceToFace={() => setFaceToFace(f => !f)} />
-      <div className="flex-1 min-h-0 w-full flex flex-col justify-center">
-        <MiniPlayerSection playerId="player2" orientation="normal" />
+    <div className="flex items-center justify-center h-full w-full overflow-hidden" style={{ background: theme.appBg }}>
+      <div className="flex flex-col h-full w-full max-w-[calc(100dvh*0.68)] mx-auto overflow-hidden p-1.5 sm:p-2.5 gap-1 shadow-2xl bg-black/20 border-x border-white/5">
+        <div className="flex-1 min-h-0 w-full flex flex-col justify-center">
+          <MiniPlayerSection
+            playerId="player1"
+            orientation={faceToFace ? 'faceToFace' : 'reversed'}
+          />
+        </div>
+        <MiniSharedZone faceToFace={faceToFace} onToggleFaceToFace={() => setFaceToFace(f => !f)} />
+        <div className="flex-1 min-h-0 w-full flex flex-col justify-center">
+          <MiniPlayerSection playerId="player2" orientation="normal" />
+        </div>
       </div>
     </div>
   );

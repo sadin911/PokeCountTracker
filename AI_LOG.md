@@ -61,3 +61,7 @@
 [2026-08-26 01:10] Major | Antigravity | Fix | src/components/collection/ - fixed pagination reset on card actions to preserve scroll position
 [2026-08-26 01:18] Major | Antigravity | Edit | src/components/collection/CollectionCardItem.tsx - enabled always-visible Quick Add button on Tablet and Mobile
 [2026-08-26 01:31] Major | Antigravity | Fix | src/ - resolved Battle & Lorcana board scaling and full height on desktop/tablet
+[2026-08-26 01:35] Major | Antigravity | Edit | src/components/mini/MiniGameBoard.tsx - fixed portrait layout ratio for Battle mode
+[2026-08-26 01:41] Major | Antigravity | Edit | src/components/mini/MiniPokemonCard.tsx - applied real card aspect ratio (63/88) & enhanced opacity/contrast
+[2026-08-26 01:51] Major | Antigravity | Edit | src/components/mini/MiniPokemonCard.tsx - boosted card art to full 90% vivid color with frosted control pills
+[2026-08-26 01:57] Major | Antigravity | Command | git tag v2.7.0 & push - Battle & Lorcana Board Scaling, Real Card Ratio (63:88) & Vivid Display Release

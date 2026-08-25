@@ -85,19 +85,19 @@ export function MiniPokemonCard({
               setShowPicker(true);
             }
           }}
-          className={`flex flex-col items-center justify-center gap-1 h-full w-full rounded-xl border border-dashed transition-all ${
+          className={`flex flex-col items-center justify-center gap-1 h-full w-full aspect-[63/88] rounded-xl border-2 border-dashed transition-all select-none shadow-md ${
             swapMode
-              ? 'border-yellow-500/80 text-yellow-500 bg-yellow-950/30 scale-[0.97]'
+              ? 'border-yellow-400 text-yellow-300 bg-yellow-950/80 scale-[0.97] ring-2 ring-yellow-400/50 shadow-yellow-900/30'
               : isActive
-                ? 'border-blue-700/50 text-blue-700 active:border-blue-500 active:text-blue-500 hover:bg-blue-950/20'
-                : 'border-gray-700/50 text-gray-700 active:border-gray-500 active:text-gray-500 hover:bg-gray-800/20'
+                ? 'border-blue-500/80 text-blue-300 bg-slate-900/90 active:border-blue-400 active:text-blue-200 hover:bg-slate-800/90 shadow-blue-950/40'
+                : 'border-slate-600/80 text-slate-400 bg-slate-900/90 active:border-slate-400 active:text-slate-200 hover:bg-slate-800/90 shadow-inner'
           }`}
         >
-          <span className="text-lg leading-none">
+          <span className="text-xl leading-none">
             {swapMode ? '⇄' : isActive ? '⚔' : '+'}
           </span>
-          <span className="text-[8px] font-bold leading-none">
-            {swapMode ? 'Move' : 'Set HP'}
+          <span className="text-[10px] font-black uppercase tracking-wider leading-none">
+            {swapMode ? 'Move' : isActive ? 'Active' : 'Set HP'}
           </span>
         </button>
         {showPicker && (
@@ -109,44 +109,46 @@ export function MiniPokemonCard({
 
   // ── Occupied card ───────────────────────────────────────────────────────────
   const borderStyle = isDragTarget
-    ? 'ring-2 ring-emerald-400 border-emerald-500 bg-emerald-950/40'
+    ? 'ring-2 ring-emerald-400 border-emerald-400 shadow-lg shadow-emerald-950/50'
     : isDragSource
-      ? 'opacity-50 border-yellow-500 bg-yellow-950/20'
+      ? 'opacity-60 border-yellow-400'
       : isSelected
-        ? 'ring-2 ring-yellow-400 border-yellow-500 bg-yellow-950/40'
+        ? 'ring-2 ring-yellow-400 border-yellow-400 shadow-lg shadow-yellow-950/50'
         : isKO
-          ? 'bg-red-950/60 border-red-700'
+          ? 'border-red-500 ring-2 ring-red-500/80'
           : swapMode
-            ? 'border-yellow-500/40 bg-yellow-950/20'
+            ? 'border-yellow-400/80 ring-1 ring-yellow-400/50'
             : isActive
-              ? 'bg-blue-950/40 border-blue-800/60'
-              : 'bg-gray-850/80 border-gray-700/60';
+              ? 'border-blue-500 shadow-lg shadow-blue-950/60 ring-1 ring-blue-500/50'
+              : 'border-slate-600 shadow-md ring-1 ring-white/10';
 
   return (
     <>
-      <div className={`relative flex flex-col gap-0.5 p-1 rounded-xl border h-full overflow-hidden transition-all shadow-md group ${borderStyle}`}>
-        {/* Subtle background image if card has artwork */}
-        {pokemon.imageUrl && (
+      <div className={`relative flex flex-col justify-between p-1 rounded-xl border h-full w-full aspect-[63/88] overflow-hidden transition-all shadow-md group select-none bg-slate-900 ${borderStyle}`}>
+        {/* Full-color vibrant card artwork */}
+        {pokemon.imageUrl ? (
           <div
-            className="absolute inset-0 bg-cover bg-top opacity-15 pointer-events-none filter blur-[0.5px]"
+            className="absolute inset-0 bg-cover bg-center opacity-90 transition-opacity filter brightness-100 contrast-105 pointer-events-none"
             style={{ backgroundImage: `url(${resolveCardImageUrl(pokemon.imageUrl)})` }}
           />
+        ) : (
+          <div className="absolute inset-0 bg-slate-900 pointer-events-none" />
         )}
 
-        {/* Top row: swap + Name/HP + Evolve 🧬 + delete */}
-        <div className="relative flex items-center gap-0.5 flex-shrink-0 z-10">
+        {/* Top row: swap + Name/HP + Evolve 🧬 + delete in frosted pill container */}
+        <div className="relative flex items-center gap-0.5 flex-shrink-0 z-10 bg-slate-950/85 backdrop-blur-sm rounded-lg p-0.5 border border-white/15 shadow-sm">
           {/* Swap ⇄ */}
           <button
             onClick={onSelect}
             onTouchStart={onSwapStart}
-            className={`w-5 h-5 rounded-full flex items-center justify-center text-[9px] flex-shrink-0 transition-all active:scale-90 cursor-grab active:cursor-grabbing ${
+            className={`w-5 h-5 rounded-md flex items-center justify-center text-[9px] flex-shrink-0 transition-all active:scale-90 cursor-grab active:cursor-grabbing ${
               isDragSource || isDragTarget
                 ? 'bg-emerald-500 text-black font-black'
                 : isSelected
                   ? 'bg-yellow-400 text-black font-black'
                   : swapMode
-                    ? 'bg-yellow-800/60 text-yellow-400'
-                    : 'bg-gray-700/60 text-gray-400 hover:text-gray-200'
+                    ? 'bg-yellow-700 text-yellow-200'
+                    : 'bg-slate-800 text-slate-300 hover:text-white'
             }`}
             title="Drag or tap to swap"
           >⇄</button>
@@ -154,10 +156,10 @@ export function MiniPokemonCard({
           {/* Name and HP — tap to change */}
           <button
             onClick={() => setShowPicker(true)}
-            className="flex-1 text-left min-w-0 overflow-hidden px-0.5 group/btn"
+            className="flex-1 text-left min-w-0 overflow-hidden px-1 group/btn"
           >
             <div className="flex items-center gap-1 leading-none">
-              <span className="text-[9px] font-bold text-gray-200 truncate leading-tight group-hover/btn:text-blue-300">
+              <span className="text-[9px] font-bold text-white truncate leading-tight group-hover/btn:text-blue-300 drop-shadow">
                 {pokemon.name !== 'Pokémon' ? pokemon.name : `${pokemon.maxHP} HP`}
               </span>
               {typeInfo && (
@@ -167,17 +169,17 @@ export function MiniPokemonCard({
               )}
             </div>
             <div className="flex items-center gap-1 mt-0.5">
-              <span className="text-[8px] font-black text-gray-400 leading-none">
+              <span className="text-[8px] font-black text-slate-300 leading-none drop-shadow">
                 {pokemon.maxHP} HP
               </span>
-              <span className="text-[7px] text-gray-500 leading-none">✎</span>
+              <span className="text-[7px] text-slate-400 leading-none">✎</span>
             </div>
           </button>
 
           {/* Evolve 🧬 Button */}
           <button
             onClick={() => setShowEvoModal(true)}
-            className="flex-shrink-0 w-6 h-6 flex items-center justify-center rounded-lg bg-purple-950/80 border border-purple-800/80 text-purple-200 text-xs font-bold hover:bg-purple-900 active:scale-90 transition-all shadow-sm"
+            className="flex-shrink-0 w-5 h-5 flex items-center justify-center rounded-md bg-purple-900/90 border border-purple-600/80 text-purple-200 text-[10px] font-bold hover:bg-purple-800 active:scale-90 transition-all shadow-sm"
             title="พัฒนาร่าง (Evolve)"
           >
             🧬
@@ -187,7 +189,7 @@ export function MiniPokemonCard({
           {pokemon.imageUrl && (
             <button
               onClick={() => setShowZoom(true)}
-              className="flex-shrink-0 w-6 h-6 flex items-center justify-center rounded-lg bg-blue-950/80 border border-blue-800/80 text-blue-200 text-xs font-bold hover:bg-blue-900 active:scale-90 transition-all shadow-sm"
+              className="flex-shrink-0 w-5 h-5 flex items-center justify-center rounded-md bg-blue-900/90 border border-blue-600/80 text-blue-200 text-[10px] font-bold hover:bg-blue-800 active:scale-90 transition-all shadow-sm"
               title="ขยายภาพการ์ด (Zoom)"
             >
               🔍
@@ -197,46 +199,57 @@ export function MiniPokemonCard({
           {/* Delete */}
           <button
             onClick={() => clearPokemon(playerId, slot)}
-            className="flex-shrink-0 w-6 h-6 flex items-center justify-center rounded-lg bg-red-950/80 border border-red-800/80 text-red-300 text-xs font-black hover:bg-red-800 active:scale-90 transition-all"
+            className="flex-shrink-0 w-5 h-5 flex items-center justify-center rounded-md bg-red-900/90 border border-red-600/80 text-red-200 text-[10px] font-black hover:bg-red-800 active:scale-90 transition-all"
             title="Remove"
           >✕</button>
         </div>
 
-        {/* Damage chips */}
-        <div className="relative flex-1 flex flex-wrap gap-0.5 content-start overflow-hidden min-h-0 z-10">
-          {chips > 0 && Array.from({ length: Math.min(chips, 24) }).map((_, i) => (
-            <button
-              key={i}
-              onClick={() => addDamage(-10)}
-              className="w-3 h-3 rounded-full bg-red-500/90 border border-red-400/50 hover:bg-red-400 active:scale-75 transition-all flex-shrink-0 shadow-sm"
-            />
-          ))}
-          {chips > 24 && (
-            <span className="text-[7px] text-red-400 font-black self-center">+{chips - 24}</span>
+        {/* Damage chips & center HP badge */}
+        <div className="relative flex-1 flex flex-col justify-center items-center gap-1 min-h-0 z-10 my-0.5">
+          {/* Damage chips */}
+          {chips > 0 && (
+            <div className="flex flex-wrap justify-center gap-0.5 max-h-10 overflow-hidden bg-slate-950/80 backdrop-blur-sm px-1.5 py-0.5 rounded-md border border-red-500/40 shadow">
+              {Array.from({ length: Math.min(chips, 14) }).map((_, i) => (
+                <button
+                  key={i}
+                  onClick={() => addDamage(-10)}
+                  className="w-2.5 h-2.5 rounded-full bg-red-500 border border-red-300 hover:bg-red-400 active:scale-75 transition-all flex-shrink-0 shadow-sm"
+                  title="Remove 10 damage"
+                />
+              ))}
+              {chips > 14 && (
+                <span className="text-[8px] text-red-300 font-black self-center leading-none">+{chips - 14}</span>
+              )}
+            </div>
           )}
+
+          {/* Current HP badge in center */}
+          <div className="text-center">
+            {isKO ? (
+              <span className="bg-red-900/95 border border-red-500 text-white text-xs font-black px-2 py-0.5 rounded-full animate-pulse shadow-md">
+                ☠ KO!
+              </span>
+            ) : (
+              <div className="bg-slate-950/85 backdrop-blur-sm border border-white/20 px-2 py-0.5 rounded-full shadow-lg flex items-center gap-1">
+                <span className={`text-sm font-black font-mono leading-none drop-shadow ${hpColor}`}>
+                  {currentHP}
+                </span>
+                <span className="text-[8px] text-slate-400 font-bold leading-none">HP</span>
+              </div>
+            )}
+          </div>
         </div>
 
-        {/* Current HP */}
-        <div className="relative text-center flex-shrink-0 z-10">
-          {isKO ? (
-            <span className="text-sm font-black text-red-400 animate-pulse">KO!</span>
-          ) : (
-            <span className={`text-base font-black font-mono leading-none drop-shadow-sm ${hpColor}`}>
-              {currentHP}
-            </span>
-          )}
-        </div>
-
-        {/* Status + ±10 */}
-        <div className="relative flex items-center gap-0.5 flex-shrink-0 z-10">
+        {/* Bottom row: Status + ±10 in frosted container */}
+        <div className="relative flex items-center gap-0.5 flex-shrink-0 z-10 bg-slate-950/85 backdrop-blur-sm rounded-lg p-0.5 border border-white/15 shadow-sm">
           <StatusBadge status={pokemon.status} onChange={status => update({ status })} compact />
           <button
             onClick={() => addDamage(10)}
-            className="flex-1 py-0.5 rounded bg-gray-700/70 border border-gray-600/50 text-red-300 text-[9px] font-black active:scale-95 transition-transform hover:bg-gray-600"
+            className="flex-1 py-0.5 rounded bg-red-950/90 hover:bg-red-900 border border-red-700/80 text-red-200 text-[9px] font-black active:scale-95 transition-all"
           >−10</button>
           <button
             onClick={() => addDamage(-10)}
-            className="flex-1 py-0.5 rounded bg-gray-700/70 border border-gray-600/50 text-green-300 text-[9px] font-black active:scale-95 transition-transform hover:bg-gray-600"
+            className="flex-1 py-0.5 rounded bg-emerald-950/90 hover:bg-emerald-900 border border-emerald-700/80 text-emerald-200 text-[9px] font-black active:scale-95 transition-all"
           >+10</button>
         </div>
       </div>
