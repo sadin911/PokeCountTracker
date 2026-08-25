@@ -38,6 +38,9 @@ interface Props {
   showFullColor: boolean;
   onToggleFullColor: () => void;
 
+  onResetFilters?: () => void;
+  isFiltered?: boolean;
+
   totalFiltered: number;
 }
 
@@ -98,6 +101,8 @@ export function CollectionFilterBar({
   onSortChange,
   showFullColor,
   onToggleFullColor,
+  onResetFilters,
+  isFiltered = false,
   totalFiltered,
 }: Props) {
   return (
@@ -277,6 +282,18 @@ export function CollectionFilterBar({
               {sortOrder === 'asc' ? '▲' : '▼'}
             </button>
           </div>
+
+          {isFiltered && onResetFilters && (
+            <button
+              type="button"
+              onClick={onResetFilters}
+              className="px-2.5 py-1 rounded-lg bg-rose-500/20 hover:bg-rose-500/30 text-rose-300 border border-rose-500/40 text-xs font-bold transition-all flex items-center gap-1 shadow-sm"
+              title="ล้างตัวกรองทั้งหมด"
+            >
+              <span>✕</span>
+              <span>ล้างตัวกรอง</span>
+            </button>
+          )}
 
           <span className="text-xs font-black text-amber-400 pl-2 border-l border-slate-700 whitespace-nowrap">
             {totalFiltered.toLocaleString()} ใบ

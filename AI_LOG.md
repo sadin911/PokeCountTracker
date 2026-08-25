@@ -46,3 +46,5 @@
 [2026-08-25 17:58] Major | Antigravity | Bash | npm run build - build verified successfully
 [2026-08-25 18:00] Major | Antigravity | Bash | npm run dev - started dev server at localhost:5173
 [2026-08-25 18:02] Major | Antigravity | Git | merged feature/deck-builder into main and pushed
+[2026-08-25 18:10] Major | Antigravity | Edit | src/store/collectionStore.ts - persisted collection filter state in store & localStorage
+

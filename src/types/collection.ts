@@ -33,6 +33,19 @@ export type CollectionStatusFilter = 'all' | 'owned' | 'missing' | 'wishlist' | 
 export type CollectionSortBy = 'number' | 'name' | 'hp' | 'quantity';
 export type SortOrder = 'asc' | 'desc';
 
+export interface CollectionFilters {
+  selectedSet: string;
+  statusFilter: CollectionStatusFilter;
+  search: string;
+  selectedType: string;
+  selectedCategory: string;
+  selectedStage: string;
+  selectedRarity: string;
+  sortBy: CollectionSortBy;
+  sortOrder: SortOrder;
+  showFullColor: boolean;
+}
+
 export type CardRarityClass =
   | 'ALL'
   | 'SAR'

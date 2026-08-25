@@ -6,6 +6,7 @@ import type {
   CardCondition,
   CollectionCardEntry,
   CollectionProfile,
+  CollectionFilters,
 } from '../types/collection';
 
 export type SyncStatus = 'idle' | 'syncing' | 'synced' | 'error';
@@ -15,6 +16,11 @@ interface CollectionState {
   activeProfileId: string;
   syncStatus: SyncStatus;
   lastSyncedAt: number | null;
+
+  // Filter persistence
+  filters: CollectionFilters;
+  setFilters: (filters: Partial<CollectionFilters>) => void;
+  resetFilters: () => void;
 
   // Profile management
   createProfile: (name: string, icon?: string) => string;
@@ -47,6 +53,31 @@ interface CollectionState {
 const DEFAULT_PROFILE_ID = 'default-main-profile';
 const GUEST_STORAGE_KEY = 'pokecount_guest_profiles_v2';
 const USER_CACHE_KEY_PREFIX = 'pokecount_user_cache_';
+const FILTERS_STORAGE_KEY = 'pokecount_collection_filters_v1';
+
+export const DEFAULT_COLLECTION_FILTERS: CollectionFilters = {
+  selectedSet: 'ALL',
+  statusFilter: 'all',
+  search: '',
+  selectedType: 'ALL',
+  selectedCategory: 'ALL',
+  selectedStage: 'ALL',
+  selectedRarity: 'ALL',
+  sortBy: 'number',
+  sortOrder: 'asc',
+  showFullColor: false,
+};
+
+function loadInitialFilters(): CollectionFilters {
+  try {
+    const raw = localStorage.getItem(FILTERS_STORAGE_KEY);
+    if (raw) {
+      const parsed = JSON.parse(raw);
+      return { ...DEFAULT_COLLECTION_FILTERS, ...parsed };
+    }
+  } catch (e) {}
+  return DEFAULT_COLLECTION_FILTERS;
+}
 
 function createDefaultProfile(): CollectionProfile {
   return {
@@ -123,6 +154,24 @@ export const useCollectionStore = create<CollectionState>((set, get) => ({
   activeProfileId: initialGuest.activeProfileId,
   syncStatus: 'idle',
   lastSyncedAt: null,
+  filters: loadInitialFilters(),
+
+  setFilters: (newFilters: Partial<CollectionFilters>) => {
+    set((state) => {
+      const updated = { ...state.filters, ...newFilters };
+      try {
+        localStorage.setItem(FILTERS_STORAGE_KEY, JSON.stringify(updated));
+      } catch (e) {}
+      return { filters: updated };
+    });
+  },
+
+  resetFilters: () => {
+    try {
+      localStorage.setItem(FILTERS_STORAGE_KEY, JSON.stringify(DEFAULT_COLLECTION_FILTERS));
+    } catch (e) {}
+    set({ filters: DEFAULT_COLLECTION_FILTERS });
+  },
 
   createProfile: (name: string, icon = '📁') => {
     const id = `profile-${Date.now()}-${Math.random().toString(36).substring(2, 7)}`;

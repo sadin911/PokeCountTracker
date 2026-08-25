@@ -6,9 +6,6 @@ import { CollectionHeader } from './CollectionHeader';
 import { CollectionFilterBar } from './CollectionFilterBar';
 import { CollectionGridView } from './CollectionGridView';
 import type {
-  CollectionStatusFilter,
-  CollectionSortBy,
-  SortOrder,
   CollectionStats,
   SetProgress,
 } from '../../types/collection';
@@ -31,17 +28,23 @@ export function CollectionTracker() {
     }
   }, [user?.uid]);
 
-  // Filters state
-  const [selectedSet, setSelectedSet] = useState<string>('ALL');
-  const [statusFilter, setStatusFilter] = useState<CollectionStatusFilter>('all');
-  const [search, setSearch] = useState<string>('');
-  const [selectedType, setSelectedType] = useState<string>('ALL');
-  const [selectedCategory, setSelectedCategory] = useState<string>('ALL');
-  const [selectedStage, setSelectedStage] = useState<string>('ALL');
-  const [selectedRarity, setSelectedRarity] = useState<string>('ALL');
-  const [sortBy, setSortBy] = useState<CollectionSortBy>('number');
-  const [sortOrder, setSortOrder] = useState<SortOrder>('asc');
-  const [showFullColor, setShowFullColor] = useState<boolean>(false);
+  // Filters state from store (persisted across tab switches and page navigations)
+  const filters = useCollectionStore((s) => s.filters);
+  const setFilters = useCollectionStore((s) => s.setFilters);
+
+  const {
+    selectedSet,
+    statusFilter,
+    search,
+    selectedType,
+    selectedCategory,
+    selectedStage,
+    selectedRarity,
+    sortBy,
+    sortOrder,
+    showFullColor,
+  } = filters;
+
   const [showBackToTop, setShowBackToTop] = useState<boolean>(false);
 
   // Track scrolling for Back to Top button
@@ -241,6 +244,16 @@ export function CollectionTracker() {
     sortOrder,
   ]);
 
+  const resetFilters = useCollectionStore((s) => s.resetFilters);
+  const isFiltered =
+    selectedSet !== 'ALL' ||
+    statusFilter !== 'all' ||
+    search.trim() !== '' ||
+    selectedType !== 'ALL' ||
+    selectedCategory !== 'ALL' ||
+    selectedStage !== 'ALL' ||
+    selectedRarity !== 'ALL';
+
   return (
     <div className="min-h-screen bg-slate-950 text-slate-100 flex flex-col font-sans selection:bg-amber-500 selection:text-slate-950">
       {/* Top Header */}
@@ -250,27 +263,26 @@ export function CollectionTracker() {
       <CollectionFilterBar
         sets={setsList}
         selectedSet={selectedSet}
-        onSelectSet={setSelectedSet}
+        onSelectSet={(val) => setFilters({ selectedSet: val })}
         statusFilter={statusFilter}
-        onStatusFilterChange={setStatusFilter}
+        onStatusFilterChange={(val) => setFilters({ statusFilter: val })}
         search={search}
-        onSearchChange={setSearch}
+        onSearchChange={(val) => setFilters({ search: val })}
         selectedType={selectedType}
-        onTypeChange={setSelectedType}
+        onTypeChange={(val) => setFilters({ selectedType: val })}
         selectedCategory={selectedCategory}
-        onCategoryChange={setSelectedCategory}
+        onCategoryChange={(val) => setFilters({ selectedCategory: val })}
         selectedStage={selectedStage}
-        onStageChange={setSelectedStage}
+        onStageChange={(val) => setFilters({ selectedStage: val })}
         selectedRarity={selectedRarity}
-        onRarityChange={setSelectedRarity}
+        onRarityChange={(val) => setFilters({ selectedRarity: val })}
         sortBy={sortBy}
         sortOrder={sortOrder}
-        onSortChange={(sb, so) => {
-          setSortBy(sb);
-          setSortOrder(so);
-        }}
+        onSortChange={(sb, so) => setFilters({ sortBy: sb, sortOrder: so })}
         showFullColor={showFullColor}
-        onToggleFullColor={() => setShowFullColor(!showFullColor)}
+        onToggleFullColor={() => setFilters({ showFullColor: !showFullColor })}
+        onResetFilters={resetFilters}
+        isFiltered={isFiltered}
         totalFiltered={filteredCards.length}
       />
 
