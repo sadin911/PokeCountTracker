@@ -1,5 +1,13 @@
 import { initializeApp, getApps, getApp } from 'firebase/app';
-import { getAuth, GoogleAuthProvider, signInWithPopup, signOut } from 'firebase/auth';
+import {
+  getAuth,
+  GoogleAuthProvider,
+  signInWithPopup,
+  signOut,
+  browserLocalPersistence,
+  setPersistence,
+  browserPopupRedirectResolver,
+} from 'firebase/auth';
 import { getFirestore } from 'firebase/firestore';
 
 const firebaseConfig = {
@@ -23,9 +31,16 @@ googleProvider.setCustomParameters({
   prompt: 'select_account',
 });
 
+// Configure local persistence to ensure credentials stay stored in localStorage
+if (typeof window !== 'undefined') {
+  setPersistence(auth, browserLocalPersistence).catch((err) => {
+    console.warn('Firebase setPersistence warning:', err);
+  });
+}
+
 export async function signInWithGoogle() {
   try {
-    const result = await signInWithPopup(auth, googleProvider);
+    const result = await signInWithPopup(auth, googleProvider, browserPopupRedirectResolver);
     return result.user;
   } catch (error: any) {
     if (error.code !== 'auth/popup-closed-by-user') {
