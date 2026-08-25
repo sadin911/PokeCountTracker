@@ -51,3 +51,4 @@
 [2026-08-25 18:15] Major | Antigravity | Edit | src/App.tsx & gameStore.ts - set collection as root default & configured subpaths
 [2026-08-25 18:17] Major | Antigravity | Command | git tag v2.5.0 - Searchable Set Filter, Collection Persistence & Subpath Routing
 [2026-08-25 18:41] Major | Antigravity | Edit | src/components/ - enhanced prominent close buttons & ESC support in all modals
+[2026-08-25 18:42] Major | Antigravity | Command | git tag v2.5.1 - Prominent Modal Controls & Clean Reset Release
