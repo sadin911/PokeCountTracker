@@ -13,53 +13,8 @@ import type {
   SetProgress,
 } from '../../types/collection';
 
-// Helper to determine Card Rarity Class
-export function getCardRarityClass(card: any): string {
-  if (card.rarityCode) return card.rarityCode;
-
-  const name = card.name || '';
-  const setId = (card.set?.id || '').toUpperCase();
-  const col = (card.collectorNumber || card.localId || '').toUpperCase();
-
-  // 1. Promo
-  if (setId.includes('-P') || setId.includes('PROMO') || col.includes('PROMO') || col.startsWith('P-')) {
-    return 'PROMO';
-  }
-
-  // 2. Token / Code check
-  if (col.includes('SAR')) return 'SAR';
-  if (col.includes('AR') || col.includes('CHR')) return 'AR';
-  if (col.includes('UR') || col.includes('MUR') || col.includes('HR')) return 'UR';
-  if (col.includes('SR') || col.includes('CSR')) return 'SR';
-
-  // 3. Secret Rare Range Detection (num > total)
-  const match = col.match(/^0*(\d+)[-/]0*(\d+)/);
-  if (match) {
-    const num = parseInt(match[1], 10);
-    const total = parseInt(match[2], 10);
-    if (num > total) {
-      const diff = num - total;
-      if (setId.startsWith('SV') || setId.startsWith('MA')) {
-        if (!name.includes('ex') && !name.includes('EX') && card.category === 'Pokemon') {
-          return 'AR';
-        }
-        if (diff > 35) return 'UR';
-        if (diff > 15) return 'SAR';
-        return 'SR';
-      }
-      if (diff > 12) return 'UR';
-      return 'SR';
-    }
-  }
-
-  // 4. Base set High Rarity:
-  if (name.includes('ex') || name.includes('EX')) return 'EX';
-  if (name.includes('VMAX')) return 'VMAX';
-  if (name.includes('VSTAR')) return 'VSTAR';
-  if (/(?:[\u0E00-\u0E7F]|\s)V(?:$|[\s\(\[\{【])/i.test(name) || name.endsWith('V')) return 'V';
-
-  return 'REGULAR';
-}
+import { getCardRarityClass } from '../../utils/rarity';
+export { getCardRarityClass };
 
 export function CollectionTracker() {
   const activeProfileId = useCollectionStore((s) => s.activeProfileId);
