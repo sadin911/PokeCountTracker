@@ -1,4 +1,5 @@
 import { useState, useMemo } from 'react';
+import { useModalBackHandler } from '../../hooks/useModalBackHandler';
 import { resolveCardImageUrl, handleCardImageError } from '../../utils/cardImage';
 import pokemonCardData from '../../data/pokemonNames.json';
 import type { Deck } from '../../types/deck';
@@ -10,6 +11,8 @@ interface Props {
 }
 
 export function DeckCoverPickerModal({ deck, onSelectCover, onClose }: Props) {
+  useModalBackHandler(true, onClose, 'deck-cover-picker-modal');
+
   const [activeTab, setActiveTab] = useState<'inDeck' | 'popular' | 'search'>('inDeck');
   const [search, setSearch] = useState('');
 

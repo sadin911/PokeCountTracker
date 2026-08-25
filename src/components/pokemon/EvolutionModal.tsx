@@ -1,5 +1,6 @@
 import { useMemo, useState } from 'react';
 import { createPortal } from 'react-dom';
+import { useModalBackHandler } from '../../hooks/useModalBackHandler';
 import pokemonCardData from '../../data/pokemonNames.json';
 import evoDataRaw from '../../data/evolutionLines.json';
 import { ENERGY_MAP } from '../../constants/energyTypes';
@@ -25,6 +26,8 @@ interface Props {
 }
 
 export function EvolutionModal({ pokemon, onSelectEvolution, onClose }: Props) {
+  useModalBackHandler(true, onClose, 'evolution-modal');
+
   const [search, setSearch] = useState('');
   const [previewCard, setPreviewCard] = useState<any | null>(null);
 

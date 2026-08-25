@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import { motion } from 'framer-motion';
+import { useModalBackHandler } from '../../hooks/useModalBackHandler';
 import type { PlayerId, SlotKey, PokemonSlot as PokemonSlotType, EnergyType } from '../../types/game';
 import { useGameStore } from '../../store/gameStore';
 import { HPPresetPicker } from '../pokemon/HPPresetPicker';
@@ -18,6 +19,8 @@ interface Props {
 }
 
 export function CardDetailModal({ pokemon, playerId, slot, onClose }: Props) {
+  useModalBackHandler(true, onClose, 'mobile-card-detail-modal');
+
   const { updatePokemon, clearPokemon, setEnergyCount } = useGameStore();
   const [showHPPicker, setShowHPPicker] = useState(false);
   const [showEvoModal, setShowEvoModal] = useState(false);

@@ -1,12 +1,15 @@
 import { useState } from 'react';
 import { createPortal } from 'react-dom';
 import { useCollectionStore } from '../../store/collectionStore';
+import { useModalBackHandler } from '../../hooks/useModalBackHandler';
 
 interface Props {
   onClose: () => void;
 }
 
 export function CollectionBackupModal({ onClose }: Props) {
+  useModalBackHandler(true, onClose, 'collection-backup-modal');
+
   const exportCollectionJSON = useCollectionStore((s) => s.exportCollectionJSON);
   const importCollectionJSON = useCollectionStore((s) => s.importCollectionJSON);
 

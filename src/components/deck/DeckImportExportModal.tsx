@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import { useDeckStore } from '../../store/deckStore';
+import { useModalBackHandler } from '../../hooks/useModalBackHandler';
 import pokemonCardData from '../../data/pokemonNames.json';
 
 interface Props {
@@ -8,6 +9,8 @@ interface Props {
 }
 
 export function DeckImportExportModal({ onClose, activeDeckId }: Props) {
+  useModalBackHandler(true, onClose, 'deck-import-export-modal');
+
   const decks = useDeckStore((s) => s.decks);
   const importDeckJSON = useDeckStore((s) => s.importDeckJSON);
   const createDeck = useDeckStore((s) => s.createDeck);

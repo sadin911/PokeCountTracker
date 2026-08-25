@@ -1,5 +1,6 @@
 import { useState, useMemo } from 'react';
 import { createPortal } from 'react-dom';
+import { useModalBackHandler } from '../../hooks/useModalBackHandler';
 import { HP_PRESETS } from '../../constants/hpPresets';
 import pokemonCardData from '../../data/pokemonNames.json';
 import { ENERGY_TYPES, ENERGY_MAP } from '../../constants/energyTypes';
@@ -29,6 +30,8 @@ interface Props {
 type StageFilter = 'ALL' | 'BASIC' | 'EVO' | 'EX';
 
 export function HPPresetPicker({ currentMaxHP, initialType, onSelect, onClose }: Props) {
+  useModalBackHandler(true, onClose, 'hp-preset-picker-modal');
+
   const [custom, setCustom] = useState('');
   const [selectedHP, setSelectedHP] = useState<number | null>(null);
   const [selectedType, setSelectedType] = useState<EnergyType | 'ALL'>(() => {

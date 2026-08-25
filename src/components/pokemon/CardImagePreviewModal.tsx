@@ -1,6 +1,6 @@
-import { useEffect } from 'react';
 import { createPortal } from 'react-dom';
 import { motion, AnimatePresence } from 'framer-motion';
+import { useModalBackHandler } from '../../hooks/useModalBackHandler';
 import { resolveCardImageUrl, handleCardImageError } from '../../utils/cardImage';
 
 interface Props {
@@ -12,13 +12,7 @@ interface Props {
 }
 
 export function CardImagePreviewModal({ imageUrl, officialImageUrl, cardName, onClose, onSelect }: Props) {
-  useEffect(() => {
-    const handleKeyDown = (e: KeyboardEvent) => {
-      if (e.key === 'Escape') onClose();
-    };
-    window.addEventListener('keydown', handleKeyDown);
-    return () => window.removeEventListener('keydown', handleKeyDown);
-  }, [onClose]);
+  useModalBackHandler(!!imageUrl, onClose, 'card-image-preview-modal');
 
   if (!imageUrl) return null;
 

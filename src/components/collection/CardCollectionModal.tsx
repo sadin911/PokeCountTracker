@@ -1,6 +1,7 @@
 import { useMemo } from 'react';
 import { createPortal } from 'react-dom';
 import { useCollectionStore } from '../../store/collectionStore';
+import { useModalBackHandler } from '../../hooks/useModalBackHandler';
 import { resolveCardImageUrl, handleCardImageError } from '../../utils/cardImage';
 import type { CardVariantKey, CardCondition } from '../../types/collection';
 
@@ -144,6 +145,9 @@ export function CardCollectionModal({ card, onClose }: Props) {
   const applicableVariants = useMemo(() => {
     return getApplicableVariants(card, variants);
   }, [card, variants]);
+
+  // Intercept back button to close modal
+  useModalBackHandler(true, onClose, 'card-collection-modal');
 
   return createPortal(
     <div

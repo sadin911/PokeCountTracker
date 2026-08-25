@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import { createPortal } from 'react-dom';
 import { useCollectionStore } from '../../store/collectionStore';
+import { useModalBackHandler } from '../../hooks/useModalBackHandler';
 
 interface Props {
   onClose: () => void;
@@ -9,6 +10,8 @@ interface Props {
 const PROFILE_ICONS = ['🎴', '📁', '⭐', '🔥', '⚡', '💧', '🌿', '🔮', '🐉', '🏆', '💎', '📦'];
 
 export function ProfileManagerModal({ onClose }: Props) {
+  useModalBackHandler(true, onClose, 'profile-manager-modal');
+
   const profiles = useCollectionStore((s) => s.profiles);
   const activeProfileId = useCollectionStore((s) => s.activeProfileId);
   const createProfile = useCollectionStore((s) => s.createProfile);

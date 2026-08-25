@@ -1,5 +1,6 @@
 import { useState, useMemo } from 'react';
 import { useCollectionStore } from '../../store/collectionStore';
+import { useModalBackHandler } from '../../hooks/useModalBackHandler';
 import { calculateMissingCards, generateShoppingListText } from '../../utils/deckCalculator';
 import { resolveCardImageUrl, handleCardImageError } from '../../utils/cardImage';
 import type { Deck } from '../../types/deck';
@@ -11,6 +12,8 @@ interface Props {
 }
 
 export function MissingCardsModal({ deck, cardDataMap, onClose }: Props) {
+  useModalBackHandler(true, onClose, 'missing-cards-modal');
+
   const activeProfileId = useCollectionStore((s) => s.activeProfileId);
   const profile = useCollectionStore((s) => s.profiles[activeProfileId]);
   const userCollectionCards = profile?.cards || {};
