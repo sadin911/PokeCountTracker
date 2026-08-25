@@ -1,3 +1,4 @@
+import { useState } from 'react';
 import { ENERGY_TYPES } from '../../constants/energyTypes';
 import type { CollectionStatusFilter, CollectionSortBy, SortOrder } from '../../types/collection';
 import { SearchableSetSelect, type SetOption } from '../common/SearchableSetSelect';
@@ -52,6 +53,16 @@ export const RARITY_CLASSES = [
   { id: 'REGULAR', label: '⚪ โปเกมอนทั่วไป (Common / Rare)' },
 ];
 
+const QUICK_RARITIES = [
+  { id: 'ALL', label: 'ทั้งหมด' },
+  { id: 'SAR', label: '🌟 SAR' },
+  { id: 'AR', label: '🎨 AR' },
+  { id: 'SR', label: '💎 SR' },
+  { id: 'UR', label: '👑 UR' },
+  { id: 'EX', label: '⚡ ex' },
+  { id: 'PROMO', label: '🎁 Promo' },
+];
+
 const STATUS_TABS: { key: CollectionStatusFilter; label: string; icon: string }[] = [
   { key: 'all', label: 'ทั้งหมด (All)', icon: '🎴' },
   { key: 'owned', label: 'มีแล้ว (Owned)', icon: '✅' },
@@ -99,21 +110,32 @@ export function CollectionFilterBar({
   isFiltered = false,
   totalFiltered,
 }: Props) {
+  const [showAdvancedMobile, setShowAdvancedMobile] = useState(false);
+
+  // Count active non-default filters
+  const activeFilterCount = [
+    selectedRarity !== 'ALL',
+    selectedCategory !== 'ALL',
+    selectedStage !== 'ALL',
+    selectedType !== 'ALL',
+    statusFilter !== 'all',
+    search.trim().length > 0,
+  ].filter(Boolean).length;
+
   return (
-    <div className="bg-slate-900/90 border-b border-slate-800/90 px-4 sm:px-8 py-3 space-y-3 shadow-md">
-      {/* Top Row: Search + Set Selector + Status Tabs */}
-      <div className="flex flex-col xl:flex-row items-stretch xl:items-center justify-between gap-3">
-        {/* Search & Set Dropdown */}
-        <div className="flex flex-col sm:flex-row items-center gap-2.5 flex-1">
+    <div className="bg-slate-900/90 border-b border-slate-800/90 px-3 sm:px-8 py-2.5 sm:py-3 space-y-2.5 sm:space-y-3 shadow-md">
+      {/* Top Row: Search & Set Selector */}
+      <div className="flex flex-col lg:flex-row items-stretch lg:items-center justify-between gap-2 sm:gap-3">
+        <div className="flex flex-col sm:flex-row items-center gap-2 sm:gap-2.5 flex-1">
           {/* Search Box */}
           <div className="relative w-full sm:w-80">
             <span className="absolute left-3.5 top-1/2 -translate-y-1/2 text-slate-400 text-sm">🔍</span>
             <input
               type="text"
-              placeholder="ค้นหาชื่อการ์ด, เลขการ์ด หรือชื่อชุดการ์ด (เช่น อัคคีสีคราม, ทริปเปิล, SV1a)..."
+              placeholder="ค้นหาชื่อการ์ด, เลขการ์ด หรือชื่อชุด..."
               value={search}
               onChange={(e) => onSearchChange(e.target.value)}
-              className="w-full pl-9 pr-8 py-2.5 bg-slate-950 border border-slate-700/90 rounded-xl text-xs sm:text-sm text-white placeholder-slate-500 focus:outline-none focus:border-amber-500 transition-all shadow-inner"
+              className="w-full pl-9 pr-8 py-2 sm:py-2.5 bg-slate-950 border border-slate-700/90 rounded-xl text-xs sm:text-sm text-white placeholder-slate-500 focus:outline-none focus:border-amber-500 transition-all shadow-inner"
             />
             {search && (
               <button
@@ -136,37 +158,102 @@ export function CollectionFilterBar({
           />
         </div>
 
-        {/* Status Filter Tabs */}
-        <div className="flex items-center gap-1.5 overflow-x-auto pb-1 xl:pb-0 scrollbar-none">
-          {STATUS_TABS.map((tab) => {
-            const isActive = statusFilter === tab.key;
-            return (
-              <button
-                key={tab.key}
-                onClick={() => onStatusFilterChange(tab.key)}
-                className={`px-3.5 py-2 rounded-xl text-xs font-bold whitespace-nowrap transition-all flex items-center gap-1.5 shadow-sm ${
-                  isActive
-                    ? 'bg-gradient-to-r from-amber-500 to-amber-600 text-slate-950 shadow-md shadow-amber-500/20 font-black scale-[1.02]'
-                    : 'bg-slate-800/80 hover:bg-slate-800 text-slate-300 border border-slate-700/60'
-                }`}
-              >
-                <span>{tab.icon}</span>
-                <span>{tab.label}</span>
-              </button>
-            );
-          })}
+        {/* Quick Total Count & Advanced Mobile Toggle Button */}
+        <div className="flex items-center justify-between lg:justify-end gap-2">
+          {/* Mobile Advanced Filters Toggle */}
+          <button
+            type="button"
+            onClick={() => setShowAdvancedMobile(!showAdvancedMobile)}
+            className={`lg:hidden flex-1 sm:flex-none px-3 py-2 rounded-xl text-xs font-bold transition-all flex items-center justify-center gap-1.5 border ${
+              showAdvancedMobile || activeFilterCount > 0
+                ? 'bg-amber-500/20 border-amber-500/60 text-amber-300'
+                : 'bg-slate-800 text-slate-300 border-slate-700'
+            }`}
+          >
+            <span>⚙️</span>
+            <span>ตัวกรองละเอียด</span>
+            {activeFilterCount > 0 && (
+              <span className="px-1.5 py-0.2 rounded-full bg-amber-500 text-slate-950 text-[10px] font-black">
+                {activeFilterCount}
+              </span>
+            )}
+          </button>
+
+          {/* Full Color Toggle (Mobile & Desktop) */}
+          <button
+            type="button"
+            onClick={onToggleFullColor}
+            className={`px-2.5 sm:px-3 py-2 rounded-xl text-xs font-bold transition-all flex items-center gap-1 shadow-sm border ${
+              showFullColor
+                ? 'bg-amber-500/20 border-amber-500/60 text-amber-300 ring-1 ring-amber-500/40'
+                : 'bg-slate-950 border-slate-700/80 text-slate-400 hover:text-slate-200'
+            }`}
+            title={showFullColor ? 'คลิกเพื่อกลับไปโหมดปกติ' : 'โหมดสีสดใสชัดเจนทุกใบ'}
+          >
+            <span>{showFullColor ? '🎨' : '👁️'}</span>
+            <span className="hidden xs:inline">{showFullColor ? 'สีสดทุกใบ' : 'โหมดสีชัด'}</span>
+          </button>
+
+          {/* Total Count Badge */}
+          <span className="text-xs font-black text-amber-400 px-2 py-1 bg-slate-950 rounded-xl border border-slate-800 whitespace-nowrap">
+            {totalFiltered.toLocaleString()} ใบ
+          </span>
         </div>
       </div>
 
-      {/* Bottom Row: Rarity Class + Category + Stage + Energy Type Chips + Sort */}
-      <div className="flex flex-wrap items-center justify-between gap-3 pt-2 border-t border-slate-800/70 text-xs">
+      {/* Row 2: Status Filter Tabs (Horizontal Scrollable on Mobile) */}
+      <div className="flex items-center gap-1.5 overflow-x-auto pb-1 scrollbar-none">
+        {STATUS_TABS.map((tab) => {
+          const isActive = statusFilter === tab.key;
+          return (
+            <button
+              key={tab.key}
+              onClick={() => onStatusFilterChange(tab.key)}
+              className={`px-3 py-1.5 rounded-xl text-xs font-bold whitespace-nowrap transition-all flex items-center gap-1 shadow-sm ${
+                isActive
+                  ? 'bg-gradient-to-r from-amber-500 to-amber-600 text-slate-950 shadow-md shadow-amber-500/20 font-black'
+                  : 'bg-slate-800/80 hover:bg-slate-800 text-slate-300 border border-slate-700/60'
+              }`}
+            >
+              <span>{tab.icon}</span>
+              <span>{tab.label}</span>
+            </button>
+          );
+        })}
+      </div>
+
+      {/* Row 3: Quick Rarity Chips Bar (Visible on Mobile & Desktop for 1-Tap Filter) */}
+      <div className="flex items-center gap-1.5 overflow-x-auto pb-1 scrollbar-none">
+        <span className="text-[11px] text-slate-400 font-bold whitespace-nowrap shrink-0">
+          ความหายาก:
+        </span>
+        {QUICK_RARITIES.map((qr) => {
+          const isSelected = selectedRarity === qr.id;
+          return (
+            <button
+              key={qr.id}
+              onClick={() => onRarityChange(qr.id)}
+              className={`px-2.5 py-1 rounded-xl text-xs font-bold whitespace-nowrap transition-all flex items-center gap-1 ${
+                isSelected
+                  ? 'bg-amber-400 text-slate-950 font-black shadow-md shadow-amber-400/20 scale-105'
+                  : 'bg-slate-800 hover:bg-slate-700 text-slate-300 border border-slate-700/60'
+              }`}
+            >
+              {qr.label}
+            </button>
+          );
+        })}
+      </div>
+
+      {/* Row 4: Advanced Filter Row (Visible by default on Desktop, Collapsible on Mobile) */}
+      <div className={`${showAdvancedMobile ? 'flex' : 'hidden lg:flex'} flex-wrap items-center justify-between gap-2.5 pt-2 border-t border-slate-800/70 text-xs animate-fade-in`}>
         {/* Dropdowns */}
-        <div className="flex items-center gap-2 flex-wrap">
-          {/* Rarity Class Selector */}
+        <div className="flex items-center gap-2 flex-wrap w-full lg:w-auto">
+          {/* Full Rarity Class Selector Dropdown */}
           <select
             value={selectedRarity}
             onChange={(e) => onRarityChange(e.target.value)}
-            className="px-3 py-1.5 bg-slate-950 border border-amber-500/50 text-amber-300 rounded-lg text-xs font-bold focus:outline-none focus:border-amber-400 shadow-inner"
+            className="px-3 py-1.5 bg-slate-950 border border-amber-500/50 text-amber-300 rounded-xl text-xs font-bold focus:outline-none focus:border-amber-400 shadow-inner"
           >
             {RARITY_CLASSES.map((r) => (
               <option key={r.id} value={r.id}>
@@ -179,7 +266,7 @@ export function CollectionFilterBar({
           <select
             value={selectedCategory}
             onChange={(e) => onCategoryChange(e.target.value)}
-            className="px-3 py-1.5 bg-slate-950 border border-slate-700 rounded-lg text-slate-200 text-xs font-semibold focus:outline-none focus:border-amber-500 shadow-inner"
+            className="px-3 py-1.5 bg-slate-950 border border-slate-700 rounded-xl text-slate-200 text-xs font-semibold focus:outline-none focus:border-amber-500 shadow-inner"
           >
             {CATEGORIES.map((c) => (
               <option key={c.id} value={c.id}>
@@ -192,7 +279,7 @@ export function CollectionFilterBar({
           <select
             value={selectedStage}
             onChange={(e) => onStageChange(e.target.value)}
-            className="px-3 py-1.5 bg-slate-950 border border-slate-700 rounded-lg text-slate-200 text-xs font-semibold focus:outline-none focus:border-amber-500 shadow-inner"
+            className="px-3 py-1.5 bg-slate-950 border border-slate-700 rounded-xl text-slate-200 text-xs font-semibold focus:outline-none focus:border-amber-500 shadow-inner"
           >
             {STAGES.map((st) => (
               <option key={st.id} value={st.id}>
@@ -205,7 +292,7 @@ export function CollectionFilterBar({
           <div className="flex items-center gap-1.5 overflow-x-auto max-w-[340px] sm:max-w-none scrollbar-none py-0.5">
             <button
               onClick={() => onTypeChange('ALL')}
-              className={`px-2.5 py-1 rounded-md text-[11px] font-black transition-all ${
+              className={`px-2.5 py-1 rounded-xl text-[11px] font-black transition-all ${
                 selectedType === 'ALL'
                   ? 'bg-indigo-600 text-white shadow-sm'
                   : 'bg-slate-800 hover:bg-slate-700 text-slate-400'
@@ -217,7 +304,7 @@ export function CollectionFilterBar({
               <button
                 key={t.type}
                 onClick={() => onTypeChange(t.type === selectedType ? 'ALL' : t.type)}
-                className={`w-7 h-7 rounded-md flex items-center justify-center text-sm transition-all ${
+                className={`w-7 h-7 rounded-xl flex items-center justify-center text-sm transition-all ${
                   selectedType === t.type
                     ? 'ring-2 ring-amber-400 bg-slate-700 scale-110 shadow-md'
                     : 'bg-slate-800/90 hover:bg-slate-700 opacity-75 hover:opacity-100'
@@ -230,29 +317,14 @@ export function CollectionFilterBar({
           </div>
         </div>
 
-        {/* Right: Full Color Toggle + Sort + Filter Count */}
-        <div className="flex items-center gap-2.5 flex-wrap justify-end">
-          {/* Full Color Toggle Button */}
-          <button
-            type="button"
-            onClick={onToggleFullColor}
-            className={`px-3 py-1.5 rounded-lg text-xs font-bold transition-all flex items-center gap-1.5 shadow-sm border ${
-              showFullColor
-                ? 'bg-amber-500/20 border-amber-500/60 text-amber-300 ring-1 ring-amber-500/40 shadow-amber-500/10'
-                : 'bg-slate-950 border-slate-700/80 text-slate-400 hover:text-slate-200 hover:border-slate-600'
-            }`}
-            title={showFullColor ? 'คลิกเพื่อกลับไปโหมดปกติ (การ์ดที่ไม่มีเป็นสีจาง)' : 'คลิกเพื่อเปิดโหมดสีสดใสชัดเจนทุกใบ (เพื่อรับชม)'}
-          >
-            <span>{showFullColor ? '🎨' : '👁️'}</span>
-            <span>{showFullColor ? 'สีสดชัดทุกใบ (ON)' : 'โหมดชมการ์ดสีชัด'}</span>
-          </button>
-
+        {/* Sort Controls & Reset Filters */}
+        <div className="flex items-center gap-2 flex-wrap justify-between lg:justify-end w-full lg:w-auto">
           <div className="flex items-center gap-1.5 text-xs text-slate-400">
             <span className="font-semibold hidden sm:inline">เรียงตาม:</span>
             <select
               value={sortBy}
               onChange={(e) => onSortChange(e.target.value as CollectionSortBy, sortOrder)}
-              className="px-2.5 py-1.5 bg-slate-950 border border-slate-700 rounded-lg text-slate-200 text-xs font-semibold focus:outline-none shadow-inner"
+              className="px-2.5 py-1.5 bg-slate-950 border border-slate-700 rounded-xl text-slate-200 text-xs font-semibold focus:outline-none shadow-inner"
             >
               <option value="number">หมายเลขการ์ด (No.)</option>
               <option value="name">ชื่อการ์ด (ก-ฮ)</option>
@@ -261,7 +333,7 @@ export function CollectionFilterBar({
             </select>
             <button
               onClick={() => onSortChange(sortBy, sortOrder === 'asc' ? 'desc' : 'asc')}
-              className="px-2 py-1.5 rounded-lg bg-slate-800 hover:bg-slate-700 text-slate-200 text-xs font-black border border-slate-700"
+              className="px-2.5 py-1.5 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-200 text-xs font-black border border-slate-700"
               title="สลับลำดับ น้อยไปมาก / มากไปน้อย"
             >
               {sortOrder === 'asc' ? '▲' : '▼'}
@@ -272,17 +344,13 @@ export function CollectionFilterBar({
             <button
               type="button"
               onClick={onResetFilters}
-              className="px-2.5 py-1 rounded-lg bg-rose-500/20 hover:bg-rose-500/30 text-rose-300 border border-rose-500/40 text-xs font-bold transition-all flex items-center gap-1 shadow-sm"
+              className="px-2.5 py-1.5 rounded-xl bg-rose-500/20 hover:bg-rose-500/30 text-rose-300 border border-rose-500/40 text-xs font-bold transition-all flex items-center gap-1 shadow-sm"
               title="ล้างตัวกรองทั้งหมด"
             >
               <span>✕</span>
               <span>ล้างตัวกรอง</span>
             </button>
           )}
-
-          <span className="text-xs font-black text-amber-400 pl-2 border-l border-slate-700 whitespace-nowrap">
-            {totalFiltered.toLocaleString()} ใบ
-          </span>
         </div>
       </div>
     </div>

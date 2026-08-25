@@ -21,77 +21,102 @@ export function DeckHeader({ isEditing, onBackToDecks, onOpenImportExport }: Pro
   const [showUserMenu, setShowUserMenu] = useState(false);
 
   return (
-    <header className="sticky top-0 z-30 bg-slate-900/95 backdrop-blur-md border-b border-slate-700/80 px-4 sm:px-8 py-3 shadow-2xl">
-      <div className="w-full flex flex-col xl:flex-row items-center justify-between gap-3">
-        {/* Left: App Branding & Main Navigation Bar */}
-        <div className="flex flex-wrap items-center justify-between w-full xl:w-auto gap-4">
-          <div className="flex items-center gap-3">
-            <div className="w-10 h-10 rounded-2xl bg-gradient-to-tr from-indigo-500 via-purple-500 to-pink-500 flex items-center justify-center shadow-lg shadow-purple-500/25 text-white font-bold text-xl ring-1 ring-white/20">
+    <header className="sticky top-0 z-30 bg-slate-900/95 backdrop-blur-md border-b border-slate-700/80 px-3 sm:px-8 py-2.5 sm:py-3 shadow-2xl">
+      <div className="w-full flex flex-col md:flex-row items-center justify-between gap-2.5 sm:gap-3">
+        {/* Left: App Branding & Desktop Navigation Bar */}
+        <div className="flex items-center justify-between w-full md:w-auto gap-3">
+          <div className="flex items-center gap-2.5">
+            <div className="w-9 h-9 sm:w-10 sm:h-10 rounded-2xl bg-gradient-to-tr from-indigo-500 via-purple-500 to-pink-500 flex items-center justify-center shadow-lg shadow-purple-500/25 text-white font-bold text-lg sm:text-xl ring-1 ring-white/20">
               🃏
             </div>
             <div>
-              <div className="flex items-center gap-2">
-                <h1 className="text-lg sm:text-xl font-black bg-gradient-to-r from-indigo-400 via-purple-300 to-pink-300 bg-clip-text text-transparent leading-none">
-                  PokéDeck Builder
+              <div className="flex items-center gap-1.5">
+                <h1 className="text-base sm:text-xl font-black bg-gradient-to-r from-indigo-400 via-purple-300 to-pink-300 bg-clip-text text-transparent leading-none">
+                  PokéDeck
                 </h1>
                 {user ? (
-                  <span className="px-2 py-0.5 rounded-full bg-emerald-500/20 border border-emerald-500/40 text-emerald-300 text-[10px] font-black uppercase tracking-wider flex items-center gap-1">
+                  <span className="px-1.5 py-0.5 rounded-full bg-emerald-500/20 border border-emerald-500/40 text-emerald-300 text-[9px] font-black uppercase tracking-wider flex items-center gap-0.5">
                     <span>☁️</span>
-                    <span>
+                    <span className="hidden sm:inline">
                       {syncStatus === 'syncing'
-                        ? 'กำลังซิงค์...'
+                        ? 'Syncing...'
                         : syncStatus === 'error'
-                        ? 'ซิงค์ผิดพลาด'
-                        : 'Cloud Sync'}
+                        ? 'Error'
+                        : 'Cloud'}
                     </span>
                   </span>
                 ) : (
-                  <span className="px-2 py-0.5 rounded-full bg-amber-500/20 border border-amber-500/40 text-amber-300 text-[10px] font-black uppercase tracking-wider">
-                    Guest Mode
+                  <span className="px-1.5 py-0.5 rounded-full bg-amber-500/20 border border-amber-500/40 text-amber-300 text-[9px] font-black uppercase tracking-wider">
+                    Guest
                   </span>
                 )}
               </div>
-              <p className="text-xs text-slate-400 font-medium mt-0.5">
+              <p className="text-[11px] sm:text-xs text-slate-400 font-medium leading-none mt-0.5 hidden sm:block">
                 ระบบสร้างเด็คและคำนวณการ์ดที่ขาด
               </p>
             </div>
           </div>
 
-          {/* Nav Tabs */}
-          <nav className="flex items-center gap-1.5 bg-slate-950/80 p-1 rounded-xl border border-slate-800">
+          {/* Desktop Nav Tabs (Hidden on mobile because of BottomNav) */}
+          <nav className="hidden md:flex items-center gap-1 bg-slate-950/80 p-1 rounded-xl border border-slate-800">
             <button
               onClick={() => setGameMode('collection')}
-              className="px-3.5 py-1.5 text-xs font-bold rounded-lg text-slate-400 hover:text-slate-200 hover:bg-slate-800 transition-all flex items-center gap-1.5"
+              className="px-3 py-1.5 text-xs font-bold rounded-lg text-slate-400 hover:text-slate-200 hover:bg-slate-800 transition-all flex items-center gap-1.5"
             >
               <span>📚</span>
               <span>สมุดสะสม</span>
             </button>
             <button
               onClick={() => setGameMode('deck')}
-              className="px-3.5 py-1.5 text-xs font-black rounded-lg bg-gradient-to-r from-indigo-500 via-purple-500 to-pink-500 text-white shadow-md shadow-indigo-500/20 transition-all flex items-center gap-1.5"
+              className="px-3 py-1.5 text-xs font-black rounded-lg bg-gradient-to-r from-indigo-500 via-purple-500 to-pink-500 text-white shadow-md shadow-indigo-500/20 transition-all flex items-center gap-1.5"
             >
               <span>🃏</span>
               <span>จัดเด็ค</span>
             </button>
             <button
               onClick={() => setGameMode('pokemon')}
-              className="px-3.5 py-1.5 text-xs font-bold rounded-lg text-slate-400 hover:text-slate-200 hover:bg-slate-800 transition-all flex items-center gap-1.5"
+              className="px-3 py-1.5 text-xs font-bold rounded-lg text-slate-400 hover:text-slate-200 hover:bg-slate-800 transition-all flex items-center gap-1.5"
             >
               <span>🎮</span>
               <span>Battle Tracker</span>
             </button>
             <button
               onClick={() => setGameMode('lorcana')}
-              className="px-3.5 py-1.5 text-xs font-bold rounded-lg text-slate-400 hover:text-slate-200 hover:bg-slate-800 transition-all flex items-center gap-1.5"
+              className="px-3 py-1.5 text-xs font-bold rounded-lg text-slate-400 hover:text-slate-200 hover:bg-slate-800 transition-all flex items-center gap-1.5"
             >
               <span>🪄</span>
               <span>Lorcana</span>
             </button>
           </nav>
+
+          {/* Mobile Right Action shortcut: Back button or Import/Export */}
+          <div className="flex md:hidden items-center gap-1.5">
+            {isEditing && onBackToDecks && (
+              <button
+                type="button"
+                onClick={onBackToDecks}
+                className="px-2.5 py-1 text-xs font-bold rounded-xl bg-slate-800 border border-slate-700 text-slate-200 shadow-sm flex items-center gap-1"
+              >
+                <span>←</span>
+                <span>เด็คทั้งหมด</span>
+              </button>
+            )}
+
+            {onOpenImportExport && (
+              <button
+                type="button"
+                onClick={onOpenImportExport}
+                className="w-8 h-8 rounded-xl bg-slate-800 border border-slate-700 text-slate-200 flex items-center justify-center text-xs shadow-sm"
+                title="Import / Export"
+              >
+                📥
+              </button>
+            )}
+          </div>
         </div>
 
-        {/* Right: Actions, Back to Decks & User Profile */}
-        <div className="flex flex-wrap items-center justify-center xl:justify-end gap-2.5 w-full xl:w-auto">
+        {/* Desktop Actions, Back to Decks & User Profile */}
+        <div className="hidden md:flex items-center justify-end gap-2.5 w-auto">
           {/* Back to Decks Button if in editor */}
           {isEditing && onBackToDecks && (
             <button
@@ -111,7 +136,7 @@ export function DeckHeader({ isEditing, onBackToDecks, onOpenImportExport }: Pro
               title="นำเข้า / ส่งออกเด็ค (PTCGL & JSON)"
             >
               <span>📥</span>
-              <span className="hidden sm:inline">Import / Export</span>
+              <span>Import / Export</span>
             </button>
           )}
 

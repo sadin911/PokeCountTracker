@@ -4,6 +4,7 @@ import { GameBoard } from './components/layout/GameBoard';
 import { LorcanaGameBoard } from './components/lorcana/LorcanaGameBoard';
 import { CollectionTracker } from './components/collection/CollectionTracker';
 import { DeckManager } from './components/deck/DeckManager';
+import { BottomNav } from './components/layout/BottomNav';
 
 // Helper to determine mode from URL pathname, hash, or query params
 function getModeFromURL(): GameMode {
@@ -112,10 +113,15 @@ function App() {
     document.documentElement.dataset.gameMode = gameMode;
   }, [displayMode, gameMode]);
 
-  if (gameMode === 'deck') return <DeckManager />;
-  if (gameMode === 'collection') return <CollectionTracker />;
-  if (gameMode === 'lorcana') return <LorcanaGameBoard />;
-  return <GameBoard />;
+  return (
+    <div className="min-h-screen pb-16 md:pb-0">
+      {gameMode === 'deck' && <DeckManager />}
+      {gameMode === 'collection' && <CollectionTracker />}
+      {gameMode === 'lorcana' && <LorcanaGameBoard />}
+      {gameMode === 'pokemon' && <GameBoard />}
+      <BottomNav />
+    </div>
+  );
 }
 
 export default App;
