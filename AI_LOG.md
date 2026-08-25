@@ -45,3 +45,4 @@
 [2026-08-25 17:58] Major | Antigravity | Edit | src/utils/rarity.ts - fixed SAR/SR/AR/UR rarity classification
 [2026-08-25 17:58] Major | Antigravity | Bash | npm run build - build verified successfully
 [2026-08-25 18:00] Major | Antigravity | Bash | npm run dev - started dev server at localhost:5173
+[2026-08-25 18:02] Major | Antigravity | Git | merged feature/deck-builder into main and pushed
