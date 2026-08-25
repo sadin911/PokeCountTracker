@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
 import type { PlayerId, SlotKey, PokemonSlot as PokemonSlotType, EnergyType } from '../../types/game';
 import { useGameStore } from '../../store/gameStore';
@@ -23,6 +23,14 @@ export function CardDetailModal({ pokemon, playerId, slot, onClose }: Props) {
   const [showEvoModal, setShowEvoModal] = useState(false);
   const [showZoom, setShowZoom] = useState(false);
   const [editingName, setEditingName] = useState(!pokemon.name);
+
+  useEffect(() => {
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if (e.key === 'Escape') onClose();
+    };
+    window.addEventListener('keydown', handleKeyDown);
+    return () => window.removeEventListener('keydown', handleKeyDown);
+  }, [onClose]);
 
   const update = (changes: Partial<PokemonSlotType>) => updatePokemon(playerId, slot, changes);
   const addDamage = (amt: number) =>
@@ -77,9 +85,14 @@ export function CardDetailModal({ pokemon, playerId, slot, onClose }: Props) {
             )}
           </div>
           <button
+            type="button"
             onClick={onClose}
-            className="w-10 h-10 flex-shrink-0 flex items-center justify-center rounded-xl bg-gray-800 text-gray-400 text-lg font-bold hover:text-white active:bg-gray-700"
-          >✕</button>
+            className="px-3.5 py-1.5 flex-shrink-0 flex items-center gap-1.5 rounded-xl bg-gray-800 hover:bg-rose-500 text-gray-300 hover:text-white text-xs font-black border border-gray-700 hover:border-rose-400 shadow-md transition-all active:scale-95 group"
+            title="ปิดหน้าต่าง (ESC)"
+          >
+            <span className="text-sm font-black group-hover:rotate-90 transition-transform">✕</span>
+            <span>ปิด</span>
+          </button>
         </div>
 
         <div className="px-5 py-4 flex flex-col gap-5">
@@ -213,18 +226,30 @@ export function CardDetailModal({ pokemon, playerId, slot, onClose }: Props) {
             </div>
           )}
 
-          {/* Remove */}
-          {pokemon.name && (
+          {/* Bottom Actions */}
+          <div className="flex flex-col gap-2.5">
+            {pokemon.name && (
+              <button
+                type="button"
+                onClick={() => { clearPokemon(playerId, slot); onClose(); }}
+                className="w-full py-3 rounded-2xl border border-red-900/60 bg-red-950/40 text-red-400 text-sm font-semibold active:scale-95 transition-transform"
+              >
+                Remove Pokémon
+              </button>
+            )}
+
             <button
-              onClick={() => { clearPokemon(playerId, slot); onClose(); }}
-              className="w-full py-3.5 rounded-2xl border border-red-900/60 bg-red-950/40 text-red-400 text-sm font-semibold active:scale-95 transition-transform"
+              type="button"
+              onClick={onClose}
+              className="w-full py-3 rounded-2xl bg-gray-800 hover:bg-gray-700 active:scale-95 text-gray-200 text-sm font-black border border-gray-700 shadow-md transition-all flex items-center justify-center gap-1.5"
             >
-              Remove Pokémon
+              <span>✕</span>
+              <span>ปิดหน้าต่าง</span>
             </button>
-          )}
+          </div>
 
           {/* Safe area bottom pad */}
-          <div className="h-6" />
+          <div className="h-4" />
         </div>
       </motion.div>
 

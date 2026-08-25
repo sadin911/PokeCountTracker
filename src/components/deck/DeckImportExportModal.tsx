@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useDeckStore } from '../../store/deckStore';
 import pokemonCardData from '../../data/pokemonNames.json';
 
@@ -21,6 +21,14 @@ export function DeckImportExportModal({ onClose, activeDeckId }: Props) {
   const [importPTCGLText, setImportPTCGLText] = useState('');
   const [copied, setCopied] = useState(false);
   const [statusMsg, setStatusMsg] = useState<{ type: 'success' | 'error'; text: string } | null>(null);
+
+  useEffect(() => {
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if (e.key === 'Escape') onClose();
+    };
+    window.addEventListener('keydown', handleKeyDown);
+    return () => window.removeEventListener('keydown', handleKeyDown);
+  }, [onClose]);
 
   const currentExportDeck = decks[selectedExportDeckId];
 
@@ -154,8 +162,14 @@ export function DeckImportExportModal({ onClose, activeDeckId }: Props) {
   };
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/80 backdrop-blur-md animate-fade-in">
-      <div className="relative w-full max-w-2xl bg-slate-900 border border-slate-700 rounded-3xl shadow-2xl overflow-hidden flex flex-col max-h-[90vh]">
+    <div 
+      className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/80 backdrop-blur-md animate-fade-in"
+      onClick={onClose}
+    >
+      <div 
+        className="relative w-full max-w-2xl bg-slate-900 border border-slate-700 rounded-3xl shadow-2xl overflow-hidden flex flex-col max-h-[90vh]"
+        onClick={e => e.stopPropagation()}
+      >
         {/* Header */}
         <div className="px-6 py-4 border-b border-slate-800 flex items-center justify-between bg-slate-950/60">
           <div className="flex items-center gap-3">
@@ -172,10 +186,13 @@ export function DeckImportExportModal({ onClose, activeDeckId }: Props) {
             </div>
           </div>
           <button
+            type="button"
             onClick={onClose}
-            className="w-8 h-8 rounded-full bg-slate-800 hover:bg-slate-700 text-slate-400 hover:text-white flex items-center justify-center font-bold transition-all"
+            className="px-3.5 py-1.5 rounded-xl bg-slate-800 hover:bg-rose-500 text-slate-300 hover:text-white flex items-center gap-1.5 text-xs font-black border border-slate-700 hover:border-rose-400 shadow-md transition-all active:scale-95 group"
+            title="ปิดหน้าต่าง (ESC)"
           >
-            ✕
+            <span className="text-sm font-black group-hover:rotate-90 transition-transform">✕</span>
+            <span>ปิด</span>
           </button>
         </div>
 
@@ -309,6 +326,18 @@ export function DeckImportExportModal({ onClose, activeDeckId }: Props) {
               </div>
             </div>
           )}
+        </div>
+
+        {/* Footer */}
+        <div className="px-6 py-3.5 border-t border-slate-800 bg-slate-950/80 flex items-center justify-end">
+          <button
+            type="button"
+            onClick={onClose}
+            className="px-6 py-2.5 rounded-xl bg-slate-800 hover:bg-slate-700 active:scale-95 text-slate-200 hover:text-white text-xs sm:text-sm font-black border border-slate-600 shadow-lg transition-all flex items-center gap-1.5"
+          >
+            <span>✕</span>
+            <span>ปิดหน้าต่าง</span>
+          </button>
         </div>
       </div>
     </div>

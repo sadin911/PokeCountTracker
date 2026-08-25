@@ -1,4 +1,4 @@
-import { useMemo } from 'react';
+import { useMemo, useEffect } from 'react';
 import { createPortal } from 'react-dom';
 import { useCollectionStore } from '../../store/collectionStore';
 import { resolveCardImageUrl, handleCardImageError } from '../../utils/cardImage';
@@ -145,6 +145,14 @@ export function CardCollectionModal({ card, onClose }: Props) {
     return getApplicableVariants(card, variants);
   }, [card, variants]);
 
+  useEffect(() => {
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if (e.key === 'Escape') onClose();
+    };
+    window.addEventListener('keydown', handleKeyDown);
+    return () => window.removeEventListener('keydown', handleKeyDown);
+  }, [onClose]);
+
   return createPortal(
     <div
       className="fixed inset-0 z-50 flex items-center justify-center p-3 sm:p-6 bg-black/85 backdrop-blur-md animate-fade-in"
@@ -152,7 +160,7 @@ export function CardCollectionModal({ card, onClose }: Props) {
         if (e.target === e.currentTarget) onClose();
       }}
     >
-      <div className="bg-slate-900 border border-slate-700/90 w-full max-w-4xl rounded-3xl shadow-2xl overflow-hidden flex flex-col md:flex-row max-h-[92vh]">
+      <div className="relative bg-slate-900 border border-slate-700/90 w-full max-w-4xl rounded-3xl shadow-2xl overflow-hidden flex flex-col md:flex-row max-h-[92vh]">
         {/* Left: Card Preview & Info */}
         <div className="md:w-5/12 bg-slate-950 p-5 sm:p-6 flex flex-col items-center justify-center border-b md:border-b-0 md:border-r border-slate-800/90 relative">
           <div className="relative group max-w-[260px] w-full aspect-[2.5/3.5] rounded-2xl overflow-hidden shadow-2xl shadow-black/80 ring-1 ring-slate-700/60">
@@ -182,7 +190,7 @@ export function CardCollectionModal({ card, onClose }: Props) {
         {/* Right: Quantities & Details (Full Width Spacious Layout) */}
         <div className="md:w-7/12 p-5 sm:p-7 overflow-y-auto flex flex-col justify-between space-y-5">
           <div className="space-y-5">
-            {/* Header with Set Badges and Wishlist Button */}
+            {/* Header with Set Badges, Wishlist Button and Prominent Close Button */}
             <div className="flex items-start justify-between gap-3">
               <div>
                 <div className="flex items-center gap-2 flex-wrap">
@@ -203,10 +211,11 @@ export function CardCollectionModal({ card, onClose }: Props) {
                 <h2 className="text-lg sm:text-xl font-black text-white mt-2 leading-snug">{card.name}</h2>
               </div>
 
-              <div className="flex items-center gap-2">
+              <div className="flex items-center gap-2 shrink-0">
                 <button
+                  type="button"
                   onClick={() => toggleWishlist(card.id)}
-                  className={`px-3.5 py-2 rounded-xl border text-xs font-extrabold transition-all flex items-center gap-1.5 shadow-sm whitespace-nowrap ${
+                  className={`px-3 py-2 rounded-xl border text-xs font-extrabold transition-all flex items-center gap-1.5 shadow-sm whitespace-nowrap ${
                     isWishlist
                       ? 'bg-amber-500/25 text-amber-300 border-amber-500/60 shadow-amber-500/15'
                       : 'bg-slate-800 text-slate-400 border-slate-700 hover:text-amber-300 hover:border-slate-600'
@@ -214,13 +223,16 @@ export function CardCollectionModal({ card, onClose }: Props) {
                   title="ปักหมุดเป็นการ์ดที่ตามหา (Wishlist)"
                 >
                   <span className="text-sm">⭐</span>
-                  <span>{isWishlist ? 'ใน Wishlist' : '+ Wishlist'}</span>
+                  <span className="hidden sm:inline">{isWishlist ? 'ใน Wishlist' : '+ Wishlist'}</span>
                 </button>
                 <button
+                  type="button"
                   onClick={onClose}
-                  className="w-9 h-9 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-300 flex items-center justify-center text-sm font-black transition-all"
+                  className="px-3 py-2 rounded-xl bg-slate-800 hover:bg-rose-500 hover:text-white text-slate-300 border border-slate-700 hover:border-rose-500/60 flex items-center gap-1.5 text-xs font-black transition-all shadow-md active:scale-95 group"
+                  title="ปิดหน้าต่าง (ESC)"
                 >
-                  ✕
+                  <span className="text-sm group-hover:rotate-90 transition-transform duration-200">✕</span>
+                  <span>ปิด</span>
                 </button>
               </div>
             </div>
@@ -325,27 +337,40 @@ export function CardCollectionModal({ card, onClose }: Props) {
           </div>
 
           {/* Footer Actions */}
-          <div className="flex items-center justify-between pt-4 border-t border-slate-800">
+          <div className="flex items-center justify-between gap-3 pt-4 border-t border-slate-800">
             {totalCount > 0 || isWishlist ? (
               <button
+                type="button"
                 onClick={() => {
                   if (confirm('คุณต้องการลบการ์ดนี้ออกจากคอลเลกชันใช่หรือไม่?')) {
                     clearCard(card.id);
                   }
                 }}
-                className="text-xs text-rose-400 hover:text-rose-300 font-bold transition-all flex items-center gap-1.5"
+                className="text-xs text-rose-400 hover:text-rose-300 font-bold transition-all flex items-center gap-1.5 px-3 py-2 rounded-xl hover:bg-rose-500/10 border border-transparent hover:border-rose-500/30"
               >
                 <span>🗑️</span>
                 <span>ล้างออกจากสมุด</span>
               </button>
             ) : <div />}
 
-            <button
-              onClick={onClose}
-              className="px-7 py-2.5 rounded-xl bg-gradient-to-r from-amber-500 to-amber-600 hover:from-amber-400 hover:to-amber-500 text-slate-950 font-black text-xs sm:text-sm shadow-xl shadow-amber-500/25 transition-all hover:scale-105 active:scale-95"
-            >
-              บันทึกเรียบร้อย
-            </button>
+            <div className="flex items-center gap-2.5">
+              <button
+                type="button"
+                onClick={onClose}
+                className="px-5 py-2.5 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-200 hover:text-white font-bold text-xs sm:text-sm border border-slate-700 transition-all hover:scale-105 active:scale-95 flex items-center gap-1.5"
+              >
+                <span>✕</span>
+                <span>ปิด</span>
+              </button>
+              <button
+                type="button"
+                onClick={onClose}
+                className="px-6 py-2.5 rounded-xl bg-gradient-to-r from-amber-500 to-amber-600 hover:from-amber-400 hover:to-amber-500 text-slate-950 font-black text-xs sm:text-sm shadow-xl shadow-amber-500/25 transition-all hover:scale-105 active:scale-95 flex items-center gap-1.5"
+              >
+                <span>✓</span>
+                <span>บันทึกเรียบร้อย</span>
+              </button>
+            </div>
           </div>
         </div>
       </div>

@@ -274,17 +274,26 @@ export function DeckManager() {
 
       {/* New Deck Modal */}
       {showNewDeckModal && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/80 backdrop-blur-md animate-fade-in">
-          <div className="w-full max-w-md bg-slate-900 border border-slate-700 rounded-3xl p-6 shadow-2xl space-y-4">
+        <div 
+          className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/80 backdrop-blur-md animate-fade-in"
+          onClick={() => setShowNewDeckModal(false)}
+        >
+          <div 
+            className="w-full max-w-md bg-slate-900 border border-slate-700 rounded-3xl p-6 shadow-2xl space-y-4"
+            onClick={e => e.stopPropagation()}
+          >
             <div className="flex items-center justify-between">
               <h3 className="text-base font-black text-white flex items-center gap-2">
                 <span>➕ สร้างเด็คใหม่</span>
               </h3>
               <button
+                type="button"
                 onClick={() => setShowNewDeckModal(false)}
-                className="text-slate-400 hover:text-white font-bold"
+                className="px-3 py-1 rounded-xl bg-slate-800 hover:bg-rose-500 text-slate-300 hover:text-white flex items-center gap-1 text-xs font-black border border-slate-700 hover:border-rose-400 shadow-md transition-all active:scale-95 group"
+                title="ปิดหน้าต่าง (ESC)"
               >
-                ✕
+                <span className="text-sm font-black group-hover:rotate-90 transition-transform">✕</span>
+                <span>ปิด</span>
               </button>
             </div>
 
@@ -295,7 +304,10 @@ export function DeckManager() {
                 placeholder="เช่น Charizard ex Tera, Gardevoir ex..."
                 value={newDeckName}
                 onChange={(e) => setNewDeckName(e.target.value)}
-                onKeyDown={(e) => e.key === 'Enter' && handleCreateNewDeck()}
+                onKeyDown={(e) => {
+                  if (e.key === 'Enter') handleCreateNewDeck();
+                  if (e.key === 'Escape') setShowNewDeckModal(false);
+                }}
                 autoFocus
                 className="w-full px-4 py-2.5 bg-slate-950 border border-slate-700 rounded-xl text-sm text-white focus:outline-none focus:border-indigo-500 shadow-inner"
               />
@@ -303,14 +315,16 @@ export function DeckManager() {
 
             <div className="flex justify-end gap-2 pt-2">
               <button
+                type="button"
                 onClick={() => setShowNewDeckModal(false)}
-                className="px-4 py-2 rounded-xl text-xs font-bold text-slate-400 hover:text-white"
+                className="px-4 py-2 rounded-xl text-xs font-bold text-slate-300 hover:text-white bg-slate-800 hover:bg-slate-700 border border-slate-700"
               >
                 ยกเลิก
               </button>
               <button
+                type="button"
                 onClick={handleCreateNewDeck}
-                className="px-5 py-2 rounded-xl bg-gradient-to-r from-indigo-500 to-purple-500 text-white font-black text-xs shadow-lg"
+                className="px-5 py-2 rounded-xl bg-gradient-to-r from-indigo-500 to-purple-500 hover:from-indigo-400 hover:to-purple-400 text-white font-black text-xs shadow-lg"
               >
                 สร้างเด็ค
               </button>

@@ -1,4 +1,4 @@
-import { useMemo, useState } from 'react';
+import { useMemo, useState, useEffect } from 'react';
 import { createPortal } from 'react-dom';
 import pokemonCardData from '../../data/pokemonNames.json';
 import evoDataRaw from '../../data/evolutionLines.json';
@@ -27,6 +27,14 @@ interface Props {
 export function EvolutionModal({ pokemon, onSelectEvolution, onClose }: Props) {
   const [search, setSearch] = useState('');
   const [previewCard, setPreviewCard] = useState<any | null>(null);
+
+  useEffect(() => {
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if (e.key === 'Escape') onClose();
+    };
+    window.addEventListener('keydown', handleKeyDown);
+    return () => window.removeEventListener('keydown', handleKeyDown);
+  }, [onClose]);
 
   // Find all possible evolved forms
   const availableEvolutions = useMemo(() => {
@@ -142,10 +150,13 @@ export function EvolutionModal({ pokemon, onSelectEvolution, onClose }: Props) {
             </div>
           </div>
           <button
+            type="button"
             onClick={onClose}
-            className="text-gray-400 hover:text-gray-200 text-lg w-7 h-7 flex items-center justify-center rounded-xl bg-gray-800 hover:bg-gray-700 transition-all"
+            className="px-3 py-1 rounded-xl bg-gray-800 hover:bg-rose-500 text-gray-300 hover:text-white flex items-center gap-1 text-xs font-black border border-gray-700 hover:border-rose-400 shadow-md transition-all active:scale-95 group"
+            title="ปิดหน้าต่าง (ESC)"
           >
-            ✕
+            <span className="text-sm font-black group-hover:rotate-90 transition-transform">✕</span>
+            <span>ปิด</span>
           </button>
         </div>
 
@@ -271,10 +282,12 @@ export function EvolutionModal({ pokemon, onSelectEvolution, onClose }: Props) {
             มี {filteredCards.length} ร่างพัฒนา
           </span>
           <button
+            type="button"
             onClick={onClose}
-            className="py-1.5 px-4 rounded-xl bg-gray-800 hover:bg-gray-700 active:scale-95 text-gray-300 hover:text-white text-xs font-bold transition-all border border-gray-700"
+            className="py-2 px-5 rounded-xl bg-slate-800 hover:bg-slate-700 active:scale-95 text-slate-200 hover:text-white text-xs font-black transition-all border border-slate-700 shadow-md flex items-center gap-1.5"
           >
-            ปิด
+            <span>✕</span>
+            <span>ปิด</span>
           </button>
         </div>
       </div>

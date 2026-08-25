@@ -47,13 +47,14 @@ export function CardImagePreviewModal({ imageUrl, officialImageUrl, cardName, on
               className="w-full h-full object-contain"
             />
 
-            {/* Close button on top-right of image */}
+            {/* Prominent Close button on top-right of image */}
             <button
+              type="button"
               onClick={onClose}
-              className="absolute top-2 right-2 w-8 h-8 rounded-full bg-black/70 hover:bg-black/90 text-white flex items-center justify-center text-sm font-bold backdrop-blur-md border border-white/20 active:scale-95 transition-all"
-              title="ปิด"
+              className="absolute top-3 right-3 w-10 h-10 rounded-full bg-black/80 hover:bg-rose-500 text-white flex items-center justify-center text-base font-black backdrop-blur-md border border-white/30 shadow-2xl active:scale-95 transition-all group"
+              title="ปิดหน้าต่าง (ESC)"
             >
-              ✕
+              <span className="group-hover:rotate-90 transition-transform duration-200">✕</span>
             </button>
           </div>
 
@@ -61,20 +62,24 @@ export function CardImagePreviewModal({ imageUrl, officialImageUrl, cardName, on
           <div className="flex items-center gap-2.5 w-full max-w-[320px] sm:max-w-[360px]">
             {onSelect && (
               <button
+                type="button"
                 onClick={() => {
                   onSelect();
                   onClose();
                 }}
-                className="flex-1 py-2.5 rounded-xl bg-blue-600 hover:bg-blue-500 active:scale-95 text-white text-xs sm:text-sm font-bold shadow-lg transition-all"
+                className="flex-1 py-3 rounded-xl bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-500 hover:to-indigo-500 active:scale-95 text-white text-xs sm:text-sm font-black shadow-lg shadow-blue-500/25 transition-all flex items-center justify-center gap-1.5"
               >
-                ✓ เลือกการ์ดใบนี้
+                <span>✓</span>
+                <span>เลือกการ์ดใบนี้</span>
               </button>
             )}
             <button
+              type="button"
               onClick={onClose}
-              className="py-2.5 px-4 rounded-xl bg-gray-800 hover:bg-gray-750 active:scale-95 text-gray-300 hover:text-white text-xs sm:text-sm font-bold border border-gray-700 transition-all"
+              className={`${onSelect ? 'px-6' : 'w-full'} py-3 rounded-xl bg-slate-800 hover:bg-slate-700 active:scale-95 text-slate-200 hover:text-white text-xs sm:text-sm font-black border border-slate-600 shadow-lg transition-all flex items-center justify-center gap-1.5`}
             >
-              ปิด
+              <span>✕</span>
+              <span>ปิดหน้าต่าง</span>
             </button>
           </div>
         </motion.div>

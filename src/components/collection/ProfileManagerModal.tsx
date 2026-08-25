@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { createPortal } from 'react-dom';
 import { useCollectionStore } from '../../store/collectionStore';
 
@@ -21,6 +21,14 @@ export function ProfileManagerModal({ onClose }: Props) {
   const [selectedIcon, setSelectedIcon] = useState('🎴');
   const [editingProfileId, setEditingProfileId] = useState<string | null>(null);
   const [editName, setEditName] = useState('');
+
+  useEffect(() => {
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if (e.key === 'Escape') onClose();
+    };
+    window.addEventListener('keydown', handleKeyDown);
+    return () => window.removeEventListener('keydown', handleKeyDown);
+  }, [onClose]);
 
   const profileList = Object.values(profiles);
 
@@ -57,25 +65,29 @@ export function ProfileManagerModal({ onClose }: Props) {
   return createPortal(
     <div
       className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/75 backdrop-blur-sm animate-fade-in"
-      onClick={(e) => {
-        if (e.target === e.currentTarget) onClose();
-      }}
+      onClick={onClose}
     >
-      <div className="bg-slate-900 border border-slate-700 w-full max-w-lg rounded-2xl shadow-2xl overflow-hidden flex flex-col max-h-[90vh]">
+      <div 
+        className="bg-slate-900 border border-slate-700 w-full max-w-lg rounded-3xl shadow-2xl overflow-hidden flex flex-col max-h-[90vh]"
+        onClick={e => e.stopPropagation()}
+      >
         {/* Header */}
-        <div className="flex items-center justify-between px-5 py-4 border-b border-slate-800 bg-slate-800/60">
-          <div className="flex items-center gap-2">
-            <span className="text-xl">📁</span>
+        <div className="flex items-center justify-between px-6 py-4 border-b border-slate-800 bg-slate-950/60">
+          <div className="flex items-center gap-3">
+            <span className="text-2xl">📁</span>
             <div>
-              <h2 className="text-base font-bold text-white">จัดการโปรไฟล์สะสม (Accounts / Binders)</h2>
+              <h2 className="text-base font-black text-white">จัดการโปรไฟล์สะสม (Accounts / Binders)</h2>
               <p className="text-xs text-slate-400">แยกสมุดสะสมการ์ดได้หลายเล่มบนเครื่องนี้</p>
             </div>
           </div>
           <button
+            type="button"
             onClick={onClose}
-            className="w-8 h-8 rounded-lg bg-slate-800 hover:bg-slate-700 text-slate-300 flex items-center justify-center text-sm font-bold transition-all"
+            className="px-3.5 py-1.5 rounded-xl bg-slate-800 hover:bg-rose-500 text-slate-300 hover:text-white flex items-center gap-1.5 text-xs font-black border border-slate-700 hover:border-rose-400 shadow-md transition-all active:scale-95 group"
+            title="ปิดหน้าต่าง (ESC)"
           >
-            ✕
+            <span className="text-sm font-black group-hover:rotate-90 transition-transform">✕</span>
+            <span>ปิด</span>
           </button>
         </div>
 
@@ -236,6 +248,18 @@ export function ProfileManagerModal({ onClose }: Props) {
               </div>
             </form>
           )}
+        </div>
+
+        {/* Footer */}
+        <div className="px-6 py-3.5 border-t border-slate-800 bg-slate-950/80 flex items-center justify-end">
+          <button
+            type="button"
+            onClick={onClose}
+            className="px-6 py-2.5 rounded-xl bg-slate-800 hover:bg-slate-700 active:scale-95 text-slate-200 hover:text-white text-xs sm:text-sm font-black border border-slate-600 shadow-lg transition-all flex items-center gap-1.5"
+          >
+            <span>✕</span>
+            <span>ปิดหน้าต่าง</span>
+          </button>
         </div>
       </div>
     </div>,
