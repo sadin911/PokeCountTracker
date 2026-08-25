@@ -42,3 +42,6 @@
 [2026-08-24 16:56] Major | Antigravity | Command | git tag v2.3.0 - tagged Advanced Rarity Filters, Full Color View Mode, Hover Zoom, and Back to Top release
 [2026-08-24 17:02] Major | Antigravity | Write | src/components/deck/ & src/store/deckStore.ts - built PokéDeck Builder & Missing Cards Collection Calculator with dedicated URL subpath /deck, multi-deck management, 60-card rules, missing card shopping list, and PTCGL import/export
 [2026-08-24 17:03] Major | Antigravity | Command | git tag v2.4.0 - tagged PokéDeck Builder & Missing Cards Calculator release
+[2026-08-25 17:58] Major | Antigravity | Edit | src/utils/rarity.ts - fixed SAR/SR/AR/UR rarity classification
+[2026-08-25 17:58] Major | Antigravity | Bash | npm run build - build verified successfully
+[2026-08-25 18:00] Major | Antigravity | Bash | npm run dev - started dev server at localhost:5173

@@ -1,10 +1,5 @@
-import fs from 'fs';
-import path from 'path';
-
-const data = JSON.parse(fs.readFileSync('src/data/pokemonNames.json', 'utf8'));
-
 // Exact set breakdown specifications based on official Pokemon TCG SV / MA Asian / Thai expansion lists:
-export const SET_RULES = {
+export const SET_RULES: Record<string, { ar?: [number, number]; sr?: [number, number]; sar?: [number, number]; ur?: [number, number]; s?: [number, number]; ssr?: [number, number] }> = {
   // SV1S (Scarlet ex - Total 108): 1-78 Base, 79-90 AR (12), 91-100 SR (10), 101-105 SAR (5), 106-108 UR (3)
   SV1S: { ar: [79, 90], sr: [91, 100], sar: [101, 105], ur: [106, 108] },
   // SV1V (Violet ex - Total 108): 1-78 Base, 79-90 AR (12), 91-100 SR (10), 101-105 SAR (5), 106-108 UR (3)
@@ -59,14 +54,16 @@ export const SET_RULES = {
   MA5: { ar: [165, 188], sr: [189, 224], sar: [225, 236], ur: [237, 238] },
 };
 
-export function classifyRarity(card) {
+export function getCardRarityClass(card: any): string {
+  if (card.rarityCode) return card.rarityCode;
+
   const name = (card.name || '').trim();
-  const setId = (card.set?.id || '').toUpperCase();
   const rawSetId = card.set?.id || '';
+  const setId = rawSetId.toUpperCase();
   const col = (card.collectorNumber || card.localId || '').toUpperCase();
   const category = card.category || '';
 
-  // 1. Promo Cards
+  // 1. Promo
   if (setId.includes('-P') || setId.includes('PROMO') || col.includes('PROMO') || col.startsWith('P-') || setId === 'PROMO') {
     return 'PROMO';
   }
@@ -96,7 +93,6 @@ export function classifyRarity(card) {
       if (config.sar && num >= config.sar[0] && num <= config.sar[1]) return 'SAR';
       if (config.ur && num >= config.ur[0] && num <= config.ur[1]) return 'UR';
     } else if (num > total) {
-      // General fallback for secret rares in sets without explicit config:
       if (category === 'Pokemon' && !name.includes('ex') && !name.includes('EX') && !name.includes('V')) {
         return 'AR';
       }
@@ -112,18 +108,3 @@ export function classifyRarity(card) {
 
   return 'REGULAR';
 }
-
-const breakdown = {};
-const enriched = data.map(card => {
-  const rarityCode = classifyRarity(card);
-  breakdown[rarityCode] = (breakdown[rarityCode] || 0) + 1;
-  return {
-    ...card,
-    rarityCode,
-  };
-});
-
-console.log('Enriched Breakdown:', breakdown);
-
-fs.writeFileSync('src/data/pokemonNames.json', JSON.stringify(enriched, null, 2), 'utf8');
-console.log('Successfully updated src/data/pokemonNames.json with accurate rarityCode!');

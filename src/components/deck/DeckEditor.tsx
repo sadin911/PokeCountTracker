@@ -7,6 +7,7 @@ import { MissingCardsModal } from './MissingCardsModal';
 import { CardImagePreviewModal } from '../pokemon/CardImagePreviewModal';
 import { DeckCoverPickerModal } from './DeckCoverPickerModal';
 import { RARITY_CLASSES } from '../collection/CollectionFilterBar';
+import { getCardRarityClass } from '../../utils/rarity';
 import pokemonCardData from '../../data/pokemonNames.json';
 import type { Deck } from '../../types/deck';
 
@@ -108,7 +109,7 @@ export function DeckEditor({ deck, onBackToDecks }: Props) {
 
       // Rarity
       if (selectedRarity !== 'ALL') {
-        if (c.rarityCode !== selectedRarity) return false;
+        if (getCardRarityClass(c) !== selectedRarity) return false;
       }
 
       // Category
