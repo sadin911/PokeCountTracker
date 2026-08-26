@@ -71,3 +71,4 @@
 [2026-08-26 12:07] Major | Antigravity | Write | src/utils/cardImage.ts & scripts/ - separated HD vs thumbnail with sample cards
 [2026-08-26 12:11] Major | Antigravity | Command | node scripts/process-and-upload-all-cards.mjs - started dual-res & raw pipeline
 [2026-08-26 12:24] Major | Antigravity | Command | 9,553 dual-res cards generated, raw saved locally, uploaded to R2 & build verified
+[2026-08-26 12:37] Major | Antigravity | Command | git tag v2.9.0 & push - Fullscreen Ultra-HD Card Preview & Dual-Resolution Architecture Release
