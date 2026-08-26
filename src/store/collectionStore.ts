@@ -55,6 +55,44 @@ const GUEST_STORAGE_KEY = 'pokecount_guest_profiles_v2';
 const USER_CACHE_KEY_PREFIX = 'pokecount_user_cache_';
 const FILTERS_STORAGE_KEY = 'pokecount_collection_filters_v1';
 
+/**
+ * Version 2 = binder documents are written whole rather than merged.
+ *
+ * Until v2, syncProfileToCloud used setDoc(..., { merge: true }). Because
+ * `cards` is a map field, a merge only ever adds or updates keys — it never
+ * removes the ones the client dropped. Clearing a card therefore updated the
+ * UI and localStorage but left the entry in Firestore forever, and the next
+ * loadUserFromCloud pulled it straight back onto the device.
+ */
+const BINDER_SCHEMA_VERSION = 2;
+
+/** Total copies across every variant of one entry. */
+function entryTotal(entry?: CollectionCardEntry): number {
+  if (!entry?.variants) return 0;
+  return Object.values(entry.variants).reduce<number>((a, b) => a + (Number(b) || 0), 0);
+}
+
+/** An entry carrying no information at all — safe to drop. */
+function isEmptyEntry(entry?: CollectionCardEntry): boolean {
+  if (!entry) return true;
+  return entryTotal(entry) === 0 && !entry.isWishlist && !entry.note;
+}
+
+/**
+ * Drop entries that say nothing. Pre-v2 documents accumulated these because
+ * setCardDetails wrote a zeroed entry for any card that was given a note or
+ * condition and then cleared.
+ */
+function pruneProfile(profile: CollectionProfile): { profile: CollectionProfile; removed: number } {
+  const cards: Record<string, CollectionCardEntry> = {};
+  let removed = 0;
+  for (const [cardId, entry] of Object.entries(profile.cards || {})) {
+    if (isEmptyEntry(entry)) removed++;
+    else cards[cardId] = entry;
+  }
+  return { profile: { ...profile, cards }, removed };
+}
+
 export const DEFAULT_COLLECTION_FILTERS: CollectionFilters = {
   selectedSet: 'ALL',
   statusFilter: 'all',
@@ -233,34 +271,34 @@ export const useCollectionStore = create<CollectionState>((set, get) => ({
 
   deleteProfile: (profileId: string) => {
     const user = auth.currentUser;
+    const state = get();
+
+    // Check the guard BEFORE touching Firestore. Deleting the remote document
+    // first and only then refusing wiped your last binder from the cloud while
+    // leaving it on the device — it then vanished for good the next time the
+    // local cache was cleared.
+    if (Object.keys(state.profiles).length <= 1 || !state.profiles[profileId]) return;
+
+    const newProfiles = { ...state.profiles };
+    delete newProfiles[profileId];
+    const newActive =
+      state.activeProfileId === profileId ? Object.keys(newProfiles)[0] : state.activeProfileId;
+
+    set({ profiles: newProfiles, activeProfileId: newActive });
+
+    // Writing localStorage inside the set() updater made it a side effect in a
+    // reducer, which fires twice under StrictMode.
+    const key = user ? `${USER_CACHE_KEY_PREFIX}${user.uid}` : GUEST_STORAGE_KEY;
+    try {
+      localStorage.setItem(
+        key,
+        JSON.stringify({ profiles: newProfiles, activeProfileId: newActive })
+      );
+    } catch (e) {}
+
     if (user) {
       deleteDoc(doc(db, 'users', user.uid, 'binders', profileId)).catch(console.error);
     }
-
-    set((state) => {
-      const profileIds = Object.keys(state.profiles);
-      if (profileIds.length <= 1) return state;
-
-      const newProfiles = { ...state.profiles };
-      delete newProfiles[profileId];
-
-      let newActive = state.activeProfileId;
-      if (state.activeProfileId === profileId) {
-        newActive = Object.keys(newProfiles)[0];
-      }
-
-      const nextState = {
-        profiles: newProfiles,
-        activeProfileId: newActive,
-      };
-
-      const key = user ? `${USER_CACHE_KEY_PREFIX}${user.uid}` : GUEST_STORAGE_KEY;
-      try {
-        localStorage.setItem(key, JSON.stringify(nextState));
-      } catch (e) {}
-
-      return nextState;
-    });
   },
 
   setVariantCount: (cardId: string, variant: CardVariantKey, count: number) => {
@@ -379,15 +417,18 @@ export const useCollectionStore = create<CollectionState>((set, get) => ({
         updatedAt: Date.now(),
       };
 
-      const newCards = {
-        ...profile.cards,
-        [cardId]: {
-          ...existingEntry,
-          condition: details.condition ?? existingEntry.condition,
-          note: details.note !== undefined ? details.note : existingEntry.note,
-          updatedAt: Date.now(),
-        },
+      const updatedEntry: CollectionCardEntry = {
+        ...existingEntry,
+        condition: details.condition ?? existingEntry.condition,
+        note: details.note !== undefined ? details.note : existingEntry.note,
+        updatedAt: Date.now(),
       };
+
+      const newCards = { ...profile.cards };
+      // Prune like the other mutators do. Without this, giving an unowned card
+      // a note and then clearing it left a zeroed entry in the binder forever.
+      if (isEmptyEntry(updatedEntry)) delete newCards[cardId];
+      else newCards[cardId] = updatedEntry;
 
       return {
         profiles: {
@@ -440,7 +481,11 @@ export const useCollectionStore = create<CollectionState>((set, get) => ({
     set({ syncStatus: 'syncing' });
     try {
       const docRef = doc(db, 'users', user.uid, 'binders', profileId);
-      await setDoc(docRef, profile, { merge: true });
+      // Whole-document write, NOT { merge: true }: a merge cannot remove cards
+      // the user cleared. The trade-off is that two devices editing the same
+      // binder at once become last-write-wins per binder rather than per card,
+      // which is the right side of the trade for a personal collection.
+      await setDoc(docRef, { ...profile, schemaVersion: BINDER_SCHEMA_VERSION });
       set({ syncStatus: 'synced', lastSyncedAt: Date.now() });
     } catch (err) {
       console.error('Failed to sync binder to Firestore:', err);
@@ -479,6 +524,40 @@ export const useCollectionStore = create<CollectionState>((set, get) => ({
         });
 
         if (Object.keys(cloudProfiles).length > 0) {
+          // One-time migration of pre-v2 binders. Each is pruned of entries
+          // that carry no information and rewritten as a whole document, which
+          // both cleans up the junk merges accumulated and stamps the binder so
+          // this never runs for it again.
+          //
+          // It cannot undo the damage already done: a card cleared before the
+          // fix looks identical to one the user genuinely owns, because the
+          // merge preserved its original counts. That intent is not recoverable.
+          // What this does is stop the drift and remove the empty entries.
+          const stale = Object.values(cloudProfiles).filter(
+            (p) => (p.schemaVersion ?? 1) < BINDER_SCHEMA_VERSION
+          );
+
+          if (stale.length > 0) {
+            let removedTotal = 0;
+            await Promise.all(
+              stale.map(async (p) => {
+                const { profile, removed } = pruneProfile(p);
+                removedTotal += removed;
+                const migrated = { ...profile, schemaVersion: BINDER_SCHEMA_VERSION };
+                cloudProfiles[p.id] = migrated;
+                await setDoc(doc(db, 'users', uid, 'binders', p.id), migrated);
+              })
+            ).catch((err) => {
+              // A failed migration is not fatal — the binders still load, and
+              // the next sign-in retries. Don't block the user on it.
+              console.warn('Binder migration failed, will retry next sign-in:', err);
+            });
+            console.info(
+              `[collection] migrated ${stale.length} binder(s) to schema v${BINDER_SCHEMA_VERSION}` +
+                (removedTotal ? `, pruned ${removedTotal} empty entr${removedTotal === 1 ? 'y' : 'ies'}` : '')
+            );
+          }
+
           const activeId = Object.keys(cloudProfiles)[0];
           set({
             profiles: cloudProfiles,
@@ -531,7 +610,7 @@ export const useCollectionStore = create<CollectionState>((set, get) => ({
       const { profiles } = get();
       for (const [id, p] of Object.entries(profiles)) {
         const docRef = doc(db, 'users', uid, 'binders', id);
-        await setDoc(docRef, p, { merge: true });
+        await setDoc(docRef, { ...p, schemaVersion: BINDER_SCHEMA_VERSION });
       }
       set({ syncStatus: 'synced', lastSyncedAt: Date.now() });
 

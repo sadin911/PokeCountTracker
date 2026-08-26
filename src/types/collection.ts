@@ -26,6 +26,12 @@ export interface CollectionProfile {
   cards: Record<string, CollectionCardEntry>;
   createdAt: number;
   updatedAt: number;
+  /**
+   * Bumped when a binder has been rewritten by a data migration. Absent (or < 2)
+   * means the document predates the switch to whole-document writes and may
+   * still hold entries the client no longer has. See BINDER_SCHEMA_VERSION.
+   */
+  schemaVersion?: number;
 }
 
 export type CollectionStatusFilter = 'all' | 'owned' | 'missing' | 'wishlist' | 'duplicates';
