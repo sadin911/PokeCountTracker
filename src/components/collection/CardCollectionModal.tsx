@@ -1,8 +1,9 @@
-import { useMemo, useEffect } from 'react';
+import { useState, useMemo, useEffect } from 'react';
 import { createPortal } from 'react-dom';
 import { useCollectionStore } from '../../store/collectionStore';
 import { resolveCardImageUrl, handleCardImageError } from '../../utils/cardImage';
 import { getEnglishCardName } from '../../utils/searchHelpers';
+import { EvolutionChainSection } from '../pokemon/EvolutionChainSection';
 import type { CardVariantKey, CardCondition } from '../../types/collection';
 
 interface Props {
@@ -59,70 +60,60 @@ const CONDITIONS: { key: CardCondition; label: string; desc: string }[] = [
 /**
  * Smart detection of applicable variants for a card in Thai Pokémon TCG
  */
-function getApplicableVariants(card: any, currentVariants: Record<CardVariantKey, number>): VariantDef[] {
-  const name = (card.name || '').toLowerCase();
+function getApplicableVariants(card: any, variants: Record<string, number> | Partial<Record<CardVariantKey, number>>): VariantDef[] {
+  const list: VariantDef[] = [];
   const setId = (card.set?.id || '').toUpperCase();
-  const colNum = (card.collectorNumber || card.localId || '').toUpperCase();
+  const col = (card.collectorNumber || card.localId || '').toUpperCase();
+  const name = (card.name || '').toLowerCase();
+  const rarity = (card.rarityCode || '').toUpperCase();
 
   const isPromo =
-    setId === 'PROMO' ||
-    colNum.includes('PROMO') ||
-    colNum.startsWith('P-') ||
-    colNum.startsWith('S-P') ||
-    colNum.startsWith('SV-P') ||
-    colNum.startsWith('M-P');
+    setId.includes('-P') ||
+    setId.includes('PROMO') ||
+    col.includes('PROMO') ||
+    col.startsWith('P-') ||
+    setId === 'PROMO';
 
   const isHighRarity =
+    rarity === 'SR' ||
+    rarity === 'HR' ||
+    rarity === 'UR' ||
+    rarity === 'SAR' ||
+    rarity === 'AR' ||
     name.includes(' ex') ||
     name.includes('ex') ||
     name.includes('vmax') ||
     name.includes('vstar') ||
-    name.includes(' v') ||
-    name.includes('radiant') ||
-    name.includes('ประกายแสง') ||
-    name.includes('เอซสเปก') ||
-    name.includes('ace spec') ||
-    colNum.includes('MUR') ||
-    colNum.includes('SAR') ||
-    colNum.includes('UR') ||
-    colNum.includes('HR') ||
-    colNum.includes('SR') ||
-    colNum.includes('AR') ||
-    colNum.includes('CHR') ||
-    colNum.includes('CSR');
-
-  let list: VariantDef[] = [];
+    name.includes(' v');
 
   if (isPromo) {
-    list = [ALL_VARIANTS_MAP.promo];
-  } else if (isHighRarity) {
-    // Ultra Rare / Secret Rare only exist in Foil
-    list = [
-      {
-        key: 'holo',
-        label: 'จำนวนการ์ด (Card Quantity)',
-        icon: '✨',
-        desc: 'การ์ดฟอยล์พิเศษ (Special Foil)',
-        color: 'amber',
-      },
-    ];
-  } else {
-    // Standard cards in booster sets have Normal and Mirror/Reverse
-    list = [ALL_VARIANTS_MAP.normal, ALL_VARIANTS_MAP.reverse, ALL_VARIANTS_MAP.holo];
+    list.push(ALL_VARIANTS_MAP.promo);
+    if ((variants.normal ?? 0) > 0) list.push(ALL_VARIANTS_MAP.normal);
+    if ((variants.holo ?? 0) > 0) list.push(ALL_VARIANTS_MAP.holo);
+    return list;
   }
 
-  // Ensure any variant with existing count > 0 is preserved
-  for (const [k, count] of Object.entries(currentVariants)) {
-    const key = k as CardVariantKey;
-    if (count > 0 && !list.some((v) => v.key === key)) {
-      list.push(ALL_VARIANTS_MAP[key]);
-    }
+  if (isHighRarity) {
+    list.push(ALL_VARIANTS_MAP.holo);
+    if ((variants.normal ?? 0) > 0) list.push(ALL_VARIANTS_MAP.normal);
+    if ((variants.reverse ?? 0) > 0) list.push(ALL_VARIANTS_MAP.reverse);
+    return list;
   }
+
+  list.push(ALL_VARIANTS_MAP.normal);
+  list.push(ALL_VARIANTS_MAP.reverse);
+  list.push(ALL_VARIANTS_MAP.holo);
 
   return list;
 }
 
-export function CardCollectionModal({ card, onClose }: Props) {
+export function CardCollectionModal({ card: initialCard, onClose }: Props) {
+  const [activeCard, setActiveCard] = useState(initialCard);
+
+  useEffect(() => {
+    setActiveCard(initialCard);
+  }, [initialCard]);
+
   const activeProfileId = useCollectionStore((s) => s.activeProfileId);
   const profile = useCollectionStore((s) => s.profiles[activeProfileId]);
   const setVariantCount = useCollectionStore((s) => s.setVariantCount);
@@ -132,7 +123,7 @@ export function CardCollectionModal({ card, onClose }: Props) {
   const setCardDetails = useCollectionStore((s) => s.setCardDetails);
   const clearCard = useCollectionStore((s) => s.clearCard);
 
-  const cardEntry = profile?.cards[card.id];
+  const cardEntry = profile?.cards[activeCard.id];
   const variants = cardEntry?.variants || { normal: 0, holo: 0, reverse: 0, promo: 0 };
   const isWishlist = !!cardEntry?.isWishlist;
   const currentCondition = cardEntry?.condition || 'NM';
@@ -140,11 +131,11 @@ export function CardCollectionModal({ card, onClose }: Props) {
 
   const totalCount = Object.values(variants).reduce((a, b) => a + b, 0);
 
-  const imgUrl = resolveCardImageUrl(card.imageUrlHigh || card.imageUrl);
+  const imgUrl = resolveCardImageUrl(activeCard.imageUrlHigh || activeCard.imageUrl);
 
   const applicableVariants = useMemo(() => {
-    return getApplicableVariants(card, variants);
-  }, [card, variants]);
+    return getApplicableVariants(activeCard, variants);
+  }, [activeCard, variants]);
 
   useEffect(() => {
     const handleKeyDown = (e: KeyboardEvent) => {
@@ -167,11 +158,11 @@ export function CardCollectionModal({ card, onClose }: Props) {
           <div className="relative group max-w-[260px] w-full aspect-[2.5/3.5] rounded-2xl overflow-hidden shadow-2xl shadow-black/80 ring-1 ring-slate-700/60">
             <img
               src={imgUrl}
-              alt={card.name}
+              alt={activeCard.name}
               className={`w-full h-full object-cover transition-all duration-300 ${
                 totalCount === 0 ? 'grayscale-[40%] opacity-90' : 'brightness-105'
               }`}
-              onError={(e) => handleCardImageError(e, card.imageUrl, card.officialImageUrl)}
+              onError={(e) => handleCardImageError(e, activeCard.imageUrl, activeCard.officialImageUrl)}
             />
             {totalCount > 0 && (
               <div className="absolute top-2.5 right-2.5 px-3 py-1 rounded-full bg-gradient-to-r from-amber-500 to-amber-600 text-slate-950 font-black text-xs shadow-xl shadow-amber-500/40 flex items-center gap-1">
@@ -181,9 +172,9 @@ export function CardCollectionModal({ card, onClose }: Props) {
           </div>
 
           <div className="mt-4 text-center w-full">
-            <h3 className="text-base sm:text-lg font-black text-white leading-tight">{card.name}</h3>
+            <h3 className="text-base sm:text-lg font-black text-white leading-tight">{activeCard.name}</h3>
             <p className="text-xs text-slate-400 mt-1 font-medium">
-              {card.set?.name || 'การ์ดเสริม'} · {card.collectorNumber || card.localId}
+              {activeCard.set?.name || 'การ์ดเสริม'} · {activeCard.collectorNumber || activeCard.localId}
             </p>
           </div>
         </div>
@@ -196,24 +187,24 @@ export function CardCollectionModal({ card, onClose }: Props) {
               <div>
                 <div className="flex items-center gap-2 flex-wrap">
                   <span className="px-2.5 py-1 rounded-lg bg-amber-500/20 border border-amber-500/40 text-amber-300 text-xs font-black">
-                    {card.set?.id || 'PROMO'}
+                    {activeCard.set?.id || 'PROMO'}
                   </span>
-                  {card.regulationMark && (
+                  {activeCard.regulationMark && (
                     <span className="px-2 py-1 rounded-lg bg-slate-800 border border-slate-700 text-slate-300 text-xs font-bold font-mono">
-                      Reg [{card.regulationMark}]
+                      Reg [{activeCard.regulationMark}]
                     </span>
                   )}
-                  {card.category && (
+                  {activeCard.category && (
                     <span className="px-2.5 py-1 rounded-lg bg-slate-800/90 text-slate-400 text-xs font-medium">
-                      {card.category}
+                      {activeCard.category}
                     </span>
                   )}
                 </div>
                 <h2 className="text-lg sm:text-xl font-black text-white mt-2 leading-snug">
-                  {card.name}
-                  {getEnglishCardName(card) && (
+                  {activeCard.name}
+                  {getEnglishCardName(activeCard) && (
                     <span className="ml-2 text-sm sm:text-base font-semibold text-slate-400 font-sans">
-                      ({getEnglishCardName(card)})
+                      ({getEnglishCardName(activeCard)})
                     </span>
                   )}
                 </h2>
@@ -222,7 +213,7 @@ export function CardCollectionModal({ card, onClose }: Props) {
               <div className="flex items-center gap-2 shrink-0">
                 <button
                   type="button"
-                  onClick={() => toggleWishlist(card.id)}
+                  onClick={() => toggleWishlist(activeCard.id)}
                   className={`px-3 py-2 rounded-xl border text-xs font-extrabold transition-all flex items-center gap-1.5 shadow-sm whitespace-nowrap ${
                     isWishlist
                       ? 'bg-amber-500/25 text-amber-300 border-amber-500/60 shadow-amber-500/15'
@@ -279,7 +270,7 @@ export function CardCollectionModal({ card, onClose }: Props) {
                       {/* Stepper Controls */}
                       <div className="flex items-center gap-1.5 flex-shrink-0">
                         <button
-                          onClick={() => decrementVariant(card.id, key)}
+                          onClick={() => decrementVariant(activeCard.id, key)}
                           disabled={count === 0}
                           className="w-8 h-8 rounded-xl bg-slate-700 hover:bg-slate-600 disabled:opacity-30 text-white font-black text-sm flex items-center justify-center transition-all shadow-inner"
                         >
@@ -290,11 +281,11 @@ export function CardCollectionModal({ card, onClose }: Props) {
                           min={0}
                           max={999}
                           value={count}
-                          onChange={(e) => setVariantCount(card.id, key, parseInt(e.target.value, 10) || 0)}
+                          onChange={(e) => setVariantCount(activeCard.id, key, parseInt(e.target.value, 10) || 0)}
                           className="w-12 text-center bg-slate-950 border border-slate-700 rounded-xl py-1.5 text-sm font-black text-amber-300 focus:outline-none focus:border-amber-500 shadow-inner"
                         />
                         <button
-                          onClick={() => incrementVariant(card.id, key)}
+                          onClick={() => incrementVariant(activeCard.id, key)}
                           className="w-8 h-8 rounded-xl bg-gradient-to-r from-amber-500 to-amber-600 hover:from-amber-400 hover:to-amber-500 text-slate-950 font-black text-sm flex items-center justify-center transition-all shadow-md shadow-amber-500/20"
                         >
                           +
@@ -306,6 +297,14 @@ export function CardCollectionModal({ card, onClose }: Props) {
               </div>
             </div>
 
+            {/* Evolution Chain Section (For Pokemon) */}
+            {activeCard.category === 'Pokemon' && (
+              <EvolutionChainSection
+                currentCard={activeCard}
+                onSelectCard={(selectedCard) => setActiveCard(selectedCard)}
+              />
+            )}
+
             {/* Condition & Note Section */}
             <div className="space-y-3 pt-2 border-t border-slate-800">
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
@@ -316,7 +315,7 @@ export function CardCollectionModal({ card, onClose }: Props) {
                   </label>
                   <select
                     value={currentCondition}
-                    onChange={(e) => setCardDetails(card.id, { condition: e.target.value as CardCondition })}
+                    onChange={(e) => setCardDetails(activeCard.id, { condition: e.target.value as CardCondition })}
                     className="w-full px-3 py-2.5 bg-slate-950 border border-slate-700 rounded-xl text-xs text-white font-medium focus:outline-none focus:border-amber-500 shadow-inner"
                   >
                     {CONDITIONS.map((c) => (
@@ -336,7 +335,7 @@ export function CardCollectionModal({ card, onClose }: Props) {
                     type="text"
                     placeholder="เช่น เก็บในอัลบั้ม A, มีรอยมุมขวา..."
                     value={currentNote}
-                    onChange={(e) => setCardDetails(card.id, { note: e.target.value })}
+                    onChange={(e) => setCardDetails(activeCard.id, { note: e.target.value })}
                     className="w-full px-3 py-2.5 bg-slate-950 border border-slate-700 rounded-xl text-xs text-white placeholder-slate-600 focus:outline-none focus:border-amber-500 shadow-inner"
                   />
                 </div>
@@ -351,7 +350,7 @@ export function CardCollectionModal({ card, onClose }: Props) {
                 type="button"
                 onClick={() => {
                   if (confirm('คุณต้องการลบการ์ดนี้ออกจากคอลเลกชันใช่หรือไม่?')) {
-                    clearCard(card.id);
+                    clearCard(activeCard.id);
                   }
                 }}
                 className="text-xs text-rose-400 hover:text-rose-300 font-bold transition-all flex items-center gap-1.5 px-3 py-2 rounded-xl hover:bg-rose-500/10 border border-transparent hover:border-rose-500/30"
