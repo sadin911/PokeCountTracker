@@ -1,13 +1,8 @@
 import pokemonCardData from '../data/pokemonNames.json';
 import evoDataRaw from '../data/evolutionLines.json';
-import translations from '../data/pokemonNameTranslations.json';
 import { getEnglishCardName } from './searchHelpers';
 
 const evoMap = evoDataRaw as Record<string, string[]>;
-const thToEnPokemon: Record<string, string> = {};
-for (const [en, th] of Object.entries(translations.pokemon || {})) {
-  thToEnPokemon[th] = en.charAt(0).toUpperCase() + en.slice(1);
-}
 
 export interface EvolutionStep {
   name: string;
@@ -26,32 +21,9 @@ const STAGE_ORDER: Record<string, number> = {
   'ร่างพิเศษ': 4,
 };
 
-function cleanThaiStem(str: string): string {
-  return (str || '')
-    .toLowerCase()
-    .replace(/[ก-ฮ]์/g, '') // remove consonant + thanthakhat (e.g. ร์, ท์, ซ์)
-    .replace(/[์็่้๊๋]/g, '') // remove stray tone marks
-    .replace(/\s+/g, '')
-    .trim();
-}
-
-function getEnglishNameForPokemon(name: string): string | null {
-  if (thToEnPokemon[name]) return thToEnPokemon[name];
-  const base = name
-    .replace(/(ex|EX|VMAX|VSTAR|V-UNION|V|GX)/g, '')
-    .replace(/^(เมก้า|ส่องประกาย|เรเดียนต์|ฮิซุย|กาลาร์|อโลลา|พัลเดีย)\s*/, '')
-    .trim();
-  if (thToEnPokemon[base]) return thToEnPokemon[base];
-
-  const stem = cleanThaiStem(base || name);
-  for (const [th, en] of Object.entries(thToEnPokemon)) {
-    if (cleanThaiStem(th) === stem) return en;
-  }
-  return null;
-}
-
 /**
- * Computes the deduplicated evolution chain steps for a given Pokémon card
+ * Computes the evolution chain steps for a given Pokémon card (unmerged, distinct names)
+ * with strict single active state.
  */
 export function getEvolutionChain(currentCard: any): EvolutionStep[] {
   if (!currentCard || currentCard.category !== 'Pokemon') return [];
@@ -65,7 +37,7 @@ export function getEvolutionChain(currentCard: any): EvolutionStep[] {
   // Find all connected names from evoMap
   const relatedNames = new Set<string>();
   relatedNames.add(rawName);
-  relatedNames.add(baseName);
+  if (baseName) relatedNames.add(baseName);
 
   if (evoMap[rawName]) {
     evoMap[rawName].forEach((n) => relatedNames.add(n));
@@ -81,22 +53,14 @@ export function getEvolutionChain(currentCard: any): EvolutionStep[] {
     }
   }
 
-  // Find cards in dataset for each related name
   const allPokemonCards = (pokemonCardData as any[]).filter((c) => c.category === 'Pokemon');
-  const speciesMap = new Map<string, {
-    name: string;
-    stage: string;
-    englishName: string | null;
-    cardsCount: number;
-    representativeCard: any;
-    allCards: any[];
-  }>();
+  const distinctSteps = new Map<string, EvolutionStep>();
 
   for (const name of relatedNames) {
+    // Exact name match for each distinct Pokemon name in the chain
     const matching = allPokemonCards.filter((c) => c.name === name);
     if (matching.length === 0) continue;
 
-    // Pick best representative card
     const rep =
       matching.find((c) => c.id === currentCard.id) ||
       matching.find((c) => c.stage && (c.imageUrl || c.imageUrlHigh)) ||
@@ -108,81 +72,52 @@ export function getEvolutionChain(currentCard: any): EvolutionStep[] {
         ? 'ร่างพิเศษ'
         : 'พื้นฐาน');
 
-    const enName = getEnglishNameForPokemon(name) || getEnglishCardName(rep) || cleanThaiStem(name);
-    const formType = name.includes('ex')
-      ? 'ex'
-      : name.includes('VMAX')
-      ? 'vmax'
-      : name.includes('เมก้า')
-      ? 'mega'
-      : 'base';
+    distinctSteps.set(name, {
+      name,
+      stage,
+      englishName: getEnglishCardName(rep),
+      cardsCount: matching.length,
+      representativeCard: rep,
+      isCurrent: false, // Calculated strictly below
+      allCards: matching,
+    });
+  }
 
-    const groupKey = `${cleanThaiStem(enName)}_${stage}_${formType}`;
-
-    if (speciesMap.has(groupKey)) {
-      const existing = speciesMap.get(groupKey)!;
-      existing.allCards.push(...matching);
-      existing.cardsCount = existing.allCards.length;
-      // Prefer current card's name and representative if it matches this group
-      if (matching.some((c) => c.id === currentCard.id) || name === rawName) {
-        existing.name = name;
-        existing.representativeCard = rep;
-      }
-    } else {
-      speciesMap.set(groupKey, {
-        name,
-        stage,
-        englishName: getEnglishNameForPokemon(name) || getEnglishCardName(rep),
+  // If only 1 step found and baseName exists, find stem matches
+  if (distinctSteps.size <= 1 && baseName.length >= 4) {
+    const stemMatches = allPokemonCards.filter(
+      (c) => c.name.includes(baseName) && !distinctSteps.has(c.name)
+    );
+    for (const card of stemMatches) {
+      const matching = allPokemonCards.filter((c) => c.name === card.name);
+      distinctSteps.set(card.name, {
+        name: card.name,
+        stage: card.stage || 'ร่างพิเศษ',
+        englishName: getEnglishCardName(card),
         cardsCount: matching.length,
-        representativeCard: rep,
-        allCards: [...matching],
+        representativeCard: card,
+        isCurrent: false,
+        allCards: matching,
       });
     }
   }
 
-  // If only 1 step found and it's the card itself, check if there's any stem matches in dataset
-  if (speciesMap.size <= 1 && baseName.length >= 4) {
-    const stemMatches = allPokemonCards.filter(
-      (c) => c.name.includes(baseName)
-    );
-    for (const card of stemMatches) {
-      const enName = getEnglishNameForPokemon(card.name) || cleanThaiStem(card.name);
-      const stage = card.stage || 'ร่างพิเศษ';
-      const formType = card.name.includes('ex') ? 'ex' : 'base';
-      const groupKey = `${cleanThaiStem(enName)}_${stage}_${formType}`;
-
-      if (!speciesMap.has(groupKey)) {
-        const matching = allPokemonCards.filter((c) => c.name === card.name);
-        speciesMap.set(groupKey, {
-          name: card.name,
-          stage,
-          englishName: getEnglishNameForPokemon(card.name) || getEnglishCardName(card),
-          cardsCount: matching.length,
-          representativeCard: card,
-          allCards: matching,
-        });
-      }
-    }
-  }
-
-  const chain = Array.from(speciesMap.values()).sort((a, b) => {
+  const chain = Array.from(distinctSteps.values()).sort((a, b) => {
     const orderA = STAGE_ORDER[a.stage] || 5;
     const orderB = STAGE_ORDER[b.stage] || 5;
     if (orderA !== orderB) return orderA - orderB;
     return a.name.localeCompare(b.name, 'th');
   });
 
-  // Calculate isCurrent strictly: Exactly ONE step is active!
+  // Strict Single Active State: Exactly ONE step is active
+  // 1. Check which step contains the exact card ID
   let activeIndex = chain.findIndex((step) =>
     step.allCards.some((c) => c.id === currentCard.id)
   );
 
+  // 2. Fallback to exact card name if ID not matched
   if (activeIndex === -1) {
-    activeIndex = chain.findIndex(
-      (step) =>
-        step.name === rawName ||
-        cleanThaiStem(step.name) === cleanThaiStem(rawName)
-    );
+    activeIndex = chain.findIndex((step) => step.name === rawName);
   }
 
   return chain.map((step, idx) => ({
