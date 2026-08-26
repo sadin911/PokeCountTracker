@@ -2,6 +2,7 @@ import { create } from 'zustand';
 import { doc, getDoc } from 'firebase/firestore';
 import { db } from '../utils/firebase';
 import { useCollectionStore } from './collectionStore';
+import defaultStats from '../data/communityStatsDefault.json';
 
 export interface CardOwnershipStat {
   count: number;
@@ -39,7 +40,11 @@ function loadCachedStats(): { totalUsers: number; cardOwners: Record<string, num
       }
     }
   } catch (e) {}
-  return { totalUsers: 0, cardOwners: {}, lastFetchedAt: null };
+  return {
+    totalUsers: defaultStats.totalUsers || 1,
+    cardOwners: (defaultStats.cardOwners as Record<string, number>) || {},
+    lastFetchedAt: null,
+  };
 }
 
 const initialCache = loadCachedStats();
