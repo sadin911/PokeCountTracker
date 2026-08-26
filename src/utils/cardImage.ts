@@ -16,7 +16,9 @@ export function resolveCardImageUrl(path?: string | null, hd: boolean = false): 
 
   if (hd) {
     if (cleanPath.startsWith('card-images/')) {
-      cleanPath = cleanPath.replace('card-images/', 'card-images-hd/');
+      cleanPath = cleanPath
+        .replace('card-images/', 'card-images-hd/')
+        .replace(/\.(webp|png|jpeg)$/, '.jpg');
     }
   }
 
@@ -30,7 +32,7 @@ export function resolveCardImageUrl(path?: string | null, hd: boolean = false): 
 
 /**
  * Fallback error handler for card image loading.
- * Hierarchy: Local HD -> Local Standard -> Cloudflare R2 HD -> Cloudflare R2 Standard -> Official Asia CDN -> Default Card Placeholder
+ * Hierarchy: Local HD (.jpg) -> Local HD (.webp) -> Local Standard -> Cloudflare R2 HD (.jpg) -> Cloudflare R2 HD (.webp) -> Cloudflare R2 Standard -> Official Asia CDN -> Default Card Placeholder
  */
 export function handleCardImageError(
   e: React.SyntheticEvent<HTMLImageElement>,
@@ -48,9 +50,20 @@ export function handleCardImageError(
   const cleanPath = (localPath || '').replace(/^\/?PokeCountTracker/, '').replace(/^\/+/, '');
   const isHdAttempt = target.src.includes('card-images-hd');
 
-  // 1. If HD failed, fallback to local standard thumbnail first
+  // 1. If HD (.jpg) failed on local dev, try local HD (.webp)
+  if (isHdAttempt && target.src.endsWith('.jpg')) {
+    const webpHdSrc = target.src.replace(/\.jpg$/, '.webp');
+    if (target.src !== webpHdSrc) {
+      target.src = webpHdSrc;
+      return;
+    }
+  }
+
+  // 2. If HD failed, fallback to local standard thumbnail
   if (isHdAttempt) {
-    const stdCleanPath = cleanPath.replace('card-images-hd/', 'card-images/');
+    const stdCleanPath = cleanPath
+      .replace('card-images-hd/', 'card-images/')
+      .replace(/\.jpg$/, '.webp');
     const baseUrl = import.meta.env.BASE_URL || '/';
     const localStdUrl = `${baseUrl.endsWith('/') ? baseUrl : baseUrl + '/'}${stdCleanPath}`;
 
@@ -60,9 +73,9 @@ export function handleCardImageError(
     }
   }
 
-  // 2. Fallback to Cloudflare R2
+  // 3. Fallback to Cloudflare R2 (HD .webp or Standard .webp)
+  const r2StdUrl = cleanPath ? `${R2_CDN_BASE}/${cleanPath.replace('card-images-hd/', 'card-images/').replace(/\.jpg$/, '.webp')}` : null;
   const r2Url = cleanPath ? `${R2_CDN_BASE}/${cleanPath}` : null;
-  const r2StdUrl = cleanPath ? `${R2_CDN_BASE}/${cleanPath.replace('card-images-hd/', 'card-images/')}` : null;
 
   if (r2StdUrl && target.src !== r2StdUrl && target.src !== officialImageUrl) {
     target.src = r2StdUrl;
