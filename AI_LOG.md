@@ -69,3 +69,5 @@
 [2026-08-26 12:02] Major | Antigravity | Write | src/components/ - added fullscreen card zoom in details & enhanced modal
 [2026-08-26 12:03] Major | Antigravity | Command | npm run dev - started dev server at http://localhost:5173/PokeCountTracker/
 [2026-08-26 12:07] Major | Antigravity | Write | src/utils/cardImage.ts & scripts/ - separated HD vs thumbnail with sample cards
+[2026-08-26 12:11] Major | Antigravity | Command | node scripts/process-and-upload-all-cards.mjs - started dual-res & raw pipeline
+[2026-08-26 12:24] Major | Antigravity | Command | 9,553 dual-res cards generated, raw saved locally, uploaded to R2 & build verified
