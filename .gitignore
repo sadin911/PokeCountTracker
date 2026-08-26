@@ -28,6 +28,10 @@ secret*.yaml
 secret*.yml
 secret*.json
 *.secret.*
+serviceAccountKey*.json
+*serviceAccount*.json
+*service-account*.json
+firebase-admin-key*.json
 
 # Editor & IDEs
 .vscode/*
