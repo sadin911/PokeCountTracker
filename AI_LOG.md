@@ -77,3 +77,8 @@
 [2026-08-26 13:18] Major | Antigravity | Command | node scripts/sync-storage-clean.mjs - cleaned R2 redundant webp, uploaded HD JPGs
 [2026-08-26 13:19] Major | Antigravity | Fix | src/components/ - fixed search filter instant reset on clear & unified single storage
 [2026-08-26 13:20] Major | Antigravity | Command | git tag v2.9.2 & push - Clean Single Storage & Search Reset Bugfix Release
+[2026-08-26 13:30] Major | Antigravity | Write | src/store/communityStore.ts & src/components/ - added Community Ownership Stats in Card Details & Preview Modal
+[2026-08-26 13:41] Major | Antigravity | Fix | src/store/communityStore.ts - guaranteed active user owned cards instantly reflected in stats calculation
+[2026-08-26 13:44] Major | Antigravity | Write | src/data/communityStatsDefault.json - created default baseline community stats file
+[2026-08-26 14:46] Major | Antigravity | Write | scripts/sync-community-stats-admin.mjs - added Firebase Admin real-user & binder sync script
+[2026-08-26 14:54] Major | Antigravity | Command | node scripts/sync-community-stats-admin.mjs - synced 5 real users & 110 owned cards to Firestore & baseline JSON

@@ -2,6 +2,7 @@ import { useState, useMemo, useEffect, useDeferredValue } from 'react';
 import pokemonCardData from '../../data/pokemonNames.json';
 import { useCollectionStore } from '../../store/collectionStore';
 import { useAuthStore } from '../../store/authStore';
+import { useCommunityStore } from '../../store/communityStore';
 import { CollectionHeader } from './CollectionHeader';
 import { CollectionFilterBar } from './CollectionFilterBar';
 import { CollectionGridView } from './CollectionGridView';
@@ -21,6 +22,7 @@ export function CollectionTracker() {
   const activeProfile = profiles[activeProfileId];
 
   const user = useAuthStore((s) => s.user);
+  const fetchCommunityStats = useCommunityStore((s) => s.fetchCommunityStats);
 
   // Automatically sync/load user binders when logged in
   useEffect(() => {
@@ -28,6 +30,11 @@ export function CollectionTracker() {
       loadUserFromCloud(user.uid);
     }
   }, [user?.uid]);
+
+  // Fetch community ownership stats on initial load
+  useEffect(() => {
+    fetchCommunityStats();
+  }, [fetchCommunityStats]);
 
   // Filters state from store (persisted across tab switches and page navigations)
   const filters = useCollectionStore((s) => s.filters);

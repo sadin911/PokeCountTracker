@@ -2,8 +2,10 @@ import { useEffect, useState } from 'react';
 import { createPortal } from 'react-dom';
 import { motion, AnimatePresence } from 'framer-motion';
 import { resolveCardImageUrl, handleCardImageError } from '../../utils/cardImage';
+import { useCommunityStore } from '../../store/communityStore';
 
 interface Props {
+  cardId?: string;
   imageUrl: string | null;
   officialImageUrl?: string | null;
   cardName?: string;
@@ -15,6 +17,7 @@ interface Props {
 }
 
 export function CardImagePreviewModal({
+  cardId,
   imageUrl,
   officialImageUrl,
   cardName,
@@ -25,6 +28,8 @@ export function CardImagePreviewModal({
   onSelect,
 }: Props) {
   const [isZoomed, setIsZoomed] = useState(false);
+  const getCardStats = useCommunityStore((s) => s.getCardStats);
+  const stats = cardId ? getCardStats(cardId) : null;
 
   useEffect(() => {
     const handleKeyDown = (e: KeyboardEvent) => {
@@ -68,6 +73,15 @@ export function CardImagePreviewModal({
               {rarityCode && (
                 <span className="px-1.5 py-0.5 rounded bg-indigo-500/20 text-indigo-300 text-[10px] font-black shrink-0">
                   {rarityCode}
+                </span>
+              )}
+              {stats && stats.totalUsers > 0 && (
+                <span
+                  className={`px-2 py-0.5 rounded-md text-[10px] font-black shrink-0 border flex items-center gap-1 ${stats.badgeColor}`}
+                  title={`มีผู้สะสมในระบบ ${stats.count} คน (${stats.percentage}% ของผู้ใช้ทั้งหมด ${stats.totalUsers} คน)`}
+                >
+                  <span>👥</span>
+                  <span>{stats.count} คน ({stats.percentage}%)</span>
                 </span>
               )}
               {cardName && (

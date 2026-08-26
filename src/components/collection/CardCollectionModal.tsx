@@ -1,6 +1,8 @@
 import { useState, useMemo, useEffect } from 'react';
 import { createPortal } from 'react-dom';
+import { motion } from 'framer-motion';
 import { useCollectionStore } from '../../store/collectionStore';
+import { useCommunityStore } from '../../store/communityStore';
 import { resolveCardImageUrl, handleCardImageError } from '../../utils/cardImage';
 import { getEnglishCardName } from '../../utils/searchHelpers';
 import { EvolutionChainSection } from '../pokemon/EvolutionChainSection';
@@ -124,6 +126,9 @@ export function CardCollectionModal({ card: initialCard, onClose }: Props) {
   const toggleWishlist = useCollectionStore((s) => s.toggleWishlist);
   const setCardDetails = useCollectionStore((s) => s.setCardDetails);
   const clearCard = useCollectionStore((s) => s.clearCard);
+
+  const getCardStats = useCommunityStore((s) => s.getCardStats);
+  const communityStats = getCardStats(activeCard.id);
 
   const cardEntry = profile?.cards[activeCard.id];
   const variants = cardEntry?.variants || { normal: 0, holo: 0, reverse: 0, promo: 0 };
@@ -262,6 +267,52 @@ export function CardCollectionModal({ card: initialCard, onClose }: Props) {
                 </button>
               </div>
             </div>
+
+            {/* Community Ownership Stats Section */}
+            {communityStats.totalUsers > 0 && (
+              <div className="bg-slate-950/70 border border-slate-800/90 rounded-2xl p-3.5 space-y-2.5 shadow-inner">
+                <div className="flex items-center justify-between gap-2 flex-wrap">
+                  <div className="flex items-center gap-2">
+                    <span className="text-sm">👥</span>
+                    <span className="text-xs font-black text-slate-200">สถิติผู้ครอบครองในการ์ดนี้</span>
+                  </div>
+                  <span className={`px-2.5 py-0.5 rounded-full text-[11px] font-black border ${communityStats.badgeColor}`}>
+                    {communityStats.tierLabel}
+                  </span>
+                </div>
+
+                {/* Progress bar */}
+                <div className="space-y-1.5">
+                  <div className="h-2 w-full bg-slate-900 rounded-full overflow-hidden border border-slate-800/80">
+                    <motion.div
+                      initial={{ width: 0 }}
+                      animate={{
+                        width: `${Math.min(100, Math.max(communityStats.count > 0 ? 3 : 0, communityStats.percentage))}%`,
+                      }}
+                      transition={{ duration: 0.5, ease: 'easeOut' }}
+                      className={`h-full rounded-full ${
+                        communityStats.percentage < 10
+                          ? 'bg-gradient-to-r from-amber-500 to-yellow-400'
+                          : communityStats.percentage < 25
+                          ? 'bg-gradient-to-r from-purple-500 to-indigo-400'
+                          : communityStats.percentage < 50
+                          ? 'bg-gradient-to-r from-cyan-500 to-blue-400'
+                          : 'bg-gradient-to-r from-emerald-500 to-teal-400'
+                      }`}
+                    />
+                  </div>
+
+                  <div className="flex items-center justify-between text-[11px] pt-0.5">
+                    <span className="text-slate-400 font-medium">
+                      มีผู้สะสม <strong className="text-white font-bold">{communityStats.count.toLocaleString()}</strong> คนครอบครอง
+                    </span>
+                    <span className="text-amber-400 font-black font-mono">
+                      {communityStats.percentage}% <span className="text-slate-500 font-normal text-[10px]">({communityStats.totalUsers.toLocaleString()} คนทั้งหมด)</span>
+                    </span>
+                  </div>
+                </div>
+              </div>
+            )}
 
             {/* Applicable Variants List (1 Full-Width Row per Variant) */}
             <div className="space-y-2.5">
@@ -412,6 +463,7 @@ export function CardCollectionModal({ card: initialCard, onClose }: Props) {
       {/* Fullscreen Card Image Zoom Modal */}
       {showZoom && (
         <CardImagePreviewModal
+          cardId={activeCard.id}
           imageUrl={activeCard.imageUrlHigh || activeCard.imageUrl}
           officialImageUrl={activeCard.officialImageUrl}
           cardName={activeCard.name}
