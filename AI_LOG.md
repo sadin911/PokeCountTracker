@@ -77,3 +77,4 @@
 [2026-08-26 13:18] Major | Antigravity | Command | node scripts/sync-storage-clean.mjs - cleaned R2 redundant webp, uploaded HD JPGs
 [2026-08-26 13:19] Major | Antigravity | Fix | src/components/ - fixed search filter instant reset on clear & unified single storage
 [2026-08-26 13:20] Major | Antigravity | Command | git tag v2.9.2 & push - Clean Single Storage & Search Reset Bugfix Release
+[2026-08-26 13:30] Major | Antigravity | Write | src/store/communityStore.ts & src/components/ - added Community Ownership Stats in Card Details & Preview Modal
