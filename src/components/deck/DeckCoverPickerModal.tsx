@@ -186,8 +186,17 @@ export function DeckCoverPickerModal({ deck, onSelectCover, onClose }: Props) {
                 value={search}
                 onChange={(e) => setSearch(e.target.value)}
                 autoFocus
-                className="w-full pl-8 pr-3 py-1.5 bg-slate-950 border border-slate-700 rounded-xl text-xs text-white placeholder-slate-500 focus:outline-none focus:border-indigo-500"
+                className="w-full pl-8 pr-7 py-1.5 bg-slate-950 border border-slate-700 rounded-xl text-xs text-white placeholder-slate-500 focus:outline-none focus:border-indigo-500"
               />
+              {search && (
+                <button
+                  type="button"
+                  onClick={() => setSearch('')}
+                  className="absolute right-2.5 top-1/2 -translate-y-1/2 text-slate-400 hover:text-white text-xs font-bold"
+                >
+                  ✕
+                </button>
+              )}
             </div>
           )}
         </div>

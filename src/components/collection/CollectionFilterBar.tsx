@@ -141,8 +141,10 @@ export function CollectionFilterBar({
             />
             {search && (
               <button
+                type="button"
                 onClick={() => onSearchChange('')}
-                className="absolute right-3 top-1/2 -translate-y-1/2 text-slate-400 hover:text-white text-xs font-bold"
+                className="absolute right-2.5 top-1/2 -translate-y-1/2 text-slate-400 hover:text-white text-xs font-bold p-1 rounded-md hover:bg-slate-800 transition-colors"
+                title="ล้างข้อความค้นหา"
               >
                 ✕
               </button>

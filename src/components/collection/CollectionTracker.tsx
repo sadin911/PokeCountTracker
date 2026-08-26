@@ -160,13 +160,15 @@ export function CollectionTracker() {
   }, [selectedSet, setsList, activeProfile]);
 
   const deferredSearch = useDeferredValue(search);
-  const cardMatcher = useMemo(() => createCardMatcher(deferredSearch), [deferredSearch]);
+  // When search is cleared to empty string, reset instantly without defer lag
+  const effectiveSearch = search.trim() === '' ? '' : deferredSearch;
+  const cardMatcher = useMemo(() => createCardMatcher(effectiveSearch), [effectiveSearch]);
 
   // 4. Filter and Sort Cards
   const filteredCards = useMemo(() => {
     const rawList = pokemonCardData as any[];
     const cardsState = activeProfile?.cards || {};
-    const hasSearch = deferredSearch.trim().length > 0;
+    const hasSearch = effectiveSearch.trim().length > 0;
 
     const filtered = rawList.filter((card) => {
       const entry = cardsState[card.id];
@@ -239,7 +241,8 @@ export function CollectionTracker() {
     selectedStage,
     selectedRarity,
     selectedType,
-    search,
+    effectiveSearch,
+    cardMatcher,
     sortBy,
     sortOrder,
   ]);
@@ -255,7 +258,7 @@ export function CollectionTracker() {
     selectedRarity !== 'ALL';
 
   // Stable key identifying current filter/search/sort criteria
-  const filterKey = `${selectedSet}_${statusFilter}_${selectedType}_${selectedCategory}_${selectedStage}_${selectedRarity}_${sortBy}_${sortOrder}_${search.trim()}_${activeProfileId}`;
+  const filterKey = `${selectedSet}_${statusFilter}_${selectedType}_${selectedCategory}_${selectedStage}_${selectedRarity}_${sortBy}_${sortOrder}_${effectiveSearch.trim()}_${activeProfileId}`;
 
   return (
     <div className="min-h-screen bg-slate-950 text-slate-100 flex flex-col font-sans selection:bg-amber-500 selection:text-slate-950">

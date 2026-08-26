@@ -86,11 +86,12 @@ export function DeckEditor({ deck, onBackToDecks }: Props) {
   }, []);
 
   const deferredSearch = useDeferredValue(search);
-  const cardMatcher = useMemo(() => createCardMatcher(deferredSearch), [deferredSearch]);
+  const effectiveSearch = search.trim() === '' ? '' : deferredSearch;
+  const cardMatcher = useMemo(() => createCardMatcher(effectiveSearch), [effectiveSearch]);
 
   // Filter Catalog Cards
   const filteredCatalog = useMemo(() => {
-    const hasSearch = deferredSearch.trim().length > 0;
+    const hasSearch = effectiveSearch.trim().length > 0;
 
     return (pokemonCardData as any[]).filter((c) => {
       // Search
@@ -122,7 +123,7 @@ export function DeckEditor({ deck, onBackToDecks }: Props) {
 
       return true;
     });
-  }, [deferredSearch, selectedSet, selectedType, selectedRarity, selectedCategory, cardMatcher]);
+  }, [effectiveSearch, selectedSet, selectedType, selectedRarity, selectedCategory, cardMatcher]);
 
   const displayedCatalog = filteredCatalog.slice(0, catalogLimit);
   const hasMoreCatalog = catalogLimit < filteredCatalog.length;
@@ -464,8 +465,10 @@ export function DeckEditor({ deck, onBackToDecks }: Props) {
               />
               {search && (
                 <button
+                  type="button"
                   onClick={() => setSearch('')}
-                  className="absolute right-3 top-1/2 -translate-y-1/2 text-slate-400 hover:text-white text-xs font-bold"
+                  className="absolute right-2.5 top-1/2 -translate-y-1/2 text-slate-400 hover:text-white text-xs font-bold p-1 rounded-md hover:bg-slate-800 transition-colors"
+                  title="ล้างข้อความค้นหา"
                 >
                   ✕
                 </button>

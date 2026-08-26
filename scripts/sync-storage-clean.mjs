@@ -1,4 +1,4 @@
-import { S3Client, PutObjectCommand } from '@aws-sdk/client-s3';
+import { S3Client, PutObjectCommand, ListObjectsV2Command, DeleteObjectsCommand } from '@aws-sdk/client-s3';
 import sharp from 'sharp';
 import fs from 'fs';
 import path from 'path';
@@ -29,8 +29,50 @@ const HD_DIR = path.join(__dirname, '../public/card-images-hd');
 
 const CONCURRENCY = 35;
 
-const cards = JSON.parse(fs.readFileSync(JSON_PATH, 'utf8'));
+// Step 1: Clean up redundant .webp files inside card-images-hd on Cloudflare R2
+async function cleanR2HdWebpDuplicates() {
+  console.log('🧹 Scanning R2 for redundant card-images-hd/*.webp to delete...');
+  let continuationToken = undefined;
+  let totalDeleted = 0;
 
+  do {
+    const listRes = await s3.send(
+      new ListObjectsV2Command({
+        Bucket: BUCKET_NAME,
+        Prefix: 'card-images-hd/',
+        ContinuationToken: continuationToken,
+      })
+    );
+
+    const keysToDelete = (listRes.Contents || [])
+      .filter((obj) => obj.Key && obj.Key.endsWith('.webp'))
+      .map((obj) => ({ Key: obj.Key }));
+
+    if (keysToDelete.length > 0) {
+      // Delete in batches of 1000
+      for (let i = 0; i < keysToDelete.length; i += 1000) {
+        const batch = keysToDelete.slice(i, i + 1000);
+        await s3.send(
+          new DeleteObjectsCommand({
+            Bucket: BUCKET_NAME,
+            Delete: { Objects: batch },
+          })
+        );
+        totalDeleted += batch.length;
+      }
+      console.log(`🗑️ Deleted ${totalDeleted} redundant .webp files from R2 card-images-hd/`);
+    }
+
+    continuationToken = listRes.IsTruncated ? listRes.NextContinuationToken : undefined;
+  } while (continuationToken);
+
+  console.log(`✅ Finished R2 cleanup! Total redundant .webp removed from R2: ${totalDeleted}`);
+}
+
+await cleanR2HdWebpDuplicates();
+
+// Step 2: Convert & Upload ONLY HD .jpg to R2
+const cards = JSON.parse(fs.readFileSync(JSON_PATH, 'utf8'));
 fs.mkdirSync(RAW_DIR, { recursive: true });
 fs.mkdirSync(HD_DIR, { recursive: true });
 
@@ -50,23 +92,19 @@ for (const card of cards) {
 
   const rawPath = path.join(RAW_DIR, `${subPathWithoutExt}.png`);
   const hdJpgPath = path.join(HD_DIR, `${subPathWithoutExt}.jpg`);
-  const hdWebpPath = path.join(HD_DIR, `${subPathWithoutExt}.webp`);
   const hdJpgR2Key = `card-images-hd/${subPathWithoutExt}.jpg`;
-  const hdWebpR2Key = `card-images-hd/${subPathWithoutExt}.webp`;
 
   queue.push({
     card,
     subPathWithoutExt,
     rawPath,
     hdJpgPath,
-    hdWebpPath,
     hdJpgR2Key,
-    hdWebpR2Key,
     officialUrl: card.officialImageUrl || null,
   });
 }
 
-console.log(`📦 Enhancing & Uploading HD images (Total: ${queue.length})...`);
+console.log(`📦 Processing & Uploading only necessary .jpg for HD (Total: ${queue.length})...`);
 
 let completed = 0;
 let errors = 0;
@@ -84,7 +122,7 @@ async function uploadBufferToR2(key, buffer, contentType = 'image/jpeg') {
 }
 
 async function processCard(item) {
-  const { card, rawPath, hdJpgPath, hdWebpPath, hdJpgR2Key, hdWebpR2Key, officialUrl } = item;
+  const { card, rawPath, hdJpgPath, hdJpgR2Key, officialUrl } = item;
 
   fs.mkdirSync(path.dirname(rawPath), { recursive: true });
   fs.mkdirSync(path.dirname(hdJpgPath), { recursive: true });
@@ -119,9 +157,7 @@ async function processCard(item) {
     }
   }
 
-  if (!rawBuf) {
-    return false;
-  }
+  if (!rawBuf) return false;
 
   let jpgBuf = null;
   try {
@@ -132,7 +168,6 @@ async function processCard(item) {
     let pipeline = sharp(rawBuf);
 
     if (isSmallSource) {
-      // Super-Resolution Upscaling for older small official images (Lanczos3 + Sharpening)
       pipeline = pipeline
         .resize(1080, 1508, {
           kernel: sharp.kernel.lanczos3,
@@ -153,10 +188,7 @@ async function processCard(item) {
   }
 
   try {
-    await Promise.all([
-      uploadBufferToR2(hdJpgR2Key, jpgBuf, 'image/jpeg'),
-      uploadBufferToR2(hdWebpR2Key, jpgBuf, 'image/jpeg'),
-    ]);
+    await uploadBufferToR2(hdJpgR2Key, jpgBuf, 'image/jpeg');
     return true;
   } catch (err) {
     console.error(`❌ R2 upload error for ${card.name}:`, err.message);
@@ -184,8 +216,8 @@ async function worker() {
   }
 }
 
-console.log(`🚀 Starting Super-Resolution & Full-Res JPG HD Processing with ${CONCURRENCY} workers...`);
+console.log(`🚀 Starting HD JPG 75% Conversion & Single-Upload to R2 with ${CONCURRENCY} workers...`);
 const workers = Array.from({ length: CONCURRENCY }, () => worker());
 await Promise.all(workers);
 
-console.log(`\n🎉 Super-Resolution HD Processing & R2 Upload Complete!`);
+console.log(`\n🎉 HD Processing & Single Storage Upload Complete!`);
