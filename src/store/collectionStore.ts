@@ -497,11 +497,13 @@ export const useCollectionStore = create<CollectionState>((set, get) => ({
     set({ syncStatus: 'syncing' });
     try {
       // 1. Try to load from user local cache first for instant UI response
+      let cachedActiveId: string | null = null;
       const cached = localStorage.getItem(`${USER_CACHE_KEY_PREFIX}${uid}`);
       if (cached) {
         try {
           const parsed = JSON.parse(cached);
           if (parsed.profiles && Object.keys(parsed.profiles).length > 0) {
+            cachedActiveId = parsed.activeProfileId || null;
             set({
               profiles: parsed.profiles,
               activeProfileId: parsed.activeProfileId || Object.keys(parsed.profiles)[0],
@@ -558,7 +560,13 @@ export const useCollectionStore = create<CollectionState>((set, get) => ({
             );
           }
 
-          const activeId = Object.keys(cloudProfiles)[0];
+          // Keep the binder the user was last looking at. Unconditionally
+          // taking the first key reset their selection on every sign-in, in
+          // whatever order Firestore happened to return the documents.
+          const activeId =
+            cachedActiveId && cloudProfiles[cachedActiveId]
+              ? cachedActiveId
+              : Object.keys(cloudProfiles)[0];
           set({
             profiles: cloudProfiles,
             activeProfileId: activeId,
