@@ -43,16 +43,14 @@
     min-height: 100%;
   }
 
-  /* Battle & Lorcana mode: full viewport height without outer scroll */
-  html[data-game-mode="pokemon"] body,
-  html[data-game-mode="lorcana"] body {
+  /* Battle mode: full viewport height without outer scroll */
+  html[data-game-mode="pokemon"] body {
     overflow: hidden;
     height: 100dvh;
     width: 100%;
   }
 
-  html[data-game-mode="pokemon"] #root,
-  html[data-game-mode="lorcana"] #root {
+  html[data-game-mode="pokemon"] #root {
     overflow: hidden;
     height: 100dvh;
     width: 100%;

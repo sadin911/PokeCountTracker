@@ -3,8 +3,8 @@
 # ⚡ PokéCount Tracker & PokéCollection 📚
 ### The All-in-One Companion & Collection Vault for Tabletop Card Games
 
-[![React](https://img.shields.io/badge/React-18.3.1-61DAFB?logo=react&logoColor=black&style=for-the-badge)](https://react.dev/)
-[![TypeScript](https://img.shields.io/badge/TypeScript-5.6-3178C6?logo=typescript&logoColor=white&style=for-the-badge)](https://www.typescriptlang.org/)
+[![React](https://img.shields.io/badge/React-19.2-61DAFB?logo=react&logoColor=black&style=for-the-badge)](https://react.dev/)
+[![TypeScript](https://img.shields.io/badge/TypeScript-6.0-3178C6?logo=typescript&logoColor=white&style=for-the-badge)](https://www.typescriptlang.org/)
 [![Vite](https://img.shields.io/badge/Vite-8.2-646CFF?logo=vite&logoColor=white&style=for-the-badge)](https://vitejs.dev/)
 [![Tailwind CSS](https://img.shields.io/badge/Tailwind_CSS-v4.0-38B2AC?logo=tailwind-css&logoColor=white&style=for-the-badge)](https://tailwindcss.com/)
 [![Firebase](https://img.shields.io/badge/Firebase-Auth_%26_Firestore-FFCA28?logo=firebase&logoColor=black&style=for-the-badge)](https://firebase.google.com/)
@@ -13,8 +13,10 @@
 <br />
 
 **[🌐 เข้าใช้งานเว็บไซต์ (Live Website)](https://sadin911.github.io/PokeCountTracker/)** • 
-**[📚 สมุดสะสมการ์ด (PokéCollection)](https://sadin911.github.io/PokeCountTracker/collection)** • 
-**[🪄 Disney Lorcana Tracker](https://sadin911.github.io/PokeCountTracker/lorcana)**
+**[📚 สมุดสะสมการ์ด (PokéCollection)](https://sadin911.github.io/PokeCountTracker/collection)**
+
+> 🪄 โหมด Disney Lorcana ถูกแยกออกไปเป็นโปรเจกต์อิสระแล้ว →
+> **[LorcanaCountTracker](https://github.com/sadin911/LorcanaCountTracker)**
 
 </div>
 
@@ -26,8 +28,7 @@
   - [1. 📚 PokéCollection Tracker (ระบบสมุดสะสมการ์ดโปเกมอนภาษาไทย)](#1--pokécollection-tracker-ระบบสมุดสะสมการ์ดโปเกมอนภาษาไทย)
   - [2. ☁️ Google Authentication & Firestore Cloud Sync](#2-️-google-authentication--firestore-cloud-sync)
   - [3. 🎮 Pokémon TCG Battle Companion (กระดานนับแต้มแข่งการ์ด)](#3--pokémon-tcg-battle-companion-กระดานนับแต้มแข่งการ์ด)
-  - [4. 🪄 Disney Lorcana Mode (โหมดลอร์คานา)](#4--disney-lorcana-mode-โหมดลอร์คานา)
-  - [5. 🎲 Shared Tabletop Tools (เครื่องมือเสริมการเล่น)](#5--shared-tabletop-tools-เครื่องมือเสริมการเล่น)
+  - [4. 🎲 Shared Tabletop Tools (เครื่องมือเสริมการเล่น)](#4--shared-tabletop-tools-เครื่องมือเสริมการเล่น)
 - [🏗️ โครงสร้างสถาปัตยกรรมและเทคโนโลยี (Architecture & Tech Stack)](#️-โครงสร้างสถาปัตยกรรมและเทคโนโลยี-architecture--tech-stack)
 - [📁 โครงสร้างโปรเจกต์ (Project Directory)](#-โครงสร้างโปรเจกต์-project-directory)
 - [💻 การติดตั้งและรันในเครื่อง (Local Setup & Development)](#-การติดตั้งและรันในเครื่อง-local-setup--development)
@@ -40,7 +41,7 @@
 
 **PokéCount Tracker** เป็น Progressive Web Application สำหรับผู้เล่นและนักสะสมการ์ดเกม โดยรวม 2 ฟังก์ชันหลักไว้ในที่เดียว:
 1. **PokéCollection Tracker**: สมุดสะสมการ์ดโปเกมอนภาษาไทยอย่างเป็นทางการกว่า **9,554+ ใบ** พร้อมรูปภาพความละเอียดสูง รองรับการบันทึกแยกประเภทฟอยล์ (Normal, Holo, Reverse Foil, Promo), ระบบค้นหาตามชื่อชุด/ชื่อการ์ด, และการเชื่อมต่อ **Cloud Firestore Sync** ผ่าน **Google Login**
-2. **Battle Companion**: กระดานนับดาเมจและบันทึกสถานะการแข่งขันแบบ Real-time สำหรับ **Pokémon TCG** และ **Disney Lorcana** ใช้งานง่ายบนมือถือและแท็บเล็ต ไม่ต้องพกกระดาษหรือเม็ดเคาน์เตอร์
+2. **Battle Companion**: กระดานนับดาเมจและบันทึกสถานะการแข่งขันแบบ Real-time สำหรับ **Pokémon TCG** ใช้งานง่ายบนมือถือและแท็บเล็ต ไม่ต้องพกกระดาษหรือเม็ดเคาน์เตอร์
 
 ---
 
@@ -82,13 +83,7 @@
 
 ---
 
-### 4. 🪄 Disney Lorcana Mode (โหมดลอร์คานา)
-* **Lore Counter**: ตัวนับค่า Lore ขนาดใหญ่ 0–20 สำหรับผู้เล่นทั้งสองฝั่ง
-* **Inkwell Tracker**: นับจำนวนการ์ดใน Inkwell พร้อมปุ่ม **💧 Ink Played** บันทึกการลงหมึกประจำเทิร์น และรีเซ็ตให้อัตโนมัติเมื่อกดจบเทิร์น
-
----
-
-### 5. 🎲 Shared Tabletop Tools (เครื่องมือเสริมการเล่น)
+### 4. 🎲 Shared Tabletop Tools (เครื่องมือเสริมการเล่น)
 * **3D Animated Coin Flip**: ทอยเหรียญ 3 มิติ แสดงผลหัว (Heads) / ก้อย (Tails)
 * **3D Animated Dice Roller**: ทอยลูกเต๋า 6 หน้า (d6) แบบแอนิเมชัน
 * **Game Reset**: กล่องข้อความยืนยันก่อนเริ่มเกมใหม่ เพื่อป้องกันการกดพลาด
@@ -146,7 +141,6 @@ PokeCountTracker/
 │   │   │   ├── CardCollectionModal.tsx     # หน้าต่างจัดการจำนวนการ์ด & สภาพการ์ด
 │   │   │   ├── ProfileManagerModal.tsx     # หน้าต่างจัดการสมุดสะสม (Multi-Profiles)
 │   │   │   └── CollectionBackupModal.tsx   # หน้าต่าง Export / Import ข้อมูล JSON
-│   │   ├── lorcana/                # คอมโพเนนต์กระดานแข่ง Disney Lorcana
 │   │   ├── mini/                   # คอมโพเนนต์กระดานแข่ง Pokémon Mini Card Board
 │   │   ├── pokemon/                # พรีเซ็ต HP, การจำลองวิวัฒนาการ, ซูมรูปการ์ด
 │   │   └── tools/                  # เหรียญทอย 3D, ลูกเต๋า 3D
@@ -157,14 +151,13 @@ PokeCountTracker/
 │   │   ├── authStore.ts            # Zustand Store สำหรับ Firebase Auth & User Session
 │   │   ├── collectionStore.ts      # Zustand Store + Cloud Firestore Sync
 │   │   ├── gameStore.ts            # Zustand Store สำหรับกระดานแข่งโปเกมอน
-│   │   └── lorcanaStore.ts         # Zustand Store สำหรับกระดานแข่งลอร์คานา
 │   ├── types/
 │   │   ├── collection.ts           # Type definitions สำหรับคอลเลกชันและการ์ด
 │   │   └── game.ts                 # Type definitions สำหรับกระดานแข่งขัน
 │   ├── utils/
 │   │   ├── cardImage.ts            # ฟังก์ชันจัดการ Image URL และ CDN Fallbacks
 │   │   └── firebase.ts             # การตั้งค่า Firebase Client SDK
-│   ├── App.tsx                     # Main App Routing (/, /collection, /lorcana)
+│   ├── App.tsx                     # Main App Routing (/, /collection, /deck, /battle)
 │   └── index.css                   # Global Design System & Fullscreen Overrides
 └── scripts/
     └── download-all-card-images.mjs # สคริปต์ดาวน์โหลดรูปภาพการ์ดจาก Cloudflare R2
@@ -196,7 +189,7 @@ npm run build
 
 ## 🌐 การตั้งค่า GitHub Pages & Single Page Routing
 
-เนื่องจาก GitHub Pages เป็น Static Hosting การเข้าถึง Deep Link URL โดยตรง (เช่น `/collection` หรือ `/lorcana`) จะถูกดักจับผ่าน `public/404.html` ซึ่งจะส่งคำขอไปยัง `index.html` เพื่อให้ React Router / State จัดการโหลดหน้าเว็บที่ถูกต้องโดยอัตโนมัติ
+เนื่องจาก GitHub Pages เป็น Static Hosting การเข้าถึง Deep Link URL โดยตรง (เช่น `/collection` หรือ `/deck`) จะถูกดักจับผ่าน `public/404.html` ซึ่งจะส่งคำขอไปยัง `index.html` เพื่อให้ React Router / State จัดการโหลดหน้าเว็บที่ถูกต้องโดยอัตโนมัติ
 
 ---
 
@@ -207,5 +200,5 @@ npm run build
 <br />
 
 <div align="center">
-  <sub>Developed with ❤️ for Pokémon TCG & Disney Lorcana Community</sub>
+  <sub>Developed with ❤️ for the Pokémon TCG Community</sub>
 </div>

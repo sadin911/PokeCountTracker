@@ -87,13 +87,6 @@ export function CollectionHeader({ stats }: Props) {
               <span>🎮</span>
               <span>Battle Tracker</span>
             </button>
-            <button
-              onClick={() => setGameMode('lorcana')}
-              className="px-3 py-1.5 text-xs font-bold rounded-lg text-slate-400 hover:text-slate-200 hover:bg-slate-800 transition-all flex items-center gap-1.5"
-            >
-              <span>🪄</span>
-              <span>Lorcana</span>
-            </button>
           </nav>
 
           {/* Mobile Right Action shortcut: Active Profile & Backup */}
