@@ -3,25 +3,34 @@ export const DEFAULT_CARD_PLACEHOLDER = `${import.meta.env.BASE_URL || '/'}card-
 
 /**
  * Resolves a card image path to its best URL.
- * - If running in Production (GitHub Pages, Vercel), points directly to Cloudflare R2 CDN.
+ * - hd: true -> points to Ultra-HD high-resolution version (card-images-hd/...)
+ * - hd: false / omitted -> points to lightweight, high-performance thumbnail (card-images/...)
+ * - If running in Production (GitHub Pages, Vercel), points to Cloudflare R2 CDN.
  * - If running in Local Dev, uses local asset path for instant offline loading.
  */
-export function resolveCardImageUrl(path?: string | null): string | undefined {
+export function resolveCardImageUrl(path?: string | null, hd: boolean = false): string | undefined {
   if (!path) return DEFAULT_CARD_PLACEHOLDER;
   if (path.startsWith('http://') || path.startsWith('https://')) return path;
 
-  const cleanPath = path.replace(/^\/?PokeCountTracker/, '').replace(/^\/+/, '');
+  let cleanPath = path.replace(/^\/?PokeCountTracker/, '').replace(/^\/+/, '');
+
+  if (hd) {
+    if (cleanPath.startsWith('card-images/')) {
+      cleanPath = cleanPath.replace('card-images/', 'card-images-hd/');
+    }
+  }
 
   if (import.meta.env.PROD) {
     return `${R2_CDN_BASE}/${cleanPath}`;
   }
 
-  return path;
+  const baseUrl = import.meta.env.BASE_URL || '/';
+  return `${baseUrl.endsWith('/') ? baseUrl : baseUrl + '/'}${cleanPath}`;
 }
 
 /**
  * Fallback error handler for card image loading.
- * Hierarchy: Local asset -> Cloudflare R2 CDN -> Official Asia CDN -> Default Card Placeholder
+ * Hierarchy: Local HD -> Local Standard -> Cloudflare R2 HD -> Cloudflare R2 Standard -> Official Asia CDN -> Default Card Placeholder
  */
 export function handleCardImageError(
   e: React.SyntheticEvent<HTMLImageElement>,
@@ -37,15 +46,33 @@ export function handleCardImageError(
   }
 
   const cleanPath = (localPath || '').replace(/^\/?PokeCountTracker/, '').replace(/^\/+/, '');
-  const r2Url = cleanPath ? `${R2_CDN_BASE}/${cleanPath}` : null;
+  const isHdAttempt = target.src.includes('card-images-hd');
 
-  // 1. If currently on local URL and failed, fallback to Cloudflare R2
-  if (r2Url && target.src !== r2Url && target.src !== officialImageUrl) {
+  // 1. If HD failed, fallback to local standard thumbnail first
+  if (isHdAttempt) {
+    const stdCleanPath = cleanPath.replace('card-images-hd/', 'card-images/');
+    const baseUrl = import.meta.env.BASE_URL || '/';
+    const localStdUrl = `${baseUrl.endsWith('/') ? baseUrl : baseUrl + '/'}${stdCleanPath}`;
+
+    if (!import.meta.env.PROD && target.src !== localStdUrl) {
+      target.src = localStdUrl;
+      return;
+    }
+  }
+
+  // 2. Fallback to Cloudflare R2
+  const r2Url = cleanPath ? `${R2_CDN_BASE}/${cleanPath}` : null;
+  const r2StdUrl = cleanPath ? `${R2_CDN_BASE}/${cleanPath.replace('card-images-hd/', 'card-images/')}` : null;
+
+  if (r2StdUrl && target.src !== r2StdUrl && target.src !== officialImageUrl) {
+    target.src = r2StdUrl;
+    return;
+  } else if (r2Url && target.src !== r2Url && target.src !== officialImageUrl) {
     target.src = r2Url;
     return;
   }
 
-  // 2. If it's a basic energy in SCF or custom set that failed on R2, fallback to SCE energy
+  // 3. If it's a basic energy in SCF or custom set that failed on R2, fallback to SCE energy
   if (cleanPath.includes('card-images/SCF/') && cleanPath.includes('พลังงานพื้นฐาน')) {
     const sceFallback = `${R2_CDN_BASE}/${cleanPath.replace('card-images/SCF/', 'card-images/SCE/')}`;
     if (target.src !== sceFallback) {
@@ -54,12 +81,13 @@ export function handleCardImageError(
     }
   }
 
-  // 3. If Cloudflare R2 failed, fallback to Official Asia CDN (only if valid)
+  // 4. If Cloudflare R2 failed, fallback to Official Asia CDN (only if valid)
   if (officialImageUrl && target.src !== officialImageUrl) {
     target.src = officialImageUrl;
     return;
   }
 
-  // 4. Ultimate Fallback: Default Placeholder Card
+  // 5. Ultimate Fallback: Default Placeholder Card
   target.src = DEFAULT_CARD_PLACEHOLDER;
 }
+

@@ -67,3 +67,5 @@
 [2026-08-26 01:57] Major | Antigravity | Command | git tag v2.7.0 & push - Battle & Lorcana Board Scaling, Real Card Ratio (63:88) & Vivid Display Release
 [2026-08-26 11:55] Major | Antigravity | Command | git pull --all, download-all-card-images & build verified
 [2026-08-26 12:02] Major | Antigravity | Write | src/components/ - added fullscreen card zoom in details & enhanced modal
+[2026-08-26 12:03] Major | Antigravity | Command | npm run dev - started dev server at http://localhost:5173/PokeCountTracker/
+[2026-08-26 12:07] Major | Antigravity | Write | src/utils/cardImage.ts & scripts/ - separated HD vs thumbnail with sample cards

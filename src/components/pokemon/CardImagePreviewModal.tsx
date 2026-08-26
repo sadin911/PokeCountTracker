@@ -36,7 +36,7 @@ export function CardImagePreviewModal({
 
   if (!imageUrl) return null;
 
-  const resolvedUrl = resolveCardImageUrl(imageUrl);
+  const resolvedUrl = resolveCardImageUrl(imageUrl, true);
 
   return createPortal(
     <AnimatePresence>

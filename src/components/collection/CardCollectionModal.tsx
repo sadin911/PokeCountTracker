@@ -133,7 +133,7 @@ export function CardCollectionModal({ card: initialCard, onClose }: Props) {
 
   const totalCount = Object.values(variants).reduce((a, b) => a + b, 0);
 
-  const imgUrl = resolveCardImageUrl(activeCard.imageUrlHigh || activeCard.imageUrl);
+  const imgUrl = resolveCardImageUrl(activeCard.imageUrlHigh || activeCard.imageUrl, true);
 
   const applicableVariants = useMemo(() => {
     return getApplicableVariants(activeCard, variants);
