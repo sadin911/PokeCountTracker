@@ -1,7 +1,6 @@
 import { useEffect } from 'react';
 import { useGameStore, type GameMode } from './store/gameStore';
 import { GameBoard } from './components/layout/GameBoard';
-import { LorcanaGameBoard } from './components/lorcana/LorcanaGameBoard';
 import { CollectionTracker } from './components/collection/CollectionTracker';
 import { DeckManager } from './components/deck/DeckManager';
 import { BottomNav } from './components/layout/BottomNav';
@@ -39,14 +38,6 @@ function getModeFromURL(): GameMode {
     return 'pokemon';
   }
   if (
-    path.includes('/lorcana') ||
-    hash.includes('lorcana') ||
-    modeParam === 'lorcana' ||
-    rawSearch.includes('lorcana')
-  ) {
-    return 'lorcana';
-  }
-  if (
     path.includes('/collection') ||
     hash.includes('collection') ||
     modeParam === 'collection' ||
@@ -69,8 +60,6 @@ function updateURLForMode(mode: GameMode) {
     targetPath = `${base}/collection`;
   } else if (mode === 'pokemon') {
     targetPath = `${base}/battle`;
-  } else if (mode === 'lorcana') {
-    targetPath = `${base}/lorcana`;
   }
 
   if (window.location.pathname !== targetPath) {
@@ -115,17 +104,12 @@ function App() {
 
   return (
     <div className={`w-full ${
-      gameMode === 'pokemon' || gameMode === 'lorcana'
+      gameMode === 'pokemon'
         ? 'h-dvh h-screen overflow-hidden flex flex-col pb-16 md:pb-0'
         : 'min-h-screen pb-16 md:pb-0'
     }`}>
       {gameMode === 'deck' && <DeckManager />}
       {gameMode === 'collection' && <CollectionTracker />}
-      {gameMode === 'lorcana' && (
-        <div className="flex-1 min-h-0 h-full w-full flex flex-col overflow-hidden">
-          <LorcanaGameBoard />
-        </div>
-      )}
       {gameMode === 'pokemon' && (
         <div className="flex-1 min-h-0 h-full w-full flex flex-col overflow-hidden">
           <GameBoard />

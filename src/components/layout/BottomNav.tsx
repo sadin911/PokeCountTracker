@@ -37,13 +37,6 @@ export function BottomNav() {
       activeGradient: 'from-blue-500 to-cyan-500',
       activeText: 'text-blue-400',
     },
-    {
-      id: 'lorcana',
-      label: 'Lorcana',
-      icon: '🪄',
-      activeGradient: 'from-amber-600 to-yellow-500',
-      activeText: 'text-amber-400',
-    },
   ];
 
   return (

@@ -1,5 +1,7 @@
 # React Native iOS/iPadOS Implementation Plan
 
+> **Superseded (2026-08-27):** Disney Lorcana has moved to its own repo, [LorcanaCountTracker](https://github.com/sadin911/LorcanaCountTracker). The Lorcana sections below are kept as a record of the original design and no longer describe this project.
+
 > **For agentic workers:** REQUIRED SUB-SKILL: Use superpowers:subagent-driven-development (recommended) or superpowers:executing-plans to implement this plan task-by-task. Steps use checkbox (`- [ ]`) syntax for tracking.
 
 **Goal:** Port PokéCount Tracker (Pokémon TCG + Disney Lorcana modes) to a native iOS/iPadOS app using React Native + Expo on the `feature/react-native` branch.

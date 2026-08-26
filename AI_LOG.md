@@ -85,3 +85,6 @@
 [2026-08-26 14:56] Major | Antigravity | Command | git tag v2.10.0 & push - Community Card Ownership Stats Release
 [2026-08-26 15:17] Major | Antigravity | Fix | src/components/ - removed 'ใบนี้' evolution label & restored 100% vivid card color in details modal
 [2026-08-26 15:17] Major | Antigravity | Command | git tag v2.10.1 & push - Clean Evolution Badges & 100% Vivid Modal Card Color Release
+[2026-08-27 00:30] Major | Claude | Delete | src/store/lorcanaStore.ts & src/components/lorcana/ - split Disney Lorcana out into its own repo (github.com/sadin911/LorcanaCountTracker); recoverable from commit 129d049 if ever needed here again
+[2026-08-27 00:30] Major | Claude | Edit | src/ - removed the 'lorcana' GameMode: gameStore union, App.tsx routing & render branch, BottomNav tab, CollectionHeader/DeckHeader nav buttons, MiniGameBoard switch button, index.css selectors
+[2026-08-27 00:30] Minor | Claude | Edit | README.md - dropped the Lorcana sections, pointed at the new repo, corrected the React/TypeScript version badges to match package.json

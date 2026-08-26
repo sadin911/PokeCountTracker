@@ -1,5 +1,7 @@
 # React Native iOS/iPadOS App — Design Spec
 
+> **Superseded (2026-08-27):** Disney Lorcana has moved to its own repo, [LorcanaCountTracker](https://github.com/sadin911/LorcanaCountTracker). The Lorcana sections below are kept as a record of the original design and no longer describe this project.
+
 **Date:** 2026-08-21  
 **Branch:** `feature/react-native`  
 **Platform:** iOS + iPadOS only (iPhone all sizes, iPad Pro/Air/mini)  
