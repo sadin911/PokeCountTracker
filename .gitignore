@@ -32,6 +32,8 @@ serviceAccountKey*.json
 *serviceAccount*.json
 *service-account*.json
 firebase-admin-key*.json
+pokecount-tracker*.json
+*-adminsdk-*.json
 
 # Editor & IDEs
 .vscode/*

@@ -1,4 +1,6 @@
-import admin from 'firebase-admin';
+import { initializeApp, cert } from 'firebase-admin/app';
+import { getAuth } from 'firebase-admin/auth';
+import { getFirestore } from 'firebase-admin/firestore';
 import fs from 'fs';
 import path from 'path';
 import { fileURLToPath } from 'url';
@@ -37,13 +39,13 @@ console.log(`🔑 กำลังโหลด Service Account Key จาก: ${p
 
 const serviceAccount = JSON.parse(fs.readFileSync(keyPath, 'utf8'));
 
-admin.initializeApp({
-  credential: admin.credential.cert(serviceAccount),
+const app = initializeApp({
+  credential: cert(serviceAccount),
   projectId: 'pokecount-tracker',
 });
 
-const auth = admin.auth();
-const db = admin.firestore();
+const auth = getAuth(app);
+const db = getFirestore(app);
 
 async function runCommunitySync() {
   console.log('🚀 เริ่มต้นการดึงและรวบรวมข้อมูลจาก Firebase...\n');
