@@ -78,3 +78,4 @@
 [2026-08-26 13:19] Major | Antigravity | Fix | src/components/ - fixed search filter instant reset on clear & unified single storage
 [2026-08-26 13:20] Major | Antigravity | Command | git tag v2.9.2 & push - Clean Single Storage & Search Reset Bugfix Release
 [2026-08-26 13:30] Major | Antigravity | Write | src/store/communityStore.ts & src/components/ - added Community Ownership Stats in Card Details & Preview Modal
+[2026-08-26 13:41] Major | Antigravity | Fix | src/store/communityStore.ts - guaranteed active user owned cards instantly reflected in stats calculation
