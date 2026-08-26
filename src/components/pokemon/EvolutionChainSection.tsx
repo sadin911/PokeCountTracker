@@ -17,7 +17,7 @@ export function EvolutionChainSection({ currentCard, onSelectCard }: Props) {
   }
 
   return (
-    <div className="space-y-2 pt-3 border-t border-slate-800/90">
+    <div className="space-y-2.5 pt-3 border-t border-slate-800/90">
       <div className="flex items-center justify-between">
         <div className="flex items-center gap-2">
           <span className="text-sm">🧬</span>
@@ -25,13 +25,13 @@ export function EvolutionChainSection({ currentCard, onSelectCard }: Props) {
             สายวิวัฒนาการ (Evolution Line)
           </h4>
         </div>
-        <span className="text-[11px] text-slate-500 font-medium">
+        <span className="text-[11px] text-slate-500 font-semibold">
           {chain.length} ร่างในสาย
         </span>
       </div>
 
-      {/* Horizontal Evolution Chain */}
-      <div className="flex items-stretch gap-2 overflow-x-auto pb-1.5 scrollbar-thin scrollbar-thumb-slate-700">
+      {/* Evolution Chain Grid / Flex Container */}
+      <div className="flex flex-wrap sm:flex-nowrap items-center gap-1.5 sm:gap-2 overflow-x-auto pb-1 scrollbar-thin scrollbar-thumb-slate-700">
         {chain.map((step, idx) => {
           const imgUrl = resolveCardImageUrl(
             step.representativeCard.imageUrl || step.representativeCard.imageUrlHigh
@@ -39,9 +39,11 @@ export function EvolutionChainSection({ currentCard, onSelectCard }: Props) {
           const isCurrent = step.isCurrent;
 
           return (
-            <div key={`${step.name}-${idx}`} className="flex items-center gap-2 shrink-0">
+            <div key={`${step.name}-${idx}`} className="flex items-center gap-1.5 sm:gap-2 flex-1 min-w-[130px] sm:min-w-0 shrink-0">
               {idx > 0 && (
-                <span className="text-slate-600 font-bold text-sm select-none">→</span>
+                <span className="text-slate-600 font-bold text-xs sm:text-sm select-none shrink-0 hidden sm:inline">
+                  →
+                </span>
               )}
 
               <button
@@ -52,19 +54,19 @@ export function EvolutionChainSection({ currentCard, onSelectCard }: Props) {
                   }
                 }}
                 disabled={isCurrent}
-                className={`group/evo relative flex items-center gap-2.5 p-2 rounded-2xl border text-left transition-all duration-200 ${
+                className={`group/evo relative w-full flex items-center gap-2 p-2 rounded-2xl border text-left transition-all duration-200 ${
                   isCurrent
-                    ? 'bg-amber-500/15 border-amber-500/60 shadow-lg shadow-amber-500/10 ring-1 ring-amber-500/40 cursor-default'
-                    : 'bg-slate-950/80 hover:bg-slate-800/90 border-slate-800 hover:border-slate-600 cursor-pointer hover:scale-[1.03] active:scale-95'
+                    ? 'bg-gradient-to-r from-amber-500/20 via-amber-500/10 to-transparent border-amber-500/80 shadow-lg shadow-amber-500/10 ring-2 ring-amber-500/50 cursor-default'
+                    : 'bg-slate-950/80 hover:bg-slate-800/90 border-slate-800 hover:border-slate-600 cursor-pointer hover:scale-[1.02] active:scale-95'
                 }`}
                 title={
                   isCurrent
-                    ? `${step.name} (การ์ดปัจจุบัน)`
+                    ? `${step.name} (การ์ดที่กำลังดูอยู่)`
                     : `คลิกเพื่อดูการ์ด ${step.name}`
                 }
               >
                 {/* Thumbnail */}
-                <div className="relative w-9 h-12 rounded-lg overflow-hidden bg-slate-900 shrink-0 shadow-md">
+                <div className="relative w-8 h-11 rounded-lg overflow-hidden bg-slate-900 shrink-0 shadow-md">
                   {imgUrl ? (
                     <img
                       src={imgUrl}
@@ -87,10 +89,10 @@ export function EvolutionChainSection({ currentCard, onSelectCard }: Props) {
                 </div>
 
                 {/* Text Details */}
-                <div className="flex flex-col min-w-0 pr-1">
-                  <div className="flex items-center gap-1.5">
+                <div className="flex flex-col min-w-0 flex-1 pr-0.5">
+                  <div className="flex items-center gap-1 flex-wrap">
                     <span
-                      className={`text-[9px] font-black px-1.5 py-0.5 rounded-md leading-none ${
+                      className={`text-[8px] sm:text-[9px] font-black px-1.5 py-0.5 rounded-md leading-none ${
                         step.stage === 'พื้นฐาน'
                           ? 'bg-emerald-950 text-emerald-300 border border-emerald-800/50'
                           : step.stage === 'ร่าง 1'
@@ -104,13 +106,13 @@ export function EvolutionChainSection({ currentCard, onSelectCard }: Props) {
                     </span>
 
                     {isCurrent && (
-                      <span className="text-[9px] font-bold text-amber-400">
+                      <span className="text-[9px] font-black text-amber-400">
                         📍 ใบนี้
                       </span>
                     )}
                   </div>
 
-                  <span className="text-xs font-bold text-white truncate mt-1 group-hover/evo:text-amber-300 transition-colors">
+                  <span className={`text-xs font-black truncate mt-1 transition-colors ${isCurrent ? 'text-amber-300' : 'text-white group-hover/evo:text-amber-300'}`}>
                     {step.name}
                   </span>
 
