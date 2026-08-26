@@ -1,6 +1,7 @@
 import { create } from 'zustand';
 import { doc, getDoc } from 'firebase/firestore';
 import { db } from '../utils/firebase';
+import { useCollectionStore } from './collectionStore';
 
 export interface CardOwnershipStat {
   count: number;
@@ -102,10 +103,33 @@ export const useCommunityStore = create<CommunityState>((set, get) => ({
     }
 
     const { cardOwners, totalUsers } = get();
-    const count = cardOwners[cardId] || 0;
+    let count = cardOwners[cardId] || 0;
 
-    // Calculate percentage based on total active users in system
-    const effectiveTotal = Math.max(totalUsers, count > 0 ? count : 0);
+    // Check if the current active user owns at least 1 copy in their profiles
+    let currentUserOwns = false;
+    try {
+      const profiles = useCollectionStore.getState().profiles;
+      if (profiles) {
+        for (const profile of Object.values(profiles)) {
+          const cardEntry = profile?.cards?.[cardId];
+          if (cardEntry?.variants) {
+            const vCount = Object.values(cardEntry.variants).reduce((a, b) => a + (Number(b) || 0), 0);
+            if (vCount > 0) {
+              currentUserOwns = true;
+              break;
+            }
+          }
+        }
+      }
+    } catch (e) {}
+
+    // If current user owns it and it was not counted in global tally, add 1 to count
+    if (currentUserOwns && count === 0) {
+      count = 1;
+    }
+
+    // Effective total users (must be at least totalUsers or at least 1 if someone owns it)
+    const effectiveTotal = Math.max(totalUsers, count > 0 ? 1 : 0);
     const percentage = effectiveTotal > 0 ? Math.round((count / effectiveTotal) * 100) : 0;
 
     if (count === 0) {
