@@ -83,3 +83,5 @@
 [2026-08-26 14:46] Major | Antigravity | Write | scripts/sync-community-stats-admin.mjs - added Firebase Admin real-user & binder sync script
 [2026-08-26 14:54] Major | Antigravity | Command | node scripts/sync-community-stats-admin.mjs - synced 5 real users & 110 owned cards to Firestore & baseline JSON
 [2026-08-26 14:56] Major | Antigravity | Command | git tag v2.10.0 & push - Community Card Ownership Stats Release
+[2026-08-26 15:17] Major | Antigravity | Fix | src/components/ - removed 'ใบนี้' evolution label & restored 100% vivid card color in details modal
+[2026-08-26 15:17] Major | Antigravity | Command | git tag v2.10.1 & push - Clean Evolution Badges & 100% Vivid Modal Card Color Release

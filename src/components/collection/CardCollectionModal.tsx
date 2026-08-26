@@ -170,9 +170,7 @@ export function CardCollectionModal({ card: initialCard, onClose }: Props) {
             <img
               src={imgUrl}
               alt={activeCard.name}
-              className={`w-full h-full object-cover transition-all duration-300 ${
-                totalCount === 0 ? 'grayscale-[40%] opacity-90' : 'brightness-105'
-              } group-hover:scale-105`}
+              className="w-full h-full object-cover transition-all duration-300 group-hover:scale-105"
               onError={(e) => handleCardImageError(e, activeCard.imageUrl, activeCard.officialImageUrl)}
             />
 

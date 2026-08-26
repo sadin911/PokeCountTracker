@@ -175,12 +175,6 @@ export function EvolutionChainSection({ currentCard, onSelectCard }: Props) {
                     >
                       {step.stage}
                     </span>
-
-                    {isCurrent && (
-                      <span className="text-[9px] font-black text-amber-400">
-                        📍 ใบนี้
-                      </span>
-                    )}
                   </div>
 
                   <span className={`text-xs font-black truncate mt-1 transition-colors ${isCurrent ? 'text-amber-300' : 'text-white group-hover/evo:text-amber-300'}`}>
