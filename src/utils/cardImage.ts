@@ -1,4 +1,5 @@
 export const R2_CDN_BASE = 'https://pub-af524b77e8e3403685545bc0a8222090.r2.dev';
+export const DEFAULT_CARD_PLACEHOLDER = `${import.meta.env.BASE_URL || '/'}card-placeholder.svg`.replace('//', '/');
 
 /**
  * Resolves a card image path to its best URL.
@@ -6,7 +7,7 @@ export const R2_CDN_BASE = 'https://pub-af524b77e8e3403685545bc0a8222090.r2.dev'
  * - If running in Local Dev, uses local asset path for instant offline loading.
  */
 export function resolveCardImageUrl(path?: string | null): string | undefined {
-  if (!path) return undefined;
+  if (!path) return DEFAULT_CARD_PLACEHOLDER;
   if (path.startsWith('http://') || path.startsWith('https://')) return path;
 
   const cleanPath = path.replace(/^\/?PokeCountTracker/, '').replace(/^\/+/, '');
@@ -20,7 +21,7 @@ export function resolveCardImageUrl(path?: string | null): string | undefined {
 
 /**
  * Fallback error handler for card image loading.
- * Hierarchy: Local asset -> Cloudflare R2 CDN -> Generic Energy Fallback -> Official Pokemon Asia CDN
+ * Hierarchy: Local asset -> Cloudflare R2 CDN -> Official Asia CDN -> Default Card Placeholder
  */
 export function handleCardImageError(
   e: React.SyntheticEvent<HTMLImageElement>,
@@ -29,6 +30,11 @@ export function handleCardImageError(
 ) {
   const target = e.currentTarget;
   if (!target) return;
+
+  // Prevent infinite loop if placeholder fails
+  if (target.src.includes('card-placeholder.svg')) {
+    return;
+  }
 
   const cleanPath = (localPath || '').replace(/^\/?PokeCountTracker/, '').replace(/^\/+/, '');
   const r2Url = cleanPath ? `${R2_CDN_BASE}/${cleanPath}` : null;
@@ -48,8 +54,12 @@ export function handleCardImageError(
     }
   }
 
-  // 3. If Cloudflare R2 failed, fallback to Official Asia CDN
+  // 3. If Cloudflare R2 failed, fallback to Official Asia CDN (only if valid)
   if (officialImageUrl && target.src !== officialImageUrl) {
     target.src = officialImageUrl;
+    return;
   }
+
+  // 4. Ultimate Fallback: Default Placeholder Card
+  target.src = DEFAULT_CARD_PLACEHOLDER;
 }
