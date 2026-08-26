@@ -478,9 +478,12 @@ export function HPPresetPicker({ currentMaxHP, initialType, onSelect, onClose }:
 
       {previewCard && (
         <CardImagePreviewModal
-          imageUrl={previewCard.imageUrl || previewCard.imageUrlHigh || null}
+          imageUrl={previewCard.imageUrlHigh || previewCard.imageUrl || null}
           officialImageUrl={previewCard.officialImageUrl || null}
           cardName={previewCard.name}
+          setInfo={previewCard.set?.id || previewCard.set?.name}
+          collectorNumber={previewCard.collectorNumber || previewCard.localId}
+          rarityCode={previewCard.rarityCode}
           onClose={() => setPreviewCard(null)}
           onSelect={() => {
             handleCardChosen(previewCard);
@@ -488,6 +491,7 @@ export function HPPresetPicker({ currentMaxHP, initialType, onSelect, onClose }:
           }}
         />
       )}
+
     </div>,
     document.body
   );

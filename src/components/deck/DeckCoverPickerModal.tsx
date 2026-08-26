@@ -1,6 +1,7 @@
 import { useState, useMemo, useEffect } from 'react';
 import { resolveCardImageUrl, handleCardImageError } from '../../utils/cardImage';
 import { createCardMatcher } from '../../utils/searchHelpers';
+import { CardImagePreviewModal } from '../pokemon/CardImagePreviewModal';
 import pokemonCardData from '../../data/pokemonNames.json';
 import type { Deck } from '../../types/deck';
 
@@ -13,6 +14,8 @@ interface Props {
 export function DeckCoverPickerModal({ deck, onSelectCover, onClose }: Props) {
   const [activeTab, setActiveTab] = useState<'inDeck' | 'popular' | 'search'>('inDeck');
   const [search, setSearch] = useState('');
+  const [previewCard, setPreviewCard] = useState<any | null>(null);
+
 
   useEffect(() => {
     const handleKeyDown = (e: KeyboardEvent) => {
@@ -236,6 +239,19 @@ export function DeckCoverPickerModal({ deck, onSelectCover, onClose }: Props) {
                         </div>
                       )}
 
+                      {/* Zoom preview button */}
+                      <button
+                        type="button"
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          setPreviewCard(card);
+                        }}
+                        className="absolute bottom-1 right-1 w-6 h-6 rounded-md bg-black/70 hover:bg-black/95 text-white flex items-center justify-center text-[10px] opacity-0 group-hover:opacity-100 transition-opacity z-10"
+                        title="ดูภาพการ์ดขนาดใหญ่"
+                      >
+                        🔍
+                      </button>
+
                       <div className="absolute inset-0 bg-indigo-600/40 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center">
                         <span className="px-2 py-1 rounded-lg bg-indigo-600 text-white font-black text-[11px] shadow-lg">
                           เลือกรูปนี้
@@ -267,6 +283,25 @@ export function DeckCoverPickerModal({ deck, onSelectCover, onClose }: Props) {
           </button>
         </div>
       </div>
+
+      {/* Card High-Res Preview Modal */}
+      {previewCard && (
+        <CardImagePreviewModal
+          imageUrl={previewCard.imageUrlHigh || previewCard.imageUrl}
+          officialImageUrl={previewCard.officialImageUrl}
+          cardName={previewCard.name}
+          setInfo={previewCard.set?.id || previewCard.set?.name}
+          collectorNumber={previewCard.collectorNumber || previewCard.localId}
+          rarityCode={previewCard.rarityCode}
+          onClose={() => setPreviewCard(null)}
+          onSelect={() => {
+            onSelectCover(previewCard.id, previewCard.imageUrl || '');
+            setPreviewCard(null);
+            onClose();
+          }}
+        />
+      )}
     </div>
   );
 }
+

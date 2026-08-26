@@ -291,9 +291,12 @@ export function EvolutionModal({ pokemon, onSelectEvolution, onClose }: Props) {
 
       {previewCard && (
         <CardImagePreviewModal
-          imageUrl={previewCard.imageUrl || previewCard.imageUrlHigh || null}
+          imageUrl={previewCard.imageUrlHigh || previewCard.imageUrl || null}
           officialImageUrl={previewCard.officialImageUrl || null}
           cardName={previewCard.name}
+          setInfo={previewCard.set?.id || previewCard.set?.name}
+          collectorNumber={previewCard.collectorNumber || previewCard.localId}
+          rarityCode={previewCard.rarityCode}
           onClose={() => setPreviewCard(null)}
           onSelect={() => {
             handleCardClick(previewCard);
@@ -301,6 +304,7 @@ export function EvolutionModal({ pokemon, onSelectEvolution, onClose }: Props) {
           }}
         />
       )}
+
     </div>,
     document.body
   );

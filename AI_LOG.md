@@ -65,3 +65,5 @@
 [2026-08-26 01:41] Major | Antigravity | Edit | src/components/mini/MiniPokemonCard.tsx - applied real card aspect ratio (63/88) & enhanced opacity/contrast
 [2026-08-26 01:51] Major | Antigravity | Edit | src/components/mini/MiniPokemonCard.tsx - boosted card art to full 90% vivid color with frosted control pills
 [2026-08-26 01:57] Major | Antigravity | Command | git tag v2.7.0 & push - Battle & Lorcana Board Scaling, Real Card Ratio (63:88) & Vivid Display Release
+[2026-08-26 11:55] Major | Antigravity | Command | git pull --all, download-all-card-images & build verified
+[2026-08-26 12:02] Major | Antigravity | Write | src/components/ - added fullscreen card zoom in details & enhanced modal

@@ -4,6 +4,7 @@ import { useCollectionStore } from '../../store/collectionStore';
 import { resolveCardImageUrl, handleCardImageError } from '../../utils/cardImage';
 import { getEnglishCardName } from '../../utils/searchHelpers';
 import { EvolutionChainSection } from '../pokemon/EvolutionChainSection';
+import { CardImagePreviewModal } from '../pokemon/CardImagePreviewModal';
 import type { CardVariantKey, CardCondition } from '../../types/collection';
 
 interface Props {
@@ -109,6 +110,7 @@ function getApplicableVariants(card: any, variants: Record<string, number> | Par
 
 export function CardCollectionModal({ card: initialCard, onClose }: Props) {
   const [activeCard, setActiveCard] = useState(initialCard);
+  const [showZoom, setShowZoom] = useState(false);
 
   useEffect(() => {
     setActiveCard(initialCard);
@@ -155,23 +157,47 @@ export function CardCollectionModal({ card: initialCard, onClose }: Props) {
       <div className="relative bg-slate-900 border border-slate-700/90 w-full max-w-4xl rounded-3xl shadow-2xl overflow-hidden flex flex-col md:flex-row max-h-[92vh]">
         {/* Left: Card Preview & Info */}
         <div className="md:w-5/12 bg-slate-950 p-5 sm:p-6 flex flex-col items-center justify-center border-b md:border-b-0 md:border-r border-slate-800/90 relative">
-          <div className="relative group max-w-[260px] w-full aspect-[2.5/3.5] rounded-2xl overflow-hidden shadow-2xl shadow-black/80 ring-1 ring-slate-700/60">
+          <div
+            onClick={() => setShowZoom(true)}
+            className="relative group max-w-[260px] w-full aspect-[2.5/3.5] rounded-2xl overflow-hidden shadow-2xl shadow-black/80 ring-1 ring-slate-700/60 cursor-zoom-in transition-all duration-200 hover:ring-2 hover:ring-amber-400/80 hover:shadow-amber-500/10"
+            title="คลิกเพื่อขยายดูภาพการ์ดใหญ่เต็มจอ (Fullscreen)"
+          >
             <img
               src={imgUrl}
               alt={activeCard.name}
               className={`w-full h-full object-cover transition-all duration-300 ${
                 totalCount === 0 ? 'grayscale-[40%] opacity-90' : 'brightness-105'
-              }`}
+              } group-hover:scale-105`}
               onError={(e) => handleCardImageError(e, activeCard.imageUrl, activeCard.officialImageUrl)}
             />
+
+            {/* Hover Magnify Overlay */}
+            <div className="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 transition-opacity flex flex-col items-center justify-center gap-1 text-white backdrop-blur-[2px]">
+              <span className="text-3xl drop-shadow-lg transform group-hover:scale-110 transition-transform">🔍</span>
+              <span className="text-xs font-black px-2.5 py-1 rounded-lg bg-black/70 border border-white/20 shadow-lg">
+                แตะเพื่อดูการ์ดเต็มจอ
+              </span>
+            </div>
+
             {totalCount > 0 && (
-              <div className="absolute top-2.5 right-2.5 px-3 py-1 rounded-full bg-gradient-to-r from-amber-500 to-amber-600 text-slate-950 font-black text-xs shadow-xl shadow-amber-500/40 flex items-center gap-1">
+              <div className="absolute top-2.5 right-2.5 px-3 py-1 rounded-full bg-gradient-to-r from-amber-500 to-amber-600 text-slate-950 font-black text-xs shadow-xl shadow-amber-500/40 flex items-center gap-1 z-10">
                 <span>มีสะสม {totalCount} ใบ</span>
               </div>
             )}
           </div>
 
-          <div className="mt-4 text-center w-full">
+          {/* Dedicated Fullscreen Button */}
+          <button
+            type="button"
+            onClick={() => setShowZoom(true)}
+            className="mt-3 w-full max-w-[260px] py-2 px-3 rounded-xl bg-slate-800/90 hover:bg-slate-750 active:scale-95 text-amber-300 hover:text-amber-200 border border-slate-700/80 hover:border-amber-500/50 shadow-md font-bold text-xs flex items-center justify-center gap-1.5 transition-all group"
+            title="ขยายภาพการ์ดขนาดใหญ่ เต็มจอ"
+          >
+            <span className="text-sm group-hover:scale-125 transition-transform">🔍</span>
+            <span>ดูการ์ดขนาดใหญ่ (Fullscreen)</span>
+          </button>
+
+          <div className="mt-3 text-center w-full">
             <h3 className="text-base sm:text-lg font-black text-white leading-tight">{activeCard.name}</h3>
             <p className="text-xs text-slate-400 mt-1 font-medium">
               {activeCard.set?.name || 'การ์ดเสริม'} · {activeCard.collectorNumber || activeCard.localId}
@@ -183,6 +209,7 @@ export function CardCollectionModal({ card: initialCard, onClose }: Props) {
         <div className="md:w-7/12 p-5 sm:p-7 overflow-y-auto flex flex-col justify-between space-y-5">
           <div className="space-y-5">
             {/* Header with Set Badges, Wishlist Button and Prominent Close Button */}
+
             <div className="flex items-start justify-between gap-3">
               <div>
                 <div className="flex items-center gap-2 flex-wrap">
@@ -381,7 +408,21 @@ export function CardCollectionModal({ card: initialCard, onClose }: Props) {
           </div>
         </div>
       </div>
+
+      {/* Fullscreen Card Image Zoom Modal */}
+      {showZoom && (
+        <CardImagePreviewModal
+          imageUrl={activeCard.imageUrlHigh || activeCard.imageUrl}
+          officialImageUrl={activeCard.officialImageUrl}
+          cardName={activeCard.name}
+          setInfo={activeCard.set?.id || activeCard.set?.name}
+          collectorNumber={activeCard.collectorNumber || activeCard.localId}
+          rarityCode={activeCard.rarityCode}
+          onClose={() => setShowZoom(false)}
+        />
+      )}
     </div>,
     document.body
   );
 }
+

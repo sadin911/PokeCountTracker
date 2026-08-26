@@ -653,13 +653,17 @@ export function DeckEditor({ deck, onBackToDecks }: Props) {
       {/* Card High-Res Preview Modal */}
       {previewCard && (
         <CardImagePreviewModal
-          imageUrl={previewCard.imageUrl}
+          imageUrl={previewCard.imageUrlHigh || previewCard.imageUrl}
           officialImageUrl={previewCard.officialImageUrl}
           cardName={previewCard.name}
+          setInfo={previewCard.set?.id || previewCard.set?.name}
+          collectorNumber={previewCard.collectorNumber || previewCard.localId}
+          rarityCode={previewCard.rarityCode}
           onClose={() => setPreviewCard(null)}
           onSelect={() => addCardToDeck(deck.id, previewCard.id, 1)}
         />
       )}
+
     </div>
   );
 }
