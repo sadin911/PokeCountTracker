@@ -196848,5 +196848,1654 @@
     "regulationMark": "J",
     "officialImageUrl": "https://asia.pokemon-card.com/th/card-img/th00014478.png",
     "rarityCode": "UR"
+  },
+  {
+    "id": "TH-SEC-10000",
+    "localId": "TH-SEC-10000",
+    "name": "กอริลลันเดอร์V",
+    "stage": "พื้นฐาน",
+    "category": "Pokemon",
+    "hp": 220,
+    "types": [
+      "Grass"
+    ],
+    "set": {
+      "id": "SC1a",
+      "name": "การ์ดเสริม \"ซอร์ด แอนด์ ชีลด์\" ชุด A"
+    },
+    "imageUrl": "/PokeCountTracker/card-images/SC1a/155-154_%E0%B8%81%E0%B8%AD%E0%B8%A3%E0%B8%B4%E0%B8%A5%E0%B8%A5%E0%B8%B1%E0%B8%99%E0%B9%80%E0%B8%94%E0%B8%AD%E0%B8%A3%E0%B9%8CV.webp",
+    "imageUrlHigh": "/PokeCountTracker/card-images/SC1a/155-154_%E0%B8%81%E0%B8%AD%E0%B8%A3%E0%B8%B4%E0%B8%A5%E0%B8%A5%E0%B8%B1%E0%B8%99%E0%B9%80%E0%B8%94%E0%B8%AD%E0%B8%A3%E0%B9%8CV.webp",
+    "collectorNumber": "155-154",
+    "regulationMark": "D",
+    "officialImageUrl": "https://asia.pokemon-card.com/th/card-img/SC1a_155-154.png",
+    "rarityCode": "SR"
+  },
+  {
+    "id": "TH-SEC-10001",
+    "localId": "TH-SEC-10001",
+    "name": "ซาเชียนV",
+    "stage": "พื้นฐาน",
+    "category": "Pokemon",
+    "hp": 220,
+    "types": [
+      "Metal"
+    ],
+    "set": {
+      "id": "SC1a",
+      "name": "การ์ดเสริม \"ซอร์ด แอนด์ ชีลด์\" ชุด A"
+    },
+    "imageUrl": "/PokeCountTracker/card-images/SC1a/160-154_%E0%B8%8B%E0%B8%B2%E0%B9%80%E0%B8%8A%E0%B8%B5%E0%B8%A2%E0%B8%99V.webp",
+    "imageUrlHigh": "/PokeCountTracker/card-images/SC1a/160-154_%E0%B8%8B%E0%B8%B2%E0%B9%80%E0%B8%8A%E0%B8%B5%E0%B8%A2%E0%B8%99V.webp",
+    "collectorNumber": "160-154",
+    "regulationMark": "D",
+    "officialImageUrl": "https://asia.pokemon-card.com/th/card-img/SC1a_160-154.png",
+    "rarityCode": "SR"
+  },
+  {
+    "id": "TH-SEC-10002",
+    "localId": "TH-SEC-10002",
+    "name": "ซามาเซนตาV",
+    "stage": "พื้นฐาน",
+    "category": "Pokemon",
+    "hp": 230,
+    "types": [
+      "Metal"
+    ],
+    "set": {
+      "id": "SC1a",
+      "name": "การ์ดเสริม \"ซอร์ด แอนด์ ชีลด์\" ชุด A"
+    },
+    "imageUrl": "/PokeCountTracker/card-images/SC1a/161-154_%E0%B8%8B%E0%B8%B2%E0%B8%A1%E0%B8%B2%E0%B9%80%E0%B8%8B%E0%B8%99%E0%B8%95%E0%B8%B2V.webp",
+    "imageUrlHigh": "/PokeCountTracker/card-images/SC1a/161-154_%E0%B8%8B%E0%B8%B2%E0%B8%A1%E0%B8%B2%E0%B9%80%E0%B8%8B%E0%B8%99%E0%B8%95%E0%B8%B2V.webp",
+    "collectorNumber": "161-154",
+    "regulationMark": "D",
+    "officialImageUrl": "https://asia.pokemon-card.com/th/card-img/SC1a_161-154.png",
+    "rarityCode": "SR"
+  },
+  {
+    "id": "TH-SEC-10003",
+    "localId": "TH-SEC-10003",
+    "name": "งานวิจัยของศาสตราจารย์ (ศาสตราจารย์แมกโนเลีย)",
+    "stage": "ซัพพอร์ต",
+    "category": "Trainer",
+    "set": {
+      "id": "SC1a",
+      "name": "การ์ดเสริม \"ซอร์ด แอนด์ ชีลด์\" ชุด A"
+    },
+    "imageUrl": "/PokeCountTracker/card-images/SC1a/165-154_%E0%B8%87%E0%B8%B2%E0%B8%99%E0%B8%A7%E0%B8%B4%E0%B8%88%E0%B8%B1%E0%B8%A2%E0%B8%82%E0%B8%AD%E0%B8%87%E0%B8%A8%E0%B8%B2%E0%B8%AA%E0%B8%95%E0%B8%A3%E0%B8%B2%E0%B8%88%E0%B8%B2%E0%B8%A3%E0%B8%A2%E0%B9%8C%20(%E0%B8%A8%E0%B8%B2%E0%B8%AA%E0%B8%95%E0%B8%A3%E0%B8%B2%E0%B8%88%E0%B8%B2%E0%B8%A3%E0%B8%A2%E0%B9%8C%E0%B9%81%E0%B8%A1%E0%B8%81%E0%B9%82%E0%B8%99%E0%B9%80%E0%B8%A5%E0%B8%B5%E0%B8%A2).webp",
+    "imageUrlHigh": "/PokeCountTracker/card-images/SC1a/165-154_%E0%B8%87%E0%B8%B2%E0%B8%99%E0%B8%A7%E0%B8%B4%E0%B8%88%E0%B8%B1%E0%B8%A2%E0%B8%82%E0%B8%AD%E0%B8%87%E0%B8%A8%E0%B8%B2%E0%B8%AA%E0%B8%95%E0%B8%A3%E0%B8%B2%E0%B8%88%E0%B8%B2%E0%B8%A3%E0%B8%A2%E0%B9%8C%20(%E0%B8%A8%E0%B8%B2%E0%B8%AA%E0%B8%95%E0%B8%A3%E0%B8%B2%E0%B8%88%E0%B8%B2%E0%B8%A3%E0%B8%A2%E0%B9%8C%E0%B9%81%E0%B8%A1%E0%B8%81%E0%B9%82%E0%B8%99%E0%B9%80%E0%B8%A5%E0%B8%B5%E0%B8%A2).webp",
+    "collectorNumber": "165-154",
+    "regulationMark": "D",
+    "officialImageUrl": "https://asia.pokemon-card.com/th/card-img/SC1a_165-154.png",
+    "rarityCode": "SR"
+  },
+  {
+    "id": "TH-SEC-10004",
+    "localId": "TH-SEC-10004",
+    "name": "มารีィ",
+    "stage": "ซัพพอร์ต",
+    "category": "Trainer",
+    "set": {
+      "id": "SC1a",
+      "name": "การ์ดเสริม \"ซอร์ด แอนด์ ชีลด์\" ชุด A"
+    },
+    "imageUrl": "/PokeCountTracker/card-images/SC1a/166-154_%E0%B8%A1%E0%B8%B2%E0%B8%A3%E0%B8%B5%E3%82%A3.webp",
+    "imageUrlHigh": "/PokeCountTracker/card-images/SC1a/166-154_%E0%B8%A1%E0%B8%B2%E0%B8%A3%E0%B8%B5%E3%82%A3.webp",
+    "collectorNumber": "166-154",
+    "regulationMark": "D",
+    "officialImageUrl": "https://asia.pokemon-card.com/th/card-img/SC1a_166-154.png",
+    "rarityCode": "SR"
+  },
+  {
+    "id": "TH-SEC-10005",
+    "localId": "TH-SEC-10005",
+    "name": "บีต",
+    "stage": "ซัพพอร์ต",
+    "category": "Trainer",
+    "set": {
+      "id": "SC1a",
+      "name": "การ์ดเสริม \"ซอร์ด แอนด์ ชีลด์\" ชุด A"
+    },
+    "imageUrl": "/PokeCountTracker/card-images/SC1a/168-154_%E0%B8%9A%E0%B8%B5%E0%B8%95.webp",
+    "imageUrlHigh": "/PokeCountTracker/card-images/SC1a/168-154_%E0%B8%9A%E0%B8%B5%E0%B8%95.webp",
+    "collectorNumber": "168-154",
+    "regulationMark": "D",
+    "officialImageUrl": "https://asia.pokemon-card.com/th/card-img/SC1a_168-154.png",
+    "rarityCode": "HR"
+  },
+  {
+    "id": "TH-SEC-10006",
+    "localId": "TH-SEC-10006",
+    "name": "ยาร์โรว์",
+    "stage": "ซัพพอร์ต",
+    "category": "Trainer",
+    "set": {
+      "id": "SC1a",
+      "name": "การ์ดเสริม \"ซอร์ด แอนด์ ชีลด์\" ชุด A"
+    },
+    "imageUrl": "/PokeCountTracker/card-images/SC1a/169-154_%E0%B8%A2%E0%B8%B2%E0%B8%A3%E0%B9%8C%E0%B9%82%E0%B8%A3%E0%B8%A7%E0%B9%8C.webp",
+    "imageUrlHigh": "/PokeCountTracker/card-images/SC1a/169-154_%E0%B8%A2%E0%B8%B2%E0%B8%A3%E0%B9%8C%E0%B9%82%E0%B8%A3%E0%B8%A7%E0%B9%8C.webp",
+    "collectorNumber": "169-154",
+    "regulationMark": "D",
+    "officialImageUrl": "https://asia.pokemon-card.com/th/card-img/SC1a_169-154.png",
+    "rarityCode": "HR"
+  },
+  {
+    "id": "TH-SEC-10007",
+    "localId": "TH-SEC-10007",
+    "name": "โอลีฟ",
+    "stage": "ซัพพอร์ต",
+    "category": "Trainer",
+    "set": {
+      "id": "SC1a",
+      "name": "การ์ดเสริม \"ซอร์ด แอนด์ ชีลด์\" ชุด A"
+    },
+    "imageUrl": "/PokeCountTracker/card-images/SC1a/170-154_%E0%B9%82%E0%B8%AD%E0%B8%A5%E0%B8%B5%E0%B8%9F.webp",
+    "imageUrlHigh": "/PokeCountTracker/card-images/SC1a/170-154_%E0%B9%82%E0%B8%AD%E0%B8%A5%E0%B8%B5%E0%B8%9F.webp",
+    "collectorNumber": "170-154",
+    "regulationMark": "D",
+    "officialImageUrl": "https://asia.pokemon-card.com/th/card-img/SC1a_170-154.png",
+    "rarityCode": "HR"
+  },
+  {
+    "id": "TH-SEC-10008",
+    "localId": "TH-SEC-10008",
+    "name": "งานวิจัยของศาสตราจารย์",
+    "stage": "ซัพพอร์ต",
+    "category": "Trainer",
+    "set": {
+      "id": "SC1a",
+      "name": "การ์ดเสริม \"ซอร์ด แอนด์ ชีลด์\" ชุด A"
+    },
+    "imageUrl": "/PokeCountTracker/card-images/SC1a/171-154_%E0%B8%87%E0%B8%B2%E0%B8%99%E0%B8%A7%E0%B8%B4%E0%B8%88%E0%B8%B1%E0%B8%A2%E0%B8%82%E0%B8%AD%E0%B8%87%E0%B8%A8%E0%B8%B2%E0%B8%AA%E0%B8%95%E0%B8%A3%E0%B8%B2%E0%B8%88%E0%B8%B2%E0%B8%A3%E0%B8%A2%E0%B9%8C.webp",
+    "imageUrlHigh": "/PokeCountTracker/card-images/SC1a/171-154_%E0%B8%87%E0%B8%B2%E0%B8%99%E0%B8%A7%E0%B8%B4%E0%B8%88%E0%B8%B1%E0%B8%A2%E0%B8%82%E0%B8%AD%E0%B8%87%E0%B8%A8%E0%B8%B2%E0%B8%AA%E0%B8%95%E0%B8%A3%E0%B8%B2%E0%B8%88%E0%B8%B2%E0%B8%A3%E0%B8%A2%E0%B9%8C.webp",
+    "collectorNumber": "171-154",
+    "regulationMark": "D",
+    "officialImageUrl": "https://asia.pokemon-card.com/th/card-img/SC1a_171-154.png",
+    "rarityCode": "HR"
+  },
+  {
+    "id": "TH-SEC-10009",
+    "localId": "TH-SEC-10009",
+    "name": "มารีィ",
+    "stage": "ซัพพอร์ต",
+    "category": "Trainer",
+    "set": {
+      "id": "SC1a",
+      "name": "การ์ดเสริม \"ซอร์ด แอนด์ ชีลด์\" ชุด A"
+    },
+    "imageUrl": "/PokeCountTracker/card-images/SC1a/172-154_%E0%B8%A1%E0%B8%B2%E0%B8%A3%E0%B8%B5%E3%82%A3.webp",
+    "imageUrlHigh": "/PokeCountTracker/card-images/SC1a/172-154_%E0%B8%A1%E0%B8%B2%E0%B8%A3%E0%B8%B5%E3%82%A3.webp",
+    "collectorNumber": "172-154",
+    "regulationMark": "D",
+    "officialImageUrl": "https://asia.pokemon-card.com/th/card-img/SC1a_172-154.png",
+    "rarityCode": "HR"
+  },
+  {
+    "id": "TH-SEC-10010",
+    "localId": "TH-SEC-10010",
+    "name": "ควิกบอล",
+    "stage": "ไอเท็ม",
+    "category": "Trainer",
+    "set": {
+      "id": "SC1a",
+      "name": "การ์ดเสริม \"ซอร์ด แอนด์ ชีลด์\" ชุด A"
+    },
+    "imageUrl": "/PokeCountTracker/card-images/SC1a/173-154_%E0%B8%84%E0%B8%A7%E0%B8%B4%E0%B8%81%E0%B8%9A%E0%B8%AD%E0%B8%A5.webp",
+    "imageUrlHigh": "/PokeCountTracker/card-images/SC1a/173-154_%E0%B8%84%E0%B8%A7%E0%B8%B4%E0%B8%81%E0%B8%9A%E0%B8%AD%E0%B8%A5.webp",
+    "collectorNumber": "173-154",
+    "regulationMark": "D",
+    "officialImageUrl": "https://asia.pokemon-card.com/th/card-img/SC1a_173-154.png",
+    "rarityCode": "UR"
+  },
+  {
+    "id": "TH-SEC-10011",
+    "localId": "TH-SEC-10011",
+    "name": "จานร่อนโลหะ",
+    "stage": "ไอเท็ม",
+    "category": "Trainer",
+    "set": {
+      "id": "SC1a",
+      "name": "การ์ดเสริม \"ซอร์ด แอนด์ ชีลด์\" ชุด A"
+    },
+    "imageUrl": "/PokeCountTracker/card-images/SC1a/174-154_%E0%B8%88%E0%B8%B2%E0%B8%99%E0%B8%A3%E0%B9%88%E0%B8%AD%E0%B8%99%E0%B9%82%E0%B8%A5%E0%B8%AB%E0%B8%B0.webp",
+    "imageUrlHigh": "/PokeCountTracker/card-images/SC1a/174-154_%E0%B8%88%E0%B8%B2%E0%B8%99%E0%B8%A3%E0%B9%88%E0%B8%AD%E0%B8%99%E0%B9%82%E0%B8%A5%E0%B8%AB%E0%B8%B0.webp",
+    "collectorNumber": "174-154",
+    "regulationMark": "D",
+    "officialImageUrl": "https://asia.pokemon-card.com/th/card-img/SC1a_174-154.png",
+    "rarityCode": "UR"
+  },
+  {
+    "id": "TH-SEC-10012",
+    "localId": "TH-SEC-10012",
+    "name": "คันเบ็ดธรรมดา",
+    "stage": "ไอเท็ม",
+    "category": "Trainer",
+    "set": {
+      "id": "SC1a",
+      "name": "การ์ดเสริม \"ซอร์ด แอนด์ ชีลด์\" ชุด A"
+    },
+    "imageUrl": "/PokeCountTracker/card-images/SC1a/175-154_%E0%B8%84%E0%B8%B1%E0%B8%99%E0%B9%80%E0%B8%9A%E0%B9%87%E0%B8%94%E0%B8%98%E0%B8%A3%E0%B8%A3%E0%B8%A1%E0%B8%94%E0%B8%B2.webp",
+    "imageUrlHigh": "/PokeCountTracker/card-images/SC1a/175-154_%E0%B8%84%E0%B8%B1%E0%B8%99%E0%B9%80%E0%B8%9A%E0%B9%87%E0%B8%94%E0%B8%98%E0%B8%A3%E0%B8%A3%E0%B8%A1%E0%B8%94%E0%B8%B2.webp",
+    "collectorNumber": "175-154",
+    "regulationMark": "D",
+    "officialImageUrl": "https://asia.pokemon-card.com/th/card-img/SC1a_175-154.png",
+    "rarityCode": "UR"
+  },
+  {
+    "id": "TH-SEC-10013",
+    "localId": "TH-SEC-10013",
+    "name": "บอลลูนลอยฟ้า",
+    "stage": "ไอเท็มติดโปเกมอน",
+    "category": "Trainer",
+    "set": {
+      "id": "SC1a",
+      "name": "การ์ดเสริม \"ซอร์ด แอนด์ ชีลด์\" ชุด A"
+    },
+    "imageUrl": "/PokeCountTracker/card-images/SC1a/176-154_%E0%B8%9A%E0%B8%AD%E0%B8%A5%E0%B8%A5%E0%B8%B9%E0%B8%99%E0%B8%A5%E0%B8%AD%E0%B8%A2%E0%B8%9F%E0%B9%89%E0%B8%B2.webp",
+    "imageUrlHigh": "/PokeCountTracker/card-images/SC1a/176-154_%E0%B8%9A%E0%B8%AD%E0%B8%A5%E0%B8%A5%E0%B8%B9%E0%B8%99%E0%B8%A5%E0%B8%AD%E0%B8%A2%E0%B8%9F%E0%B9%89%E0%B8%B2.webp",
+    "collectorNumber": "176-154",
+    "regulationMark": "D",
+    "officialImageUrl": "https://asia.pokemon-card.com/th/card-img/SC1a_176-154.png",
+    "rarityCode": "UR"
+  },
+  {
+    "id": "TH-SEC-10014",
+    "localId": "TH-SEC-10014",
+    "name": "ซาเชียนV",
+    "stage": "พื้นฐาน",
+    "category": "Pokemon",
+    "hp": 220,
+    "types": [
+      "Metal"
+    ],
+    "set": {
+      "id": "SC1a",
+      "name": "การ์ดเสริม \"ซอร์ด แอนด์ ชีลด์\" ชุด A"
+    },
+    "imageUrl": "/PokeCountTracker/card-images/SC1a/177-154_%E0%B8%8B%E0%B8%B2%E0%B9%80%E0%B8%8A%E0%B8%B5%E0%B8%A2%E0%B8%99V.webp",
+    "imageUrlHigh": "/PokeCountTracker/card-images/SC1a/177-154_%E0%B8%8B%E0%B8%B2%E0%B9%80%E0%B8%8A%E0%B8%B5%E0%B8%A2%E0%B8%99V.webp",
+    "collectorNumber": "177-154",
+    "regulationMark": "D",
+    "officialImageUrl": "https://asia.pokemon-card.com/th/card-img/SC1a_177-154.png",
+    "rarityCode": "UR"
+  },
+  {
+    "id": "TH-SEC-10015",
+    "localId": "TH-SEC-10015",
+    "name": "ซามาเซนตาV",
+    "stage": "พื้นฐาน",
+    "category": "Pokemon",
+    "hp": 230,
+    "types": [
+      "Metal"
+    ],
+    "set": {
+      "id": "SC1a",
+      "name": "การ์ดเสริม \"ซอร์ด แอนด์ ชีลด์\" ชุด A"
+    },
+    "imageUrl": "/PokeCountTracker/card-images/SC1a/178-154_%E0%B8%8B%E0%B8%B2%E0%B8%A1%E0%B8%B2%E0%B9%80%E0%B8%8B%E0%B8%99%E0%B8%95%E0%B8%B2V.webp",
+    "imageUrlHigh": "/PokeCountTracker/card-images/SC1a/178-154_%E0%B8%8B%E0%B8%B2%E0%B8%A1%E0%B8%B2%E0%B9%80%E0%B8%8B%E0%B8%99%E0%B8%95%E0%B8%B2V.webp",
+    "collectorNumber": "178-154",
+    "regulationMark": "D",
+    "officialImageUrl": "https://asia.pokemon-card.com/th/card-img/SC1a_178-154.png",
+    "rarityCode": "UR"
+  },
+  {
+    "id": "TH-SEC-10016",
+    "localId": "TH-SEC-10016",
+    "name": "เซเลบีV",
+    "stage": "พื้นฐาน",
+    "category": "Pokemon",
+    "hp": 190,
+    "types": [
+      "Grass"
+    ],
+    "set": {
+      "id": "SC1b",
+      "name": "การ์ดเสริม \"ซอร์ด แอนด์ ชีลด์\" ชุด B"
+    },
+    "imageUrl": "/PokeCountTracker/card-images/SC1b/154-153_%E0%B9%80%E0%B8%8B%E0%B9%80%E0%B8%A5%E0%B8%9A%E0%B8%B5V.webp",
+    "imageUrlHigh": "/PokeCountTracker/card-images/SC1b/154-153_%E0%B9%80%E0%B8%8B%E0%B9%80%E0%B8%A5%E0%B8%9A%E0%B8%B5V.webp",
+    "collectorNumber": "154-153",
+    "regulationMark": "D",
+    "officialImageUrl": "https://asia.pokemon-card.com/th/card-img/SC1b_154-153.png",
+    "rarityCode": "SR"
+  },
+  {
+    "id": "TH-SEC-10017",
+    "localId": "TH-SEC-10017",
+    "name": "วิคทินีV",
+    "stage": "พื้นฐาน",
+    "category": "Pokemon",
+    "hp": 190,
+    "types": [
+      "Fire"
+    ],
+    "set": {
+      "id": "SC1b",
+      "name": "การ์ดเสริม \"ซอร์ด แอนด์ ชีลด์\" ชุด B"
+    },
+    "imageUrl": "/PokeCountTracker/card-images/SC1b/155-153_%E0%B8%A7%E0%B8%B4%E0%B8%84%E0%B8%97%E0%B8%B4%E0%B8%99%E0%B8%B5V.webp",
+    "imageUrlHigh": "/PokeCountTracker/card-images/SC1b/155-153_%E0%B8%A7%E0%B8%B4%E0%B8%84%E0%B8%97%E0%B8%B4%E0%B8%99%E0%B8%B5V.webp",
+    "collectorNumber": "155-153",
+    "regulationMark": "D",
+    "officialImageUrl": "https://asia.pokemon-card.com/th/card-img/SC1b_155-153.png",
+    "rarityCode": "SR"
+  },
+  {
+    "id": "TH-SEC-10018",
+    "localId": "TH-SEC-10018",
+    "name": "ซอนเนีย",
+    "stage": "ซัพพอร์ต",
+    "category": "Trainer",
+    "set": {
+      "id": "SC1b",
+      "name": "การ์ดเสริม \"ซอร์ด แอนด์ ชีลด์\" ชุด B"
+    },
+    "imageUrl": "/PokeCountTracker/card-images/SC1b/159-153_%E0%B8%8B%E0%B8%AD%E0%B8%99%E0%B9%80%E0%B8%99%E0%B8%B5%E0%B8%A2.webp",
+    "imageUrlHigh": "/PokeCountTracker/card-images/SC1b/159-153_%E0%B8%8B%E0%B8%AD%E0%B8%99%E0%B9%80%E0%B8%99%E0%B8%B5%E0%B8%A2.webp",
+    "collectorNumber": "159-153",
+    "regulationMark": "D",
+    "officialImageUrl": "https://asia.pokemon-card.com/th/card-img/SC1b_159-153.png",
+    "rarityCode": "SR"
+  },
+  {
+    "id": "TH-SEC-10019",
+    "localId": "TH-SEC-10019",
+    "name": "คำสั่งของบอส (ซากากิ)",
+    "stage": "ซัพพอร์ต",
+    "category": "Trainer",
+    "set": {
+      "id": "SC1b",
+      "name": "การ์ดเสริม \"ซอร์ด แอนด์ ชีลด์\" ชุด B"
+    },
+    "imageUrl": "/PokeCountTracker/card-images/SC1b/163-153_%E0%B8%84%E0%B8%B3%E0%B8%AA%E0%B8%B1%E0%B9%88%E0%B8%87%E0%B8%82%E0%B8%AD%E0%B8%87%E0%B8%9A%E0%B8%AD%E0%B8%AA%20(%E0%B8%8B%E0%B8%B2%E0%B8%81%E0%B8%B2%E0%B8%81%E0%B8%B4).webp",
+    "imageUrlHigh": "/PokeCountTracker/card-images/SC1b/163-153_%E0%B8%84%E0%B8%B3%E0%B8%AA%E0%B8%B1%E0%B9%88%E0%B8%87%E0%B8%82%E0%B8%AD%E0%B8%87%E0%B8%9A%E0%B8%AD%E0%B8%AA%20(%E0%B8%8B%E0%B8%B2%E0%B8%81%E0%B8%B2%E0%B8%81%E0%B8%B4).webp",
+    "collectorNumber": "163-153",
+    "regulationMark": "D",
+    "officialImageUrl": "https://asia.pokemon-card.com/th/card-img/SC1b_163-153.png",
+    "rarityCode": "SR"
+  },
+  {
+    "id": "TH-SEC-10020",
+    "localId": "TH-SEC-10020",
+    "name": "ซอนเนีย",
+    "stage": "ซัพพอร์ต",
+    "category": "Trainer",
+    "set": {
+      "id": "SC1b",
+      "name": "การ์ดเสริม \"ซอร์ด แอนด์ ชีลด์\" ชุด B"
+    },
+    "imageUrl": "/PokeCountTracker/card-images/SC1b/164-153_%E0%B8%8B%E0%B8%AD%E0%B8%99%E0%B9%80%E0%B8%99%E0%B8%B5%E0%B8%A2.webp",
+    "imageUrlHigh": "/PokeCountTracker/card-images/SC1b/164-153_%E0%B8%8B%E0%B8%AD%E0%B8%99%E0%B9%80%E0%B8%99%E0%B8%B5%E0%B8%A2.webp",
+    "collectorNumber": "164-153",
+    "regulationMark": "D",
+    "officialImageUrl": "https://asia.pokemon-card.com/th/card-img/SC1b_164-153.png",
+    "rarityCode": "HR"
+  },
+  {
+    "id": "TH-SEC-10021",
+    "localId": "TH-SEC-10021",
+    "name": "คำสั่งของบอส (ซากากิ)",
+    "stage": "ซัพพอร์ต",
+    "category": "Trainer",
+    "set": {
+      "id": "SC1b",
+      "name": "การ์ดเสริม \"ซอร์ด แอนด์ ชีลด์\" ชุด B"
+    },
+    "imageUrl": "/PokeCountTracker/card-images/SC1b/166-153_%E0%B8%84%E0%B8%B3%E0%B8%AA%E0%B8%B1%E0%B9%88%E0%B8%87%E0%B8%82%E0%B8%AD%E0%B8%87%E0%B8%9A%E0%B8%AD%E0%B8%AA%20(%E0%B8%8B%E0%B8%B2%E0%B8%81%E0%B8%B2%E0%B8%81%E0%B8%B4).webp",
+    "imageUrlHigh": "/PokeCountTracker/card-images/SC1b/166-153_%E0%B8%84%E0%B8%B3%E0%B8%AA%E0%B8%B1%E0%B9%88%E0%B8%87%E0%B8%82%E0%B8%AD%E0%B8%87%E0%B8%9A%E0%B8%AD%E0%B8%AA%20(%E0%B8%8B%E0%B8%B2%E0%B8%81%E0%B8%B2%E0%B8%81%E0%B8%B4).webp",
+    "collectorNumber": "166-153",
+    "regulationMark": "D",
+    "officialImageUrl": "https://asia.pokemon-card.com/th/card-img/SC1b_166-153.png",
+    "rarityCode": "HR"
+  },
+  {
+    "id": "TH-SEC-10022",
+    "localId": "TH-SEC-10022",
+    "name": "มอสโนว์",
+    "stage": "ร่าง 1",
+    "category": "Pokemon",
+    "hp": 90,
+    "types": [
+      "Water"
+    ],
+    "set": {
+      "id": "SC1b",
+      "name": "การ์ดเสริม \"ซอร์ด แอนด์ ชีลด์\" ชุด B"
+    },
+    "imageUrl": "/PokeCountTracker/card-images/SC1b/167-153_%E0%B8%A1%E0%B8%AD%E0%B8%AA%E0%B9%82%E0%B8%99%E0%B8%A7%E0%B9%8C.webp",
+    "imageUrlHigh": "/PokeCountTracker/card-images/SC1b/167-153_%E0%B8%A1%E0%B8%AD%E0%B8%AA%E0%B9%82%E0%B8%99%E0%B8%A7%E0%B9%8C.webp",
+    "collectorNumber": "167-153",
+    "regulationMark": "D",
+    "officialImageUrl": "https://asia.pokemon-card.com/th/card-img/SC1b_167-153.png",
+    "rarityCode": "UR"
+  },
+  {
+    "id": "TH-SEC-10023",
+    "localId": "TH-SEC-10023",
+    "name": "ไฮเปอร์บอล",
+    "stage": "ไอเท็ม",
+    "category": "Trainer",
+    "set": {
+      "id": "SC1b",
+      "name": "การ์ดเสริม \"ซอร์ด แอนด์ ชีลด์\" ชุด B"
+    },
+    "imageUrl": "/PokeCountTracker/card-images/SC1b/168-153_%E0%B9%84%E0%B8%AE%E0%B9%80%E0%B8%9B%E0%B8%AD%E0%B8%A3%E0%B9%8C%E0%B8%9A%E0%B8%AD%E0%B8%A5.webp",
+    "imageUrlHigh": "/PokeCountTracker/card-images/SC1b/168-153_%E0%B9%84%E0%B8%AE%E0%B9%80%E0%B8%9B%E0%B8%AD%E0%B8%A3%E0%B9%8C%E0%B8%9A%E0%B8%AD%E0%B8%A5.webp",
+    "collectorNumber": "168-153",
+    "regulationMark": "D",
+    "officialImageUrl": "https://asia.pokemon-card.com/th/card-img/SC1b_168-153.png",
+    "rarityCode": "UR"
+  },
+  {
+    "id": "TH-SEC-10024",
+    "localId": "TH-SEC-10024",
+    "name": "ลูกอมประหลาด",
+    "stage": "ไอเท็ม",
+    "category": "Trainer",
+    "set": {
+      "id": "SC1b",
+      "name": "การ์ดเสริม \"ซอร์ด แอนด์ ชีลด์\" ชุด B"
+    },
+    "imageUrl": "/PokeCountTracker/card-images/SC1b/169-153_%E0%B8%A5%E0%B8%B9%E0%B8%81%E0%B8%AD%E0%B8%A1%E0%B8%9B%E0%B8%A3%E0%B8%B0%E0%B8%AB%E0%B8%A5%E0%B8%B2%E0%B8%94.webp",
+    "imageUrlHigh": "/PokeCountTracker/card-images/SC1b/169-153_%E0%B8%A5%E0%B8%B9%E0%B8%81%E0%B8%AD%E0%B8%A1%E0%B8%9B%E0%B8%A3%E0%B8%B0%E0%B8%AB%E0%B8%A5%E0%B8%B2%E0%B8%94.webp",
+    "collectorNumber": "169-153",
+    "regulationMark": "D",
+    "officialImageUrl": "https://asia.pokemon-card.com/th/card-img/SC1b_169-153.png",
+    "rarityCode": "UR"
+  },
+  {
+    "id": "TH-SEC-10025",
+    "localId": "TH-SEC-10025",
+    "name": "เทอร์โบแพทช์",
+    "stage": "ไอเท็ม",
+    "category": "Trainer",
+    "set": {
+      "id": "SC1b",
+      "name": "การ์ดเสริม \"ซอร์ด แอนด์ ชีลด์\" ชุด B"
+    },
+    "imageUrl": "/PokeCountTracker/card-images/SC1b/170-153_%E0%B9%80%E0%B8%97%E0%B8%AD%E0%B8%A3%E0%B9%8C%E0%B9%82%E0%B8%9A%E0%B9%81%E0%B8%9E%E0%B8%97%E0%B8%8A%E0%B9%8C.webp",
+    "imageUrlHigh": "/PokeCountTracker/card-images/SC1b/170-153_%E0%B9%80%E0%B8%97%E0%B8%AD%E0%B8%A3%E0%B9%8C%E0%B9%82%E0%B8%9A%E0%B9%81%E0%B8%9E%E0%B8%97%E0%B8%8A%E0%B9%8C.webp",
+    "collectorNumber": "170-153",
+    "regulationMark": "D",
+    "officialImageUrl": "https://asia.pokemon-card.com/th/card-img/SC1b_170-153.png",
+    "rarityCode": "UR"
+  },
+  {
+    "id": "TH-SEC-10026",
+    "localId": "TH-SEC-10026",
+    "name": "ค้อนทำลายล้าง",
+    "stage": "ไอเท็ม",
+    "category": "Trainer",
+    "set": {
+      "id": "SC1b",
+      "name": "การ์ดเสริม \"ซอร์ด แอนด์ ชีลด์\" ชุด B"
+    },
+    "imageUrl": "/PokeCountTracker/card-images/SC1b/171-153_%E0%B8%84%E0%B9%89%E0%B8%AD%E0%B8%99%E0%B8%97%E0%B8%B3%E0%B8%A5%E0%B8%B2%E0%B8%A2%E0%B8%A5%E0%B9%89%E0%B8%B2%E0%B8%87.webp",
+    "imageUrlHigh": "/PokeCountTracker/card-images/SC1b/171-153_%E0%B8%84%E0%B9%89%E0%B8%AD%E0%B8%99%E0%B8%97%E0%B8%B3%E0%B8%A5%E0%B8%B2%E0%B8%A2%E0%B8%A5%E0%B9%89%E0%B8%B2%E0%B8%87.webp",
+    "collectorNumber": "171-153",
+    "regulationMark": "D",
+    "officialImageUrl": "https://asia.pokemon-card.com/th/card-img/SC1b_171-153.png",
+    "rarityCode": "UR"
+  },
+  {
+    "id": "TH-SEC-10027",
+    "localId": "TH-SEC-10027",
+    "name": "สับเปลี่ยนโปเกมอน",
+    "stage": "ไอเท็ม",
+    "category": "Trainer",
+    "set": {
+      "id": "SC1b",
+      "name": "การ์ดเสริม \"ซอร์ด แอนด์ ชีลด์\" ชุด B"
+    },
+    "imageUrl": "/PokeCountTracker/card-images/SC1b/172-153_%E0%B8%AA%E0%B8%B1%E0%B8%9A%E0%B9%80%E0%B8%9B%E0%B8%A5%E0%B8%B5%E0%B9%88%E0%B8%A2%E0%B8%99%E0%B9%82%E0%B8%9B%E0%B9%80%E0%B8%81%E0%B8%A1%E0%B8%AD%E0%B8%99.webp",
+    "imageUrlHigh": "/PokeCountTracker/card-images/SC1b/172-153_%E0%B8%AA%E0%B8%B1%E0%B8%9A%E0%B9%80%E0%B8%9B%E0%B8%A5%E0%B8%B5%E0%B9%88%E0%B8%A2%E0%B8%99%E0%B9%82%E0%B8%9B%E0%B9%80%E0%B8%81%E0%B8%A1%E0%B8%AD%E0%B8%99.webp",
+    "collectorNumber": "172-153",
+    "regulationMark": "D",
+    "officialImageUrl": "https://asia.pokemon-card.com/th/card-img/SC1b_172-153.png",
+    "rarityCode": "UR"
+  },
+  {
+    "id": "TH-SEC-10028",
+    "localId": "TH-SEC-10028",
+    "name": "ทวินเอนเนอร์จี้",
+    "stage": "พิเศษ",
+    "category": "Energy",
+    "set": {
+      "id": "SC1b",
+      "name": "การ์ดเสริม \"ซอร์ด แอนด์ ชีลด์\" ชุด B"
+    },
+    "imageUrl": "/PokeCountTracker/card-images/SC1b/173-153_%E0%B8%97%E0%B8%A7%E0%B8%B4%E0%B8%99%E0%B9%80%E0%B8%AD%E0%B8%99%E0%B9%80%E0%B8%99%E0%B8%AD%E0%B8%A3%E0%B9%8C%E0%B8%88%E0%B8%B5%E0%B9%89.webp",
+    "imageUrlHigh": "/PokeCountTracker/card-images/SC1b/173-153_%E0%B8%97%E0%B8%A7%E0%B8%B4%E0%B8%99%E0%B9%80%E0%B8%AD%E0%B8%99%E0%B9%80%E0%B8%99%E0%B8%AD%E0%B8%A3%E0%B9%8C%E0%B8%88%E0%B8%B5%E0%B9%89.webp",
+    "collectorNumber": "173-153",
+    "regulationMark": "D",
+    "officialImageUrl": "https://asia.pokemon-card.com/th/card-img/SC1b_173-153.png",
+    "rarityCode": "UR"
+  },
+  {
+    "id": "TH-SEC-10029",
+    "localId": "TH-SEC-10029",
+    "name": "วูลาโอสจู่โจมครั้งเดียวV",
+    "stage": "พื้นฐาน",
+    "category": "Pokemon",
+    "hp": 220,
+    "types": [
+      "Fighting"
+    ],
+    "set": {
+      "id": "S5I",
+      "name": "มาสเตอร์จู่โจมครั้งเดียว"
+    },
+    "imageUrl": "/PokeCountTracker/card-images/S5I/071-070_%E0%B8%A7%E0%B8%B9%E0%B8%A5%E0%B8%B2%E0%B9%82%E0%B8%AD%E0%B8%AA%E0%B8%88%E0%B8%B9%E0%B9%88%E0%B9%82%E0%B8%88%E0%B8%A1%E0%B8%84%E0%B8%A3%E0%B8%B1%E0%B9%89%E0%B8%87%E0%B9%80%E0%B8%94%E0%B8%B5%E0%B8%A2%E0%B8%A7V.webp",
+    "imageUrlHigh": "/PokeCountTracker/card-images/S5I/071-070_%E0%B8%A7%E0%B8%B9%E0%B8%A5%E0%B8%B2%E0%B9%82%E0%B8%AD%E0%B8%AA%E0%B8%88%E0%B8%B9%E0%B9%88%E0%B9%82%E0%B8%88%E0%B8%A1%E0%B8%84%E0%B8%A3%E0%B8%B1%E0%B9%89%E0%B8%87%E0%B9%80%E0%B8%94%E0%B8%B5%E0%B8%A2%E0%B8%A7V.webp",
+    "collectorNumber": "071-070",
+    "regulationMark": "E",
+    "officialImageUrl": "https://asia.pokemon-card.com/th/card-img/S5I_071-070.png",
+    "rarityCode": "SR"
+  },
+  {
+    "id": "TH-SEC-10030",
+    "localId": "TH-SEC-10030",
+    "name": "วูลาโอสจู่โจมครั้งเดียวVMAX",
+    "stage": "VMAX",
+    "category": "Pokemon",
+    "hp": 330,
+    "types": [
+      "Fighting"
+    ],
+    "set": {
+      "id": "S5I",
+      "name": "มาสเตอร์จู่โจมครั้งเดียว"
+    },
+    "imageUrl": "/PokeCountTracker/card-images/S5I/077-070_%E0%B8%A7%E0%B8%B9%E0%B8%A5%E0%B8%B2%E0%B9%82%E0%B8%AD%E0%B8%AA%E0%B8%88%E0%B8%B9%E0%B9%88%E0%B9%82%E0%B8%88%E0%B8%A1%E0%B8%84%E0%B8%A3%E0%B8%B1%E0%B9%89%E0%B8%87%E0%B9%80%E0%B8%94%E0%B8%B5%E0%B8%A2%E0%B8%A7VMAX.webp",
+    "imageUrlHigh": "/PokeCountTracker/card-images/S5I/077-070_%E0%B8%A7%E0%B8%B9%E0%B8%A5%E0%B8%B2%E0%B9%82%E0%B8%AD%E0%B8%AA%E0%B8%88%E0%B8%B9%E0%B9%88%E0%B9%82%E0%B8%88%E0%B8%A1%E0%B8%84%E0%B8%A3%E0%B8%B1%E0%B9%89%E0%B8%87%E0%B9%80%E0%B8%94%E0%B8%B5%E0%B8%A2%E0%B8%A7VMAX.webp",
+    "collectorNumber": "077-070",
+    "regulationMark": "E",
+    "officialImageUrl": "https://asia.pokemon-card.com/th/card-img/S5I_077-070.png",
+    "rarityCode": "HR"
+  },
+  {
+    "id": "TH-SEC-10031",
+    "localId": "TH-SEC-10031",
+    "name": "ชิบานะ",
+    "stage": "ซัพพอร์ต",
+    "category": "Trainer",
+    "set": {
+      "id": "S5I",
+      "name": "มาสเตอร์จู่โจมครั้งเดียว"
+    },
+    "imageUrl": "/PokeCountTracker/card-images/S5I/079-070_%E0%B8%8A%E0%B8%B4%E0%B8%9A%E0%B8%B2%E0%B8%99%E0%B8%B0.webp",
+    "imageUrlHigh": "/PokeCountTracker/card-images/S5I/079-070_%E0%B8%8A%E0%B8%B4%E0%B8%9A%E0%B8%B2%E0%B8%99%E0%B8%B0.webp",
+    "collectorNumber": "079-070",
+    "regulationMark": "E",
+    "officialImageUrl": "https://asia.pokemon-card.com/th/card-img/S5I_079-070.png",
+    "rarityCode": "HR"
+  },
+  {
+    "id": "TH-SEC-10032",
+    "localId": "TH-SEC-10032",
+    "name": "คาริน",
+    "stage": "ซัพพอร์ต",
+    "category": "Trainer",
+    "set": {
+      "id": "S5I",
+      "name": "มาสเตอร์จู่โจมครั้งเดียว"
+    },
+    "imageUrl": "/PokeCountTracker/card-images/S5I/080-070_%E0%B8%84%E0%B8%B2%E0%B8%A3%E0%B8%B4%E0%B8%99.webp",
+    "imageUrlHigh": "/PokeCountTracker/card-images/S5I/080-070_%E0%B8%84%E0%B8%B2%E0%B8%A3%E0%B8%B4%E0%B8%99.webp",
+    "collectorNumber": "080-070",
+    "regulationMark": "E",
+    "officialImageUrl": "https://asia.pokemon-card.com/th/card-img/S5I_080-070.png",
+    "rarityCode": "HR"
+  },
+  {
+    "id": "TH-SEC-10033",
+    "localId": "TH-SEC-10033",
+    "name": "เฮลการ์",
+    "stage": "ร่าง 1",
+    "category": "Pokemon",
+    "hp": 130,
+    "types": [
+      "Darkness"
+    ],
+    "set": {
+      "id": "S5I",
+      "name": "มาสเตอร์จู่โจมครั้งเดียว"
+    },
+    "imageUrl": "/PokeCountTracker/card-images/S5I/081-070_%E0%B9%80%E0%B8%AE%E0%B8%A5%E0%B8%81%E0%B8%B2%E0%B8%A3%E0%B9%8C.webp",
+    "imageUrlHigh": "/PokeCountTracker/card-images/S5I/081-070_%E0%B9%80%E0%B8%AE%E0%B8%A5%E0%B8%81%E0%B8%B2%E0%B8%A3%E0%B9%8C.webp",
+    "collectorNumber": "081-070",
+    "regulationMark": "E",
+    "officialImageUrl": "https://asia.pokemon-card.com/th/card-img/S5I_081-070.png",
+    "rarityCode": "UR"
+  },
+  {
+    "id": "TH-SEC-10034",
+    "localId": "TH-SEC-10034",
+    "name": "ม้วนคัมภีร์จู่โจมครั้งเดียว",
+    "stage": "ไอเท็มติดโปเกมอน",
+    "category": "Trainer",
+    "set": {
+      "id": "S5I",
+      "name": "มาสเตอร์จู่โจมครั้งเดียว"
+    },
+    "imageUrl": "/PokeCountTracker/card-images/S5I/082-070_%E0%B8%A1%E0%B9%89%E0%B8%A7%E0%B8%99%E0%B8%84%E0%B8%B1%E0%B8%A1%E0%B8%A0%E0%B8%B5%E0%B8%A3%E0%B9%8C%E0%B8%88%E0%B8%B9%E0%B9%88%E0%B9%82%E0%B8%88%E0%B8%A1%E0%B8%84%E0%B8%A3%E0%B8%B1%E0%B9%89%E0%B8%87%E0%B9%80%E0%B8%94%E0%B8%B5%E0%B8%A2%E0%B8%A7.webp",
+    "imageUrlHigh": "/PokeCountTracker/card-images/S5I/082-070_%E0%B8%A1%E0%B9%89%E0%B8%A7%E0%B8%99%E0%B8%84%E0%B8%B1%E0%B8%A1%E0%B8%A0%E0%B8%B5%E0%B8%A3%E0%B9%8C%E0%B8%88%E0%B8%B9%E0%B9%88%E0%B9%82%E0%B8%88%E0%B8%A1%E0%B8%84%E0%B8%A3%E0%B8%B1%E0%B9%89%E0%B8%87%E0%B9%80%E0%B8%94%E0%B8%B5%E0%B8%A2%E0%B8%A7.webp",
+    "collectorNumber": "082-070",
+    "regulationMark": "E",
+    "officialImageUrl": "https://asia.pokemon-card.com/th/card-img/S5I_082-070.png",
+    "rarityCode": "UR"
+  },
+  {
+    "id": "TH-SEC-10035",
+    "localId": "TH-SEC-10035",
+    "name": "เอนเนอร์จี้จู่โจมครั้งเดียว",
+    "stage": "พิเศษ",
+    "category": "Energy",
+    "set": {
+      "id": "S5I",
+      "name": "มาสเตอร์จู่โจมครั้งเดียว"
+    },
+    "imageUrl": "/PokeCountTracker/card-images/S5I/083-070_%E0%B9%80%E0%B8%AD%E0%B8%99%E0%B9%80%E0%B8%99%E0%B8%AD%E0%B8%A3%E0%B9%8C%E0%B8%88%E0%B8%B5%E0%B9%89%E0%B8%88%E0%B8%B9%E0%B9%88%E0%B9%82%E0%B8%88%E0%B8%A1%E0%B8%84%E0%B8%A3%E0%B8%B1%E0%B9%89%E0%B8%87%E0%B9%80%E0%B8%94%E0%B8%B5%E0%B8%A2%E0%B8%A7.webp",
+    "imageUrlHigh": "/PokeCountTracker/card-images/S5I/083-070_%E0%B9%80%E0%B8%AD%E0%B8%99%E0%B9%80%E0%B8%99%E0%B8%AD%E0%B8%A3%E0%B9%8C%E0%B8%88%E0%B8%B5%E0%B9%89%E0%B8%88%E0%B8%B9%E0%B9%88%E0%B9%82%E0%B8%88%E0%B8%A1%E0%B8%84%E0%B8%A3%E0%B8%B1%E0%B9%89%E0%B8%87%E0%B9%80%E0%B8%94%E0%B8%B5%E0%B8%A2%E0%B8%A7.webp",
+    "collectorNumber": "083-070",
+    "regulationMark": "E",
+    "officialImageUrl": "https://asia.pokemon-card.com/th/card-img/S5I_083-070.png",
+    "rarityCode": "UR"
+  },
+  {
+    "id": "TH-SEC-10036",
+    "localId": "TH-SEC-10036",
+    "name": "วูลาโอสจู่โจมต่อเนื่องV",
+    "stage": "พื้นฐาน",
+    "category": "Pokemon",
+    "hp": 220,
+    "types": [
+      "Fighting"
+    ],
+    "set": {
+      "id": "S5R",
+      "name": "มาสเตอร์จู่โจมต่อเนื่อง"
+    },
+    "imageUrl": "/PokeCountTracker/card-images/S5R/071-070_%E0%B8%A7%E0%B8%B9%E0%B8%A5%E0%B8%B2%E0%B9%82%E0%B8%AD%E0%B8%AA%E0%B8%88%E0%B8%B9%E0%B9%88%E0%B9%82%E0%B8%88%E0%B8%A1%E0%B8%95%E0%B9%88%E0%B8%AD%E0%B9%80%E0%B8%99%E0%B8%B7%E0%B9%88%E0%B8%AD%E0%B8%87V.webp",
+    "imageUrlHigh": "/PokeCountTracker/card-images/S5R/071-070_%E0%B8%A7%E0%B8%B9%E0%B8%A5%E0%B8%B2%E0%B9%82%E0%B8%AD%E0%B8%AA%E0%B8%88%E0%B8%B9%E0%B9%88%E0%B9%82%E0%B8%88%E0%B8%A1%E0%B8%95%E0%B9%88%E0%B8%AD%E0%B9%80%E0%B8%99%E0%B8%B7%E0%B9%88%E0%B8%AD%E0%B8%87V.webp",
+    "collectorNumber": "071-070",
+    "regulationMark": "E",
+    "officialImageUrl": "https://asia.pokemon-card.com/th/card-img/S5R_071-070.png",
+    "rarityCode": "SR"
+  },
+  {
+    "id": "TH-SEC-10037",
+    "localId": "TH-SEC-10037",
+    "name": "วูลาโอสจู่โจมต่อเนื่องVMAX",
+    "stage": "VMAX",
+    "category": "Pokemon",
+    "hp": 330,
+    "types": [
+      "Water"
+    ],
+    "set": {
+      "id": "S5R",
+      "name": "มาสเตอร์จู่โจมต่อเนื่อง"
+    },
+    "imageUrl": "/PokeCountTracker/card-images/S5R/077-070_%E0%B8%A7%E0%B8%B9%E0%B8%A5%E0%B8%B2%E0%B9%82%E0%B8%AD%E0%B8%AA%E0%B8%88%E0%B8%B9%E0%B9%88%E0%B9%82%E0%B8%88%E0%B8%A1%E0%B8%95%E0%B9%88%E0%B8%AD%E0%B9%80%E0%B8%99%E0%B8%B7%E0%B9%88%E0%B8%AD%E0%B8%87VMAX.webp",
+    "imageUrlHigh": "/PokeCountTracker/card-images/S5R/077-070_%E0%B8%A7%E0%B8%B9%E0%B8%A5%E0%B8%B2%E0%B9%82%E0%B8%AD%E0%B8%AA%E0%B8%88%E0%B8%B9%E0%B9%88%E0%B9%82%E0%B8%88%E0%B8%A1%E0%B8%95%E0%B9%88%E0%B8%AD%E0%B9%80%E0%B8%99%E0%B8%B7%E0%B9%88%E0%B8%AD%E0%B8%87VMAX.webp",
+    "collectorNumber": "077-070",
+    "regulationMark": "E",
+    "officialImageUrl": "https://asia.pokemon-card.com/th/card-img/S5R_077-070.png",
+    "rarityCode": "HR"
+  },
+  {
+    "id": "TH-SEC-10038",
+    "localId": "TH-SEC-10038",
+    "name": "โคร์นี",
+    "stage": "ซัพพอร์ต",
+    "category": "Trainer",
+    "set": {
+      "id": "S5R",
+      "name": "มาสเตอร์จู่โจมต่อเนื่อง"
+    },
+    "imageUrl": "/PokeCountTracker/card-images/S5R/079-070_%E0%B9%82%E0%B8%84%E0%B8%A3%E0%B9%8C%E0%B8%99%E0%B8%B5.webp",
+    "imageUrlHigh": "/PokeCountTracker/card-images/S5R/079-070_%E0%B9%82%E0%B8%84%E0%B8%A3%E0%B9%8C%E0%B8%99%E0%B8%B5.webp",
+    "collectorNumber": "079-070",
+    "regulationMark": "E",
+    "officialImageUrl": "https://asia.pokemon-card.com/th/card-img/S5R_079-070.png",
+    "rarityCode": "HR"
+  },
+  {
+    "id": "TH-SEC-10039",
+    "localId": "TH-SEC-10039",
+    "name": "โมมิ",
+    "stage": "ซัพพอร์ต",
+    "category": "Trainer",
+    "set": {
+      "id": "S5R",
+      "name": "มาสเตอร์จู่โจมต่อเนื่อง"
+    },
+    "imageUrl": "/PokeCountTracker/card-images/S5R/080-070_%E0%B9%82%E0%B8%A1%E0%B8%A1%E0%B8%B4.webp",
+    "imageUrlHigh": "/PokeCountTracker/card-images/S5R/080-070_%E0%B9%82%E0%B8%A1%E0%B8%A1%E0%B8%B4.webp",
+    "collectorNumber": "080-070",
+    "regulationMark": "E",
+    "officialImageUrl": "https://asia.pokemon-card.com/th/card-img/S5R_080-070.png",
+    "rarityCode": "HR"
+  },
+  {
+    "id": "TH-SEC-10040",
+    "localId": "TH-SEC-10040",
+    "name": "ออคตัน",
+    "stage": "ร่าง 1",
+    "category": "Pokemon",
+    "hp": 110,
+    "types": [
+      "Water"
+    ],
+    "set": {
+      "id": "S5R",
+      "name": "มาสเตอร์จู่โจมต่อเนื่อง"
+    },
+    "imageUrl": "/PokeCountTracker/card-images/S5R/081-070_%E0%B8%AD%E0%B8%AD%E0%B8%84%E0%B8%95%E0%B8%B1%E0%B8%99.webp",
+    "imageUrlHigh": "/PokeCountTracker/card-images/S5R/081-070_%E0%B8%AD%E0%B8%AD%E0%B8%84%E0%B8%95%E0%B8%B1%E0%B8%99.webp",
+    "collectorNumber": "081-070",
+    "regulationMark": "E",
+    "officialImageUrl": "https://asia.pokemon-card.com/th/card-img/S5R_081-070.png",
+    "rarityCode": "UR"
+  },
+  {
+    "id": "TH-SEC-10041",
+    "localId": "TH-SEC-10041",
+    "name": "เลเวลบอล",
+    "stage": "ไอเท็ม",
+    "category": "Trainer",
+    "set": {
+      "id": "S5R",
+      "name": "มาสเตอร์จู่โจมต่อเนื่อง"
+    },
+    "imageUrl": "/PokeCountTracker/card-images/S5R/082-070_%E0%B9%80%E0%B8%A5%E0%B9%80%E0%B8%A7%E0%B8%A5%E0%B8%9A%E0%B8%AD%E0%B8%A5.webp",
+    "imageUrlHigh": "/PokeCountTracker/card-images/S5R/082-070_%E0%B9%80%E0%B8%A5%E0%B9%80%E0%B8%A7%E0%B8%A5%E0%B8%9A%E0%B8%AD%E0%B8%A5.webp",
+    "collectorNumber": "082-070",
+    "regulationMark": "E",
+    "officialImageUrl": "https://asia.pokemon-card.com/th/card-img/S5R_082-070.png",
+    "rarityCode": "UR"
+  },
+  {
+    "id": "TH-SEC-10042",
+    "localId": "TH-SEC-10042",
+    "name": "เอนเนอร์จี้จู่โจมต่อเนื่อง",
+    "stage": "พิเศษ",
+    "category": "Energy",
+    "set": {
+      "id": "S5R",
+      "name": "มาสเตอร์จู่โจมต่อเนื่อง"
+    },
+    "imageUrl": "/PokeCountTracker/card-images/S5R/083-070_%E0%B9%80%E0%B8%AD%E0%B8%99%E0%B9%80%E0%B8%99%E0%B8%AD%E0%B8%A3%E0%B9%8C%E0%B8%88%E0%B8%B5%E0%B9%89%E0%B8%88%E0%B8%B9%E0%B9%88%E0%B9%82%E0%B8%88%E0%B8%A1%E0%B8%95%E0%B9%88%E0%B8%AD%E0%B9%80%E0%B8%99%E0%B8%B7%E0%B9%88%E0%B8%AD%E0%B8%87.webp",
+    "imageUrlHigh": "/PokeCountTracker/card-images/S5R/083-070_%E0%B9%80%E0%B8%AD%E0%B8%99%E0%B9%80%E0%B8%99%E0%B8%AD%E0%B8%A3%E0%B9%8C%E0%B8%88%E0%B8%B5%E0%B9%89%E0%B8%88%E0%B8%B9%E0%B9%88%E0%B9%82%E0%B8%88%E0%B8%A1%E0%B8%95%E0%B9%88%E0%B8%AD%E0%B9%80%E0%B8%99%E0%B8%B7%E0%B9%88%E0%B8%AD%E0%B8%87.webp",
+    "collectorNumber": "083-070",
+    "regulationMark": "E",
+    "officialImageUrl": "https://asia.pokemon-card.com/th/card-img/S5R_083-070.png",
+    "rarityCode": "UR"
+  },
+  {
+    "id": "TH-SEC-10043",
+    "localId": "TH-SEC-10043",
+    "name": "แบล็กกีVMAX",
+    "stage": "VMAX",
+    "category": "Pokemon",
+    "hp": 310,
+    "types": [
+      "Darkness"
+    ],
+    "set": {
+      "id": "S6a",
+      "name": "อีวุยฮีโร"
+    },
+    "imageUrl": "/PokeCountTracker/card-images/S6a/089-069_%E0%B9%81%E0%B8%9A%E0%B8%A5%E0%B9%87%E0%B8%81%E0%B8%81%E0%B8%B5VMAX.webp",
+    "imageUrlHigh": "/PokeCountTracker/card-images/S6a/089-069_%E0%B9%81%E0%B8%9A%E0%B8%A5%E0%B9%87%E0%B8%81%E0%B8%81%E0%B8%B5VMAX.webp",
+    "collectorNumber": "089-069",
+    "regulationMark": "E",
+    "officialImageUrl": "https://asia.pokemon-card.com/th/card-img/S6a_089-069.png",
+    "rarityCode": "HR"
+  },
+  {
+    "id": "TH-SEC-10044",
+    "localId": "TH-SEC-10044",
+    "name": "แบล็กกีVMAX",
+    "stage": "VMAX",
+    "category": "Pokemon",
+    "hp": 310,
+    "types": [
+      "Darkness"
+    ],
+    "set": {
+      "id": "S6a",
+      "name": "อีวุยฮีโร"
+    },
+    "imageUrl": "/PokeCountTracker/card-images/S6a/090-069_%E0%B9%81%E0%B8%9A%E0%B8%A5%E0%B9%87%E0%B8%81%E0%B8%81%E0%B8%B5VMAX.webp",
+    "imageUrlHigh": "/PokeCountTracker/card-images/S6a/090-069_%E0%B9%81%E0%B8%9A%E0%B8%A5%E0%B9%87%E0%B8%81%E0%B8%81%E0%B8%B5VMAX.webp",
+    "collectorNumber": "090-069",
+    "regulationMark": "E",
+    "officialImageUrl": "https://asia.pokemon-card.com/th/card-img/S6a_090-069.png",
+    "rarityCode": "HR"
+  },
+  {
+    "id": "TH-SEC-10045",
+    "localId": "TH-SEC-10045",
+    "name": "นิมเฟียVMAX",
+    "stage": "VMAX",
+    "category": "Pokemon",
+    "hp": 310,
+    "types": [
+      "Psychic"
+    ],
+    "set": {
+      "id": "S6a",
+      "name": "อีวุยฮีโร"
+    },
+    "imageUrl": "/PokeCountTracker/card-images/S6a/091-069_%E0%B8%99%E0%B8%B4%E0%B8%A1%E0%B9%80%E0%B8%9F%E0%B8%B5%E0%B8%A2VMAX.webp",
+    "imageUrlHigh": "/PokeCountTracker/card-images/S6a/091-069_%E0%B8%99%E0%B8%B4%E0%B8%A1%E0%B9%80%E0%B8%9F%E0%B8%B5%E0%B8%A2VMAX.webp",
+    "collectorNumber": "091-069",
+    "regulationMark": "E",
+    "officialImageUrl": "https://asia.pokemon-card.com/th/card-img/S6a_091-069.png",
+    "rarityCode": "HR"
+  },
+  {
+    "id": "TH-SEC-10046",
+    "localId": "TH-SEC-10046",
+    "name": "นิมเฟียVMAX",
+    "stage": "VMAX",
+    "category": "Pokemon",
+    "hp": 310,
+    "types": [
+      "Psychic"
+    ],
+    "set": {
+      "id": "S6a",
+      "name": "อีวุยฮีโร"
+    },
+    "imageUrl": "/PokeCountTracker/card-images/S6a/092-069_%E0%B8%99%E0%B8%B4%E0%B8%A1%E0%B9%80%E0%B8%9F%E0%B8%B5%E0%B8%A2VMAX.webp",
+    "imageUrlHigh": "/PokeCountTracker/card-images/S6a/092-069_%E0%B8%99%E0%B8%B4%E0%B8%A1%E0%B9%80%E0%B8%9F%E0%B8%B5%E0%B8%A2VMAX.webp",
+    "collectorNumber": "092-069",
+    "regulationMark": "E",
+    "officialImageUrl": "https://asia.pokemon-card.com/th/card-img/S6a_092-069.png",
+    "rarityCode": "HR"
+  },
+  {
+    "id": "TH-SEC-10047",
+    "localId": "TH-SEC-10047",
+    "name": "อโรม่าเลดี้",
+    "stage": "ซัพพอร์ต",
+    "category": "Trainer",
+    "set": {
+      "id": "S6a",
+      "name": "อีวุยฮีโร"
+    },
+    "imageUrl": "/PokeCountTracker/card-images/S6a/093-069_%E0%B8%AD%E0%B9%82%E0%B8%A3%E0%B8%A1%E0%B9%88%E0%B8%B2%E0%B9%80%E0%B8%A5%E0%B8%94%E0%B8%B5%E0%B9%89.webp",
+    "imageUrlHigh": "/PokeCountTracker/card-images/S6a/093-069_%E0%B8%AD%E0%B9%82%E0%B8%A3%E0%B8%A1%E0%B9%88%E0%B8%B2%E0%B9%80%E0%B8%A5%E0%B8%94%E0%B8%B5%E0%B9%89.webp",
+    "collectorNumber": "093-069",
+    "regulationMark": "E",
+    "officialImageUrl": "https://asia.pokemon-card.com/th/card-img/S6a_093-069.png",
+    "rarityCode": "HR"
+  },
+  {
+    "id": "TH-SEC-10048",
+    "localId": "TH-SEC-10048",
+    "name": "ตลับใส่เหรียญ",
+    "stage": "ไอเท็ม",
+    "category": "Trainer",
+    "set": {
+      "id": "S6a",
+      "name": "อีวุยฮีโร"
+    },
+    "imageUrl": "/PokeCountTracker/card-images/S6a/094-069_%E0%B8%95%E0%B8%A5%E0%B8%B1%E0%B8%9A%E0%B9%83%E0%B8%AA%E0%B9%88%E0%B9%80%E0%B8%AB%E0%B8%A3%E0%B8%B5%E0%B8%A2%E0%B8%8D.webp",
+    "imageUrlHigh": "/PokeCountTracker/card-images/S6a/094-069_%E0%B8%95%E0%B8%A5%E0%B8%B1%E0%B8%9A%E0%B9%83%E0%B8%AA%E0%B9%88%E0%B9%80%E0%B8%AB%E0%B8%A3%E0%B8%B5%E0%B8%A2%E0%B8%8D.webp",
+    "collectorNumber": "094-069",
+    "regulationMark": "E",
+    "officialImageUrl": "https://asia.pokemon-card.com/th/card-img/S6a_094-069.png",
+    "rarityCode": "UR"
+  },
+  {
+    "id": "TH-SEC-10049",
+    "localId": "TH-SEC-10049",
+    "name": "บอลลูนดวงจันทร์",
+    "stage": "สเตเดียม",
+    "category": "Trainer",
+    "set": {
+      "id": "S6a",
+      "name": "อีวุยฮีโร"
+    },
+    "imageUrl": "/PokeCountTracker/card-images/S6a/095-069_%E0%B8%9A%E0%B8%AD%E0%B8%A5%E0%B8%A5%E0%B8%B9%E0%B8%99%E0%B8%94%E0%B8%A7%E0%B8%87%E0%B8%88%E0%B8%B1%E0%B8%99%E0%B8%97%E0%B8%A3%E0%B9%8C.webp",
+    "imageUrlHigh": "/PokeCountTracker/card-images/S6a/095-069_%E0%B8%9A%E0%B8%AD%E0%B8%A5%E0%B8%A5%E0%B8%B9%E0%B8%99%E0%B8%94%E0%B8%A7%E0%B8%87%E0%B8%88%E0%B8%B1%E0%B8%99%E0%B8%97%E0%B8%A3%E0%B9%8C.webp",
+    "collectorNumber": "095-069",
+    "regulationMark": "E",
+    "officialImageUrl": "https://asia.pokemon-card.com/th/card-img/S6a_095-069.png",
+    "rarityCode": "UR"
+  },
+  {
+    "id": "TH-SEC-10050",
+    "localId": "TH-SEC-10050",
+    "name": "เร็คควอซาVMAX",
+    "stage": "VMAX",
+    "category": "Pokemon",
+    "hp": 320,
+    "types": [
+      "Dragon"
+    ],
+    "set": {
+      "id": "S7R",
+      "name": "สายน้ำแห่งนภา"
+    },
+    "imageUrl": "/PokeCountTracker/card-images/S7R/077-067_%E0%B9%80%E0%B8%A3%E0%B9%87%E0%B8%84%E0%B8%84%E0%B8%A7%E0%B8%AD%E0%B8%8B%E0%B8%B2VMAX.webp",
+    "imageUrlHigh": "/PokeCountTracker/card-images/S7R/077-067_%E0%B9%80%E0%B8%A3%E0%B9%87%E0%B8%84%E0%B8%84%E0%B8%A7%E0%B8%AD%E0%B8%8B%E0%B8%B2VMAX.webp",
+    "collectorNumber": "077-067",
+    "regulationMark": "E",
+    "officialImageUrl": "https://asia.pokemon-card.com/th/card-img/S7R_077-067.png",
+    "rarityCode": "HR"
+  },
+  {
+    "id": "TH-SEC-10051",
+    "localId": "TH-SEC-10051",
+    "name": "เร็คควอซาVMAX",
+    "stage": "VMAX",
+    "category": "Pokemon",
+    "hp": 320,
+    "types": [
+      "Dragon"
+    ],
+    "set": {
+      "id": "S7R",
+      "name": "สายน้ำแห่งนภา"
+    },
+    "imageUrl": "/PokeCountTracker/card-images/S7R/078-067_%E0%B9%80%E0%B8%A3%E0%B9%87%E0%B8%84%E0%B8%84%E0%B8%A7%E0%B8%AD%E0%B8%8B%E0%B8%B2VMAX.webp",
+    "imageUrlHigh": "/PokeCountTracker/card-images/S7R/078-067_%E0%B9%80%E0%B8%A3%E0%B9%87%E0%B8%84%E0%B8%84%E0%B8%A7%E0%B8%AD%E0%B8%8B%E0%B8%B2VMAX.webp",
+    "collectorNumber": "078-067",
+    "regulationMark": "E",
+    "officialImageUrl": "https://asia.pokemon-card.com/th/card-img/S7R_078-067.png",
+    "rarityCode": "HR"
+  },
+  {
+    "id": "TH-SEC-10052",
+    "localId": "TH-SEC-10052",
+    "name": "ความตั้งมั่นของฮิกานะ",
+    "stage": "ซัพพอร์ต",
+    "category": "Trainer",
+    "set": {
+      "id": "S7R",
+      "name": "สายน้ำแห่งนภา"
+    },
+    "imageUrl": "/PokeCountTracker/card-images/S7R/080-067_%E0%B8%84%E0%B8%A7%E0%B8%B2%E0%B8%A1%E0%B8%95%E0%B8%B1%E0%B9%89%E0%B8%87%E0%B8%A1%E0%B8%B1%E0%B9%88%E0%B8%99%E0%B8%82%E0%B8%AD%E0%B8%87%E0%B8%AE%E0%B8%B4%E0%B8%81%E0%B8%B2%E0%B8%99%E0%B8%B0.webp",
+    "imageUrlHigh": "/PokeCountTracker/card-images/S7R/080-067_%E0%B8%84%E0%B8%A7%E0%B8%B2%E0%B8%A1%E0%B8%95%E0%B8%B1%E0%B9%89%E0%B8%87%E0%B8%A1%E0%B8%B1%E0%B9%88%E0%B8%99%E0%B8%82%E0%B8%AD%E0%B8%87%E0%B8%AE%E0%B8%B4%E0%B8%81%E0%B8%B2%E0%B8%99%E0%B8%B0.webp",
+    "collectorNumber": "080-067",
+    "regulationMark": "E",
+    "officialImageUrl": "https://asia.pokemon-card.com/th/card-img/S7R_080-067.png",
+    "rarityCode": "HR"
+  },
+  {
+    "id": "TH-SEC-10053",
+    "localId": "TH-SEC-10053",
+    "name": "ทอยแคชเชอร์",
+    "stage": "ไอเท็ม",
+    "category": "Trainer",
+    "set": {
+      "id": "S7R",
+      "name": "สายน้ำแห่งนภา"
+    },
+    "imageUrl": "/PokeCountTracker/card-images/S7R/081-067_%E0%B8%97%E0%B8%AD%E0%B8%A2%E0%B9%81%E0%B8%84%E0%B8%8A%E0%B9%80%E0%B8%8A%E0%B8%AD%E0%B8%A3%E0%B9%8C.webp",
+    "imageUrlHigh": "/PokeCountTracker/card-images/S7R/081-067_%E0%B8%97%E0%B8%AD%E0%B8%A2%E0%B9%81%E0%B8%84%E0%B8%8A%E0%B9%80%E0%B8%8A%E0%B8%AD%E0%B8%A3%E0%B9%8C.webp",
+    "collectorNumber": "081-067",
+    "regulationMark": "E",
+    "officialImageUrl": "https://asia.pokemon-card.com/th/card-img/S7R_081-067.png",
+    "rarityCode": "UR"
+  },
+  {
+    "id": "TH-SEC-10054",
+    "localId": "TH-SEC-10054",
+    "name": "เทือกเขาแห่งพายุ",
+    "stage": "สเตเดียม",
+    "category": "Trainer",
+    "set": {
+      "id": "S7R",
+      "name": "สายน้ำแห่งนภา"
+    },
+    "imageUrl": "/PokeCountTracker/card-images/S7R/082-067_%E0%B9%80%E0%B8%97%E0%B8%B7%E0%B8%AD%E0%B8%81%E0%B9%80%E0%B8%82%E0%B8%B2%E0%B9%81%E0%B8%AB%E0%B9%88%E0%B8%87%E0%B8%9E%E0%B8%B2%E0%B8%A2%E0%B8%B8.webp",
+    "imageUrlHigh": "/PokeCountTracker/card-images/S7R/082-067_%E0%B9%80%E0%B8%97%E0%B8%B7%E0%B8%AD%E0%B8%81%E0%B9%80%E0%B8%82%E0%B8%B2%E0%B9%81%E0%B8%AB%E0%B9%88%E0%B8%87%E0%B8%9E%E0%B8%B2%E0%B8%A2%E0%B8%B8.webp",
+    "collectorNumber": "082-067",
+    "regulationMark": "E",
+    "officialImageUrl": "https://asia.pokemon-card.com/th/card-img/S7R_082-067.png",
+    "rarityCode": "UR"
+  },
+  {
+    "id": "TH-SEC-10055",
+    "localId": "TH-SEC-10055",
+    "name": "เอนเนอร์จี้สายฟ้า",
+    "stage": "พื้นฐาน",
+    "category": "Energy",
+    "set": {
+      "id": "S7R",
+      "name": "สายน้ำแห่งนภา"
+    },
+    "imageUrl": "/PokeCountTracker/card-images/S7R/083-067_%E0%B9%80%E0%B8%AD%E0%B8%99%E0%B9%80%E0%B8%99%E0%B8%AD%E0%B8%A3%E0%B9%8C%E0%B8%88%E0%B8%B5%E0%B9%89%E0%B8%AA%E0%B8%B2%E0%B8%A2%E0%B8%9F%E0%B9%89%E0%B8%B2.webp",
+    "imageUrlHigh": "/PokeCountTracker/card-images/S7R/083-067_%E0%B9%80%E0%B8%AD%E0%B8%99%E0%B9%80%E0%B8%99%E0%B8%AD%E0%B8%A3%E0%B9%8C%E0%B8%88%E0%B8%B5%E0%B9%89%E0%B8%AA%E0%B8%B2%E0%B8%A2%E0%B8%9F%E0%B9%89%E0%B8%B2.webp",
+    "collectorNumber": "083-067",
+    "regulationMark": "E",
+    "officialImageUrl": "https://asia.pokemon-card.com/th/card-img/S7R_083-067.png",
+    "rarityCode": "UR"
+  },
+  {
+    "id": "TH-SEC-10056",
+    "localId": "TH-SEC-10056",
+    "name": "มิวVMAX",
+    "stage": "VMAX",
+    "category": "Pokemon",
+    "hp": 310,
+    "types": [
+      "Psychic"
+    ],
+    "set": {
+      "id": "S8",
+      "name": "จู่โจมแบบฟิวชัน"
+    },
+    "imageUrl": "/PokeCountTracker/card-images/S8/109-100_%E0%B8%A1%E0%B8%B4%E0%B8%A7VMAX.webp",
+    "imageUrlHigh": "/PokeCountTracker/card-images/S8/109-100_%E0%B8%A1%E0%B8%B4%E0%B8%A7VMAX.webp",
+    "collectorNumber": "109-100",
+    "regulationMark": "E",
+    "officialImageUrl": "https://asia.pokemon-card.com/th/card-img/S8_109-100.png",
+    "rarityCode": "HR"
+  },
+  {
+    "id": "TH-SEC-10057",
+    "localId": "TH-SEC-10057",
+    "name": "มิวVMAX",
+    "stage": "VMAX",
+    "category": "Pokemon",
+    "hp": 310,
+    "types": [
+      "Psychic"
+    ],
+    "set": {
+      "id": "S8",
+      "name": "จู่โจมแบบฟิวชัน"
+    },
+    "imageUrl": "/PokeCountTracker/card-images/S8/110-100_%E0%B8%A1%E0%B8%B4%E0%B8%A7VMAX.webp",
+    "imageUrlHigh": "/PokeCountTracker/card-images/S8/110-100_%E0%B8%A1%E0%B8%B4%E0%B8%A7VMAX.webp",
+    "collectorNumber": "110-100",
+    "regulationMark": "E",
+    "officialImageUrl": "https://asia.pokemon-card.com/th/card-img/S8_110-100.png",
+    "rarityCode": "HR"
+  },
+  {
+    "id": "TH-SEC-10058",
+    "localId": "TH-SEC-10058",
+    "name": "คามิลล่า",
+    "stage": "ซัพพอร์ต",
+    "category": "Trainer",
+    "set": {
+      "id": "S8",
+      "name": "จู่โจมแบบฟิวชัน"
+    },
+    "imageUrl": "/PokeCountTracker/card-images/S8/111-100_%E0%B8%84%E0%B8%B2%E0%B8%A1%E0%B8%B4%E0%B8%A5%E0%B8%A5%E0%B9%88%E0%B8%B2.webp",
+    "imageUrlHigh": "/PokeCountTracker/card-images/S8/111-100_%E0%B8%84%E0%B8%B2%E0%B8%A1%E0%B8%B4%E0%B8%A5%E0%B8%A5%E0%B9%88%E0%B8%B2.webp",
+    "collectorNumber": "111-100",
+    "regulationMark": "E",
+    "officialImageUrl": "https://asia.pokemon-card.com/th/card-img/S8_111-100.png",
+    "rarityCode": "HR"
+  },
+  {
+    "id": "TH-SEC-10059",
+    "localId": "TH-SEC-10059",
+    "name": "พาวเวอร์แท็บเล็ต",
+    "stage": "ไอเท็ม",
+    "category": "Trainer",
+    "set": {
+      "id": "S8",
+      "name": "จู่โจมแบบฟิวชัน"
+    },
+    "imageUrl": "/PokeCountTracker/card-images/S8/112-100_%E0%B8%9E%E0%B8%B2%E0%B8%A7%E0%B9%80%E0%B8%A7%E0%B8%AD%E0%B8%A3%E0%B9%8C%E0%B9%81%E0%B8%97%E0%B9%87%E0%B8%9A%E0%B9%80%E0%B8%A5%E0%B9%87%E0%B8%95.webp",
+    "imageUrlHigh": "/PokeCountTracker/card-images/S8/112-100_%E0%B8%9E%E0%B8%B2%E0%B8%A7%E0%B9%80%E0%B8%A7%E0%B8%AD%E0%B8%A3%E0%B9%8C%E0%B9%81%E0%B8%97%E0%B9%87%E0%B8%9A%E0%B9%80%E0%B8%A5%E0%B9%87%E0%B8%95.webp",
+    "collectorNumber": "112-100",
+    "regulationMark": "E",
+    "officialImageUrl": "https://asia.pokemon-card.com/th/card-img/S8_112-100.png",
+    "rarityCode": "UR"
+  },
+  {
+    "id": "TH-SEC-10060",
+    "localId": "TH-SEC-10060",
+    "name": "ครอสสวิตเชอร์",
+    "stage": "ไอเท็ม",
+    "category": "Trainer",
+    "set": {
+      "id": "S8",
+      "name": "จู่โจมแบบฟิวชัน"
+    },
+    "imageUrl": "/PokeCountTracker/card-images/S8/113-100_%E0%B8%84%E0%B8%A3%E0%B8%AD%E0%B8%AA%E0%B8%AA%E0%B8%A7%E0%B8%B4%E0%B8%95%E0%B9%80%E0%B8%8A%E0%B8%AD%E0%B8%A3%E0%B9%8C.webp",
+    "imageUrlHigh": "/PokeCountTracker/card-images/S8/113-100_%E0%B8%84%E0%B8%A3%E0%B8%AD%E0%B8%AA%E0%B8%AA%E0%B8%A7%E0%B8%B4%E0%B8%95%E0%B9%80%E0%B8%8A%E0%B8%AD%E0%B8%A3%E0%B9%8C.webp",
+    "collectorNumber": "113-100",
+    "regulationMark": "E",
+    "officialImageUrl": "https://asia.pokemon-card.com/th/card-img/S8_113-100.png",
+    "rarityCode": "UR"
+  },
+  {
+    "id": "TH-SEC-10061",
+    "localId": "TH-SEC-10061",
+    "name": "ลิซาร์ดอนVSTAR",
+    "stage": "VSTAR",
+    "category": "Pokemon",
+    "hp": 280,
+    "types": [
+      "Fire"
+    ],
+    "set": {
+      "id": "S9",
+      "name": "สตาร์เบิร์ท"
+    },
+    "imageUrl": "/PokeCountTracker/card-images/S9/109-100_%E0%B8%A5%E0%B8%B4%E0%B8%8B%E0%B8%B2%E0%B8%A3%E0%B9%8C%E0%B8%94%E0%B8%AD%E0%B8%99VSTAR.webp",
+    "imageUrlHigh": "/PokeCountTracker/card-images/S9/109-100_%E0%B8%A5%E0%B8%B4%E0%B8%8B%E0%B8%B2%E0%B8%A3%E0%B9%8C%E0%B8%94%E0%B8%AD%E0%B8%99VSTAR.webp",
+    "collectorNumber": "109-100",
+    "regulationMark": "F",
+    "officialImageUrl": "https://asia.pokemon-card.com/th/card-img/S9_109-100.png",
+    "rarityCode": "HR"
+  },
+  {
+    "id": "TH-SEC-10062",
+    "localId": "TH-SEC-10062",
+    "name": "อาร์เซอุสVSTAR",
+    "stage": "VSTAR",
+    "category": "Pokemon",
+    "hp": 280,
+    "types": [
+      "Colorless"
+    ],
+    "set": {
+      "id": "S9",
+      "name": "สตาร์เบิร์ท"
+    },
+    "imageUrl": "/PokeCountTracker/card-images/S9/110-100_%E0%B8%AD%E0%B8%B2%E0%B8%A3%E0%B9%8C%E0%B9%80%E0%B8%8B%E0%B8%AD%E0%B8%B8%E0%B8%AAVSTAR.webp",
+    "imageUrlHigh": "/PokeCountTracker/card-images/S9/110-100_%E0%B8%AD%E0%B8%B2%E0%B8%A3%E0%B9%8C%E0%B9%80%E0%B8%8B%E0%B8%AD%E0%B8%B8%E0%B8%AAVSTAR.webp",
+    "collectorNumber": "110-100",
+    "regulationMark": "F",
+    "officialImageUrl": "https://asia.pokemon-card.com/th/card-img/S9_110-100.png",
+    "rarityCode": "HR"
+  },
+  {
+    "id": "TH-SEC-10063",
+    "localId": "TH-SEC-10063",
+    "name": "ชิโรนะ",
+    "stage": "ซัพพอร์ต",
+    "category": "Trainer",
+    "set": {
+      "id": "S9",
+      "name": "สตาร์เบิร์ท"
+    },
+    "imageUrl": "/PokeCountTracker/card-images/S9/111-100_%E0%B8%8A%E0%B8%B4%E0%B9%82%E0%B8%A3%E0%B8%99%E0%B8%B0.webp",
+    "imageUrlHigh": "/PokeCountTracker/card-images/S9/111-100_%E0%B8%8A%E0%B8%B4%E0%B9%82%E0%B8%A3%E0%B8%99%E0%B8%B0.webp",
+    "collectorNumber": "111-100",
+    "regulationMark": "F",
+    "officialImageUrl": "https://asia.pokemon-card.com/th/card-img/S9_111-100.png",
+    "rarityCode": "HR"
+  },
+  {
+    "id": "TH-SEC-10064",
+    "localId": "TH-SEC-10064",
+    "name": "ไฮเปอร์บอล",
+    "stage": "ไอเท็ม",
+    "category": "Trainer",
+    "set": {
+      "id": "S9",
+      "name": "สตาร์เบิร์ท"
+    },
+    "imageUrl": "/PokeCountTracker/card-images/S9/113-100_%E0%B9%84%E0%B8%AE%E0%B9%80%E0%B8%9B%E0%B8%AD%E0%B8%A3%E0%B9%8C%E0%B8%9A%E0%B8%AD%E0%B8%A5.webp",
+    "imageUrlHigh": "/PokeCountTracker/card-images/S9/113-100_%E0%B9%84%E0%B8%AE%E0%B9%80%E0%B8%9B%E0%B8%AD%E0%B8%A3%E0%B9%8C%E0%B8%9A%E0%B8%AD%E0%B8%A5.webp",
+    "collectorNumber": "113-100",
+    "regulationMark": "F",
+    "officialImageUrl": "https://asia.pokemon-card.com/th/card-img/S9_113-100.png",
+    "rarityCode": "UR"
+  },
+  {
+    "id": "TH-SEC-10065",
+    "localId": "TH-SEC-10065",
+    "name": "เข็มขัดแห่งการเลือก",
+    "stage": "ไอเท็มติดโปเกมอน",
+    "category": "Trainer",
+    "set": {
+      "id": "S9",
+      "name": "สตาร์เบิร์ท"
+    },
+    "imageUrl": "/PokeCountTracker/card-images/S9/114-100_%E0%B9%80%E0%B8%82%E0%B9%87%E0%B8%A1%E0%B8%82%E0%B8%B1%E0%B8%94%E0%B9%81%E0%B8%AB%E0%B9%88%E0%B8%87%E0%B8%81%E0%B8%B2%E0%B8%A3%E0%B9%80%E0%B8%A5%E0%B8%B7%E0%B8%AD%E0%B8%81.webp",
+    "imageUrlHigh": "/PokeCountTracker/card-images/S9/114-100_%E0%B9%80%E0%B8%82%E0%B9%87%E0%B8%A1%E0%B8%82%E0%B8%B1%E0%B8%94%E0%B9%81%E0%B8%AB%E0%B9%88%E0%B8%87%E0%B8%81%E0%B8%B2%E0%B8%A3%E0%B9%80%E0%B8%A5%E0%B8%B7%E0%B8%AD%E0%B8%81.webp",
+    "collectorNumber": "114-100",
+    "regulationMark": "F",
+    "officialImageUrl": "https://asia.pokemon-card.com/th/card-img/S9_114-100.png",
+    "rarityCode": "UR"
+  },
+  {
+    "id": "TH-SEC-10066",
+    "localId": "TH-SEC-10066",
+    "name": "แอ่งภูเขาไฟลาวา",
+    "stage": "สเตเดียม",
+    "category": "Trainer",
+    "set": {
+      "id": "S9",
+      "name": "สตาร์เบิร์ท"
+    },
+    "imageUrl": "/PokeCountTracker/card-images/S9/115-100_%E0%B9%81%E0%B8%AD%E0%B9%88%E0%B8%87%E0%B8%A0%E0%B8%B9%E0%B9%80%E0%B8%82%E0%B8%B2%E0%B9%84%E0%B8%9F%E0%B8%A5%E0%B8%B2%E0%B8%A7%E0%B8%B2.webp",
+    "imageUrlHigh": "/PokeCountTracker/card-images/S9/115-100_%E0%B9%81%E0%B8%AD%E0%B9%88%E0%B8%87%E0%B8%A0%E0%B8%B9%E0%B9%80%E0%B8%82%E0%B8%B2%E0%B9%84%E0%B8%9F%E0%B8%A5%E0%B8%B2%E0%B8%A7%E0%B8%B2.webp",
+    "collectorNumber": "115-100",
+    "regulationMark": "F",
+    "officialImageUrl": "https://asia.pokemon-card.com/th/card-img/S9_115-100.png",
+    "rarityCode": "UR"
+  },
+  {
+    "id": "TH-SEC-10067",
+    "localId": "TH-SEC-10067",
+    "name": "ดับเบิลเทอร์โบเอนเนอร์จี้",
+    "stage": "พิเศษ",
+    "category": "Energy",
+    "set": {
+      "id": "S9",
+      "name": "สตาร์เบิร์ท"
+    },
+    "imageUrl": "/PokeCountTracker/card-images/S9/116-100_%E0%B8%94%E0%B8%B1%E0%B8%9A%E0%B9%80%E0%B8%9A%E0%B8%B4%E0%B8%A5%E0%B9%80%E0%B8%97%E0%B8%AD%E0%B8%A3%E0%B9%8C%E0%B9%82%E0%B8%9A%E0%B9%80%E0%B8%AD%E0%B8%99%E0%B9%80%E0%B8%99%E0%B8%AD%E0%B8%A3%E0%B9%8C%E0%B8%88%E0%B8%B5%E0%B9%89.webp",
+    "imageUrlHigh": "/PokeCountTracker/card-images/S9/116-100_%E0%B8%94%E0%B8%B1%E0%B8%9A%E0%B9%80%E0%B8%9A%E0%B8%B4%E0%B8%A5%E0%B9%80%E0%B8%97%E0%B8%AD%E0%B8%A3%E0%B9%8C%E0%B9%82%E0%B8%9A%E0%B9%80%E0%B8%AD%E0%B8%99%E0%B9%80%E0%B8%99%E0%B8%AD%E0%B8%A3%E0%B9%8C%E0%B8%88%E0%B8%B5%E0%B9%89.webp",
+    "collectorNumber": "116-100",
+    "regulationMark": "F",
+    "officialImageUrl": "https://asia.pokemon-card.com/th/card-img/S9_116-100.png",
+    "rarityCode": "UR"
+  },
+  {
+    "id": "TH-SEC-10068",
+    "localId": "TH-SEC-10068",
+    "name": "ดีอัลกา ร่างดั้งเดิมVSTAR",
+    "stage": "VSTAR",
+    "category": "Pokemon",
+    "hp": 280,
+    "types": [
+      "Metal"
+    ],
+    "set": {
+      "id": "S10D",
+      "name": "เจ้าแห่งกาลเวลา"
+    },
+    "imageUrl": "/PokeCountTracker/card-images/S10D/072-067_%E0%B8%94%E0%B8%B5%E0%B8%AD%E0%B8%B1%E0%B8%A5%E0%B8%81%E0%B8%B2%20%E0%B8%A3%E0%B9%88%E0%B8%B2%E0%B8%87%E0%B8%94%E0%B8%B1%E0%B9%89%E0%B8%87%E0%B9%80%E0%B8%94%E0%B8%B4%E0%B8%A1VSTAR.webp",
+    "imageUrlHigh": "/PokeCountTracker/card-images/S10D/072-067_%E0%B8%94%E0%B8%B5%E0%B8%AD%E0%B8%B1%E0%B8%A5%E0%B8%81%E0%B8%B2%20%E0%B8%A3%E0%B9%88%E0%B8%B2%E0%B8%87%E0%B8%94%E0%B8%B1%E0%B9%89%E0%B8%87%E0%B9%80%E0%B8%94%E0%B8%B4%E0%B8%A1VSTAR.webp",
+    "collectorNumber": "072-067",
+    "regulationMark": "F",
+    "officialImageUrl": "https://asia.pokemon-card.com/th/card-img/S10D_072-067.png",
+    "rarityCode": "HR"
+  },
+  {
+    "id": "TH-SEC-10069",
+    "localId": "TH-SEC-10069",
+    "name": "ไค",
+    "stage": "ซัพพอร์ต",
+    "category": "Trainer",
+    "set": {
+      "id": "S10D",
+      "name": "เจ้าแห่งกาลเวลา"
+    },
+    "imageUrl": "/PokeCountTracker/card-images/S10D/074-067_%E0%B9%84%E0%B8%84.webp",
+    "imageUrlHigh": "/PokeCountTracker/card-images/S10D/074-067_%E0%B9%84%E0%B8%84.webp",
+    "collectorNumber": "074-067",
+    "regulationMark": "F",
+    "officialImageUrl": "https://asia.pokemon-card.com/th/card-img/S10D_074-067.png",
+    "rarityCode": "HR"
+  },
+  {
+    "id": "TH-SEC-10070",
+    "localId": "TH-SEC-10070",
+    "name": "รองเท้าเดินป่า",
+    "stage": "ไอเท็ม",
+    "category": "Trainer",
+    "set": {
+      "id": "S10D",
+      "name": "เจ้าแห่งกาลเวลา"
+    },
+    "imageUrl": "/PokeCountTracker/card-images/S10D/075-067_%E0%B8%A3%E0%B8%AD%E0%B8%87%E0%B9%80%E0%B8%97%E0%B9%89%E0%B8%B2%E0%B9%80%E0%B8%94%E0%B8%B4%E0%B8%99%E0%B8%9B%E0%B9%88%E0%B8%B2.webp",
+    "imageUrlHigh": "/PokeCountTracker/card-images/S10D/075-067_%E0%B8%A3%E0%B8%AD%E0%B8%87%E0%B9%80%E0%B8%97%E0%B9%89%E0%B8%B2%E0%B9%80%E0%B8%94%E0%B8%B4%E0%B8%99%E0%B8%9B%E0%B9%88%E0%B8%B2.webp",
+    "collectorNumber": "075-067",
+    "regulationMark": "F",
+    "officialImageUrl": "https://asia.pokemon-card.com/th/card-img/S10D_075-067.png",
+    "rarityCode": "UR"
+  },
+  {
+    "id": "TH-SEC-10071",
+    "localId": "TH-SEC-10071",
+    "name": "วิหารซินโอ",
+    "stage": "สเตเดียม",
+    "category": "Trainer",
+    "set": {
+      "id": "S10D",
+      "name": "เจ้าแห่งกาลเวลา"
+    },
+    "imageUrl": "/PokeCountTracker/card-images/S10D/076-067_%E0%B8%A7%E0%B8%B4%E0%B8%AB%E0%B8%B2%E0%B8%A3%E0%B8%8B%E0%B8%B4%E0%B8%99%E0%B9%82%E0%B8%AD.webp",
+    "imageUrlHigh": "/PokeCountTracker/card-images/S10D/076-067_%E0%B8%A7%E0%B8%B4%E0%B8%AB%E0%B8%B2%E0%B8%A3%E0%B8%8B%E0%B8%B4%E0%B8%99%E0%B9%82%E0%B8%AD.webp",
+    "collectorNumber": "076-067",
+    "regulationMark": "F",
+    "officialImageUrl": "https://asia.pokemon-card.com/th/card-img/S10D_076-067.png",
+    "rarityCode": "UR"
+  },
+  {
+    "id": "TH-SEC-10072",
+    "localId": "TH-SEC-10072",
+    "name": "พัลเกีย ร่างดั้งเดิมVSTAR",
+    "stage": "VSTAR",
+    "category": "Pokemon",
+    "hp": 280,
+    "types": [
+      "Water"
+    ],
+    "set": {
+      "id": "S10P",
+      "name": "จอมมายาผ่ามิติ"
+    },
+    "imageUrl": "/PokeCountTracker/card-images/S10P/072-067_%E0%B8%9E%E0%B8%B1%E0%B8%A5%E0%B9%80%E0%B8%81%E0%B8%B5%E0%B8%A2%20%E0%B8%A3%E0%B9%88%E0%B8%B2%E0%B8%87%E0%B8%94%E0%B8%B1%E0%B9%89%E0%B8%87%E0%B9%80%E0%B8%94%E0%B8%B4%E0%B8%A1VSTAR.webp",
+    "imageUrlHigh": "/PokeCountTracker/card-images/S10P/072-067_%E0%B8%9E%E0%B8%B1%E0%B8%A5%E0%B9%80%E0%B8%81%E0%B8%B5%E0%B8%A2%20%E0%B8%A3%E0%B9%88%E0%B8%B2%E0%B8%87%E0%B8%94%E0%B8%B1%E0%B9%89%E0%B8%87%E0%B9%80%E0%B8%94%E0%B8%B4%E0%B8%A1VSTAR.webp",
+    "collectorNumber": "072-067",
+    "regulationMark": "F",
+    "officialImageUrl": "https://asia.pokemon-card.com/th/card-img/S10P_072-067.png",
+    "rarityCode": "HR"
+  },
+  {
+    "id": "TH-SEC-10073",
+    "localId": "TH-SEC-10073",
+    "name": "ตาข่ายเก็บกู้",
+    "stage": "ไอเท็ม",
+    "category": "Trainer",
+    "set": {
+      "id": "S10P",
+      "name": "จอมมายาผ่ามิติ"
+    },
+    "imageUrl": "/PokeCountTracker/card-images/S10P/075-067_%E0%B8%95%E0%B8%B2%E0%B8%82%E0%B9%88%E0%B8%B2%E0%B8%A2%E0%B9%80%E0%B8%81%E0%B9%87%E0%B8%9A%E0%B8%81%E0%B8%B9%E0%B9%89.webp",
+    "imageUrlHigh": "/PokeCountTracker/card-images/S10P/075-067_%E0%B8%95%E0%B8%B2%E0%B8%82%E0%B9%88%E0%B8%B2%E0%B8%A2%E0%B9%80%E0%B8%81%E0%B9%87%E0%B8%9A%E0%B8%81%E0%B8%B9%E0%B9%89.webp",
+    "collectorNumber": "075-067",
+    "regulationMark": "F",
+    "officialImageUrl": "https://asia.pokemon-card.com/th/card-img/S10P_075-067.png",
+    "rarityCode": "UR"
+  },
+  {
+    "id": "TH-SEC-10074",
+    "localId": "TH-SEC-10074",
+    "name": "กิราตินาVSTAR",
+    "stage": "VSTAR",
+    "category": "Pokemon",
+    "hp": 280,
+    "types": [
+      "Dragon"
+    ],
+    "set": {
+      "id": "S11",
+      "name": "ลอสต์เวิลด์"
+    },
+    "imageUrl": "/PokeCountTracker/card-images/S11/109-100_%E0%B8%81%E0%B8%B4%E0%B8%A3%E0%B8%B2%E0%B8%95%E0%B8%B4%E0%B8%99%E0%B8%B2VSTAR.webp",
+    "imageUrlHigh": "/PokeCountTracker/card-images/S11/109-100_%E0%B8%81%E0%B8%B4%E0%B8%A3%E0%B8%B2%E0%B8%95%E0%B8%B4%E0%B8%99%E0%B8%B2VSTAR.webp",
+    "collectorNumber": "109-100",
+    "regulationMark": "F",
+    "officialImageUrl": "https://asia.pokemon-card.com/th/card-img/S11_109-100.png",
+    "rarityCode": "HR"
+  },
+  {
+    "id": "TH-SEC-10075",
+    "localId": "TH-SEC-10075",
+    "name": "การทดลองของอาโครมา",
+    "stage": "ซัพพอร์ต",
+    "category": "Trainer",
+    "set": {
+      "id": "S11",
+      "name": "ลอสต์เวิลด์"
+    },
+    "imageUrl": "/PokeCountTracker/card-images/S11/111-100_%E0%B8%81%E0%B8%B2%E0%B8%A3%E0%B8%97%E0%B8%94%E0%B8%A5%E0%B8%AD%E0%B8%87%E0%B8%82%E0%B8%AD%E0%B8%87%E0%B8%AD%E0%B8%B2%E0%B9%82%E0%B8%84%E0%B8%A3%E0%B8%A1%E0%B8%B2.webp",
+    "imageUrlHigh": "/PokeCountTracker/card-images/S11/111-100_%E0%B8%81%E0%B8%B2%E0%B8%A3%E0%B8%97%E0%B8%94%E0%B8%A5%E0%B8%AD%E0%B8%87%E0%B8%82%E0%B8%AD%E0%B8%87%E0%B8%AD%E0%B8%B2%E0%B9%82%E0%B8%84%E0%B8%A3%E0%B8%A1%E0%B8%B2.webp",
+    "collectorNumber": "111-100",
+    "regulationMark": "F",
+    "officialImageUrl": "https://asia.pokemon-card.com/th/card-img/S11_111-100.png",
+    "rarityCode": "HR"
+  },
+  {
+    "id": "TH-SEC-10076",
+    "localId": "TH-SEC-10076",
+    "name": "ลอสต์สวีปเปอร์",
+    "stage": "ไอเท็ม",
+    "category": "Trainer",
+    "set": {
+      "id": "S11",
+      "name": "ลอสต์เวิลด์"
+    },
+    "imageUrl": "/PokeCountTracker/card-images/S11/113-100_%E0%B8%A5%E0%B8%AD%E0%B8%AA%E0%B8%95%E0%B9%8C%E0%B8%AA%E0%B8%A7%E0%B8%B5%E0%B8%9B%E0%B9%80%E0%B8%9B%E0%B8%AD%E0%B8%A3%E0%B9%8C.webp",
+    "imageUrlHigh": "/PokeCountTracker/card-images/S11/113-100_%E0%B8%A5%E0%B8%AD%E0%B8%AA%E0%B8%95%E0%B9%8C%E0%B8%AA%E0%B8%A7%E0%B8%B5%E0%B8%9B%E0%B9%80%E0%B8%9B%E0%B8%AD%E0%B8%A3%E0%B9%8C.webp",
+    "collectorNumber": "113-100",
+    "regulationMark": "F",
+    "officialImageUrl": "https://asia.pokemon-card.com/th/card-img/S11_113-100.png",
+    "rarityCode": "UR"
+  },
+  {
+    "id": "TH-SEC-10077",
+    "localId": "TH-SEC-10077",
+    "name": "เกตมายา",
+    "stage": "ไอเท็ม",
+    "category": "Trainer",
+    "set": {
+      "id": "S11",
+      "name": "ลอสต์เวิลด์"
+    },
+    "imageUrl": "/PokeCountTracker/card-images/S11/114-100_%E0%B9%80%E0%B8%81%E0%B8%95%E0%B8%A1%E0%B8%B2%E0%B8%A2%E0%B8%B2.webp",
+    "imageUrlHigh": "/PokeCountTracker/card-images/S11/114-100_%E0%B9%80%E0%B8%81%E0%B8%95%E0%B8%A1%E0%B8%B2%E0%B8%A2%E0%B8%B2.webp",
+    "collectorNumber": "114-100",
+    "regulationMark": "F",
+    "officialImageUrl": "https://asia.pokemon-card.com/th/card-img/S11_114-100.png",
+    "rarityCode": "UR"
+  },
+  {
+    "id": "TH-SEC-10078",
+    "localId": "TH-SEC-10078",
+    "name": "กิราตินาVSTAR",
+    "stage": "VSTAR",
+    "category": "Pokemon",
+    "hp": 280,
+    "types": [
+      "Dragon"
+    ],
+    "set": {
+      "id": "S11",
+      "name": "ลอสต์เวิลด์"
+    },
+    "imageUrl": "/PokeCountTracker/card-images/S11/115-100_%E0%B8%81%E0%B8%B4%E0%B8%A3%E0%B8%B2%E0%B8%95%E0%B8%B4%E0%B8%99%E0%B8%B2VSTAR.webp",
+    "imageUrlHigh": "/PokeCountTracker/card-images/S11/115-100_%E0%B8%81%E0%B8%B4%E0%B8%A3%E0%B8%B2%E0%B8%95%E0%B8%B4%E0%B8%99%E0%B8%B2VSTAR.webp",
+    "collectorNumber": "115-100",
+    "regulationMark": "F",
+    "officialImageUrl": "https://asia.pokemon-card.com/th/card-img/S11_115-100.png",
+    "rarityCode": "UR"
+  },
+  {
+    "id": "TH-SEC-10079",
+    "localId": "TH-SEC-10079",
+    "name": "เซเรนา",
+    "stage": "ซัพพอร์ต",
+    "category": "Trainer",
+    "set": {
+      "id": "S11a",
+      "name": "อาร์คานาแห่งประกายแสง"
+    },
+    "imageUrl": "/PokeCountTracker/card-images/S11a/077-068_%E0%B9%80%E0%B8%8B%E0%B9%80%E0%B8%A3%E0%B8%99%E0%B8%B2.webp",
+    "imageUrlHigh": "/PokeCountTracker/card-images/S11a/077-068_%E0%B9%80%E0%B8%8B%E0%B9%80%E0%B8%A3%E0%B8%99%E0%B8%B2.webp",
+    "collectorNumber": "077-068",
+    "regulationMark": "F",
+    "officialImageUrl": "https://asia.pokemon-card.com/th/card-img/S11a_077-068.png",
+    "rarityCode": "HR"
+  },
+  {
+    "id": "TH-SEC-10080",
+    "localId": "TH-SEC-10080",
+    "name": "สับเปลี่ยนเอนเนอร์จี้",
+    "stage": "ไอเท็ม",
+    "category": "Trainer",
+    "set": {
+      "id": "S11a",
+      "name": "อาร์คานาแห่งประกายแสง"
+    },
+    "imageUrl": "/PokeCountTracker/card-images/S11a/079-068_%E0%B8%AA%E0%B8%B1%E0%B8%9A%E0%B9%80%E0%B8%9B%E0%B8%A5%E0%B8%B5%E0%B9%88%E0%B8%A2%E0%B8%99%E0%B9%80%E0%B8%AD%E0%B8%99%E0%B9%80%E0%B8%99%E0%B8%AD%E0%B8%A3%E0%B9%8C%E0%B8%88%E0%B8%B5%E0%B9%89.webp",
+    "imageUrlHigh": "/PokeCountTracker/card-images/S11a/079-068_%E0%B8%AA%E0%B8%B1%E0%B8%9A%E0%B9%80%E0%B8%9B%E0%B8%A5%E0%B8%B5%E0%B9%88%E0%B8%A2%E0%B8%99%E0%B9%80%E0%B8%AD%E0%B8%99%E0%B9%80%E0%B8%99%E0%B8%AD%E0%B8%A3%E0%B9%8C%E0%B8%88%E0%B8%B5%E0%B9%89.webp",
+    "collectorNumber": "079-068",
+    "regulationMark": "F",
+    "officialImageUrl": "https://asia.pokemon-card.com/th/card-img/S11a_079-068.png",
+    "rarityCode": "UR"
+  },
+  {
+    "id": "TH-SEC-10081",
+    "localId": "TH-SEC-10081",
+    "name": "ลูเกียVSTAR",
+    "stage": "VSTAR",
+    "category": "Pokemon",
+    "hp": 280,
+    "types": [
+      "Colorless"
+    ],
+    "set": {
+      "id": "S12",
+      "name": "ปฐมบทแห่งยุคใหม่"
+    },
+    "imageUrl": "/PokeCountTracker/card-images/S12/105-098_%E0%B8%A5%E0%B8%B9%E0%B9%80%E0%B8%81%E0%B8%B5%E0%B8%A2VSTAR.webp",
+    "imageUrlHigh": "/PokeCountTracker/card-images/S12/105-098_%E0%B8%A5%E0%B8%B9%E0%B9%80%E0%B8%81%E0%B8%B5%E0%B8%A2VSTAR.webp",
+    "collectorNumber": "105-098",
+    "regulationMark": "F",
+    "officialImageUrl": "https://asia.pokemon-card.com/th/card-img/S12_105-098.png",
+    "rarityCode": "HR"
+  },
+  {
+    "id": "TH-SEC-10082",
+    "localId": "TH-SEC-10082",
+    "name": "คนงาน",
+    "stage": "ซัพพอร์ต",
+    "category": "Trainer",
+    "set": {
+      "id": "S12",
+      "name": "ปฐมบทแห่งยุคใหม่"
+    },
+    "imageUrl": "/PokeCountTracker/card-images/S12/108-098_%E0%B8%84%E0%B8%99%E0%B8%87%E0%B8%B2%E0%B8%99.webp",
+    "imageUrlHigh": "/PokeCountTracker/card-images/S12/108-098_%E0%B8%84%E0%B8%99%E0%B8%87%E0%B8%B2%E0%B8%99.webp",
+    "collectorNumber": "108-098",
+    "regulationMark": "F",
+    "officialImageUrl": "https://asia.pokemon-card.com/th/card-img/S12_108-098.png",
+    "rarityCode": "HR"
+  },
+  {
+    "id": "TH-SEC-10083",
+    "localId": "TH-SEC-10083",
+    "name": "เสื้อคลุมพรางใบไม้",
+    "stage": "ไอเท็มติดโปเกมอน",
+    "category": "Trainer",
+    "set": {
+      "id": "S12",
+      "name": "ปฐมบทแห่งยุคใหม่"
+    },
+    "imageUrl": "/PokeCountTracker/card-images/S12/109-098_%E0%B9%80%E0%B8%AA%E0%B8%B7%E0%B9%89%E0%B8%AD%E0%B8%84%E0%B8%A5%E0%B8%B8%E0%B8%A1%E0%B8%9E%E0%B8%A3%E0%B8%B2%E0%B8%87%E0%B9%83%E0%B8%9A%E0%B9%84%E0%B8%A1%E0%B9%89.webp",
+    "imageUrlHigh": "/PokeCountTracker/card-images/S12/109-098_%E0%B9%80%E0%B8%AA%E0%B8%B7%E0%B9%89%E0%B8%AD%E0%B8%84%E0%B8%A5%E0%B8%B8%E0%B8%A1%E0%B8%9E%E0%B8%A3%E0%B8%B2%E0%B8%87%E0%B9%83%E0%B8%9A%E0%B9%84%E0%B8%A1%E0%B9%89.webp",
+    "collectorNumber": "109-098",
+    "regulationMark": "F",
+    "officialImageUrl": "https://asia.pokemon-card.com/th/card-img/S12_109-098.png",
+    "rarityCode": "UR"
+  },
+  {
+    "id": "TH-SEC-10084",
+    "localId": "TH-SEC-10084",
+    "name": "ลูเกียVSTAR",
+    "stage": "VSTAR",
+    "category": "Pokemon",
+    "hp": 280,
+    "types": [
+      "Colorless"
+    ],
+    "set": {
+      "id": "S12",
+      "name": "ปฐมบทแห่งยุคใหม่"
+    },
+    "imageUrl": "/PokeCountTracker/card-images/S12/111-098_%E0%B8%A5%E0%B8%B9%E0%B9%80%E0%B8%81%E0%B8%B5%E0%B8%A2VSTAR.webp",
+    "imageUrlHigh": "/PokeCountTracker/card-images/S12/111-098_%E0%B8%A5%E0%B8%B9%E0%B9%80%E0%B8%81%E0%B8%B5%E0%B8%A2VSTAR.webp",
+    "collectorNumber": "111-098",
+    "regulationMark": "F",
+    "officialImageUrl": "https://asia.pokemon-card.com/th/card-img/S12_111-098.png",
+    "rarityCode": "UR"
+  },
+  {
+    "id": "TH-SEC-10085",
+    "localId": "TH-SEC-10085",
+    "name": "ดีอัลกา ร่างดั้งเดิมVSTAR",
+    "stage": "VSTAR",
+    "category": "Pokemon",
+    "hp": 280,
+    "types": [
+      "Metal"
+    ],
+    "set": {
+      "id": "S12a",
+      "name": "จักรวาลแห่ง VSTAR"
+    },
+    "imageUrl": "/PokeCountTracker/card-images/S12a/251-172_%E0%B8%94%E0%B8%B5%E0%B8%AD%E0%B8%B1%E0%B8%A5%E0%B8%81%E0%B8%B2%20%E0%B8%A3%E0%B9%88%E0%B8%B2%E0%B8%87%E0%B8%94%E0%B8%B1%E0%B9%89%E0%B8%87%E0%B9%80%E0%B8%94%E0%B8%B4%E0%B8%A1VSTAR.webp",
+    "imageUrlHigh": "/PokeCountTracker/card-images/S12a/251-172_%E0%B8%94%E0%B8%B5%E0%B8%AD%E0%B8%B1%E0%B8%A5%E0%B8%81%E0%B8%B2%20%E0%B8%A3%E0%B9%88%E0%B8%B2%E0%B8%87%E0%B8%94%E0%B8%B1%E0%B9%89%E0%B8%87%E0%B9%80%E0%B8%94%E0%B8%B4%E0%B8%A1VSTAR.webp",
+    "collectorNumber": "251-172",
+    "regulationMark": "F",
+    "officialImageUrl": "https://asia.pokemon-card.com/th/card-img/S12a_251-172.png",
+    "rarityCode": "UR"
+  },
+  {
+    "id": "TH-SEC-10086",
+    "localId": "TH-SEC-10086",
+    "name": "พัลเกีย ร่างดั้งเดิมVSTAR",
+    "stage": "VSTAR",
+    "category": "Pokemon",
+    "hp": 280,
+    "types": [
+      "Water"
+    ],
+    "set": {
+      "id": "S12a",
+      "name": "จักรวาลแห่ง VSTAR"
+    },
+    "imageUrl": "/PokeCountTracker/card-images/S12a/252-172_%E0%B8%9E%E0%B8%B1%E0%B8%A5%E0%B9%80%E0%B8%81%E0%B8%B5%E0%B8%A2%20%E0%B8%A3%E0%B9%88%E0%B8%B2%E0%B8%87%E0%B8%94%E0%B8%B1%E0%B9%89%E0%B8%87%E0%B9%80%E0%B8%94%E0%B8%B4%E0%B8%A1VSTAR.webp",
+    "imageUrlHigh": "/PokeCountTracker/card-images/S12a/252-172_%E0%B8%9E%E0%B8%B1%E0%B8%A5%E0%B9%80%E0%B8%81%E0%B8%B5%E0%B8%A2%20%E0%B8%A3%E0%B9%88%E0%B8%B2%E0%B8%87%E0%B8%94%E0%B8%B1%E0%B9%89%E0%B8%87%E0%B9%80%E0%B8%94%E0%B8%B4%E0%B8%A1VSTAR.webp",
+    "collectorNumber": "252-172",
+    "regulationMark": "F",
+    "officialImageUrl": "https://asia.pokemon-card.com/th/card-img/S12a_252-172.png",
+    "rarityCode": "UR"
+  },
+  {
+    "id": "TH-SEC-10087",
+    "localId": "TH-SEC-10087",
+    "name": "กิราตินาVSTAR",
+    "stage": "VSTAR",
+    "category": "Pokemon",
+    "hp": 280,
+    "types": [
+      "Dragon"
+    ],
+    "set": {
+      "id": "S12a",
+      "name": "จักรวาลแห่ง VSTAR"
+    },
+    "imageUrl": "/PokeCountTracker/card-images/S12a/253-172_%E0%B8%81%E0%B8%B4%E0%B8%A3%E0%B8%B2%E0%B8%95%E0%B8%B4%E0%B8%99%E0%B8%B2VSTAR.webp",
+    "imageUrlHigh": "/PokeCountTracker/card-images/S12a/253-172_%E0%B8%81%E0%B8%B4%E0%B8%A3%E0%B8%B2%E0%B8%95%E0%B8%B4%E0%B8%99%E0%B8%B2VSTAR.webp",
+    "collectorNumber": "253-172",
+    "regulationMark": "F",
+    "officialImageUrl": "https://asia.pokemon-card.com/th/card-img/S12a_253-172.png",
+    "rarityCode": "UR"
+  },
+  {
+    "id": "TH-SEC-10088",
+    "localId": "TH-SEC-10088",
+    "name": "อาร์เซอุสVSTAR",
+    "stage": "VSTAR",
+    "category": "Pokemon",
+    "hp": 280,
+    "types": [
+      "Colorless"
+    ],
+    "set": {
+      "id": "S12a",
+      "name": "จักรวาลแห่ง VSTAR"
+    },
+    "imageUrl": "/PokeCountTracker/card-images/S12a/254-172_%E0%B8%AD%E0%B8%B2%E0%B8%A3%E0%B9%8C%E0%B9%80%E0%B8%8B%E0%B8%AD%E0%B8%B8%E0%B8%AAVSTAR.webp",
+    "imageUrlHigh": "/PokeCountTracker/card-images/S12a/254-172_%E0%B8%AD%E0%B8%B2%E0%B8%A3%E0%B9%8C%E0%B9%80%E0%B8%8B%E0%B8%AD%E0%B8%B8%E0%B8%AAVSTAR.webp",
+    "collectorNumber": "254-172",
+    "regulationMark": "F",
+    "officialImageUrl": "https://asia.pokemon-card.com/th/card-img/S12a_254-172.png",
+    "rarityCode": "UR"
   }
 ]

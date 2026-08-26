@@ -9,6 +9,7 @@ import { DeckCoverPickerModal } from './DeckCoverPickerModal';
 import { RARITY_CLASSES } from '../collection/CollectionFilterBar';
 import { SearchableSetSelect } from '../common/SearchableSetSelect';
 import { getCardRarityClass } from '../../utils/rarity';
+import { matchesCardSearch } from '../../utils/searchHelpers';
 import pokemonCardData from '../../data/pokemonNames.json';
 import type { Deck } from '../../types/deck';
 
@@ -91,10 +92,7 @@ export function DeckEditor({ deck, onBackToDecks }: Props) {
     return (pokemonCardData as any[]).filter((c) => {
       // Search
       if (sTerm) {
-        const nameMatch = (c.name || '').toLowerCase().includes(sTerm);
-        const colMatch = (c.collectorNumber || c.localId || '').toLowerCase().includes(sTerm);
-        const setMatch = (c.set?.name || '').toLowerCase().includes(sTerm) || (c.set?.id || '').toLowerCase().includes(sTerm);
-        if (!nameMatch && !colMatch && !setMatch) return false;
+        if (!matchesCardSearch(c, search)) return false;
       }
 
       // Set

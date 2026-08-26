@@ -2,6 +2,7 @@ import { useMemo, useEffect } from 'react';
 import { createPortal } from 'react-dom';
 import { useCollectionStore } from '../../store/collectionStore';
 import { resolveCardImageUrl, handleCardImageError } from '../../utils/cardImage';
+import { getEnglishCardName } from '../../utils/searchHelpers';
 import type { CardVariantKey, CardCondition } from '../../types/collection';
 
 interface Props {
@@ -208,7 +209,14 @@ export function CardCollectionModal({ card, onClose }: Props) {
                     </span>
                   )}
                 </div>
-                <h2 className="text-lg sm:text-xl font-black text-white mt-2 leading-snug">{card.name}</h2>
+                <h2 className="text-lg sm:text-xl font-black text-white mt-2 leading-snug">
+                  {card.name}
+                  {getEnglishCardName(card) && (
+                    <span className="ml-2 text-sm sm:text-base font-semibold text-slate-400 font-sans">
+                      ({getEnglishCardName(card)})
+                    </span>
+                  )}
+                </h2>
               </div>
 
               <div className="flex items-center gap-2 shrink-0">

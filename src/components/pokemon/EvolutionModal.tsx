@@ -6,6 +6,7 @@ import { ENERGY_MAP } from '../../constants/energyTypes';
 import type { EnergyType, PokemonSlot as PokemonSlotType } from '../../types/game';
 import { CardImagePreviewModal } from './CardImagePreviewModal';
 import { resolveCardImageUrl, handleCardImageError } from '../../utils/cardImage';
+import { matchesCardSearch } from '../../utils/searchHelpers';
 
 const evoMap = evoDataRaw as Record<string, string[]>;
 
@@ -106,12 +107,7 @@ export function EvolutionModal({ pokemon, onSelectEvolution, onClose }: Props) {
 
   const filteredCards = useMemo(() => {
     if (!search.trim()) return availableEvolutions;
-    const q = search.trim().toLowerCase();
-    return availableEvolutions.filter(c =>
-      (c.name && c.name.toLowerCase().includes(q)) ||
-      (c.stage && c.stage.toLowerCase().includes(q)) ||
-      (c.set?.id && c.set.id.toLowerCase().includes(q))
-    );
+    return availableEvolutions.filter(c => matchesCardSearch(c, search));
   }, [availableEvolutions, search]);
 
   const handleCardClick = (card: any) => {

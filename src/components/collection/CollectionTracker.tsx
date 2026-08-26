@@ -11,6 +11,7 @@ import type {
 } from '../../types/collection';
 
 import { getCardRarityClass } from '../../utils/rarity';
+import { matchesCardSearch } from '../../utils/searchHelpers';
 export { getCardRarityClass };
 
 export function CollectionTracker() {
@@ -198,14 +199,9 @@ export function CollectionTracker() {
         if (!types.includes(selectedType)) return false;
       }
 
-      // Search Query (Card Name, Collector Number, Set ID, Set Name)
+      // Search Query (Card Name EN/TH, Collector Number, Set ID, Set Name)
       if (search.trim()) {
-        const q = search.trim().toLowerCase();
-        const nameMatch = (card.name || '').toLowerCase().includes(q);
-        const numMatch = (card.collectorNumber || card.localId || '').toLowerCase().includes(q);
-        const setIdMatch = (card.set?.id || '').toLowerCase().includes(q);
-        const setNameMatch = (card.set?.name || '').toLowerCase().includes(q);
-        if (!nameMatch && !numMatch && !setIdMatch && !setNameMatch) return false;
+        if (!matchesCardSearch(card, search)) return false;
       }
 
       return true;

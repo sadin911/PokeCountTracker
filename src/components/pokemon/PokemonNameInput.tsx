@@ -2,6 +2,7 @@ import { useState, useRef, useEffect, useCallback } from 'react';
 import rawData from '../../data/pokemonNames.json';
 import { CardImagePreviewModal } from './CardImagePreviewModal';
 import { resolveCardImageUrl, handleCardImageError } from '../../utils/cardImage';
+import { matchesCardSearch, getEnglishCardName } from '../../utils/searchHelpers';
 
 interface CardEntry {
   id?: string;
@@ -47,7 +48,7 @@ export function PokemonNameInput({
 
   const suggestions = value.trim().length >= 1
     ? pokemonData
-        .filter(e => e.name.toLowerCase().includes(value.toLowerCase()))
+        .filter(e => matchesCardSearch(e, value))
         .slice(0, MAX_SUGGESTIONS)
     : [];
 
@@ -136,7 +137,14 @@ export function PokemonNameInput({
                   onMouseDown={() => select(entry)}
                   className="flex-1 min-w-0 flex flex-col text-left"
                 >
-                  <span className="font-medium truncate">{entry.name}</span>
+                  <div className="flex items-center gap-1.5 truncate">
+                    <span className="font-medium truncate">{entry.name}</span>
+                    {getEnglishCardName(entry) && (
+                      <span className="text-[11px] text-gray-400 font-normal truncate">
+                        ({getEnglishCardName(entry)})
+                      </span>
+                    )}
+                  </div>
                   {entry.set?.name && (
                     <span className="text-[11px] text-gray-400 truncate">
                       {entry.set.name}

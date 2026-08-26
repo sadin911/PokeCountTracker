@@ -1,56 +1,95 @@
-// Exact set breakdown specifications based on official Pokemon TCG SV / MA Asian / Thai expansion lists:
-export const SET_RULES: Record<string, { ar?: [number, number]; sr?: [number, number]; sar?: [number, number]; ur?: [number, number]; s?: [number, number]; ssr?: [number, number] }> = {
-  // SV1S (Scarlet ex - Total 108): 1-78 Base, 79-90 AR (12), 91-100 SR (10), 101-105 SAR (5), 106-108 UR (3)
+// Exact set breakdown specifications based on official Pokemon TCG SV / SWSH / MA Asian / Thai expansion lists:
+export const SET_RULES: Record<
+  string,
+  {
+    ar?: [number, number];
+    sr?: [number, number];
+    sar?: [number, number];
+    ur?: [number, number];
+    hr?: [number, number];
+    s?: [number, number];
+    ssr?: [number, number];
+    chr?: [number, number];
+    csr?: [number, number];
+  }
+> = {
+  // --- Sword & Shield Era Sets ---
+  // SC1a (Base 154): 155-166 SR, 167-172 HR, 173-178 UR
+  SC1a: { sr: [155, 166], hr: [167, 172], ur: [173, 178] },
+  // SC1b (Base 153): 154-163 SR, 164-166 HR, 167-173 UR
+  SC1b: { sr: [154, 163], hr: [164, 166], ur: [167, 173] },
+  // SC3a / SC3b (Shiny Star V - Base 159): 160-250 S/SSR, 251-260 UR
+  SC3a: { s: [160, 240], ssr: [241, 250], ur: [251, 260] },
+  SC3b: { s: [160, 240], ssr: [241, 250], ur: [251, 260] },
+  // S5I (Single Strike - Base 70): 71-76 SR, 77-80 HR, 81-83 UR
+  S5I: { sr: [71, 76], hr: [77, 80], ur: [81, 83] },
+  // S5R (Rapid Strike - Base 70): 71-76 SR, 77-80 HR, 81-83 UR
+  S5R: { sr: [71, 76], hr: [77, 80], ur: [81, 83] },
+  // S5a (Peerless Fighters - Base 70): 71-78 SR, 79-80 HR, 81-83 UR
+  S5a: { sr: [71, 78], hr: [79, 80], ur: [81, 83] },
+  // S6H (Silver Lance - Base 70): 71-78 SR, 79-82 HR, 83-87 UR
+  S6H: { sr: [71, 78], hr: [79, 82], ur: [83, 87] },
+  // S6K (Jet-Black Spirit - Base 70): 71-78 SR, 79-82 HR, 83-86 UR
+  S6K: { sr: [71, 78], hr: [79, 82], ur: [83, 86] },
+  // S6a (Eevee Heroes - Base 69): 70-84 SR, 85-93 HR, 94-96 UR
+  S6a: { sr: [70, 84], hr: [85, 93], ur: [94, 96] },
+  // S7D (Skyscraping Perfection - Base 67): 68-73 SR, 74-77 HR, 78-81 UR
+  S7D: { sr: [68, 73], hr: [74, 77], ur: [78, 81] },
+  // S7R (Blue Sky Stream - Base 67): 68-75 SR, 76-80 HR, 81-83 UR
+  S7R: { sr: [68, 75], hr: [76, 80], ur: [81, 83] },
+  // S8 (Fusion Arts - Base 100): 101-108 SR, 109-111 HR, 112-114 UR
+  S8: { sr: [101, 108], hr: [109, 111], ur: [112, 114] },
+  // S8b (VMAX Climax - Base 184): 185-230 CHR, 231-270 CSR, 271-280 UR
+  S8b: { chr: [185, 230], csr: [231, 270], ur: [271, 280] },
+  // S9 (Star Birth - Base 100): 101-108 SR, 109-112 HR, 113-116 UR
+  S9: { sr: [101, 108], hr: [109, 112], ur: [113, 116] },
+  // S9a (Battle Region - Base 67): 68-76 SR, 77-80 HR, 81-84 UR
+  S9a: { sr: [68, 76], hr: [77, 80], ur: [81, 84] },
+  // S10D (Time Gazer - Base 67): 68-71 SR, 72-74 HR, 75-76 UR
+  S10D: { sr: [68, 71], hr: [72, 74], ur: [75, 76] },
+  // S10P (Space Juggler - Base 67): 68-71 SR, 72-74 HR, 75-76 UR
+  S10P: { sr: [68, 71], hr: [72, 74], ur: [75, 76] },
+  // S10a (Dark Phantasma - Base 71): 72-79 SR, 80-83 HR, 84-86 UR
+  S10a: { sr: [72, 79], hr: [80, 83], ur: [84, 86] },
+  // S10b (Pokemon GO - Base 79): 80-84 SR, 85-87 HR, 88-90 UR
+  S10b: { sr: [80, 84], hr: [85, 87], ur: [88, 90] },
+  // S11 (Lost Abyss - Base 100): 101-108 SR, 109-112 HR, 113-115 UR
+  S11: { sr: [101, 108], hr: [109, 112], ur: [113, 115] },
+  // S11a (Incandescent Arcana - Base 68): 69-74 SR, 75-78 HR, 79-81 UR
+  S11a: { sr: [69, 74], hr: [75, 78], ur: [79, 81] },
+  // S12 (Paradigm Trigger - Base 98): 99-104 SR, 105-108 HR, 109-111 UR
+  S12: { sr: [99, 104], hr: [105, 108], ur: [109, 111] },
+  // S12a (VSTAR Universe - Base 172): 173-210 AR, 211-250 SAR, 251-254 UR
+  S12a: { ar: [173, 210], sar: [211, 250], ur: [251, 254] },
+
+  // --- Scarlet & Violet Era Sets ---
   SV1S: { ar: [79, 90], sr: [91, 100], sar: [101, 105], ur: [106, 108] },
-  // SV1V (Violet ex - Total 108): 1-78 Base, 79-90 AR (12), 91-100 SR (10), 101-105 SAR (5), 106-108 UR (3)
   SV1V: { ar: [79, 90], sr: [91, 100], sar: [101, 105], ur: [106, 108] },
-  // SV1a (Triplet Beat - Total 103): 1-73 Base, 74-85 AR (12), 86-95 SR (10), 96-101 SAR (6), 102-103 UR (2)
   SV1a: { ar: [74, 85], sr: [86, 95], sar: [96, 101], ur: [102, 103] },
-  // SV2P (Snow Hazard - Total 99): 1-71 Base, 72-83 AR (12), 84-91 SR (8), 92-96 SAR (5), 97-99 UR (3)
   SV2P: { ar: [72, 83], sr: [84, 91], sar: [92, 96], ur: [97, 99] },
-  // SV2D (Clay Burst - Total 99): 1-71 Base, 72-83 AR (12), 84-91 SR (8), 92-96 SAR (5), 97-99 UR (3)
   SV2D: { ar: [72, 83], sr: [84, 91], sar: [92, 96], ur: [97, 99] },
-  // SV2a (Pokemon 151 - Total 210): 1-165 Base, 166-183 AR (18), 184-199 SR (16), 200-207 SAR (8), 208-210 UR (3)
   SV2a: { ar: [166, 183], sr: [184, 199], sar: [200, 207], ur: [208, 210] },
-  // SV3 (Ruler of Black Flame - Total 141): 1-108 Base, 109-120 AR (12), 121-133 SR (13), 134-138 SAR (5), 139-141 UR (3)
   SV3: { ar: [109, 120], sr: [121, 133], sar: [134, 138], ur: [139, 141] },
-  // SV3a (Raging Surf - Total 92): 1-62 Base, 63-74 AR (12), 75-84 SR (10), 85-89 SAR (5), 90-92 UR (3)
   SV3a: { ar: [63, 74], sr: [75, 84], sar: [85, 89], ur: [90, 92] },
-  // SV4K (Ancient Roar - Total 95): 1-66 Base, 67-78 AR (12), 79-88 SR (10), 89-92 SAR (4), 93-95 UR (3)
   SV4K: { ar: [67, 78], sr: [79, 88], sar: [89, 92], ur: [93, 95] },
-  // SV4M (Future Flash - Total 95): 1-66 Base, 67-78 AR (12), 79-88 SR (10), 89-92 SAR (4), 93-95 UR (3)
   SV4M: { ar: [67, 78], sr: [79, 88], sar: [89, 92], ur: [93, 95] },
-  // SV4a (Shiny Treasure ex - Total 360): 1-190 Base, 191-319 S (129), 320-337 SSR (18), 338-345 SR (8), 346-353 SAR (8), 354-360 UR (7)
   SV4a: { s: [191, 319], ssr: [320, 337], sr: [338, 345], sar: [346, 353], ur: [354, 360] },
-  // SV5K (Wild Force - Total 100): 1-71 Base, 72-83 AR (12), 84-93 SR (10), 94-97 SAR (4), 98-100 UR (3)
   SV5K: { ar: [72, 83], sr: [84, 93], sar: [94, 97], ur: [98, 100] },
-  // SV5M (Cyber Judge - Total 100): 1-71 Base, 72-83 AR (12), 84-93 SR (10), 94-97 SAR (4), 98-100 UR (3)
   SV5M: { ar: [72, 83], sr: [84, 93], sar: [94, 97], ur: [98, 100] },
-  // SV5a (Crimson Haze - Total 96): 1-66 Base, 67-78 AR (12), 79-88 SR (10), 89-93 SAR (5), 94-96 UR (3)
   SV5a: { ar: [67, 78], sr: [79, 88], sar: [89, 93], ur: [94, 96] },
-  // SV6 (Mask of Change - Total 133): 1-101 Base, 102-113 AR (12), 114-124 SR (11), 125-130 SAR (6), 131-133 UR (3)
   SV6: { ar: [102, 113], sr: [114, 124], sar: [125, 130], ur: [131, 133] },
-  // SV7s (Stellar Guidance - Total 229): 1-166 Base, 167-184 AR (18), 185-212 SR (28), 213-223 SAR (11), 224-229 UR (6)
   SV7s: { ar: [167, 184], sr: [185, 212], sar: [213, 223], ur: [224, 229] },
-  // SV8s (Supercharged Breaker - Total 244): 1-182 Base, 183-200 AR (18), 201-229 SR (29), 230-238 SAR (9), 239-244 UR (6)
   SV8s: { ar: [183, 200], sr: [201, 229], sar: [230, 238], ur: [239, 244] },
-  // Sv8a (Terastal Fest ex - Total 381): 1-187 Base, 188-202 SR (15), 203-228 SAR (26), 229-237 UR (9)
   Sv8a: { sr: [188, 202], sar: [203, 228], ur: [229, 237] },
-  // SV9s (Destined Rivals - Total 185): 1-139 Base, 140-153 AR (14), 154-173 SR (20), 174-182 SAR (9), 183-185 UR (3)
   SV9s: { ar: [140, 153], sr: [154, 173], sar: [174, 182], ur: [183, 185] },
-  // SV10s (Glory of Team Rocket - Total 189): 1-138 Base, 139-152 AR (14), 153-176 SR (24), 177-186 SAR (10), 187-189 UR (3)
   SV10s: { ar: [139, 152], sr: [153, 176], sar: [177, 186], ur: [187, 189] },
-  // SV11s (Black & White - Total 348): 1-172 Base, 173-316 AR (144), 317-332 SR (16), 333-346 SAR (14), 347-348 UR (2)
   SV11s: { ar: [173, 316], sr: [317, 332], sar: [333, 346], ur: [347, 348] },
-  // MA1 (Mega Evolution 1 - Total 184): 1-126 Base, 127-150 AR (24), 151-172 SR (22), 173-182 SAR (10), 183-184 UR (2)
+
+  // --- Mega Evolution Era Sets ---
   MA1: { ar: [127, 150], sr: [151, 172], sar: [173, 182], ur: [183, 184] },
-  // MA2 (Mega Evolution 2 - Total 143): 1-103 Base, 104-119 AR (16), 120-136 SR (17), 137-142 SAR (6), 143-143 UR (1)
   MA2: { ar: [104, 119], sr: [120, 136], sar: [137, 142], ur: [143, 143] },
-  // MA3 (Mega Evolution Dream ex - Total 250): 1-193 Base, 194-213 AR (20), 214-232 SR (19), 233-249 SAR (17), 250-250 UR (1)
   MA3: { ar: [194, 213], sr: [214, 232], sar: [233, 249], ur: [250, 250] },
-  // MA4 (Void Blast - Total 181): 1-123 Base, 124-147 AR (24), 148-168 SR (21), 169-179 SAR (11), 180-181 UR (2)
   MA4: { ar: [124, 147], sr: [148, 168], sar: [169, 179], ur: [180, 181] },
-  // MA5 (Shadow Menace - Total 238): 1-164 Base, 165-188 AR (24), 189-224 SR (36), 225-236 SAR (12), 237-238 UR (2)
   MA5: { ar: [165, 188], sr: [189, 224], sar: [225, 236], ur: [237, 238] },
 };
 
@@ -64,7 +103,13 @@ export function getCardRarityClass(card: any): string {
   const category = card.category || '';
 
   // 1. Promo
-  if (setId.includes('-P') || setId.includes('PROMO') || col.includes('PROMO') || col.startsWith('P-') || setId === 'PROMO') {
+  if (
+    setId.includes('-P') ||
+    setId.includes('PROMO') ||
+    col.includes('PROMO') ||
+    col.startsWith('P-') ||
+    setId === 'PROMO'
+  ) {
     return 'PROMO';
   }
 
@@ -74,7 +119,7 @@ export function getCardRarityClass(card: any): string {
   }
 
   // 3. Radiant
-  if (name.includes('ส่องประกาย') || name.includes('Radiant')) {
+  if (name.includes('ส่องประกาย') || name.includes('เรเดียนต์') || name.includes('Radiant')) {
     return 'RADIANT';
   }
 
@@ -88,8 +133,11 @@ export function getCardRarityClass(card: any): string {
     if (config) {
       if (config.s && num >= config.s[0] && num <= config.s[1]) return 'AR';
       if (config.ssr && num >= config.ssr[0] && num <= config.ssr[1]) return 'EX';
+      if (config.chr && num >= config.chr[0] && num <= config.chr[1]) return 'AR';
+      if (config.csr && num >= config.csr[0] && num <= config.csr[1]) return 'SR';
       if (config.ar && num >= config.ar[0] && num <= config.ar[1]) return 'AR';
       if (config.sr && num >= config.sr[0] && num <= config.sr[1]) return 'SR';
+      if (config.hr && num >= config.hr[0] && num <= config.hr[1]) return 'HR';
       if (config.sar && num >= config.sar[0] && num <= config.sar[1]) return 'SAR';
       if (config.ur && num >= config.ur[0] && num <= config.ur[1]) return 'UR';
     } else if (num > total) {
