@@ -1,4 +1,4 @@
-import { useState, useMemo, useRef, useEffect } from 'react';
+import { useState, useMemo, useRef, useEffect, useDeferredValue } from 'react';
 import { useDeckStore } from '../../store/deckStore';
 import { useCollectionStore } from '../../store/collectionStore';
 import { calculateDeckStats, calculateMissingCards } from '../../utils/deckCalculator';
@@ -9,7 +9,7 @@ import { DeckCoverPickerModal } from './DeckCoverPickerModal';
 import { RARITY_CLASSES } from '../collection/CollectionFilterBar';
 import { SearchableSetSelect } from '../common/SearchableSetSelect';
 import { getCardRarityClass } from '../../utils/rarity';
-import { matchesCardSearch } from '../../utils/searchHelpers';
+import { createCardMatcher } from '../../utils/searchHelpers';
 import pokemonCardData from '../../data/pokemonNames.json';
 import type { Deck } from '../../types/deck';
 
@@ -85,14 +85,17 @@ export function DeckEditor({ deck, onBackToDecks }: Props) {
     return Array.from(map.values());
   }, []);
 
+  const deferredSearch = useDeferredValue(search);
+  const cardMatcher = useMemo(() => createCardMatcher(deferredSearch), [deferredSearch]);
+
   // Filter Catalog Cards
   const filteredCatalog = useMemo(() => {
-    const sTerm = search.trim().toLowerCase();
+    const hasSearch = deferredSearch.trim().length > 0;
 
     return (pokemonCardData as any[]).filter((c) => {
       // Search
-      if (sTerm) {
-        if (!matchesCardSearch(c, search)) return false;
+      if (hasSearch) {
+        if (!cardMatcher(c)) return false;
       }
 
       // Set
@@ -119,7 +122,7 @@ export function DeckEditor({ deck, onBackToDecks }: Props) {
 
       return true;
     });
-  }, [search, selectedSet, selectedType, selectedRarity, selectedCategory]);
+  }, [deferredSearch, selectedSet, selectedType, selectedRarity, selectedCategory, cardMatcher]);
 
   const displayedCatalog = filteredCatalog.slice(0, catalogLimit);
   const hasMoreCatalog = catalogLimit < filteredCatalog.length;

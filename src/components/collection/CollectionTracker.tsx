@@ -1,4 +1,4 @@
-import { useState, useMemo, useEffect } from 'react';
+import { useState, useMemo, useEffect, useDeferredValue } from 'react';
 import pokemonCardData from '../../data/pokemonNames.json';
 import { useCollectionStore } from '../../store/collectionStore';
 import { useAuthStore } from '../../store/authStore';
@@ -11,7 +11,7 @@ import type {
 } from '../../types/collection';
 
 import { getCardRarityClass } from '../../utils/rarity';
-import { matchesCardSearch } from '../../utils/searchHelpers';
+import { createCardMatcher } from '../../utils/searchHelpers';
 export { getCardRarityClass };
 
 export function CollectionTracker() {
@@ -159,10 +159,14 @@ export function CollectionTracker() {
     };
   }, [selectedSet, setsList, activeProfile]);
 
+  const deferredSearch = useDeferredValue(search);
+  const cardMatcher = useMemo(() => createCardMatcher(deferredSearch), [deferredSearch]);
+
   // 4. Filter and Sort Cards
   const filteredCards = useMemo(() => {
     const rawList = pokemonCardData as any[];
     const cardsState = activeProfile?.cards || {};
+    const hasSearch = deferredSearch.trim().length > 0;
 
     const filtered = rawList.filter((card) => {
       const entry = cardsState[card.id];
@@ -200,8 +204,8 @@ export function CollectionTracker() {
       }
 
       // Search Query (Card Name EN/TH, Collector Number, Set ID, Set Name)
-      if (search.trim()) {
-        if (!matchesCardSearch(card, search)) return false;
+      if (hasSearch) {
+        if (!cardMatcher(card)) return false;
       }
 
       return true;

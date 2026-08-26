@@ -3,29 +3,43 @@ import translations from '../data/pokemonNameTranslations.json';
 const pokemonMap: Record<string, string> = translations.pokemon || {};
 const trainerMap: Record<string, string> = translations.trainers || {};
 
+// Fast string cleaner with memoization cache for short strings
+const cleanCache = new Map<string, string>();
 function cleanString(str: string): string {
-  return (str || '')
+  if (!str) return '';
+  if (cleanCache.has(str)) return cleanCache.get(str)!;
+
+  const res = str
     .toLowerCase()
     .replace(/['’`]/g, '')
     .replace(/[-.:_]/g, ' ')
     .replace(/\s+/g, ' ')
     .trim();
+
+  if (cleanCache.size < 5000) {
+    cleanCache.set(str, res);
+  }
+  return res;
 }
 
-interface PhraseEntry {
-  key: string;
-  value: string;
-}
+// 1. Fast O(1) Hash Map for Translation Lookups
+const lookupMap = new Map<string, string>();
+const prefixList: { key: string; value: string }[] = [];
 
-const phraseEntries: PhraseEntry[] = [];
 for (const [k, v] of Object.entries(pokemonMap)) {
-  phraseEntries.push({ key: cleanString(k), value: v });
+  const cleanKey = cleanString(k);
+  lookupMap.set(cleanKey, v);
+  prefixList.push({ key: cleanKey, value: v });
 }
+
 for (const [k, v] of Object.entries(trainerMap)) {
-  phraseEntries.push({ key: cleanString(k), value: v });
+  const cleanKey = cleanString(k);
+  lookupMap.set(cleanKey, v);
+  prefixList.push({ key: cleanKey, value: v });
 }
-// Sort by longest key first
-phraseEntries.sort((a, b) => b.key.length - a.key.length);
+
+// Sort prefixList by key length descending for longest prefix match
+prefixList.sort((a, b) => b.key.length - a.key.length);
 
 // Reverse map: Thai Name -> English Name
 const thaiToEnPokemonMap: Record<string, string> = {};
@@ -42,52 +56,79 @@ for (const [en, th] of Object.entries(trainerMap)) {
   thaiToEnTrainerMap[th] = titleCase;
 }
 
-// Special suffix / keyword translations
-const SUFFIX_MAP: Record<string, string[]> = {
-  ex: ['ex'],
-  v: ['v'],
-  vmax: ['vmax'],
-  vstar: ['vstar'],
-  gx: ['gx'],
-  radiant: ['ส่องประกาย', 'เรเดียนต์'],
-  mega: ['เมก้า'],
-  m: ['เมก้า'],
-  alolan: ['อโลลา'],
-  galarian: ['กาลาร์'],
-  hisuian: ['ฮิซุย'],
-  paldean: ['พัลเดีย'],
-  ancient: ['โบราณ'],
-  future: ['อนาคต'],
+const SUFFIX_MAP: Record<string, string> = {
+  ex: 'ex',
+  v: 'v',
+  vmax: 'vmax',
+  vstar: 'vstar',
+  gx: 'gx',
+  radiant: 'ส่องประกาย',
+  mega: 'เมก้า',
+  m: 'เมก้า',
+  alolan: 'อโลลา',
+  galarian: 'กาลาร์',
+  hisuian: 'ฮิซุย',
+  paldean: 'พัลเดีย',
+  ancient: 'โบราณ',
+  future: 'อนาคต',
 };
 
+// Card metadata search key cache using WeakMap
+const cardSearchKeyCache = new WeakMap<any, string>();
+const cardNameCleanCache = new WeakMap<any, string>();
+
+export function getCardSearchKey(card: any): string {
+  let key = cardSearchKeyCache.get(card);
+  if (key === undefined) {
+    key = cleanString(
+      `${card.name || ''} ${card.collectorNumber || card.localId || ''} ${card.set?.id || ''} ${card.set?.name || ''}`
+    );
+    cardSearchKeyCache.set(card, key);
+  }
+  return key;
+}
+
+export function getCardCleanName(card: any): string {
+  let name = cardNameCleanCache.get(card);
+  if (name === undefined) {
+    name = cleanString(card.name || '');
+    cardNameCleanCache.set(card, name);
+  }
+  return name;
+}
+
 /**
- * Extracts candidate translated token groups for a given search query
+ * Creates an ultra-fast compiled Card Matcher for a given search query.
+ * Translates and normalizes the query ONCE, then performs instant sub-millisecond filtering.
  */
-export function getTranslatedTokenGroups(query: string): string[][] {
-  const q = cleanString(query);
-  if (!q) return [];
+export function createCardMatcher(rawQuery: string): (card: any) => boolean {
+  if (!rawQuery || !rawQuery.trim()) {
+    return () => true;
+  }
 
-  const rawTokens = q.split(' ').filter(Boolean);
-  if (rawTokens.length === 0) return [];
+  const rawClean = cleanString(rawQuery);
+  const rawTokens = rawClean.split(' ').filter(Boolean);
+  if (rawTokens.length === 0) {
+    return () => true;
+  }
 
-  const candidateGroups: string[][] = [];
-
-  // 1. Sliding window phrase matching on tokens (Length 4 down to 1)
+  // 1. Compile translated token groups
+  const tokenGroups: string[][] = [];
   const mappedTokens: string[] = [];
   let i = 0;
+
   while (i < rawTokens.length) {
     let matched = false;
     for (let len = Math.min(4, rawTokens.length - i); len >= 1; len--) {
       const phrase = rawTokens.slice(i, i + len).join(' ');
-      const found = phraseEntries.find((p) => p.key === phrase);
-      if (found) {
-        mappedTokens.push(found.value);
+      if (lookupMap.has(phrase)) {
+        mappedTokens.push(lookupMap.get(phrase)!);
         i += len;
         matched = true;
         break;
       }
       if (len === 1 && SUFFIX_MAP[phrase]) {
-        mappedTokens.push(SUFFIX_MAP[phrase][0]);
+        mappedTokens.push(SUFFIX_MAP[phrase]);
         i += 1;
         matched = true;
         break;
@@ -100,58 +141,65 @@ export function getTranslatedTokenGroups(query: string): string[][] {
   }
 
   if (mappedTokens.length > 0) {
-    candidateGroups.push(mappedTokens);
+    tokenGroups.push(mappedTokens.map(cleanString));
 
-    // If radiant was part of tokens, also test alternative 'เรเดียนต์'
+    // Handle radiant synonym
     if (mappedTokens.includes('ส่องประกาย')) {
-      candidateGroups.push(mappedTokens.map((t) => (t === 'ส่องประกาย' ? 'เรเดียนต์' : t)));
+      tokenGroups.push(
+        mappedTokens.map((t) => (t === 'ส่องประกาย' ? 'เรเดียนต์' : cleanString(t)))
+      );
     }
   }
 
-  // 2. Prefix matching for single word (>= 3 chars)
-  if (rawTokens.length === 1 && q.length >= 3) {
-    for (const { key, value } of phraseEntries) {
-      if (key.startsWith(q) || key.includes(q)) {
-        candidateGroups.push([value]);
+  // Prefix matching for single word (>= 3 chars)
+  if (rawTokens.length === 1 && rawClean.length >= 3) {
+    for (const { key, value } of prefixList) {
+      if (key.startsWith(rawClean)) {
+        tokenGroups.push([cleanString(value)]);
       }
     }
   }
 
-  return candidateGroups;
-}
+  // Return optimized matcher function
+  return function matchesCard(card: any): boolean {
+    const cardSearchKey = getCardSearchKey(card);
 
-/**
- * Robust Card Search Matcher
- * Matches query against Card Name (Thai & English), Collector Number, Set ID, Set Name.
- */
-export function matchesCardSearch(card: any, rawQuery: string): boolean {
-  if (!rawQuery || !rawQuery.trim()) return true;
-
-  const rawClean = cleanString(rawQuery);
-  const cardName = cleanString(card.name || '');
-  const colNum = cleanString(card.collectorNumber || card.localId || '');
-  const setId = cleanString(card.set?.id || '');
-  const setName = cleanString(card.set?.name || '');
-
-  // 1. Direct substring match on card attributes
-  if (
-    cardName.includes(rawClean) ||
-    colNum.includes(rawClean) ||
-    setId.includes(rawClean) ||
-    setName.includes(rawClean)
-  ) {
-    return true;
-  }
-
-  // 2. Translated token sets: check if all tokens in any candidate group are present in cardName
-  const candidateTokenGroups = getTranslatedTokenGroups(rawQuery);
-  for (const tokenGroup of candidateTokenGroups) {
-    if (tokenGroup.length > 0 && tokenGroup.every((t) => cardName.includes(cleanString(t)))) {
+    // 1. Fast direct substring match
+    if (cardSearchKey.includes(rawClean)) {
       return true;
     }
-  }
 
-  return false;
+    // 2. Token groups match on card name
+    const cardName = getCardCleanName(card);
+    for (let g = 0; g < tokenGroups.length; g++) {
+      const group = tokenGroups[g];
+      let allMatch = true;
+      for (let t = 0; t < group.length; t++) {
+        if (!cardName.includes(group[t])) {
+          allMatch = false;
+          break;
+        }
+      }
+      if (allMatch) return true;
+    }
+
+    return false;
+  };
+}
+
+// Cached last matcher for direct matchesCardSearch calls
+let lastRawQuery = '';
+let lastMatcher: (card: any) => boolean = () => true;
+
+/**
+ * Direct Card Search Matcher (cached for fast repeated calls)
+ */
+export function matchesCardSearch(card: any, rawQuery: string): boolean {
+  if (rawQuery !== lastRawQuery) {
+    lastRawQuery = rawQuery;
+    lastMatcher = createCardMatcher(rawQuery);
+  }
+  return lastMatcher(card);
 }
 
 /**

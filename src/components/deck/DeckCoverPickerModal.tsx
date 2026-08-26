@@ -1,6 +1,6 @@
 import { useState, useMemo, useEffect } from 'react';
 import { resolveCardImageUrl, handleCardImageError } from '../../utils/cardImage';
-import { matchesCardSearch } from '../../utils/searchHelpers';
+import { createCardMatcher } from '../../utils/searchHelpers';
 import pokemonCardData from '../../data/pokemonNames.json';
 import type { Deck } from '../../types/deck';
 
@@ -81,9 +81,16 @@ export function DeckCoverPickerModal({ deck, onSelectCover, onClose }: Props) {
   // 3. Search filtered cards
   const searchResults = useMemo(() => {
     if (!search.trim()) return [];
-    return (pokemonCardData as any[])
-      .filter((c) => matchesCardSearch(c, search))
-      .slice(0, 48);
+    const matcher = createCardMatcher(search);
+    const list: any[] = [];
+    const all = pokemonCardData as any[];
+    for (let i = 0; i < all.length; i++) {
+      if (matcher(all[i])) {
+        list.push(all[i]);
+        if (list.length >= 48) break;
+      }
+    }
+    return list;
   }, [search]);
 
   const displayedCards =

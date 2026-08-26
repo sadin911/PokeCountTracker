@@ -1,8 +1,8 @@
-import { useState, useRef, useEffect, useCallback } from 'react';
+import { useState, useRef, useEffect, useCallback, useMemo } from 'react';
 import rawData from '../../data/pokemonNames.json';
 import { CardImagePreviewModal } from './CardImagePreviewModal';
 import { resolveCardImageUrl, handleCardImageError } from '../../utils/cardImage';
-import { matchesCardSearch, getEnglishCardName } from '../../utils/searchHelpers';
+import { getEnglishCardName, createCardMatcher } from '../../utils/searchHelpers';
 
 interface CardEntry {
   id?: string;
@@ -46,11 +46,18 @@ export function PokemonNameInput({
   const [previewCard, setPreviewCard] = useState<CardEntry | null>(null);
   const blurTimer = useRef<ReturnType<typeof setTimeout> | undefined>(undefined);
 
-  const suggestions = value.trim().length >= 1
-    ? pokemonData
-        .filter(e => matchesCardSearch(e, value))
-        .slice(0, MAX_SUGGESTIONS)
-    : [];
+  const suggestions = useMemo(() => {
+    if (value.trim().length < 1) return [];
+    const matcher = createCardMatcher(value);
+    const list: CardEntry[] = [];
+    for (let i = 0; i < pokemonData.length; i++) {
+      if (matcher(pokemonData[i])) {
+        list.push(pokemonData[i]);
+        if (list.length >= MAX_SUGGESTIONS) break;
+      }
+    }
+    return list;
+  }, [value]);
 
   const showDropdown = open && suggestions.length > 0;
 
@@ -99,7 +106,7 @@ export function PokemonNameInput({
       />
       {showDropdown && (
         <div className="absolute top-full left-0 right-0 z-[60] mt-1 bg-gray-900 border border-gray-600 rounded-xl shadow-2xl overflow-hidden max-h-72 overflow-y-auto">
-          {suggestions.map((entry, i) => {
+          {suggestions.map((entry: CardEntry, i: number) => {
             const imgUrl = entry.imageUrl || (entry.image ? `${entry.image}/low.webp` : null);
             return (
               <div
