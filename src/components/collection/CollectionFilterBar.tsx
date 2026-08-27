@@ -233,13 +233,26 @@ export function CollectionFilterBar({
       <div className="flex items-center gap-1.5 overflow-x-auto pb-1 scrollbar-none">
         {STATUS_TABS.map((tab) => {
           const isActive = statusFilter === tab.key;
+          let activeClass = 'bg-slate-700 text-white font-black';
+          if (tab.key === 'owned') {
+            activeClass = 'bg-gradient-to-r from-blue-600 to-blue-500 text-white shadow-md shadow-blue-500/25 font-black ring-1 ring-blue-400/40';
+          } else if (tab.key === 'missing') {
+            activeClass = 'bg-gradient-to-r from-red-600 to-rose-600 text-white shadow-md shadow-red-500/25 font-black ring-1 ring-red-400/40';
+          } else if (tab.key === 'wishlist') {
+            activeClass = 'bg-gradient-to-r from-yellow-400 to-amber-400 text-slate-950 shadow-md shadow-yellow-400/25 font-black ring-1 ring-yellow-300/50';
+          } else if (tab.key === 'duplicates') {
+            activeClass = 'bg-gradient-to-r from-amber-500 to-orange-500 text-slate-950 shadow-md shadow-amber-500/25 font-black ring-1 ring-amber-400/50';
+          } else if (tab.key === 'all') {
+            activeClass = 'bg-gradient-to-r from-yellow-400 via-amber-400 to-yellow-500 text-slate-950 shadow-md shadow-yellow-400/25 font-black ring-1 ring-yellow-300/50';
+          }
+
           return (
             <button
               key={tab.key}
               onClick={() => onStatusFilterChange(tab.key)}
               className={`px-3 py-1.5 rounded-xl text-xs font-bold whitespace-nowrap transition-all flex items-center gap-1 shadow-sm ${
                 isActive
-                  ? 'bg-gradient-to-r from-amber-500 to-amber-600 text-slate-950 shadow-md shadow-amber-500/20 font-black'
+                  ? activeClass
                   : 'bg-slate-800/80 hover:bg-slate-800 text-slate-300 border border-slate-700/60'
               }`}
             >
@@ -265,10 +278,10 @@ export function CollectionFilterBar({
               className={`px-2.5 py-1 rounded-xl text-xs font-bold whitespace-nowrap transition-all flex items-center gap-1 shrink-0 ${
                 isSelected
                   ? isStd
-                    ? 'bg-gradient-to-r from-emerald-400 to-teal-400 text-slate-950 font-black shadow-md shadow-emerald-500/20 scale-105'
-                    : 'bg-amber-400 text-slate-950 font-black shadow-md shadow-amber-400/20 scale-105'
+                    ? 'bg-gradient-to-r from-yellow-400 to-amber-400 text-slate-950 font-black shadow-md shadow-yellow-400/25 ring-1 ring-yellow-300/50 scale-105'
+                    : 'bg-gradient-to-r from-blue-600 to-blue-500 text-white font-black shadow-md shadow-blue-500/25 scale-105'
                   : isStd
-                  ? 'bg-emerald-950/60 text-emerald-300 border border-emerald-500/50 hover:bg-emerald-900/60'
+                  ? 'bg-yellow-500/10 text-yellow-300 border border-yellow-500/40 hover:bg-yellow-500/20'
                   : 'bg-slate-800 hover:bg-slate-700 text-slate-300 border border-slate-700/60'
               }`}
               title={reg.label}
@@ -286,13 +299,20 @@ export function CollectionFilterBar({
         </span>
         {CATEGORIES.map((cat) => {
           const isSelected = selectedCategory === cat.id;
+          let activeCategoryClass = 'bg-gradient-to-r from-yellow-400 to-amber-400 text-slate-950 font-black shadow-md shadow-yellow-400/25 scale-105 ring-1 ring-yellow-300/50';
+          if (cat.id === 'trainer') {
+            activeCategoryClass = 'bg-gradient-to-r from-blue-600 to-blue-500 text-white font-black shadow-md shadow-blue-500/25 scale-105 ring-1 ring-blue-300/50';
+          } else if (cat.id === 'energy') {
+            activeCategoryClass = 'bg-gradient-to-r from-red-600 to-rose-500 text-white font-black shadow-md shadow-red-500/25 scale-105 ring-1 ring-red-300/50';
+          }
+
           return (
             <button
               key={cat.id}
               onClick={() => onCategoryChange(cat.id)}
               className={`px-2.5 py-1 rounded-xl text-xs font-bold whitespace-nowrap transition-all flex items-center gap-1 shrink-0 ${
                 isSelected
-                  ? 'bg-amber-400 text-slate-950 font-black shadow-md shadow-amber-400/20 scale-105'
+                  ? activeCategoryClass
                   : 'bg-slate-800 hover:bg-slate-700 text-slate-300 border border-slate-700/60'
               }`}
             >

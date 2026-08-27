@@ -28,12 +28,12 @@ export function DeckHeader({ isEditing, onBackToDecks, onOpenImportExport }: Pro
         {/* Left: App Branding & Desktop Navigation Bar */}
         <div className="flex items-center justify-between w-full md:w-auto gap-3">
           <div className="flex items-center gap-2.5">
-            <div className="w-9 h-9 sm:w-10 sm:h-10 rounded-2xl bg-gradient-to-tr from-indigo-500 via-purple-500 to-pink-500 flex items-center justify-center shadow-lg shadow-purple-500/25 text-white font-bold text-lg sm:text-xl ring-1 ring-white/20">
+            <div className="w-9 h-9 sm:w-10 sm:h-10 rounded-2xl bg-gradient-to-tr from-blue-700 via-blue-500 to-yellow-400 flex items-center justify-center shadow-lg shadow-blue-500/25 text-white font-bold text-lg sm:text-xl ring-2 ring-blue-400/40">
               🃏
             </div>
             <div>
               <div className="flex items-center gap-1.5">
-                <h1 className="text-base sm:text-xl font-black bg-gradient-to-r from-indigo-400 via-purple-300 to-pink-300 bg-clip-text text-transparent leading-none">
+                <h1 className="text-base sm:text-xl font-black bg-gradient-to-r from-blue-300 via-sky-200 to-yellow-300 bg-clip-text text-transparent leading-none drop-shadow-[0_2px_10px_rgba(42,117,187,0.3)]">
                   PokéDeck
                 </h1>
                 {user ? (
@@ -48,7 +48,7 @@ export function DeckHeader({ isEditing, onBackToDecks, onOpenImportExport }: Pro
                     </span>
                   </span>
                 ) : (
-                  <span className="px-1.5 py-0.5 rounded-full bg-amber-500/20 border border-amber-500/40 text-amber-300 text-[9px] font-black uppercase tracking-wider">
+                  <span className="px-1.5 py-0.5 rounded-full bg-yellow-500/20 border border-yellow-500/40 text-yellow-300 text-[9px] font-black uppercase tracking-wider">
                     Guest
                   </span>
                 )}
@@ -60,24 +60,24 @@ export function DeckHeader({ isEditing, onBackToDecks, onOpenImportExport }: Pro
           </div>
 
           {/* Desktop Nav Tabs (Hidden on mobile because of BottomNav) */}
-          <nav className="hidden md:flex items-center gap-1 bg-slate-950/80 p-1 rounded-xl border border-slate-800">
+          <nav className="hidden md:flex items-center gap-1 bg-slate-950/90 p-1 rounded-xl border border-slate-800">
             <button
               onClick={() => setGameMode('collection')}
-              className="px-3 py-1.5 text-xs font-bold rounded-lg text-slate-400 hover:text-slate-200 hover:bg-slate-800 transition-all flex items-center gap-1.5"
+              className="px-3 py-1.5 text-xs font-bold rounded-lg text-slate-400 hover:text-yellow-300 hover:bg-slate-800/80 transition-all flex items-center gap-1.5"
             >
               <span>📚</span>
               <span>สมุดสะสม</span>
             </button>
             <button
               onClick={() => setGameMode('deck')}
-              className="px-3 py-1.5 text-xs font-black rounded-lg bg-gradient-to-r from-indigo-500 via-purple-500 to-pink-500 text-white shadow-md shadow-indigo-500/20 transition-all flex items-center gap-1.5"
+              className="px-3 py-1.5 text-xs font-black rounded-lg bg-gradient-to-r from-blue-600 via-blue-500 to-indigo-600 text-white shadow-md shadow-blue-500/25 transition-all flex items-center gap-1.5 ring-1 ring-blue-300/50"
             >
               <span>🃏</span>
               <span>จัดเด็ค</span>
             </button>
             <button
               onClick={() => setGameMode('pokemon')}
-              className="px-3 py-1.5 text-xs font-bold rounded-lg text-slate-400 hover:text-slate-200 hover:bg-slate-800 transition-all flex items-center gap-1.5"
+              className="px-3 py-1.5 text-xs font-bold rounded-lg text-slate-400 hover:text-red-300 hover:bg-slate-800/80 transition-all flex items-center gap-1.5"
             >
               <span>🎮</span>
               <span>Battle Tracker</span>

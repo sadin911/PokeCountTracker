@@ -88,10 +88,10 @@ export function CollectionGridView({ cards, currentSetProgress, showFullColor, f
     <div className="flex-1 p-4 sm:p-6 lg:p-8 w-full space-y-4">
       {/* Set Progress Header (If specific set is selected) */}
       {currentSetProgress && (
-        <div className="bg-gradient-to-r from-slate-900 via-slate-800/90 to-slate-900 border border-slate-700/80 rounded-2xl p-5 shadow-2xl flex flex-col md:flex-row items-center justify-between gap-4">
+        <div className="bg-gradient-to-r from-slate-900 via-slate-800/95 to-slate-900 border border-slate-700/80 hover:border-yellow-500/40 rounded-2xl p-5 shadow-2xl flex flex-col md:flex-row items-center justify-between gap-4 transition-all">
           <div className="space-y-1.5 w-full md:w-auto">
             <div className="flex items-center gap-2.5 flex-wrap">
-              <span className="px-2.5 py-1 rounded-lg bg-amber-500 text-slate-950 font-black text-xs shadow-md shadow-amber-500/20">
+              <span className="px-2.5 py-1 rounded-lg bg-gradient-to-r from-yellow-400 to-amber-400 text-slate-950 font-black text-xs shadow-md shadow-yellow-400/25 ring-1 ring-yellow-300/50">
                 {currentSetProgress.setId}
               </span>
               <h2 className="text-base sm:text-lg font-black text-white">
@@ -99,9 +99,9 @@ export function CollectionGridView({ cards, currentSetProgress, showFullColor, f
               </h2>
             </div>
             <p className="text-xs sm:text-sm text-slate-300">
-              สะสมได้แล้ว <span className="text-amber-400 font-extrabold">{currentSetProgress.uniqueOwned}</span> จากทั้งหมด{' '}
+              สะสมได้แล้ว <span className="text-yellow-300 font-extrabold">{currentSetProgress.uniqueOwned}</span> จากทั้งหมด{' '}
               <span className="text-slate-100 font-extrabold">{currentSetProgress.totalCards}</span> แบบ (รวม{' '}
-              <span className="text-cyan-300 font-bold">{currentSetProgress.totalCount}</span> ใบ)
+              <span className="text-blue-300 font-bold">{currentSetProgress.totalCount}</span> ใบ)
             </p>
           </div>
 
@@ -109,11 +109,11 @@ export function CollectionGridView({ cards, currentSetProgress, showFullColor, f
           <div className="w-full md:w-80 flex items-center gap-3.5">
             <div className="flex-1 bg-slate-950 rounded-full h-4 p-0.5 overflow-hidden border border-slate-700 shadow-inner">
               <div
-                className="bg-gradient-to-r from-amber-500 via-rose-500 to-emerald-400 h-full rounded-full transition-all duration-500 shadow-sm"
+                className="bg-gradient-to-r from-yellow-400 via-amber-400 to-yellow-500 h-full rounded-full transition-all duration-500 shadow-[0_0_12px_rgba(255,203,5,0.5)]"
                 style={{ width: `${currentSetProgress.percentage}%` }}
               />
             </div>
-            <span className="text-sm font-black text-amber-300 min-w-[50px] text-right">
+            <span className="text-sm font-black text-yellow-300 min-w-[50px] text-right">
               {currentSetProgress.percentage}%
             </span>
           </div>

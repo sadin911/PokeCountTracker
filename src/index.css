@@ -3,6 +3,12 @@
 @layer base {
   :root {
     color-scheme: dark;
+    --poke-yellow: #FFCB05;
+    --poke-yellow-dark: #C79D00;
+    --poke-blue: #2A75BB;
+    --poke-blue-dark: #1B365D;
+    --poke-red: #EE1515;
+    --poke-red-dark: #990000;
   }
 
   html, body, #root {
@@ -13,8 +19,12 @@
   }
 
   body {
-    @apply bg-gray-950 text-gray-100;
+    @apply bg-slate-950 text-slate-100;
     font-family: system-ui, -apple-system, sans-serif;
+    background-image: 
+      radial-gradient(circle at 15% 10%, rgba(255, 203, 5, 0.04) 0%, transparent 40%),
+      radial-gradient(circle at 85% 90%, rgba(42, 117, 187, 0.05) 0%, transparent 45%),
+      radial-gradient(circle at 50% 50%, rgba(238, 21, 21, 0.02) 0%, transparent 60%);
   }
 
   #root {

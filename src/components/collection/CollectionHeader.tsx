@@ -35,12 +35,12 @@ export function CollectionHeader({ stats }: Props) {
         {/* Left: App Branding & Desktop Navigation Bar */}
         <div className="flex items-center justify-between w-full md:w-auto gap-3">
           <div className="flex items-center gap-2.5">
-            <div className="w-9 h-9 sm:w-10 sm:h-10 rounded-2xl bg-gradient-to-tr from-amber-500 via-rose-500 to-indigo-600 flex items-center justify-center shadow-lg shadow-rose-500/25 text-white font-bold text-lg sm:text-xl ring-1 ring-white/20">
-              📚
+            <div className="w-9 h-9 sm:w-10 sm:h-10 rounded-2xl bg-gradient-to-tr from-red-600 via-amber-500 to-yellow-400 flex items-center justify-center shadow-lg shadow-yellow-500/25 text-white font-bold text-lg sm:text-xl ring-2 ring-yellow-400/40">
+              ⚡
             </div>
             <div>
               <div className="flex items-center gap-1.5">
-                <h1 className="text-base sm:text-xl font-black bg-gradient-to-r from-amber-400 via-rose-300 to-cyan-300 bg-clip-text text-transparent leading-none">
+                <h1 className="text-base sm:text-xl font-black bg-gradient-to-r from-yellow-300 via-amber-400 to-yellow-500 bg-clip-text text-transparent leading-none drop-shadow-[0_2px_10px_rgba(255,203,5,0.3)]">
                   PokéCollection
                 </h1>
                 {user ? (
@@ -55,7 +55,7 @@ export function CollectionHeader({ stats }: Props) {
                     </span>
                   </span>
                 ) : (
-                  <span className="px-1.5 py-0.5 rounded-full bg-amber-500/20 border border-amber-500/40 text-amber-300 text-[9px] font-black uppercase tracking-wider">
+                  <span className="px-1.5 py-0.5 rounded-full bg-yellow-500/20 border border-yellow-500/40 text-yellow-300 text-[9px] font-black uppercase tracking-wider">
                     Guest
                   </span>
                 )}
@@ -67,24 +67,24 @@ export function CollectionHeader({ stats }: Props) {
           </div>
 
           {/* Desktop Nav Tabs (Hidden on mobile because of BottomNav) */}
-          <nav className="hidden md:flex items-center gap-1 bg-slate-950/80 p-1 rounded-xl border border-slate-800">
+          <nav className="hidden md:flex items-center gap-1 bg-slate-950/90 p-1 rounded-xl border border-slate-800">
             <button
               onClick={() => setGameMode('collection')}
-              className="px-3 py-1.5 text-xs font-black rounded-lg bg-gradient-to-r from-amber-500 to-rose-500 text-slate-950 shadow-md shadow-amber-500/20 transition-all flex items-center gap-1.5"
+              className="px-3 py-1.5 text-xs font-black rounded-lg bg-gradient-to-r from-yellow-400 via-amber-400 to-yellow-500 text-slate-950 shadow-md shadow-yellow-400/25 transition-all flex items-center gap-1.5 ring-1 ring-yellow-300/50"
             >
               <span>📚</span>
               <span>สมุดสะสม</span>
             </button>
             <button
               onClick={() => setGameMode('deck')}
-              className="px-3 py-1.5 text-xs font-bold rounded-lg text-slate-400 hover:text-slate-200 hover:bg-slate-800 transition-all flex items-center gap-1.5"
+              className="px-3 py-1.5 text-xs font-bold rounded-lg text-slate-400 hover:text-blue-300 hover:bg-slate-800/80 transition-all flex items-center gap-1.5"
             >
               <span>🃏</span>
               <span>จัดเด็ค</span>
             </button>
             <button
               onClick={() => setGameMode('pokemon')}
-              className="px-3 py-1.5 text-xs font-bold rounded-lg text-slate-400 hover:text-slate-200 hover:bg-slate-800 transition-all flex items-center gap-1.5"
+              className="px-3 py-1.5 text-xs font-bold rounded-lg text-slate-400 hover:text-red-300 hover:bg-slate-800/80 transition-all flex items-center gap-1.5"
             >
               <span>🎮</span>
               <span>Battle Tracker</span>
@@ -101,7 +101,7 @@ export function CollectionHeader({ stats }: Props) {
               title="สลับโปรไฟล์"
             >
               <span>{activeProfile?.icon || '🎴'}</span>
-              <span className="text-amber-300 font-extrabold max-w-[80px] truncate text-[11px]">
+              <span className="text-yellow-300 font-extrabold max-w-[80px] truncate text-[11px]">
                 {activeProfile?.name || 'สมุดสะสม'}
               </span>
             </button>
@@ -121,13 +121,13 @@ export function CollectionHeader({ stats }: Props) {
           {/* Active Profile Dropdown Pill (Desktop) */}
           <button
             onClick={() => setShowProfileModal(true)}
-            className="hidden md:flex items-center gap-2 px-3 py-1.5 rounded-xl bg-slate-800 hover:bg-slate-700 border border-slate-600 text-slate-200 text-xs font-bold shadow-md transition-all group"
+            className="hidden md:flex items-center gap-2 px-3 py-1.5 rounded-xl bg-slate-800/90 hover:bg-slate-700 border border-slate-700 hover:border-yellow-500/40 text-slate-200 text-xs font-bold shadow-md transition-all group"
             title="คลิกเพื่อจัดการหรือสลับโปรไฟล์สะสม (Multi-Account)"
           >
             <span className="text-base">{activeProfile?.icon || '🎴'}</span>
             <div className="text-left">
               <div className="text-[9px] text-slate-400 uppercase tracking-wider leading-none">โปรไฟล์</div>
-              <div className="text-amber-300 font-extrabold max-w-[120px] truncate leading-tight">
+              <div className="text-yellow-300 font-extrabold max-w-[120px] truncate leading-tight">
                 {activeProfile?.name || 'My Collection'}
               </div>
             </div>
@@ -138,16 +138,16 @@ export function CollectionHeader({ stats }: Props) {
 
           {/* Summary Badges (Responsive) */}
           <div className="flex items-center gap-1.5 sm:gap-2 text-[11px] sm:text-xs">
-            <div className="px-2.5 py-1 rounded-xl bg-emerald-500/15 border border-emerald-500/40 text-emerald-300 font-black flex items-center gap-1 shadow-sm">
+            <div className="px-2.5 py-1 rounded-xl bg-blue-500/15 border border-blue-500/40 text-blue-300 font-black flex items-center gap-1 shadow-sm">
               <span>🎴</span>
               <span>{stats.totalUniqueOwned.toLocaleString()} แบบ</span>
             </div>
-            <div className="px-2.5 py-1 rounded-xl bg-cyan-500/15 border border-cyan-500/40 text-cyan-300 font-black flex items-center gap-1 shadow-sm">
+            <div className="px-2.5 py-1 rounded-xl bg-yellow-500/15 border border-yellow-500/40 text-yellow-300 font-black flex items-center gap-1 shadow-sm">
               <span>✨</span>
               <span>{stats.totalCardsCount.toLocaleString()} ใบ</span>
             </div>
             {stats.wishlistCount > 0 && (
-              <div className="px-2 py-1 rounded-xl bg-amber-500/15 border border-amber-500/40 text-amber-300 font-black flex items-center gap-1 shadow-sm">
+              <div className="px-2 py-1 rounded-xl bg-red-500/15 border border-red-500/40 text-red-300 font-black flex items-center gap-1 shadow-sm">
                 <span>⭐</span>
                 <span>{stats.wishlistCount}</span>
               </div>
