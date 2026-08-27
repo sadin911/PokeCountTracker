@@ -127,13 +127,9 @@ export function SearchableSetSelect({
     };
   }, [isOpen]);
 
-  // Auto focus input when opened
+  // Reset search term when closed without autofocusing on open
   useEffect(() => {
-    if (isOpen) {
-      setTimeout(() => {
-        inputRef.current?.focus();
-      }, 50);
-    } else {
+    if (!isOpen) {
       setSearchTerm('');
     }
   }, [isOpen]);
