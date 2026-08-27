@@ -125,3 +125,4 @@
 [2026-08-27 15:10] Major | Antigravity | Feature | Move Rarity filter to main toolbar as compact dropdown
 [2026-08-27 15:21] Major | Antigravity | Fix | Fixed mobile horizontal overflow in Set & Rarity filter bar
 [2026-08-27 15:24] Major | Antigravity | Fix | Fixed dropdown z-index stacking above card grid
+[2026-08-27 16:30] Major | Antigravity | Fix | Enhanced pull-to-refresh touch detection and responsiveness
