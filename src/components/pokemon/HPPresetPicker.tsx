@@ -353,10 +353,18 @@ export function HPPresetPicker({ currentMaxHP, initialType, onSelect, onClose }:
                     const typeInfo = firstType ? ENERGY_MAP[firstType] : null;
 
                     return (
-                      <button
+                      <div
                         key={`${card.id || card.name}_${idx}`}
+                        role="button"
+                        tabIndex={0}
                         onClick={() => handleCardChosen(card)}
-                        className="group flex flex-col rounded-2xl bg-gray-800/70 hover:bg-gray-750 active:bg-gray-700 border border-gray-700/60 hover:border-blue-500/80 p-2 text-left transition-all active:scale-[0.98] shadow-md overflow-hidden relative"
+                        onKeyDown={(e) => {
+                          if (e.key === 'Enter' || e.key === ' ') {
+                            e.preventDefault();
+                            handleCardChosen(card);
+                          }
+                        }}
+                        className="group flex flex-col rounded-2xl bg-gray-800/70 hover:bg-gray-750 active:bg-gray-700 border border-gray-700/60 hover:border-blue-500/80 p-2 text-left transition-all active:scale-[0.98] shadow-md overflow-hidden relative cursor-pointer"
                       >
                         {/* Card Image Thumbnail */}
                         <div className="w-full aspect-[3/4] bg-gray-950 rounded-xl overflow-hidden mb-1.5 flex items-center justify-center border border-gray-700/50 group-hover:border-blue-400/60 relative">
@@ -428,7 +436,7 @@ export function HPPresetPicker({ currentMaxHP, initialType, onSelect, onClose }:
                             </span>
                           )}
                         </div>
-                      </button>
+                      </div>
                     );
                   })}
                 </div>
