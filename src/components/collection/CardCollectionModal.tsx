@@ -6,7 +6,7 @@ import { useDeckStore } from '../../store/deckStore';
 import { useCommunityStore } from '../../store/communityStore';
 import { resolveCardImageUrl, handleCardImageError } from '../../utils/cardImage';
 import { getEnglishCardName } from '../../utils/searchHelpers';
-import { isCardFoil } from '../../utils/cardFoil';
+import { isCardFoil, foilPulseDelay } from '../../utils/cardFoil';
 import { useFoilTilt } from '../../hooks/useFoilTilt';
 import { EvolutionChainSection } from '../pokemon/EvolutionChainSection';
 import { CardImagePreviewModal } from '../pokemon/CardImagePreviewModal';
@@ -175,9 +175,6 @@ export function CardCollectionModal({ card: initialCard, onClose, deckId }: Prop
             ref={tilt.ref}
             onPointerMove={isFoil ? tilt.onPointerMove : undefined}
             onPointerLeave={isFoil ? tilt.onPointerLeave : undefined}
-            onTouchStart={isFoil ? tilt.onTouchStart : undefined}
-            onTouchMove={isFoil ? tilt.onTouchMove : undefined}
-            onTouchEnd={isFoil ? tilt.onTouchEnd : undefined}
             onClick={() => setShowZoom(true)}
             className={`relative group max-w-[260px] w-full aspect-[2.5/3.5] rounded-2xl overflow-hidden shadow-xl dark:shadow-2xl dark:shadow-black/80 ring-1 cursor-zoom-in transition-all duration-200 select-none touch-none ${
               isFoil
@@ -194,7 +191,13 @@ export function CardCollectionModal({ card: initialCard, onClose, deckId }: Prop
             />
 
             {/* Holographic / Foil Shimmer Overlay */}
-            {isFoil && <div className="foil-holo" aria-hidden="true" />}
+            {isFoil && (
+              <div
+                className="foil-holo"
+                aria-hidden="true"
+                style={{ animationDelay: `${foilPulseDelay(activeCard.id)}s` }}
+              />
+            )}
 
             {totalCount > 0 && (
               <div className="absolute top-2.5 right-2.5 px-3 py-1 rounded-full bg-gradient-to-r from-amber-500 to-amber-600 text-slate-950 font-black text-xs shadow-xl shadow-amber-500/40 flex items-center gap-1 z-10 pointer-events-none">

@@ -1,29 +1,83 @@
-import { useCallback, useEffect, useRef, useState, type TouchEvent } from 'react';
+import { useCallback, useEffect, useRef, useState } from 'react';
 
 /**
- * High-performance 3D tilt & holographic physics engine for Pokemon foil cards.
- * Features:
- * 1. Gyroscope sensor filtering (EMA low-pass + deadzone + angle compensation)
- * 2. Framerate-controlled delta-time interpolation (silky smooth 60-120fps)
- * 3. Mobile touch drag with instant response & spring release
- * 4. Desktop mouse pointer tracking
- * 5. Zero CSS-transition conflict during active motion (prevents jitter)
+ * 3D tilt for premium (foil-only) cards, driven by the pointer on a desktop and
+ * by the device gyroscope on a phone.
+ *
+ * Both inputs hold their angle. A pointer says where you are looking, so the card
+ * stays leaned while the cursor sits on it; a gyroscope says how the phone is
+ * being held, so the card stays leaned until the phone is levelled again. Neither
+ * springs back on its own.
+ *
+ * What sells the illusion is not the rotation on its own — it is that the
+ * specular highlight and the holographic bands move *against* the tilt, the way
+ * light does on a real foil card. So this hook publishes both: the rotation, and
+ * the position the CSS uses to place the highlight.
+ *
+ * One hook owns every `--foil-*` property on the element. Pointer and gyro are
+ * gated on mutually exclusive media queries, but routing both through a single
+ * writer means there is no arrangement in which two sources fight over the same
+ * variable.
+ *
+ * Everything is written straight to CSS custom properties rather than to React
+ * state. A grid can hold sixty of these, and re-rendering a card on every
+ * pointermove would be the one thing guaranteed to make it feel cheap.
  */
 
-const MAX_TILT_DEG = 12;
+/**
+ * Degrees at the extremes. Shallow enough that the light still carries the effect,
+ * but 3.5° was too tight: paired with the gain below it saturated inside the first
+ * few degrees of wrist, so the card sat pinned at the limit and every bit of
+ * sensor noise showed up as a judder around it.
+ */
+const MAX_TILT_DEG = 7;
 
-/** Gyroscope physics constants */
-const GYRO_GAIN = 0.55;
-const GYRO_MAX_DELTA_DEG = 40;
-const GYRO_DEADZONE_DEG = 0.5;
-const GYRO_EMA_ALPHA = 0.18; // Sensor noise smoothing
-const LERP_SPEED = 0.16; // Physics interpolation speed
+/** Snappy while an input drives it, unhurried on the way back to rest. */
+const TRACK_MS = 70;
+const RELEASE_MS = 420;
+
+/**
+ * Device degrees to card degrees. A full lean takes about 17° of wrist, so most of
+ * a comfortable range of movement maps to actual rotation instead of running into
+ * the clamp.
+ */
+const GYRO_GAIN = 0.4;
+
+/** Sensor wrap-around (gamma flips through ±90) shows up as an absurd delta. */
+const GYRO_MAX_DELTA_DEG = 45;
+
+/**
+ * Degrees away from where you were holding the phone that still count as holding
+ * it steady. A hand at rest wobbles a few tenths of a degree and a phone in a
+ * moving car never stops moving at all; without this the card twitches
+ * constantly. Subtracted from the deviation rather than compared against it, so
+ * crossing the threshold eases in instead of jumping.
+ */
+const GYRO_DEADZONE_DEG = 0.8;
+
+/**
+ * Low-pass filter, applied once per animation frame rather than once per sensor
+ * reading. Per reading its time constant rides on the sensor's rate — and phones
+ * deliver orientation events anywhere from 20Hz to 60Hz, often in bursts — so the
+ * same number produced smooth motion on one handset and steps on another.
+ */
+const GYRO_SMOOTHING = 0.12;
+
+/**
+ * The card should behave like a physical card held behind the glass, staying
+ * level in the world while the phone turns around it — so its rotation is the
+ * opposite of the device's. Flip this if it reads inverted on a real handset;
+ * a sensor is the one thing that cannot be checked in a headless browser.
+ */
+const GYRO_SIGN = -1;
 
 export type GyroStatus = 'unsupported' | 'idle' | 'active' | 'denied';
 
 interface Options {
   /**
-   * Allow the gyroscope to drive the tilt on touch devices when not dragging.
+   * Allow the gyroscope to drive the tilt on touch devices. Off by default: it
+   * belongs on a card being examined on its own, not on sixty grid tiles
+   * tilting in unison every time the phone moves.
    */
   gyro?: boolean;
 }
@@ -36,168 +90,84 @@ export function useFoilTilt<T extends HTMLElement>(enabled: boolean, options: Op
   const { gyro: gyroAllowed = false } = options;
 
   const ref = useRef<T | null>(null);
-  const isTouching = useRef(false);
-  const isHovered = useRef(false);
+  const frame = useRef(0);
+  /**
+   * Only fine pointers (a mouse, a trackpad) drive the tilt from movement. On
+   * a touch screen a touch is a scroll gesture nine times out of ten; trying
+   * to tilt from touch events makes the card twitch during normal scrolling.
+   */
+  const pointerDrives = useRef(false);
   const reducedMotion = useRef(false);
   const [gyroStatus, setGyroStatus] = useState<GyroStatus>('unsupported');
 
-  // Physics state
-  const target = useRef({ rx: 0, ry: 0, mx: 50, my: 50, on: 0 });
-  const current = useRef({ rx: 0, ry: 0, mx: 50, my: 50, on: 0 });
-  const animFrame = useRef(0);
-  const isLoopRunning = useRef(false);
-
-  // Gyro sensor state
-  const gyroBaseline = useRef<{ beta: number; gamma: number } | null>(null);
-  const gyroFiltered = useRef<{ beta: number; gamma: number }>({ beta: 0, gamma: 0 });
-
-  const writeToDOM = useCallback((rx: number, ry: number, mx: number, my: number, on: number) => {
+  const write = useCallback((rx: number, ry: number, mx: number, my: number, on: number, durMs: number) => {
     const el = ref.current;
     if (!el) return;
     el.style.setProperty('--foil-rx', `${rx.toFixed(2)}deg`);
     el.style.setProperty('--foil-ry', `${ry.toFixed(2)}deg`);
     el.style.setProperty('--foil-mx', `${mx.toFixed(1)}%`);
     el.style.setProperty('--foil-my', `${my.toFixed(1)}%`);
+    // Shadow offsets in px, because CSS calc() cannot divide a deg by a deg to
+    // get back to a plain number.
     el.style.setProperty('--foil-sx', `${(-ry * 1.1).toFixed(1)}px`);
-    el.style.setProperty('--foil-sy', `${(rx * 1.1 + 8).toFixed(1)}px`);
-    el.style.setProperty('--foil-on', on.toFixed(3));
+    el.style.setProperty('--foil-sy', `${(rx * 1.1 + 10).toFixed(1)}px`);
+    el.style.setProperty('--foil-on', String(on));
+    el.style.setProperty('--foil-dur', `${durMs}ms`);
   }, []);
-
-  // Central Physics & Render Loop (Smooth Framerate Controlled)
-  const startPhysicsLoop = useCallback(() => {
-    if (isLoopRunning.current) return;
-    isLoopRunning.current = true;
-
-    const tick = () => {
-      const cur = current.current;
-      const tgt = target.current;
-
-      const dRx = tgt.rx - cur.rx;
-      const dRy = tgt.ry - cur.ry;
-      const dMx = tgt.mx - cur.mx;
-      const dMy = tgt.my - cur.my;
-      const dOn = tgt.on - cur.on;
-
-      const isMoving =
-        Math.abs(dRx) > 0.005 ||
-        Math.abs(dRy) > 0.005 ||
-        Math.abs(dMx) > 0.05 ||
-        Math.abs(dMy) > 0.05 ||
-        Math.abs(dOn) > 0.005;
-
-      if (isMoving || isTouching.current || isHovered.current) {
-        cur.rx += dRx * LERP_SPEED;
-        cur.ry += dRy * LERP_SPEED;
-        cur.mx += dMx * LERP_SPEED;
-        cur.my += dMy * LERP_SPEED;
-        cur.on += dOn * LERP_SPEED;
-
-        writeToDOM(cur.rx, cur.ry, cur.mx, cur.my, cur.on);
-        animFrame.current = requestAnimationFrame(tick);
-      } else {
-        // Snap to exact target when close enough to stop wasting CPU/GPU
-        cur.rx = tgt.rx;
-        cur.ry = tgt.ry;
-        cur.mx = tgt.mx;
-        cur.my = tgt.my;
-        cur.on = tgt.on;
-        writeToDOM(cur.rx, cur.ry, cur.mx, cur.my, cur.on);
-        isLoopRunning.current = false;
-      }
-    };
-
-    animFrame.current = requestAnimationFrame(tick);
-  }, [writeToDOM]);
 
   useEffect(() => {
     if (!enabled) return;
+    const fine = window.matchMedia('(hover: hover) and (pointer: fine)');
     const reduced = window.matchMedia('(prefers-reduced-motion: reduce)');
     const sync = () => {
       reducedMotion.current = reduced.matches;
+      pointerDrives.current = fine.matches && !reduced.matches;
     };
     sync();
+    fine.addEventListener('change', sync);
     reduced.addEventListener('change', sync);
     return () => {
+      fine.removeEventListener('change', sync);
       reduced.removeEventListener('change', sync);
-      cancelAnimationFrame(animFrame.current);
-      isLoopRunning.current = false;
     };
   }, [enabled]);
 
-  // --- Pointer / Desktop Mouse ------------------------------------------------
+  useEffect(() => () => cancelAnimationFrame(frame.current), []);
+
+  // --- Pointer ---------------------------------------------------------------
 
   const onPointerMove = useCallback(
     (e: { clientX: number; clientY: number }) => {
-      if (reducedMotion.current || isTouching.current) return;
+      if (!pointerDrives.current) return;
       const el = ref.current;
       if (!el) return;
 
-      isHovered.current = true;
       const rect = el.getBoundingClientRect();
-      const px = Math.max(0, Math.min(1, (e.clientX - rect.left) / rect.width));
-      const py = Math.max(0, Math.min(1, (e.clientY - rect.top) / rect.height));
+      const px = (e.clientX - rect.left) / rect.width;
+      const py = (e.clientY - rect.top) / rect.height;
 
-      target.current.rx = (0.5 - py) * 2 * MAX_TILT_DEG;
-      target.current.ry = (px - 0.5) * 2 * MAX_TILT_DEG;
-      target.current.mx = px * 100;
-      target.current.my = py * 100;
-      target.current.on = 1;
-
-      startPhysicsLoop();
+      cancelAnimationFrame(frame.current);
+      frame.current = requestAnimationFrame(() => {
+        write(
+          (0.5 - py) * 2 * MAX_TILT_DEG,
+          (px - 0.5) * 2 * MAX_TILT_DEG,
+          px * 100,
+          py * 100,
+          1,
+          TRACK_MS
+        );
+      });
     },
-    [startPhysicsLoop]
+    [write]
   );
 
   const onPointerLeave = useCallback(() => {
-    if (reducedMotion.current || isTouching.current) return;
-    isHovered.current = false;
-    target.current.rx = 0;
-    target.current.ry = 0;
-    target.current.mx = 50;
-    target.current.my = 50;
-    target.current.on = 0;
-    startPhysicsLoop();
-  }, [startPhysicsLoop]);
+    if (!pointerDrives.current) return;
+    cancelAnimationFrame(frame.current);
+    write(0, 0, 50, 50, 0, RELEASE_MS);
+  }, [write]);
 
-  // --- Mobile Touch Dragging --------------------------------------------------
-
-  const onTouchStart = useCallback(() => {
-    isTouching.current = true;
-  }, []);
-
-  const onTouchMove = useCallback(
-    (e: TouchEvent<T>) => {
-      if (reducedMotion.current || !e.touches[0]) return;
-      const touch = e.touches[0];
-      const el = ref.current;
-      if (!el) return;
-
-      const rect = el.getBoundingClientRect();
-      const px = Math.max(0, Math.min(1, (touch.clientX - rect.left) / rect.width));
-      const py = Math.max(0, Math.min(1, (touch.clientY - rect.top) / rect.height));
-
-      target.current.rx = (0.5 - py) * 2 * MAX_TILT_DEG;
-      target.current.ry = (px - 0.5) * 2 * MAX_TILT_DEG;
-      target.current.mx = px * 100;
-      target.current.my = py * 100;
-      target.current.on = 1;
-
-      startPhysicsLoop();
-    },
-    [startPhysicsLoop]
-  );
-
-  const onTouchEnd = useCallback(() => {
-    isTouching.current = false;
-    target.current.rx = 0;
-    target.current.ry = 0;
-    target.current.mx = 50;
-    target.current.my = 50;
-    target.current.on = 0;
-    startPhysicsLoop();
-  }, [startPhysicsLoop]);
-
-  // --- Mobile Device Gyroscope ------------------------------------------------
+  // --- Gyroscope -------------------------------------------------------------
 
   useEffect(() => {
     if (!enabled || !gyroAllowed) return;
@@ -205,39 +175,44 @@ export function useFoilTilt<T extends HTMLElement>(enabled: boolean, options: Op
       setGyroStatus('unsupported');
       return;
     }
+    // A phone that reports a fine pointer is a phone with a mouse attached; let
+    // the pointer drive in that case.
     const coarse = window.matchMedia('(hover: none), (pointer: coarse)').matches;
     const reduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
     setGyroStatus(coarse && !reduced ? 'idle' : 'unsupported');
   }, [enabled, gyroAllowed]);
 
   const listening = useRef(false);
+  const easeFrame = useRef(0);
 
   const startGyro = useCallback(() => {
     if (listening.current) return undefined;
     listening.current = true;
 
+    /* First reading becomes neutral: nobody holds a phone at beta 0, so absolute
+       angles would start the card pinned at full tilt. */
+    let baseline: { beta: number; gamma: number } | null = null;
+    /* The sensor only ever sets a target. Easing toward it and writing to the DOM
+       happens on animation frames, which decouples both the filter's time
+       constant and the write rate from however fast the handset reports. */
+    const target = { rx: 0, ry: 0 };
+    const shown = { rx: 0, ry: 0 };
     const clamp = (v: number) => Math.max(-MAX_TILT_DEG, Math.min(MAX_TILT_DEG, v));
 
     const onOrientation = (e: DeviceOrientationEvent) => {
-      if (isTouching.current || isHovered.current || reducedMotion.current) return;
       const { beta, gamma } = e;
       if (beta === null || gamma === null) return;
-
-      if (!gyroBaseline.current) {
-        gyroBaseline.current = { beta, gamma };
-        gyroFiltered.current = { beta, gamma };
+      if (!baseline) {
+        baseline = { beta, gamma };
         return;
       }
 
-      // Low-pass EMA Filter on raw sensor input
-      gyroFiltered.current.beta += (beta - gyroFiltered.current.beta) * GYRO_EMA_ALPHA;
-      gyroFiltered.current.gamma += (gamma - gyroFiltered.current.gamma) * GYRO_EMA_ALPHA;
-
-      let dx = gyroFiltered.current.beta - gyroBaseline.current.beta;
-      let dy = gyroFiltered.current.gamma - gyroBaseline.current.gamma;
-
+      let dx = beta - baseline.beta;
+      let dy = gamma - baseline.gamma;
       if (Math.abs(dx) > GYRO_MAX_DELTA_DEG || Math.abs(dy) > GYRO_MAX_DELTA_DEG) return;
 
+      /* Dead zone on the deviation vector, not per axis, so a slight diagonal
+         lean is treated the same as a slight lean along either axis. */
       const off = Math.hypot(dx, dy);
       if (off <= GYRO_DEADZONE_DEG) {
         dx = 0;
@@ -248,32 +223,51 @@ export function useFoilTilt<T extends HTMLElement>(enabled: boolean, options: Op
         dy *= past;
       }
 
+      /* Remap for the screen's own rotation, or a phone held sideways tilts the
+         card along the wrong axis. */
       const angle = window.screen?.orientation?.angle ?? 0;
       if (angle === 90) [dx, dy] = [dy, -dx];
       else if (angle === 180) [dx, dy] = [-dx, -dy];
       else if (angle === 270) [dx, dy] = [-dy, dx];
 
-      const rx = clamp(-dx * GYRO_GAIN);
-      const ry = clamp(-dy * GYRO_GAIN);
-
-      target.current.rx = rx;
-      target.current.ry = ry;
-      target.current.mx = 50 + (ry / MAX_TILT_DEG) * 45;
-      target.current.my = 50 - (rx / MAX_TILT_DEG) * 45;
-      target.current.on = Math.min(1, Math.hypot(rx, ry) / (MAX_TILT_DEG * 0.5));
-
-      startPhysicsLoop();
+      /* Absolute: the target is the lean the phone is being held at. Hold the
+         phone still and the target stops moving, so the card settles there and
+         stays — it never springs back to level on its own. */
+      target.rx = clamp(GYRO_SIGN * dx * GYRO_GAIN);
+      target.ry = clamp(GYRO_SIGN * dy * GYRO_GAIN);
     };
 
-    window.addEventListener('deviceorientation', onOrientation, { passive: true });
+    const ease = () => {
+      const dRx = target.rx - shown.rx;
+      const dRy = target.ry - shown.ry;
+      /* Below a fifth of a degree there is nothing to see, and skipping the write
+         keeps a phone held steady from restyling the card sixty times a second. */
+      if (Math.abs(dRx) > 0.02 || Math.abs(dRy) > 0.02) {
+        shown.rx += dRx * GYRO_SMOOTHING;
+        shown.ry += dRy * GYRO_SMOOTHING;
+        const { rx, ry } = shown;
+        const lean = Math.min(1, Math.hypot(rx, ry) / (MAX_TILT_DEG * 0.6));
+        /* Highlight tracks the lean so the bands slide against the rotation — the
+           parallax the eye reads as depth. Written with no CSS transition: the
+           easing above is the smoothing, and a transition restarting every frame
+           is exactly what makes this look stepped. */
+        write(rx, ry, 50 + (ry / MAX_TILT_DEG) * 45, 50 - (rx / MAX_TILT_DEG) * 45, lean, 0);
+      }
+      easeFrame.current = requestAnimationFrame(ease);
+    };
+
+    window.addEventListener('deviceorientation', onOrientation);
+    easeFrame.current = requestAnimationFrame(ease);
     setGyroStatus('active');
     return onOrientation;
-  }, [startPhysicsLoop]);
+  }, [write]);
 
   const stopGyroRef = useRef<((e: DeviceOrientationEvent) => void) | undefined>(undefined);
 
   const enableGyro = useCallback(async () => {
     const Ctor = window.DeviceOrientationEvent as unknown as DeviceOrientationEventStatic | undefined;
+    // iOS 13+ gates the sensor behind a permission prompt that only a user
+    // gesture may open, which is why this is a button and not an effect.
     if (typeof Ctor?.requestPermission === 'function') {
       try {
         const result = await Ctor.requestPermission();
@@ -289,6 +283,7 @@ export function useFoilTilt<T extends HTMLElement>(enabled: boolean, options: Op
     stopGyroRef.current = startGyro();
   }, [startGyro]);
 
+  /* Android needs no prompt, so there the tilt starts on its own. */
   useEffect(() => {
     if (gyroStatus !== 'idle') return;
     const Ctor = window.DeviceOrientationEvent as unknown as DeviceOrientationEventStatic | undefined;
@@ -299,8 +294,7 @@ export function useFoilTilt<T extends HTMLElement>(enabled: boolean, options: Op
   useEffect(
     () => () => {
       if (stopGyroRef.current) window.removeEventListener('deviceorientation', stopGyroRef.current);
-      cancelAnimationFrame(animFrame.current);
-      isLoopRunning.current = false;
+      cancelAnimationFrame(easeFrame.current);
       listening.current = false;
     },
     []
@@ -310,10 +304,8 @@ export function useFoilTilt<T extends HTMLElement>(enabled: boolean, options: Op
     ref,
     onPointerMove,
     onPointerLeave,
-    onTouchStart,
-    onTouchMove,
-    onTouchEnd,
     gyro: {
+      /** 'idle' means available but waiting on the iOS permission gesture. */
       status: gyroStatus,
       enable: enableGyro,
       needsGesture: gyroStatus === 'idle',
