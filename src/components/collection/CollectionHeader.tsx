@@ -4,6 +4,7 @@ import { useGameStore } from '../../store/gameStore';
 import { useAuthStore } from '../../store/authStore';
 import { ProfileManagerModal } from './ProfileManagerModal';
 import { CollectionBackupModal } from './CollectionBackupModal';
+import { PWAInstallButton } from '../common/PWAInstallButton';
 import type { CollectionStats } from '../../types/collection';
 
 interface Props {
@@ -89,8 +90,10 @@ export function CollectionHeader({ stats }: Props) {
             </button>
           </nav>
 
-          {/* Mobile Right Action shortcut: Active Profile & Backup */}
+          {/* Mobile Right Action shortcut: Active Profile, Backup & Install PWA */}
           <div className="flex md:hidden items-center gap-1.5">
+            <PWAInstallButton variant="badge" />
+
             <button
               onClick={() => setShowProfileModal(true)}
               className="flex items-center gap-1.5 px-2.5 py-1 rounded-xl bg-slate-800 border border-slate-700 text-slate-200 text-xs font-bold shadow-sm"
@@ -148,6 +151,11 @@ export function CollectionHeader({ stats }: Props) {
                 <span>{stats.wishlistCount}</span>
               </div>
             )}
+          </div>
+
+          {/* PWA Install Button (Desktop) */}
+          <div className="hidden md:block">
+            <PWAInstallButton variant="badge" />
           </div>
 
           {/* Backup / Export Button (Desktop) */}

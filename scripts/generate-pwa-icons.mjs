@@ -1,4 +1,14 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" width="512" height="512">
+import sharp from 'sharp';
+import fs from 'fs';
+import path from 'path';
+import { fileURLToPath } from 'url';
+
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
+const publicDir = path.resolve(__dirname, '../public');
+
+// Create a high quality 512x512 SVG Pokéball icon with Masterball / PokéCount purple-indigo glow aesthetic
+const svgIcon = `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" width="512" height="512">
   <defs>
     <!-- Background Gradient -->
     <radialGradient id="bgGrad" cx="50%" cy="30%" r="75%">
@@ -100,4 +110,56 @@
     <!-- Top Shell Gloss Reflection Arc -->
     <path d="M 120 220 A 150 150 0 0 1 392 220" fill="none" stroke="#ffffff" stroke-width="6" stroke-linecap="round" opacity="0.25" />
   </g>
-</svg>
+</svg>`;
+
+async function generate() {
+  const svgBuffer = Buffer.from(svgIcon);
+
+  // 1. Save standard SVG icon
+  fs.writeFileSync(path.join(publicDir, 'pwa-icon.svg'), svgIcon);
+  fs.writeFileSync(path.join(publicDir, 'favicon.svg'), svgIcon);
+
+  // 2. Generate 512x512 PNG
+  await sharp(svgBuffer)
+    .resize(512, 512)
+    .png()
+    .toFile(path.join(publicDir, 'pwa-512x512.png'));
+  console.log('Created pwa-512x512.png');
+
+  // 3. Generate 192x192 PNG
+  await sharp(svgBuffer)
+    .resize(192, 192)
+    .png()
+    .toFile(path.join(publicDir, 'pwa-192x192.png'));
+  console.log('Created pwa-192x192.png');
+
+  // 4. Generate 180x180 Apple Touch Icon PNG
+  await sharp(svgBuffer)
+    .resize(180, 180)
+    .png()
+    .toFile(path.join(publicDir, 'apple-touch-icon.png'));
+  console.log('Created apple-touch-icon.png');
+
+  // 5. Generate Maskable Icon 512x512 (with safe zone padding)
+  const maskableSvg = `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" width="512" height="512">
+    <rect width="512" height="512" fill="#0f172a" />
+    <g transform="translate(51.2, 51.2) scale(0.8)">
+      ${svgIcon.replace(/<svg[^>]*>/, '').replace(/<\/svg>/, '')}
+    </g>
+  </svg>`;
+
+  await sharp(Buffer.from(maskableSvg))
+    .resize(512, 512)
+    .png()
+    .toFile(path.join(publicDir, 'maskable-icon-512x512.png'));
+  console.log('Created maskable-icon-512x512.png');
+
+  // 6. Generate 64x64 favicon PNG
+  await sharp(svgBuffer)
+    .resize(64, 64)
+    .png()
+    .toFile(path.join(publicDir, 'pwa-64x64.png'));
+  console.log('Created pwa-64x64.png');
+}
+
+generate().catch(console.error);

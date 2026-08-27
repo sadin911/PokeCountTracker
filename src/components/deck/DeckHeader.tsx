@@ -2,6 +2,7 @@ import { useState } from 'react';
 import { useDeckStore } from '../../store/deckStore';
 import { useGameStore } from '../../store/gameStore';
 import { useAuthStore } from '../../store/authStore';
+import { PWAInstallButton } from '../common/PWAInstallButton';
 
 interface Props {
   isEditing?: boolean;
@@ -82,8 +83,10 @@ export function DeckHeader({ isEditing, onBackToDecks, onOpenImportExport }: Pro
             </button>
           </nav>
 
-          {/* Mobile Right Action shortcut: Back button or Import/Export */}
+          {/* Mobile Right Action shortcut: Back button or Import/Export & Install PWA */}
           <div className="flex md:hidden items-center gap-1.5">
+            <PWAInstallButton variant="badge" />
+
             {isEditing && onBackToDecks && (
               <button
                 type="button"
@@ -110,6 +113,9 @@ export function DeckHeader({ isEditing, onBackToDecks, onOpenImportExport }: Pro
 
         {/* Desktop Actions, Back to Decks & User Profile */}
         <div className="hidden md:flex items-center justify-end gap-2.5 w-auto">
+          {/* PWA Install Button (Desktop) */}
+          <PWAInstallButton variant="badge" />
+
           {/* Back to Decks Button if in editor */}
           {isEditing && onBackToDecks && (
             <button
