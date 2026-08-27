@@ -147,4 +147,7 @@
 [2026-08-27 17:41] Major | Antigravity | Feature | src/ - 100% exact copy of Lorcana physics constants, useFoilTilt, and modal architecture
 [2026-08-27 17:41] Major | Antigravity | Command | npx playwright test - verified 34 E2E tests passed (100% green)
 [2026-08-27 17:41] Major | Antigravity | Command | git push origin main - Deploying exact Lorcana 3D foil architecture & clean zoom
+[2026-08-27 17:46] Major | Antigravity | Refactor | src/ - Fullscreen mode is 100% static clean artwork zoom; 3D tilt is strictly in Detail Modal only
+[2026-08-27 17:46] Major | Antigravity | Command | npx playwright test - verified 34 E2E tests passed (100% green)
+[2026-08-27 17:46] Major | Antigravity | Command | git push origin main - Deploying Lorcana-matched Detail-only 3D Tilt & Pure Static Fullscreen
 
