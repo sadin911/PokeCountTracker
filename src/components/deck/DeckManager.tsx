@@ -64,7 +64,7 @@ export function DeckManager() {
   const coverDeck = selectedCoverDeckId ? decks[selectedCoverDeckId] : null;
 
   return (
-    <div className="min-h-screen bg-slate-950 text-slate-100 flex flex-col font-sans selection:bg-indigo-500 selection:text-white">
+    <div className="min-h-screen bg-slate-100 dark:bg-slate-950 text-slate-900 dark:text-slate-100 flex flex-col font-sans selection:bg-blue-600 selection:text-white transition-colors duration-200">
       {/* Top Header */}
       <DeckHeader
         isEditing={!!editingDeck}

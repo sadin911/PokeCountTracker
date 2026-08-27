@@ -3,6 +3,7 @@ import { useDeckStore } from '../../store/deckStore';
 import { useGameStore } from '../../store/gameStore';
 import { useAuthStore } from '../../store/authStore';
 import { PWAInstallButton } from '../common/PWAInstallButton';
+import { ThemeToggle } from '../common/ThemeToggle';
 import { isAdminEmail } from '../../utils/adminAuth';
 
 interface Props {
@@ -84,8 +85,9 @@ export function DeckHeader({ isEditing, onBackToDecks, onOpenImportExport }: Pro
             </button>
           </nav>
 
-          {/* Mobile Right Action shortcut: Back button or Import/Export & Install PWA */}
+          {/* Mobile Right Action shortcut: Theme, Back button or Import/Export & Install PWA */}
           <div className="flex md:hidden items-center gap-1.5">
+            <ThemeToggle />
             <PWAInstallButton variant="badge" />
 
             {isEditing && onBackToDecks && (
@@ -114,6 +116,9 @@ export function DeckHeader({ isEditing, onBackToDecks, onOpenImportExport }: Pro
 
         {/* Desktop Actions, Back to Decks & User Profile */}
         <div className="hidden md:flex items-center justify-end gap-2.5 w-auto">
+          {/* Theme Toggle (Desktop) */}
+          <ThemeToggle />
+
           {/* PWA Install Button (Desktop) */}
           <PWAInstallButton variant="badge" />
 

@@ -348,7 +348,7 @@ export function CollectionTracker() {
   }, [selectedCategory]);
 
   return (
-    <div className="min-h-screen bg-slate-950 text-slate-100 flex flex-col font-sans selection:bg-amber-500 selection:text-slate-950">
+    <div className="min-h-screen bg-slate-100 dark:bg-slate-950 text-slate-900 dark:text-slate-100 flex flex-col font-sans selection:bg-red-500 selection:text-white transition-colors duration-200">
       {/* Top Header */}
       <CollectionHeader stats={overallStats} />
 

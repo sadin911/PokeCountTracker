@@ -1,14 +1,25 @@
 @import "tailwindcss";
 
+@custom-variant dark (&:where(.dark, .dark *));
+
 @layer base {
   :root {
+    color-scheme: light dark;
+    --pokeball-red: #EE1515;
+    --pokeball-red-dark: #CC0000;
+    --pokeball-white: #FFFFFF;
+    --pokeball-dark: #1E293B;
+    --pokeball-black: #0F172A;
+    --pokeball-yellow: #FFCB05;
+    --pokeball-blue: #2A75BB;
+  }
+
+  html.dark {
     color-scheme: dark;
-    --poke-yellow: #FFCB05;
-    --poke-yellow-dark: #C79D00;
-    --poke-blue: #2A75BB;
-    --poke-blue-dark: #1B365D;
-    --poke-red: #EE1515;
-    --poke-red-dark: #990000;
+  }
+
+  html.light {
+    color-scheme: light;
   }
 
   html, body, #root {
@@ -19,12 +30,23 @@
   }
 
   body {
-    @apply bg-slate-950 text-slate-100;
     font-family: system-ui, -apple-system, sans-serif;
+    @apply transition-colors duration-200;
+  }
+
+  html.dark body {
+    @apply bg-slate-950 text-slate-100;
     background-image: 
-      radial-gradient(circle at 15% 10%, rgba(255, 203, 5, 0.04) 0%, transparent 40%),
+      radial-gradient(circle at 15% 10%, rgba(238, 21, 21, 0.05) 0%, transparent 40%),
       radial-gradient(circle at 85% 90%, rgba(42, 117, 187, 0.05) 0%, transparent 45%),
-      radial-gradient(circle at 50% 50%, rgba(238, 21, 21, 0.02) 0%, transparent 60%);
+      radial-gradient(circle at 50% 50%, rgba(255, 203, 5, 0.02) 0%, transparent 60%);
+  }
+
+  html.light body {
+    @apply bg-slate-100 text-slate-900;
+    background-image: 
+      radial-gradient(circle at 15% 10%, rgba(238, 21, 21, 0.04) 0%, transparent 40%),
+      radial-gradient(circle at 85% 90%, rgba(42, 117, 187, 0.04) 0%, transparent 45%);
   }
 
   #root {

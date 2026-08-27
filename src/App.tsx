@@ -6,6 +6,7 @@ import { DeckManager } from './components/deck/DeckManager';
 import { AdminPage } from './components/admin/AdminPage';
 import { BottomNav } from './components/layout/BottomNav';
 import { trackEvent } from './utils/analytics';
+import { useThemeStore } from './store/themeStore';
 
 // Helper to determine mode from URL pathname, hash, or query params
 function getModeFromURL(): GameMode {
@@ -84,8 +85,10 @@ function App() {
   const gameMode = useGameStore((s) => s.gameMode);
   const setGameMode = useGameStore((s) => s.setGameMode);
 
-  // Initialize mode from URL on mount
+  // Initialize mode from URL and theme on mount
   useEffect(() => {
+    useThemeStore.getState().initTheme();
+
     const initialMode = getModeFromURL();
     if (initialMode !== gameMode) {
       setGameMode(initialMode);

@@ -5,6 +5,7 @@ import { useAuthStore } from '../../store/authStore';
 import { ProfileManagerModal } from './ProfileManagerModal';
 import { CollectionBackupModal } from './CollectionBackupModal';
 import { PWAInstallButton } from '../common/PWAInstallButton';
+import { ThemeToggle } from '../common/ThemeToggle';
 import { isAdminEmail } from '../../utils/adminAuth';
 import type { CollectionStats } from '../../types/collection';
 
@@ -91,8 +92,9 @@ export function CollectionHeader({ stats }: Props) {
             </button>
           </nav>
 
-          {/* Mobile Right Action shortcut: Active Profile, Backup & Install PWA */}
+          {/* Mobile Right Action shortcut: Theme Toggle, Active Profile, Backup & Install PWA */}
           <div className="flex md:hidden items-center gap-1.5">
+            <ThemeToggle />
             <PWAInstallButton variant="badge" />
 
             <button
@@ -152,6 +154,11 @@ export function CollectionHeader({ stats }: Props) {
                 <span>{stats.wishlistCount}</span>
               </div>
             )}
+          </div>
+
+          {/* Theme Toggle (Desktop) */}
+          <div className="hidden md:block">
+            <ThemeToggle />
           </div>
 
           {/* PWA Install Button (Desktop) */}
