@@ -43,6 +43,7 @@ interface CollectionState {
   loadUserFromCloud: (uid: string) => Promise<boolean>;
   syncProfileToCloud: (profileId: string) => Promise<void>;
   uploadLocalProfilesToCloud: (uid: string) => Promise<void>;
+  forceSyncCloud: (uid: string) => Promise<boolean>;
   resetToGuest: () => void;
 
   // Backup & Restore
@@ -630,6 +631,28 @@ export const useCollectionStore = create<CollectionState>((set, get) => ({
     } catch (err) {
       console.error('Failed to upload local binders to cloud:', err);
       set({ syncStatus: 'error' });
+    }
+  },
+
+  forceSyncCloud: async (uid: string) => {
+    set({ syncStatus: 'syncing' });
+    try {
+      const { profiles, activeProfileId } = get();
+      for (const [id, p] of Object.entries(profiles)) {
+        const docRef = doc(db, 'users', uid, 'binders', id);
+        await setDoc(docRef, { ...p, schemaVersion: BINDER_SCHEMA_VERSION });
+      }
+      set({ syncStatus: 'synced', lastSyncedAt: Date.now() });
+
+      localStorage.setItem(
+        `${USER_CACHE_KEY_PREFIX}${uid}`,
+        JSON.stringify({ profiles, activeProfileId })
+      );
+      return true;
+    } catch (err) {
+      console.error('Failed to force sync binders to cloud:', err);
+      set({ syncStatus: 'error' });
+      return false;
     }
   },
 

@@ -157,9 +157,6 @@
 [2026-08-27 17:56] Major | Antigravity | Command | npx playwright test - verified 34 E2E tests passed (100% green)
 [2026-08-27 17:56] Major | Antigravity | Command | git push origin main - Deploying 100% Lorcana layer architecture
 [2026-08-27 18:39] Major | Antigravity | Clean | src/data/pokemonNames.json - deduplicated 402 redundant card entries (from 9,643 to 9,241 cards)
-[2026-08-27 18:39] Major | Antigravity | Command | npx playwright test - verified 34 E2E tests passed (100% green)
-[2026-08-27 18:39] Major | Antigravity | Command | git push origin main - Deploying Cleaned & Deduplicated Database
-
-
-
-
+[2026-08-27 23:55] Major | Antigravity | Feature | src/store/collectionStore.ts & CollectionHeader.tsx - added dedicated Force Cloud Sync button & handler
+[2026-08-27 23:55] Major | Antigravity | Command | npx playwright test - verified 34 E2E tests passed (100% green)
+[2026-08-27 23:55] Major | Antigravity | Command | git push origin main - Deploying Force Cloud Sync feature

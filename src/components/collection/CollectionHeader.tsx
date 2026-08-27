@@ -1,5 +1,7 @@
 import { useState } from "react";
 import { useCollectionStore } from "../../store/collectionStore";
+import { useDeckStore } from "../../store/deckStore";
+import { useCommunityStore } from "../../store/communityStore";
 import { useGameStore } from "../../store/gameStore";
 import { useAuthStore } from "../../store/authStore";
 import { ProfileManagerModal } from "./ProfileManagerModal";
@@ -14,10 +16,24 @@ interface Props {
   stats: CollectionStats;
 }
 
+function formatLastSynced(timestamp: number | null): string {
+  if (!timestamp) return "ยังไม่เคยซิงค์";
+  const diff = Date.now() - timestamp;
+  if (diff < 60000) return "เมื่อสักครู่";
+  const mins = Math.floor(diff / 60000);
+  if (mins < 60) return `${mins} นาทีที่แล้ว`;
+  const d = new Date(timestamp);
+  return `${d.getHours().toString().padStart(2, "0")}:${d.getMinutes().toString().padStart(2, "0")} น.`;
+}
+
 export function CollectionHeader({ stats }: Props) {
   const activeProfileId = useCollectionStore((s) => s.activeProfileId);
   const profiles = useCollectionStore((s) => s.profiles);
   const syncStatus = useCollectionStore((s) => s.syncStatus);
+  const lastSyncedAt = useCollectionStore((s) => s.lastSyncedAt);
+  const forceSyncCloud = useCollectionStore((s) => s.forceSyncCloud);
+  const uploadLocalDecksToCloud = useDeckStore((s) => s.uploadLocalDecksToCloud);
+  const fetchCommunityStats = useCommunityStore((s) => s.fetchCommunityStats);
   const setGameMode = useGameStore((s) => s.setGameMode);
 
   const user = useAuthStore((s) => s.user);
@@ -28,8 +44,40 @@ export function CollectionHeader({ stats }: Props) {
   const [showProfileModal, setShowProfileModal] = useState(false);
   const [showBackupModal, setShowBackupModal] = useState(false);
   const [showUserMenu, setShowUserMenu] = useState(false);
+  const [isManualSyncing, setIsManualSyncing] = useState(false);
+  const [syncFeedback, setSyncFeedback] = useState<string | null>(null);
 
   const activeProfile = profiles[activeProfileId];
+
+  const handleForceSync = async () => {
+    if (!user) {
+      signIn();
+      return;
+    }
+    setIsManualSyncing(true);
+    try {
+      // 1. Force upload binders to Firestore
+      const res = await forceSyncCloud(user.uid);
+      // 2. Force upload decks to Firestore
+      await uploadLocalDecksToCloud(user.uid);
+      // 3. Refresh community stats
+      await fetchCommunityStats(true);
+
+      if (res) {
+        setSyncFeedback("ซิงค์สำเร็จแล้ว!");
+      } else {
+        setSyncFeedback("ซิงค์ผิดพลาด");
+      }
+    } catch (e) {
+      console.error("Force sync failed:", e);
+      setSyncFeedback("ซิงค์ล้มเหลว");
+    } finally {
+      setIsManualSyncing(false);
+      setTimeout(() => setSyncFeedback(null), 3000);
+    }
+  };
+
+  const isSyncing = syncStatus === "syncing" || isManualSyncing;
 
   return (
     <header className="sticky top-0 z-30 bg-white/95 dark:bg-slate-900/95 backdrop-blur-md border-b border-slate-200 dark:border-slate-700/80 px-3 sm:px-8 pt-[max(0.625rem,env(safe-area-inset-top,0px))] pb-2 sm:py-3 shadow-md dark:shadow-2xl transition-colors duration-200">
@@ -47,23 +95,48 @@ export function CollectionHeader({ stats }: Props) {
                   PokéCollection
                 </h1>
                 {user ? (
-                  <span
-                    className="px-1.5 py-0.5 rounded-full bg-emerald-100 dark:bg-emerald-500/20 border border-emerald-300 dark:border-emerald-500/40 text-emerald-800 dark:text-emerald-300 text-[9px] font-black uppercase tracking-wider flex items-center gap-0.5"
-                    title={syncStatus === "syncing" ? "กำลังซิงค์ข้อมูล Cloud..." : "Cloud Sync เชื่อมต่ออยู่"}
-                  >
-                    <span>☁️</span>
-                    <span className="hidden sm:inline">
-                      {syncStatus === "syncing"
-                        ? "Syncing..."
+                  <button
+                    type="button"
+                    onClick={handleForceSync}
+                    disabled={isSyncing}
+                    className={`px-2 py-0.5 rounded-full border text-[10px] font-black uppercase tracking-wider flex items-center gap-1 transition-all active:scale-95 cursor-pointer shadow-xs ${
+                      isSyncing
+                        ? "bg-amber-100 dark:bg-amber-500/20 border-amber-300 dark:border-amber-500/40 text-amber-800 dark:text-amber-300"
                         : syncStatus === "error"
-                        ? "Error"
+                        ? "bg-rose-100 dark:bg-rose-500/20 border-rose-300 dark:border-rose-500/40 text-rose-800 dark:text-rose-300 hover:bg-rose-200"
+                        : "bg-emerald-100 dark:bg-emerald-500/20 hover:bg-emerald-200 dark:hover:bg-emerald-500/30 border-emerald-300 dark:border-emerald-500/40 text-emerald-800 dark:text-emerald-300"
+                    }`}
+                    title={
+                      isSyncing
+                        ? "กำลังซิงค์ข้อมูลกับ Cloud..."
+                        : syncFeedback
+                        ? syncFeedback
+                        : `Cloud Sync เชื่อมต่ออยู่ (${formatLastSynced(lastSyncedAt)}) - คลิกเพื่อบังคับ Sync ทันที`
+                    }
+                  >
+                    <span className={isSyncing ? "animate-spin" : ""}>
+                      {isSyncing ? "🔄" : "☁️"}
+                    </span>
+                    <span>
+                      {isSyncing
+                        ? "Syncing..."
+                        : syncFeedback
+                        ? syncFeedback
+                        : syncStatus === "error"
+                        ? "Sync Error"
                         : "Cloud"}
                     </span>
-                  </span>
+                  </button>
                 ) : (
-                  <span className="px-1.5 py-0.5 rounded-full bg-amber-100 dark:bg-yellow-500/20 border border-amber-300 dark:border-yellow-500/40 text-amber-800 dark:text-yellow-300 text-[9px] font-black uppercase tracking-wider">
-                    Guest
-                  </span>
+                  <button
+                    type="button"
+                    onClick={() => signIn()}
+                    className="px-1.5 py-0.5 rounded-full bg-amber-100 dark:bg-yellow-500/20 hover:bg-amber-200 dark:hover:bg-yellow-500/30 border border-amber-300 dark:border-yellow-500/40 text-amber-800 dark:text-yellow-300 text-[9px] font-black uppercase tracking-wider flex items-center gap-0.5 cursor-pointer"
+                    title="เข้าสู่ระบบเพื่อเปิดใช้งาน Cloud Sync ข้ามอุปกรณ์"
+                  >
+                    <span>☁️</span>
+                    <span>Guest</span>
+                  </button>
                 )}
               </div>
               <p className="text-[11px] sm:text-xs text-slate-500 dark:text-slate-400 font-medium leading-none mt-0.5 hidden sm:block">
@@ -130,16 +203,41 @@ export function CollectionHeader({ stats }: Props) {
                   )}
                 </button>
 
-                {showUserMenu && (
-                  <div className="absolute right-0 mt-2 w-56 rounded-2xl bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-700 shadow-2xl p-3 z-50 animate-fade-in space-y-2">
+                    {showUserMenu && (
+                  <div className="absolute right-0 mt-2 w-64 rounded-2xl bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-700 shadow-2xl p-3 z-50 animate-fade-in space-y-2.5">
                     <div className="px-2 py-1.5 border-b border-slate-100 dark:border-slate-800">
                       <p className="text-xs font-bold text-slate-900 dark:text-white truncate">{user.displayName}</p>
                       <p className="text-[11px] text-slate-500 dark:text-slate-400 truncate">{user.email}</p>
-                      <div className="mt-1 flex items-center gap-1 text-[10px] text-emerald-600 dark:text-emerald-400 font-semibold">
-                        <span>☁️</span>
-                        <span>Cloud Sync เชื่อมต่ออยู่</span>
+                      <div className="mt-1 flex items-center justify-between text-[10px] text-emerald-600 dark:text-emerald-400 font-semibold">
+                        <span className="flex items-center gap-1">
+                          <span>☁️</span>
+                          <span>Cloud Sync: เชื่อมต่อแล้ว</span>
+                        </span>
+                        <span className="text-slate-400 dark:text-slate-500">{formatLastSynced(lastSyncedAt)}</span>
                       </div>
                     </div>
+
+                    {/* Force Cloud Sync Button inside Menu */}
+                    <button
+                      type="button"
+                      onClick={handleForceSync}
+                      disabled={isSyncing}
+                      className={`w-full text-left px-3 py-2 rounded-xl text-xs font-bold transition-all flex items-center justify-between gap-2 shadow-xs cursor-pointer ${
+                        isSyncing
+                          ? "bg-amber-100 dark:bg-amber-500/20 text-amber-800 dark:text-amber-300"
+                          : "bg-emerald-50 dark:bg-emerald-500/10 hover:bg-emerald-100 dark:hover:bg-emerald-500/20 border border-emerald-200 dark:border-emerald-500/30 text-emerald-700 dark:text-emerald-300"
+                      }`}
+                    >
+                      <div className="flex items-center gap-2">
+                        <span className={isSyncing ? "animate-spin" : ""}>🔄</span>
+                        <span>{isSyncing ? "กำลัง Sync ข้อมูล..." : "บังคับ Sync กับ Cloud ทันที"}</span>
+                      </div>
+                      {syncFeedback && (
+                        <span className="text-[10px] bg-emerald-500 text-white px-1.5 py-0.5 rounded font-black">
+                          {syncFeedback}
+                        </span>
+                      )}
+                    </button>
 
                     {isAdminEmail(user.email) && (
                       <button
@@ -215,7 +313,7 @@ export function CollectionHeader({ stats }: Props) {
             )}
           </div>
 
-          {/* Desktop Tools: Theme, Install, Backup, Auth */}
+          {/* Desktop Tools: Theme, Install, Backup, Sync & Auth */}
           <div className="hidden md:flex items-center gap-2">
             <ThemeToggle />
             <PWAInstallButton variant="badge" />
@@ -228,6 +326,24 @@ export function CollectionHeader({ stats }: Props) {
               <span>💾</span>
               <span>Backup</span>
             </button>
+
+            {/* Dedicated Force Sync Button in Desktop Toolbar */}
+            {user && (
+              <button
+                type="button"
+                onClick={handleForceSync}
+                disabled={isSyncing}
+                className={`px-3 py-1.5 text-xs font-bold rounded-xl border transition-all flex items-center gap-1.5 shadow-sm cursor-pointer ${
+                  isSyncing
+                    ? "bg-amber-100 dark:bg-amber-500/20 border-amber-300 dark:border-amber-500/40 text-amber-800 dark:text-amber-300"
+                    : "bg-emerald-50 dark:bg-emerald-500/10 hover:bg-emerald-100 dark:hover:bg-emerald-500/20 border-emerald-300 dark:border-emerald-500/40 text-emerald-800 dark:text-emerald-300"
+                }`}
+                title={`บังคับ Sync ข้อมูลกับ Cloud ทันที (ซิงค์ล่าสุด: ${formatLastSynced(lastSyncedAt)})`}
+              >
+                <span className={isSyncing ? "animate-spin" : ""}>🔄</span>
+                <span>{isSyncing ? "Syncing..." : syncFeedback || "Sync Cloud"}</span>
+              </button>
+            )}
 
             {user ? (
               <div className="relative">
@@ -253,15 +369,40 @@ export function CollectionHeader({ stats }: Props) {
                 </button>
 
                 {showUserMenu && (
-                  <div className="absolute right-0 mt-2 w-56 rounded-2xl bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-700 shadow-2xl p-3 z-50 animate-fade-in space-y-2">
+                  <div className="absolute right-0 mt-2 w-64 rounded-2xl bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-700 shadow-2xl p-3 z-50 animate-fade-in space-y-2.5">
                     <div className="px-2 py-1.5 border-b border-slate-100 dark:border-slate-800">
                       <p className="text-xs font-bold text-slate-900 dark:text-white truncate">{user.displayName}</p>
                       <p className="text-[11px] text-slate-500 dark:text-slate-400 truncate">{user.email}</p>
-                      <div className="mt-1 flex items-center gap-1 text-[10px] text-emerald-600 dark:text-emerald-400 font-semibold">
-                        <span>☁️</span>
-                        <span>Cloud Sync เปิดใช้งานอยู่</span>
+                      <div className="mt-1 flex items-center justify-between text-[10px] text-emerald-600 dark:text-emerald-400 font-semibold">
+                        <span className="flex items-center gap-1">
+                          <span>☁️</span>
+                          <span>Cloud Sync: เชื่อมต่อแล้ว</span>
+                        </span>
+                        <span className="text-slate-400 dark:text-slate-500">{formatLastSynced(lastSyncedAt)}</span>
                       </div>
                     </div>
+
+                    {/* Force Cloud Sync Button inside Desktop Menu */}
+                    <button
+                      type="button"
+                      onClick={handleForceSync}
+                      disabled={isSyncing}
+                      className={`w-full text-left px-3 py-2 rounded-xl text-xs font-bold transition-all flex items-center justify-between gap-2 shadow-xs cursor-pointer ${
+                        isSyncing
+                          ? "bg-amber-100 dark:bg-amber-500/20 text-amber-800 dark:text-amber-300"
+                          : "bg-emerald-50 dark:bg-emerald-500/10 hover:bg-emerald-100 dark:hover:bg-emerald-500/20 border border-emerald-200 dark:border-emerald-500/30 text-emerald-700 dark:text-emerald-300"
+                      }`}
+                    >
+                      <div className="flex items-center gap-2">
+                        <span className={isSyncing ? "animate-spin" : ""}>🔄</span>
+                        <span>{isSyncing ? "กำลัง Sync ข้อมูล..." : "บังคับ Sync กับ Cloud ทันที"}</span>
+                      </div>
+                      {syncFeedback && (
+                        <span className="text-[10px] bg-emerald-500 text-white px-1.5 py-0.5 rounded font-black">
+                          {syncFeedback}
+                        </span>
+                      )}
+                    </button>
 
                     {isAdminEmail(user.email) && (
                       <button
