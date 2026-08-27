@@ -94,3 +94,5 @@
 [2026-08-27 01:35] Minor | Claude | Fix | src/store/collectionStore.ts - setCardDetails now prunes, so clearing a note on an unowned card no longer leaves a zeroed entry forever; loadUserFromCloud keeps the selected binder instead of resetting to whichever doc Firestore returned first
 [2026-08-27 01:35] Major | Claude | Command | git tag v2.11.0 & push - Lorcana Split & Firestore Card Deletion Fix Release
 [2026-08-27 08:26] Major | Antigravity | Write | PWA support - integrated vite-plugin-pwa, icons, manifest & install UI
+[2026-08-27 08:27] Major | Antigravity | Command | git tag v2.12.0 & push - Progressive Web App (PWA) & Mobile Install Release
+
