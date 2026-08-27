@@ -160,3 +160,6 @@
 [2026-08-27 23:55] Major | Antigravity | Feature | src/store/collectionStore.ts & CollectionHeader.tsx - added dedicated Force Cloud Sync button & handler
 [2026-08-27 23:55] Major | Antigravity | Command | npx playwright test - verified 34 E2E tests passed (100% green)
 [2026-08-27 23:55] Major | Antigravity | Command | git push origin main - Deploying Force Cloud Sync feature
+[2026-08-28 00:03] Major | Antigravity | Feature | src/hooks/useOTAUpdate.ts, OTAUpdateBanner, OTAUpdateButton - built 1-tap OTA updates
+[2026-08-28 00:03] Major | Antigravity | Command | npx playwright test - verified 34 E2E tests passed (100% green)
+[2026-08-28 00:03] Major | Antigravity | Command | git push origin main - Deploying Over-The-Air (OTA) Instant App Update System

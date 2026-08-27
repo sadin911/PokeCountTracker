@@ -9,6 +9,7 @@ import { MiniPokemonCard } from './MiniPokemonCard';
 import { CoinFlip } from '../tools/CoinFlip';
 import { DiceRoller } from '../tools/DiceRoller';
 import { EndTurnModal } from '../layout/EndTurnModal';
+import { OTAUpdateButton } from '../common/OTAUpdateButton';
 
 function ThemePanel({ themeId, onSelect, onClose, open }: {
   themeId: string;
@@ -399,6 +400,9 @@ function MiniSharedZone({ faceToFace, onToggleFaceToFace }: { faceToFace: boolea
                 className={`px-2 py-1 rounded-md text-[10px] font-bold border ${theme.centerText} border-gray-700/50 hover:text-gray-200 hover:border-gray-500 transition-colors`}
                 title={isFs ? 'Exit fullscreen' : 'Enter fullscreen'}
               >{isFs ? '⊡' : '⛶'}</button>
+              <div className="hidden sm:inline-flex">
+                <OTAUpdateButton variant="badge" />
+              </div>
               <button
                 onClick={() => setGameMode('deck')}
                 className="hidden sm:inline-flex px-2 py-1 rounded-md text-[10px] font-bold border bg-purple-800/60 border-purple-500/60 text-purple-300 hover:bg-purple-700/60 transition-colors"

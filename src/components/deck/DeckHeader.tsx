@@ -3,6 +3,7 @@ import { useDeckStore } from '../../store/deckStore';
 import { useGameStore } from '../../store/gameStore';
 import { useAuthStore } from '../../store/authStore';
 import { PWAInstallButton } from '../common/PWAInstallButton';
+import { OTAUpdateButton } from '../common/OTAUpdateButton';
 import { ThemeToggle } from '../common/ThemeToggle';
 import { MasterBallIcon } from '../icons/MasterBallIcon';
 import { isAdminEmail } from '../../utils/adminAuth';
@@ -88,6 +89,7 @@ export function DeckHeader({ isEditing, onBackToDecks, onOpenImportExport }: Pro
 
           {/* Mobile Right Action shortcut: Theme, Back button or Import/Export & Install PWA */}
           <div className="flex md:hidden items-center gap-1.5">
+            <OTAUpdateButton variant="badge" />
             <ThemeToggle />
             <PWAInstallButton variant="badge" />
 
@@ -139,6 +141,11 @@ export function DeckHeader({ isEditing, onBackToDecks, onOpenImportExport }: Pro
             </button>
           )}
 
+          {/* OTA Update Check (Desktop) */}
+          <div className="hidden md:block">
+            <OTAUpdateButton variant="toolbar" />
+          </div>
+
           {/* Theme Toggle (Desktop) */}
           <div className="hidden md:block">
             <ThemeToggle />
@@ -184,6 +191,9 @@ export function DeckHeader({ isEditing, onBackToDecks, onOpenImportExport }: Pro
                       <span>Cloud Sync เปิดใช้งานอยู่</span>
                     </div>
                   </div>
+
+                  {/* OTA Update inside Menu */}
+                  <OTAUpdateButton variant="menu" />
 
                   {isAdminEmail(user.email) && (
                     <button

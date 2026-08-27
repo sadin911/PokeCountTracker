@@ -7,6 +7,7 @@ import { useAuthStore } from "../../store/authStore";
 import { ProfileManagerModal } from "./ProfileManagerModal";
 import { CollectionBackupModal } from "./CollectionBackupModal";
 import { PWAInstallButton } from "../common/PWAInstallButton";
+import { OTAUpdateButton } from "../common/OTAUpdateButton";
 import { ThemeToggle } from "../common/ThemeToggle";
 import { MasterBallIcon } from "../icons/MasterBallIcon";
 import { isAdminEmail } from "../../utils/adminAuth";
@@ -170,8 +171,9 @@ export function CollectionHeader({ stats }: Props) {
             </button>
           </nav>
 
-          {/* Mobile Right Action shortcut: Theme, Install PWA, Backup & User Auth */}
+          {/* Mobile Right Action shortcut: Theme, Install PWA, OTA, Backup & User Auth */}
           <div className="flex md:hidden items-center gap-1.5 shrink-0">
+            <OTAUpdateButton variant="badge" />
             <ThemeToggle />
             <PWAInstallButton variant="badge" />
 
@@ -315,6 +317,7 @@ export function CollectionHeader({ stats }: Props) {
 
           {/* Desktop Tools: Theme, Install, Backup, Sync & Auth */}
           <div className="hidden md:flex items-center gap-2">
+            <OTAUpdateButton variant="toolbar" />
             <ThemeToggle />
             <PWAInstallButton variant="badge" />
 
@@ -403,6 +406,9 @@ export function CollectionHeader({ stats }: Props) {
                         </span>
                       )}
                     </button>
+
+                    {/* OTA Update Check inside Menu */}
+                    <OTAUpdateButton variant="menu" />
 
                     {isAdminEmail(user.email) && (
                       <button

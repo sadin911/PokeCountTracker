@@ -5,6 +5,7 @@ import { CollectionTracker } from './components/collection/CollectionTracker';
 import { DeckManager } from './components/deck/DeckManager';
 import { AdminPage } from './components/admin/AdminPage';
 import { BottomNav } from './components/layout/BottomNav';
+import { OTAUpdateBanner } from './components/common/OTAUpdateBanner';
 import { trackEvent } from './utils/analytics';
 import { useThemeStore } from './store/themeStore';
 
@@ -136,6 +137,7 @@ function App() {
         </div>
       )}
       <BottomNav />
+      <OTAUpdateBanner />
     </div>
   );
 }
