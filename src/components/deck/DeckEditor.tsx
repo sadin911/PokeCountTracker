@@ -8,7 +8,7 @@ import { CardCollectionModal } from '../collection/CardCollectionModal';
 import { DeckCoverPickerModal } from './DeckCoverPickerModal';
 import { RARITY_CLASSES } from '../collection/CollectionFilterBar';
 import { SearchableSetSelect } from '../common/SearchableSetSelect';
-import { REGULATION_SERIES_OPTIONS } from '../../types/collection';
+import { REGULATION_SERIES_OPTIONS, STANDARD_REGULATION_MARKS } from '../../types/collection';
 import { getCardRarityClass } from '../../utils/rarity';
 import { createCardMatcher } from '../../utils/searchHelpers';
 import pokemonCardData from '../../data/pokemonNames.json';
@@ -140,7 +140,7 @@ export function DeckEditor({ deck, onBackToDecks }: Props) {
       if (selectedRegulation !== 'ALL') {
         const mark = c.regulationMark || '';
         if (selectedRegulation === 'STANDARD') {
-          if (!['G', 'H', 'I', 'J'].includes(mark)) return false;
+          if (!STANDARD_REGULATION_MARKS.includes(mark as any)) return false;
         } else if (selectedRegulation === 'EXPANDED') {
           if (!['A', 'B'].includes(mark)) return false;
         } else {

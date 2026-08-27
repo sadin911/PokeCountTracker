@@ -1,4 +1,5 @@
 import { useState, useRef, useEffect, useMemo } from 'react';
+import { STANDARD_REGULATION_MARKS } from '../../types/collection';
 
 export interface SetOption {
   id: string;
@@ -21,7 +22,7 @@ export interface SearchableSetSelectProps {
 
 const REGULATION_QUICK_TABS = [
   { id: 'ALL', label: 'ทั้งหมด' },
-  { id: 'STANDARD', label: '⚡ Standard (G-J)' },
+  { id: 'STANDARD', label: '⚡ Standard (H-J)' },
   { id: 'J', label: 'J' },
   { id: 'I', label: 'I' },
   { id: 'H', label: 'H' },
@@ -80,12 +81,11 @@ export function SearchableSetSelect({
     // Filter by regulation tab
     if (selectedRegTab !== 'ALL') {
       if (selectedRegTab === 'STANDARD') {
-        const std = ['G', 'H', 'I', 'J'];
         result = result.filter((s) => {
           if (s.regulationMarks && s.regulationMarks.length > 0) {
-            return s.regulationMarks.some((m) => std.includes(m));
+            return s.regulationMarks.some((m) => (STANDARD_REGULATION_MARKS as readonly string[]).includes(m));
           }
-          return s.regulationMark ? std.includes(s.regulationMark) : false;
+          return s.regulationMark ? (STANDARD_REGULATION_MARKS as readonly string[]).includes(s.regulationMark) : false;
         });
       } else {
         result = result.filter((s) => {

@@ -6,9 +6,10 @@ import { useCommunityStore } from '../../store/communityStore';
 import { CollectionHeader } from './CollectionHeader';
 import { CollectionFilterBar } from './CollectionFilterBar';
 import { CollectionGridView } from './CollectionGridView';
-import type {
-  CollectionStats,
-  SetProgress,
+import {
+  type CollectionStats,
+  type SetProgress,
+  STANDARD_REGULATION_MARKS,
 } from '../../types/collection';
 
 import { getCardRarityClass } from '../../utils/rarity';
@@ -233,7 +234,7 @@ export function CollectionTracker() {
       if (selectedRegulation !== 'ALL') {
         const mark = card.regulationMark || '';
         if (selectedRegulation === 'STANDARD') {
-          if (!['G', 'H', 'I', 'J'].includes(mark)) return false;
+          if (!STANDARD_REGULATION_MARKS.includes(mark as any)) return false;
         } else if (selectedRegulation === 'EXPANDED') {
           if (!['A', 'B'].includes(mark)) return false;
         } else {
