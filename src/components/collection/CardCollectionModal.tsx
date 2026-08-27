@@ -9,7 +9,6 @@ import { getEnglishCardName } from '../../utils/searchHelpers';
 import { isCardFoil, foilPulseDelay } from '../../utils/cardFoil';
 import { useFoilTilt } from '../../hooks/useFoilTilt';
 import { EvolutionChainSection } from '../pokemon/EvolutionChainSection';
-import { CardImagePreviewModal } from '../pokemon/CardImagePreviewModal';
 import type { CardVariantKey, CardCondition } from '../../types/collection';
 
 interface Props {
@@ -147,7 +146,7 @@ export function CardCollectionModal({ card: initialCard, onClose, deckId }: Prop
   const currentNote = cardEntry?.note || '';
 
   const isFoil = useMemo(() => isCardFoil(activeCard, variants), [activeCard, variants]);
-  const tilt = useFoilTilt<HTMLDivElement>(isFoil, { gyro: true });
+  const tilt = useFoilTilt<HTMLButtonElement>(isFoil, { gyro: true });
 
   const applicableVariants = useMemo(() => {
     return getApplicableVariants(activeCard, variants);
@@ -163,82 +162,92 @@ export function CardCollectionModal({ card: initialCard, onClose, deckId }: Prop
 
   return createPortal(
     <div
-      className="fixed inset-0 z-50 flex items-center justify-center p-3 sm:p-6 bg-black/70 dark:bg-black/85 backdrop-blur-md animate-fade-in"
-      onClick={(e) => {
-        if (e.target === e.currentTarget) onClose();
-      }}
+      className="fixed inset-0 z-50 flex items-center justify-center p-3 sm:p-4 bg-black/80 backdrop-blur-md animate-fade-in"
+      onClick={onClose}
     >
-      <div className="relative bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-700/90 w-full max-w-4xl rounded-3xl shadow-2xl overflow-hidden flex flex-col md:flex-row max-h-[92vh] transition-colors duration-200">
-        {/* Left: Card Preview & Info */}
-        <div className="md:w-5/12 bg-slate-100 dark:bg-slate-950 p-5 sm:p-6 flex flex-col items-center justify-center border-b md:border-b-0 md:border-r border-slate-200 dark:border-slate-800/90 relative">
-          <div
-            ref={tilt.ref}
-            onPointerMove={isFoil ? tilt.onPointerMove : undefined}
-            onPointerLeave={isFoil ? tilt.onPointerLeave : undefined}
-            onClick={() => setShowZoom(true)}
-            className={`relative group max-w-[260px] w-full aspect-[2.5/3.5] rounded-2xl overflow-hidden shadow-xl dark:shadow-2xl dark:shadow-black/80 ring-1 cursor-zoom-in transition-all duration-200 select-none touch-none ${
-              isFoil
-                ? 'foil-3d ring-amber-400/80 hover:ring-amber-300 hover:shadow-amber-500/20'
-                : 'ring-slate-300 dark:ring-slate-700/60 hover:ring-2 hover:ring-purple-400 dark:hover:ring-amber-400/80 hover:shadow-purple-500/10'
-            }`}
-            title="คลิกเพื่อขยายดูภาพการ์ดใหญ่เต็มจอ (Fullscreen)"
-          >
-            <img
-              src={resolveCardImageUrl(activeCard.imageUrlHigh || activeCard.imageUrl, true)}
-              alt={activeCard.name}
-              className="w-full h-full object-cover pointer-events-none"
-              onError={(e) => handleCardImageError(e, activeCard.imageUrl, activeCard.officialImageUrl)}
-            />
-
-            {/* Holographic / Foil Shimmer Overlay */}
-            {isFoil && (
-              <div
-                className="foil-holo"
-                aria-hidden="true"
-                style={{ animationDelay: `${foilPulseDelay(activeCard.id)}s` }}
-              />
-            )}
-
-            {totalCount > 0 && (
-              <div className="absolute top-2.5 right-2.5 px-3 py-1 rounded-full bg-gradient-to-r from-amber-500 to-amber-600 text-slate-950 font-black text-xs shadow-xl shadow-amber-500/40 flex items-center gap-1 z-10 pointer-events-none">
-                <span>มีสะสม {totalCount} ใบ</span>
-              </div>
-            )}
-          </div>
-
-          {/* iOS Gyroscope Permission / Activation Gesture Button */}
-          {isFoil && tilt.gyro.needsGesture && (
+      <div
+        data-testid="card-detail"
+        data-card-id={activeCard.id}
+        onClick={(e) => e.stopPropagation()}
+        className="w-full max-w-4xl max-h-[92vh] overflow-y-auto overscroll-contain scrollbar-thin rounded-3xl border border-slate-700/60 bg-slate-900/95 backdrop-blur-2xl shadow-2xl shadow-black/90"
+      >
+        <div className="grid grid-cols-1 md:grid-cols-12 gap-5 p-4 sm:p-6">
+          {/* Image Column */}
+          <div className="md:col-span-5 space-y-3">
             <button
               type="button"
-              onClick={tilt.gyro.enable}
-              className="mt-2.5 w-full max-w-[260px] py-2 px-3 rounded-xl border border-amber-400/50 bg-amber-400/10 dark:bg-amber-500/15 text-xs font-bold text-amber-800 dark:text-amber-300 hover:bg-amber-400/20 active:scale-95 transition-all flex items-center justify-center gap-1.5 shadow-sm"
+              onClick={() => setShowZoom(true)}
+              ref={tilt.ref}
+              onPointerMove={isFoil ? tilt.onPointerMove : undefined}
+              onPointerLeave={isFoil ? tilt.onPointerLeave : undefined}
+              className={`relative block w-full rounded-2xl overflow-hidden border bg-[#1b2038] group ${
+                isFoil
+                  ? 'foil-3d border-[#dfc792]/50 hover:border-[#dfc792]'
+                  : 'border-[#c8b07b]/30 hover:border-[#c8b07b] transition-all shadow-xl shadow-black/50'
+              }`}
             >
-              <span>✨</span>
-              <span>เอียงโทรศัพท์เพื่อดูประกายการ์ด 3D</span>
+              <img
+                src={resolveCardImageUrl(activeCard.imageUrlHigh || activeCard.imageUrl, true)}
+                alt={activeCard.name}
+                onError={(e) => handleCardImageError(e, activeCard.imageUrl, activeCard.officialImageUrl)}
+                className="w-full h-auto transition-transform duration-300 group-hover:scale-[1.02]"
+              />
+              {isFoil && (
+                <>
+                  {/* The stagger sits on this layer, not on the tilt target: custom
+                      properties inherit down through the wrappers, animation-delay
+                      does not. */}
+                  <div
+                    className="foil-holo"
+                    aria-hidden="true"
+                    style={{ animationDelay: `${foilPulseDelay(activeCard.id)}s` }}
+                  />
+                </>
+              )}
             </button>
-          )}
 
-          {/* Dedicated Fullscreen Button */}
-          <button
-            type="button"
-            onClick={() => setShowZoom(true)}
-            className="mt-3 w-full max-w-[260px] py-2 px-3 rounded-xl bg-white dark:bg-slate-800/90 hover:bg-slate-50 dark:hover:bg-slate-750 active:scale-95 text-purple-700 dark:text-amber-300 hover:text-purple-900 dark:hover:text-amber-200 border border-slate-200 dark:border-slate-700/80 hover:border-purple-400 dark:hover:border-amber-500/50 shadow-sm dark:shadow-md font-bold text-xs flex items-center justify-center gap-1.5 transition-all group"
-            title="ขยายภาพการ์ดขนาดใหญ่ เต็มจอ"
-          >
-            <span className="text-sm group-hover:scale-125 transition-transform">🔍</span>
-            <span>ดูการ์ดขนาดใหญ่ (Fullscreen)</span>
-          </button>
+            {totalCount > 0 && (
+              <div className="flex items-center justify-center">
+                <span className="px-3 py-1 rounded-full bg-gradient-to-r from-amber-500 to-amber-600 text-slate-950 font-black text-xs shadow-md">
+                  มีสะสม {totalCount} ใบ
+                </span>
+              </div>
+            )}
 
-          <div className="mt-3 text-center w-full">
-            <h3 className="text-base sm:text-lg font-black text-slate-900 dark:text-white leading-tight">{activeCard.name}</h3>
-            <p className="text-xs text-slate-500 dark:text-slate-400 mt-1 font-medium">
+            {/* iOS 13+ will only open the motion permission prompt from a user
+                gesture, so the tilt needs a button rather than an effect.
+                Android starts on its own and never renders this. */}
+            {isFoil && tilt.gyro.needsGesture && (
+              <button
+                type="button"
+                onClick={tilt.gyro.enable}
+                className="w-full py-2 rounded-xl border border-[#dfc792]/40 bg-[#dfc792]/10 text-xs font-bold text-[#dfc792] hover:bg-[#dfc792]/20 transition-all flex items-center justify-center gap-1.5"
+              >
+                <span>✨</span>
+                <span>Tilt your phone to catch the foil</span>
+              </button>
+            )}
+            {isFoil && tilt.gyro.status === 'denied' && (
+              <p className="text-[10px] text-slate-400 text-center">
+                Motion access was declined — the foil still shifts, just without the tilt.
+              </p>
+            )}
+
+            <button
+              type="button"
+              onClick={() => setShowZoom(true)}
+              className="w-full py-2 rounded-xl border border-[#c8b07b]/30 bg-[#1b2038]/80 hover:bg-[#252a48] text-xs font-bold text-slate-200 hover:text-[#dfc792] transition-all flex items-center justify-center gap-1.5"
+            >
+              <span>🔍</span>
+              <span>View Fullscreen Artwork</span>
+            </button>
+            <p className="text-[11px] text-slate-400 text-center font-mono font-medium">
               {activeCard.set?.name || 'การ์ดเสริม'} · {activeCard.collectorNumber || activeCard.localId}
             </p>
           </div>
-        </div>
 
-        {/* Right: Quantities & Details (Full Width Spacious Layout) */}
-        <div className="md:w-7/12 p-5 sm:p-7 overflow-y-auto flex flex-col justify-between space-y-5">
+          {/* Details Column */}
+          <div className="md:col-span-7 space-y-5">
           <div className="space-y-5">
             {/* Header with Set Badges, Wishlist Button and Prominent Close Button */}
 
@@ -541,20 +550,39 @@ export function CardCollectionModal({ card: initialCard, onClose, deckId }: Prop
           </div>
         </div>
       </div>
+    </div>
 
-      {/* Fullscreen Card Image Zoom Modal */}
-      {showZoom && (
-        <CardImagePreviewModal
-          cardId={activeCard.id}
-          imageUrl={activeCard.imageUrlHigh || activeCard.imageUrl}
-          officialImageUrl={activeCard.officialImageUrl}
-          cardName={activeCard.name}
-          setInfo={activeCard.set?.id || activeCard.set?.name}
-          collectorNumber={activeCard.collectorNumber || activeCard.localId}
-          rarityCode={activeCard.rarityCode}
-          onClose={() => setShowZoom(false)}
-        />
-      )}
+      {/* Fullscreen Card Image Zoom Modal (100% Lorcana Architecture) */}
+      {showZoom &&
+        createPortal(
+          <div
+            data-testid="artwork-fullscreen"
+            className="fixed inset-0 z-60 flex items-center justify-center p-4 bg-black/95 backdrop-blur-xl animate-fade-in touch-none overscroll-none"
+            onClick={(e) => {
+              e.stopPropagation();
+              setShowZoom(false);
+            }}
+          >
+            <img
+              src={resolveCardImageUrl(activeCard.imageUrlHigh || activeCard.imageUrl, true)}
+              alt={activeCard.name}
+              onError={(e) => handleCardImageError(e, activeCard.imageUrl, activeCard.officialImageUrl)}
+              className="max-w-full max-h-full object-contain rounded-2xl shadow-2xl shadow-black"
+            />
+            <button
+              type="button"
+              onClick={(e) => {
+                e.stopPropagation();
+                setShowZoom(false);
+              }}
+              aria-label="Close fullscreen"
+              className="absolute top-4 right-4 w-10 h-10 rounded-full bg-slate-800/90 text-slate-100 text-lg flex items-center justify-center hover:bg-slate-700"
+            >
+              ✕
+            </button>
+          </div>,
+          document.body
+        )}
     </div>,
     document.body
   );

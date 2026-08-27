@@ -29,19 +29,28 @@
   transition:
     transform var(--foil-dur) cubic-bezier(0.16, 1, 0.3, 1),
     box-shadow var(--foil-dur) ease-out;
+  /* Shadow leans opposite the tilt. Kept subtle: with a shallow rotation a heavy
+     shadow is the thing that would look overdone. */
   box-shadow:
     var(--foil-sx) var(--foil-sy) calc(14px + 8px * var(--foil-on))
       rgba(0, 0, 0, calc(0.28 + 0.2 * var(--foil-on))),
-    0 0 0 1px rgba(255, 203, 5, calc(0.3 + 0.35 * var(--foil-on)));
+    0 0 0 1px rgba(223, 199, 146, calc(0.3 + 0.35 * var(--foil-on)));
 }
 
+/* The holographic bands, oversized and positioned from the input, so they slide
+   across the art as the card turns. color-dodge is what makes them read as light
+   rather than as paint.
+
+   Two elements deep on purpose: the wrapper's opacity carries the tilt ramp, and
+   ::before carries the idle pulse. Put both on one element and the animation wins
+   over the declaration every frame. */
 @utility foil-holo {
   position: absolute;
   inset: 0;
   overflow: hidden;
   border-radius: inherit;
   pointer-events: none;
-  mix-blend-mode: screen;
+  mix-blend-mode: color-dodge;
   opacity: calc(0.22 + 0.4 * var(--foil-on));
   transition: opacity var(--foil-dur) ease-out;
 
@@ -50,10 +59,17 @@
     position: absolute;
     inset: -25%;
     background-image:
-      radial-gradient(58% 42% at var(--foil-mx) var(--foil-my), rgba(255, 255, 255, 0.45), transparent 70%),
-      radial-gradient(52% 44% at 78% 78%, rgba(255, 203, 5, 0.35), transparent 70%),
-      radial-gradient(60% 50% at 20% 80%, rgba(146, 206, 232, 0.28), transparent 70%);
-    background-size: 200% 200%, auto, auto;
+      repeating-linear-gradient(
+        112deg,
+        rgba(255, 214, 148, 0.3) 0%,
+        rgba(150, 226, 255, 0.26) 7%,
+        rgba(206, 164, 255, 0.24) 14%,
+        rgba(255, 236, 176, 0.3) 21%,
+        rgba(255, 214, 148, 0.3) 28%
+      ),
+      radial-gradient(58% 42% at 24% 14%, rgba(223, 199, 146, 0.48), transparent 70%),
+      radial-gradient(52% 44% at 78% 78%, rgba(146, 206, 232, 0.4), transparent 70%);
+    background-size: 240% 240%, auto, auto;
     background-position: var(--foil-mx) var(--foil-my);
     transition: background-position var(--foil-dur) ease-out;
     animation: foil-holo-pulse 9s ease-in-out infinite;
