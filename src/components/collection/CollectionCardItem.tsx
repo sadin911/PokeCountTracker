@@ -95,7 +95,17 @@ export function CollectionCardItem({
       <div className="mt-2 flex flex-col justify-between flex-1">
         <div onClick={() => onSelect(card)} className="cursor-pointer">
           <div className="flex items-center justify-between text-[10px] text-slate-400 font-mono">
-            <span className="truncate max-w-[70%]">{card.set?.id || 'PROMO'}</span>
+            <div className="flex items-center gap-1 min-w-0">
+              <span className="truncate">{card.set?.id || 'PROMO'}</span>
+              {card.regulationMark && (
+                <span
+                  className="px-1 py-0.2 rounded text-[8px] font-black uppercase bg-slate-800 text-slate-300 border border-slate-700 shrink-0"
+                  title={`Regulation Mark ${card.regulationMark}`}
+                >
+                  {card.regulationMark}
+                </span>
+              )}
+            </div>
             <span>{card.collectorNumber || card.localId}</span>
           </div>
           <h4

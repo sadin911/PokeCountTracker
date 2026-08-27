@@ -95,4 +95,5 @@
 [2026-08-27 01:35] Major | Claude | Command | git tag v2.11.0 & push - Lorcana Split & Firestore Card Deletion Fix Release
 [2026-08-27 08:26] Major | Antigravity | Write | PWA support - integrated vite-plugin-pwa, icons, manifest & install UI
 [2026-08-27 08:27] Major | Antigravity | Command | git tag v2.12.0 & push - Progressive Web App (PWA) & Mobile Install Release
-
+[2026-08-27 09:00] Major | Antigravity | Edit | src/components/deck/ & collection/ - unified CardCollectionModal with Deck support & Missing Cards refill
+[2026-08-27 09:06] Major | Antigravity | Write | src/ - added Regulation Mark Series filtering & set grouping across Collection & Deck Builder

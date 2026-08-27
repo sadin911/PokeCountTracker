@@ -5,6 +5,8 @@ export interface SetOption {
   name: string;
   count?: number;
   owned?: number;
+  regulationMark?: string;
+  regulationMarks?: string[];
 }
 
 export interface SearchableSetSelectProps {
@@ -15,6 +17,39 @@ export interface SearchableSetSelectProps {
   className?: string;
   accentColor?: 'amber' | 'indigo';
   showProgress?: boolean;
+}
+
+const REGULATION_QUICK_TABS = [
+  { id: 'ALL', label: 'ทั้งหมด' },
+  { id: 'STANDARD', label: '⚡ Standard (G-J)' },
+  { id: 'J', label: 'J' },
+  { id: 'I', label: 'I' },
+  { id: 'H', label: 'H' },
+  { id: 'G', label: 'G' },
+  { id: 'F', label: 'F' },
+  { id: 'E', label: 'E' },
+  { id: 'D', label: 'D' },
+] as const;
+
+export function getRegulationMarkBadgeStyle(mark?: string) {
+  switch (mark) {
+    case 'J':
+      return 'bg-fuchsia-500/20 text-fuchsia-300 border-fuchsia-500/50';
+    case 'I':
+      return 'bg-cyan-500/20 text-cyan-300 border-cyan-500/50';
+    case 'H':
+      return 'bg-emerald-500/20 text-emerald-300 border-emerald-500/50';
+    case 'G':
+      return 'bg-amber-500/20 text-amber-300 border-amber-500/50';
+    case 'F':
+      return 'bg-blue-500/20 text-blue-300 border-blue-500/50';
+    case 'E':
+      return 'bg-purple-500/20 text-purple-300 border-purple-500/50';
+    case 'D':
+      return 'bg-rose-500/20 text-rose-300 border-rose-500/50';
+    default:
+      return 'bg-slate-800 text-slate-400 border-slate-700';
+  }
 }
 
 export function SearchableSetSelect({
@@ -28,6 +63,7 @@ export function SearchableSetSelect({
 }: SearchableSetSelectProps) {
   const [isOpen, setIsOpen] = useState(false);
   const [searchTerm, setSearchTerm] = useState('');
+  const [selectedRegTab, setSelectedRegTab] = useState<string>('ALL');
   const containerRef = useRef<HTMLDivElement | null>(null);
   const inputRef = useRef<HTMLInputElement | null>(null);
 
@@ -37,16 +73,40 @@ export function SearchableSetSelect({
     [sets, selectedSet]
   );
 
-  // Filter sets by search term
+  // Filter sets by search term and regulation tab
   const filteredSets = useMemo(() => {
-    if (!searchTerm.trim()) return sets;
+    let result = sets;
+
+    // Filter by regulation tab
+    if (selectedRegTab !== 'ALL') {
+      if (selectedRegTab === 'STANDARD') {
+        const std = ['G', 'H', 'I', 'J'];
+        result = result.filter((s) => {
+          if (s.regulationMarks && s.regulationMarks.length > 0) {
+            return s.regulationMarks.some((m) => std.includes(m));
+          }
+          return s.regulationMark ? std.includes(s.regulationMark) : false;
+        });
+      } else {
+        result = result.filter((s) => {
+          if (s.regulationMarks && s.regulationMarks.length > 0) {
+            return s.regulationMarks.includes(selectedRegTab);
+          }
+          return s.regulationMark === selectedRegTab;
+        });
+      }
+    }
+
+    if (!searchTerm.trim()) return result;
     const term = searchTerm.trim().toLowerCase();
-    return sets.filter(
+    return result.filter(
       (s) =>
         s.id.toLowerCase().includes(term) ||
-        s.name.toLowerCase().includes(term)
+        s.name.toLowerCase().includes(term) ||
+        (s.regulationMark && s.regulationMark.toLowerCase() === term)
     );
-  }, [sets, searchTerm]);
+  }, [sets, searchTerm, selectedRegTab]);
+
 
   // Click outside to close
   useEffect(() => {
@@ -228,9 +288,32 @@ export function SearchableSetSelect({
               )}
             </div>
 
+            {/* Regulation Series Filter Tabs */}
+            <div className="flex items-center gap-1 overflow-x-auto pb-1 pt-0.5 no-scrollbar scrollbar-none">
+              {REGULATION_QUICK_TABS.map((tab) => {
+                const isActive = selectedRegTab === tab.id;
+                return (
+                  <button
+                    key={tab.id}
+                    type="button"
+                    onClick={() => setSelectedRegTab(tab.id)}
+                    className={`px-2 py-1 rounded-lg text-[10px] font-bold shrink-0 transition-all ${
+                      isActive
+                        ? isAmber
+                          ? 'bg-amber-400 text-slate-950 shadow-sm font-black'
+                          : 'bg-indigo-400 text-slate-950 shadow-sm font-black'
+                        : 'bg-slate-900 text-slate-400 hover:text-slate-200 hover:bg-slate-800 border border-slate-800'
+                    }`}
+                  >
+                    {tab.label}
+                  </button>
+                );
+              })}
+            </div>
+
             <div className="flex items-center justify-between px-1 text-[11px] text-slate-400">
               <span>
-                {searchTerm.trim()
+                {searchTerm.trim() || selectedRegTab !== 'ALL'
                   ? `พบ ${filteredSets.length} ชุดการ์ด`
                   : `ชุดการ์ดทั้งหมด ${sets.length} ชุด`}
               </span>
@@ -244,7 +327,8 @@ export function SearchableSetSelect({
           <div className="overflow-y-auto overflow-x-hidden p-1.5 space-y-1 max-h-[300px] scrollbar-thin scrollbar-thumb-slate-700 scrollbar-track-transparent">
             {/* Option: ALL SETS */}
             {(!searchTerm.trim() ||
-              'ทุกชุดการ์ด all sets'.includes(searchTerm.toLowerCase())) && (
+              'ทุกชุดการ์ด all sets'.includes(searchTerm.toLowerCase())) &&
+              selectedRegTab === 'ALL' && (
               <button
                 type="button"
                 onClick={() => {
@@ -305,6 +389,16 @@ export function SearchableSetSelect({
                     >
                       {s.id}
                     </span>
+                    {s.regulationMark && (
+                      <span
+                        className={`px-1.5 py-0.2 text-[9px] font-black rounded border uppercase shrink-0 ${getRegulationMarkBadgeStyle(
+                          s.regulationMark
+                        )}`}
+                        title={`Regulation Mark ${s.regulationMark}`}
+                      >
+                        {s.regulationMark}
+                      </span>
+                    )}
                     <span className="truncate">{s.name}</span>
                   </div>
 
