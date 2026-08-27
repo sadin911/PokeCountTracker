@@ -110,21 +110,21 @@ export function CardImagePreviewModal({
             </button>
           </div>
 
-          {/* Card Image Container with Ambient Glow */}
+          {/* Card Image Container */}
           <div className="relative w-full flex items-center justify-center">
-            {/* Ambient Backlight Glow */}
-            <div className="absolute -inset-4 bg-gradient-to-tr from-amber-500/20 via-indigo-500/20 to-cyan-500/20 rounded-[32px] blur-2xl opacity-75 pointer-events-none" />
-
             <div
               ref={tilt.ref}
               onPointerMove={isFoil ? tilt.onPointerMove : undefined}
               onPointerLeave={isFoil ? tilt.onPointerLeave : undefined}
+              onTouchStart={isFoil ? tilt.onTouchStart : undefined}
+              onTouchMove={isFoil ? tilt.onTouchMove : undefined}
+              onTouchEnd={isFoil ? tilt.onTouchEnd : undefined}
               onClick={() => setIsZoomed((prev) => !prev)}
               className={`relative w-full ${
                 isZoomed
                   ? 'max-w-[460px] sm:max-w-[560px] md:max-w-[620px]'
                   : 'max-w-[340px] sm:max-w-[420px] md:max-w-[460px]'
-              } aspect-[63/88] max-h-[82vh] rounded-2xl sm:rounded-3xl overflow-hidden shadow-[0_0_60px_rgba(0,0,0,0.95)] border-2 border-slate-700/80 bg-slate-950 flex items-center justify-center transition-all duration-300 cursor-zoom-in group ${
+              } aspect-[63/88] max-h-[82vh] rounded-2xl sm:rounded-3xl overflow-hidden shadow-2xl shadow-black border-2 border-slate-700/80 bg-slate-950 flex items-center justify-center transition-all duration-300 cursor-zoom-in group ${
                 isFoil ? 'foil-3d border-amber-400/60' : ''
               }`}
               title={isZoomed ? 'คลิกเพื่อย่อกลับขนาดปกติ' : 'คลิกเพื่อขยายดูรายละเอียดชัดเจน'}

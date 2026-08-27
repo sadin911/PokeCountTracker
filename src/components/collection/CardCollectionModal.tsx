@@ -176,6 +176,9 @@ export function CardCollectionModal({ card: initialCard, onClose, deckId }: Prop
             ref={tilt.ref}
             onPointerMove={isFoil ? tilt.onPointerMove : undefined}
             onPointerLeave={isFoil ? tilt.onPointerLeave : undefined}
+            onTouchStart={isFoil ? tilt.onTouchStart : undefined}
+            onTouchMove={isFoil ? tilt.onTouchMove : undefined}
+            onTouchEnd={isFoil ? tilt.onTouchEnd : undefined}
             onClick={() => setShowZoom(true)}
             className={`relative group max-w-[260px] w-full aspect-[2.5/3.5] rounded-2xl overflow-hidden shadow-xl dark:shadow-2xl dark:shadow-black/80 ring-1 cursor-zoom-in transition-all duration-200 ${
               isFoil

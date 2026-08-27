@@ -135,3 +135,6 @@
 [2026-08-27 17:11] Major | Antigravity | Fix | src/ - synced exact Lorcana 3D tilt constants & removed blocking hover overlay
 [2026-08-27 17:11] Major | Antigravity | Command | npx playwright test - verified 34 E2E tests passed (100% green)
 [2026-08-27 17:11] Major | Antigravity | Command | git push origin main - Deploying refined natural 3D foil tilt & clear artwork view
+[2026-08-27 17:18] Major | Antigravity | Fix | src/ - fixed PWA fullscreen GPU color flickering & added zero-latency touch drag tilt
+[2026-08-27 17:18] Major | Antigravity | Command | npx playwright test - verified 34 E2E tests passed (100% green)
+[2026-08-27 17:18] Major | Antigravity | Command | git push origin main - Deploying PWA fullscreen flicker fix & smooth touch tilt
