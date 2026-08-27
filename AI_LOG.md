@@ -99,3 +99,4 @@
 [2026-08-27 09:06] Major | Antigravity | Write | src/ - added Regulation Mark Series filtering & set grouping across Collection & Deck Builder
 [2026-08-27 09:16] Major | Antigravity | Edit | src/data/pokemonNames.json - fixed 353 mismatched regulation marks from official scrape data
 [2026-08-27 09:19] Major | Antigravity | Edit | src/ - updated Standard format regulation marks to H, I, J (Standard: H-J)
+[2026-08-27 09:23] Major | Antigravity | Edit | src/data/pokemonNames.json - categorized 234 Basic & Special Energy cards from Trainer to Energy

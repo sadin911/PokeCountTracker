@@ -3143,7 +3143,7 @@
     "localId": "152",
     "name": "เอนเนอร์จี้สปีดสายฟ้า",
     "stage": "",
-    "category": "Trainer",
+    "category": "Energy",
     "hp": null,
     "types": [],
     "set": {
@@ -3162,7 +3162,7 @@
     "localId": "153",
     "name": "เอนเนอร์จี้เฮอเรอร์พลังจิต",
     "stage": "",
-    "category": "Trainer",
+    "category": "Energy",
     "hp": null,
     "types": [],
     "set": {
@@ -3181,7 +3181,7 @@
     "localId": "154",
     "name": "ออโรราเอนเนอร์จี้",
     "stage": "",
-    "category": "Trainer",
+    "category": "Energy",
     "hp": null,
     "types": [],
     "set": {
@@ -6339,7 +6339,7 @@
     "localId": "306",
     "name": "แคปเจอร์เอนเนอร์จี้",
     "stage": "",
-    "category": "Trainer",
+    "category": "Energy",
     "hp": null,
     "types": [],
     "set": {
@@ -6358,7 +6358,7 @@
     "localId": "307",
     "name": "ทวินเอนเนอร์จี้",
     "stage": "",
-    "category": "Trainer",
+    "category": "Energy",
     "hp": null,
     "types": [],
     "set": {
@@ -12975,7 +12975,7 @@
     "localId": "877",
     "name": "เอนเนอร์จี้ฮีท[ไฟ]",
     "stage": "",
-    "category": "Trainer",
+    "category": "Energy",
     "hp": null,
     "types": [],
     "set": {
@@ -12994,7 +12994,7 @@
     "localId": "878",
     "name": "เอนเนอร์จี้วอช [น้ำ]",
     "stage": "",
-    "category": "Trainer",
+    "category": "Energy",
     "hp": null,
     "types": [],
     "set": {
@@ -13013,7 +13013,7 @@
     "localId": "879",
     "name": "เอนเนอร์จี้สโตน[ต่อสู้]",
     "stage": "",
-    "category": "Trainer",
+    "category": "Energy",
     "hp": null,
     "types": [],
     "set": {
@@ -13032,7 +13032,7 @@
     "localId": "880",
     "name": "เอนเนอร์จี้พาวเวอร์ฟูล[ไร้สี]",
     "stage": "",
-    "category": "Trainer",
+    "category": "Energy",
     "hp": null,
     "types": [],
     "set": {
@@ -16270,7 +16270,7 @@
     "localId": "1036",
     "name": "เอนเนอร์จี้อโรมา[พืช]",
     "stage": "",
-    "category": "Trainer",
+    "category": "Energy",
     "hp": null,
     "types": [],
     "set": {
@@ -16289,7 +16289,7 @@
     "localId": "1037",
     "name": "เอนเนอร์จี้ไฮด์ [ความมืด]",
     "stage": "",
-    "category": "Trainer",
+    "category": "Energy",
     "hp": null,
     "types": [],
     "set": {
@@ -16308,7 +16308,7 @@
     "localId": "1038",
     "name": "เอนเนอร์จี้โค้ตติ้ง [โลหะ]",
     "stage": "",
-    "category": "Trainer",
+    "category": "Energy",
     "hp": null,
     "types": [],
     "set": {
@@ -17716,7 +17716,7 @@
     "localId": "1108",
     "name": "พลังงานจู่โจมครั้งเดียว",
     "stage": "",
-    "category": "Trainer",
+    "category": "Energy",
     "hp": null,
     "types": [],
     "set": {
@@ -19124,7 +19124,7 @@
     "localId": "1176",
     "name": "พลังงานจู่โจมต่อเนื่อง",
     "stage": "",
-    "category": "Trainer",
+    "category": "Energy",
     "hp": null,
     "types": [],
     "set": {
@@ -24945,7 +24945,7 @@
     "localId": "1457",
     "name": "เทรเชอร์เอนเนอร์จี้",
     "stage": "",
-    "category": "Trainer",
+    "category": "Energy",
     "hp": null,
     "types": [],
     "set": {
@@ -26328,7 +26328,7 @@
     "localId": "1524",
     "name": "ทวินเอนเนอร์จี้",
     "stage": "",
-    "category": "Trainer",
+    "category": "Energy",
     "hp": null,
     "types": [],
     "set": {
@@ -27711,7 +27711,7 @@
     "localId": "1591",
     "name": "ออโรราเอนเนอร์จี้",
     "stage": "",
-    "category": "Trainer",
+    "category": "Energy",
     "hp": null,
     "types": [],
     "set": {
@@ -29787,7 +29787,7 @@
     "localId": "1691",
     "name": "พลังงานจู่โจมแบบฟิวชัน",
     "stage": "",
-    "category": "Trainer",
+    "category": "Energy",
     "hp": null,
     "types": [],
     "set": {
@@ -30329,7 +30329,7 @@
     "localId": "1717",
     "name": "พลังงานพื้นฐาน [หญ้า]",
     "stage": "",
-    "category": "Trainer",
+    "category": "Energy",
     "hp": null,
     "types": [],
     "set": {
@@ -30348,7 +30348,7 @@
     "localId": "1718",
     "name": "พลังงานพื้นฐาน [ไฟ]",
     "stage": "",
-    "category": "Trainer",
+    "category": "Energy",
     "hp": null,
     "types": [],
     "set": {
@@ -30367,7 +30367,7 @@
     "localId": "1719",
     "name": "พลังงานพื้นฐาน [น้ำ]",
     "stage": "",
-    "category": "Trainer",
+    "category": "Energy",
     "hp": null,
     "types": [],
     "set": {
@@ -30386,7 +30386,7 @@
     "localId": "1720",
     "name": "พลังงานพื้นฐาน [สายฟ้า]",
     "stage": "",
-    "category": "Trainer",
+    "category": "Energy",
     "hp": null,
     "types": [],
     "set": {
@@ -30405,7 +30405,7 @@
     "localId": "1721",
     "name": "พลังงานพื้นฐาน [พลังจิต]",
     "stage": "",
-    "category": "Trainer",
+    "category": "Energy",
     "hp": null,
     "types": [],
     "set": {
@@ -30424,7 +30424,7 @@
     "localId": "1722",
     "name": "พลังงานพื้นฐาน [ต่อสู้]",
     "stage": "",
-    "category": "Trainer",
+    "category": "Energy",
     "hp": null,
     "types": [],
     "set": {
@@ -30443,7 +30443,7 @@
     "localId": "1723",
     "name": "พลังงานพื้นฐาน [ความมืด]",
     "stage": "",
-    "category": "Trainer",
+    "category": "Energy",
     "hp": null,
     "types": [],
     "set": {
@@ -30462,7 +30462,7 @@
     "localId": "1724",
     "name": "พลังงานพื้นฐาน [โลหะ]",
     "stage": "",
-    "category": "Trainer",
+    "category": "Energy",
     "hp": null,
     "types": [],
     "set": {
@@ -32958,7 +32958,7 @@
     "localId": "1846",
     "name": "เอนเนอร์จี้อโรมา[พืช] อโรมา",
     "stage": "",
-    "category": "Trainer",
+    "category": "Energy",
     "hp": null,
     "types": [],
     "set": {
@@ -32977,7 +32977,7 @@
     "localId": "1847",
     "name": "เอนเนอร์จี้ฮีท[ไฟ] ฮีท",
     "stage": "",
-    "category": "Trainer",
+    "category": "Energy",
     "hp": null,
     "types": [],
     "set": {
@@ -32996,7 +32996,7 @@
     "localId": "1848",
     "name": "เอนเนอร์จี้วอช [น้ำ]",
     "stage": "",
-    "category": "Trainer",
+    "category": "Energy",
     "hp": null,
     "types": [],
     "set": {
@@ -33015,7 +33015,7 @@
     "localId": "1849",
     "name": "เอนเนอร์จี้สปีดสายฟ้า",
     "stage": "",
-    "category": "Trainer",
+    "category": "Energy",
     "hp": null,
     "types": [],
     "set": {
@@ -33034,7 +33034,7 @@
     "localId": "1850",
     "name": "เอนเนอร์จี้เฮอเรอร์พลังจิต",
     "stage": "",
-    "category": "Trainer",
+    "category": "Energy",
     "hp": null,
     "types": [],
     "set": {
@@ -33053,7 +33053,7 @@
     "localId": "1851",
     "name": "เอนเนอร์จี้สโตน[ต่อสู้] สโตน",
     "stage": "",
-    "category": "Trainer",
+    "category": "Energy",
     "hp": null,
     "types": [],
     "set": {
@@ -33072,7 +33072,7 @@
     "localId": "1852",
     "name": "เอนเนอร์จี้ไฮด์ [ความมืด] ไฮด์",
     "stage": "",
-    "category": "Trainer",
+    "category": "Energy",
     "hp": null,
     "types": [],
     "set": {
@@ -33091,7 +33091,7 @@
     "localId": "1853",
     "name": "เอนเนอร์จี้โค้ตติ้ง [โลหะ]",
     "stage": "",
-    "category": "Trainer",
+    "category": "Energy",
     "hp": null,
     "types": [],
     "set": {
@@ -33110,7 +33110,7 @@
     "localId": "1854",
     "name": "เอนเนอร์จี้พาวเวอร์ฟูล[ไร้สี]",
     "stage": "",
-    "category": "Trainer",
+    "category": "Energy",
     "hp": null,
     "types": [],
     "set": {
@@ -33129,7 +33129,7 @@
     "localId": "1855",
     "name": "ออโรราเอนเนอร์จี้",
     "stage": "",
-    "category": "Trainer",
+    "category": "Energy",
     "hp": null,
     "types": [],
     "set": {
@@ -33148,7 +33148,7 @@
     "localId": "1856",
     "name": "แคปเจอร์เอนเนอร์จี้",
     "stage": "",
-    "category": "Trainer",
+    "category": "Energy",
     "hp": null,
     "types": [],
     "set": {
@@ -33167,7 +33167,7 @@
     "localId": "1857",
     "name": "ทวินเอนเนอร์จี้",
     "stage": "",
-    "category": "Trainer",
+    "category": "Energy",
     "hp": null,
     "types": [],
     "set": {
@@ -36234,7 +36234,7 @@
     "localId": "2006",
     "name": "เอนเนอร์จี้อโรมา[พืช]",
     "stage": "",
-    "category": "Trainer",
+    "category": "Energy",
     "hp": null,
     "types": [],
     "set": {
@@ -36253,7 +36253,7 @@
     "localId": "2007",
     "name": "เอนเนอร์จี้ฮีท[ไฟ]",
     "stage": "",
-    "category": "Trainer",
+    "category": "Energy",
     "hp": null,
     "types": [],
     "set": {
@@ -36272,7 +36272,7 @@
     "localId": "2008",
     "name": "เอนเนอร์จี้วอช [น้ำ]",
     "stage": "",
-    "category": "Trainer",
+    "category": "Energy",
     "hp": null,
     "types": [],
     "set": {
@@ -36291,7 +36291,7 @@
     "localId": "2009",
     "name": "เอนเนอร์จี้สปีด [สายฟ้า]",
     "stage": "",
-    "category": "Trainer",
+    "category": "Energy",
     "hp": null,
     "types": [],
     "set": {
@@ -36310,7 +36310,7 @@
     "localId": "2010",
     "name": "เอนเนอร์จี้เฮอเรอร์ [พลังจิต]",
     "stage": "",
-    "category": "Trainer",
+    "category": "Energy",
     "hp": null,
     "types": [],
     "set": {
@@ -36329,7 +36329,7 @@
     "localId": "2011",
     "name": "เอนเนอร์จี้สโตน[ต่อสู้]",
     "stage": "",
-    "category": "Trainer",
+    "category": "Energy",
     "hp": null,
     "types": [],
     "set": {
@@ -36348,7 +36348,7 @@
     "localId": "2012",
     "name": "เอนเนอร์จี้ไฮด์ [ความมืด]",
     "stage": "",
-    "category": "Trainer",
+    "category": "Energy",
     "hp": null,
     "types": [],
     "set": {
@@ -36367,7 +36367,7 @@
     "localId": "2013",
     "name": "เอนเนอร์จี้โค้ตติ้ง [โลหะ]",
     "stage": "",
-    "category": "Trainer",
+    "category": "Energy",
     "hp": null,
     "types": [],
     "set": {
@@ -36386,7 +36386,7 @@
     "localId": "2014",
     "name": "เอนเนอร์จี้พาวเวอร์ฟูล[ไร้สี]",
     "stage": "",
-    "category": "Trainer",
+    "category": "Energy",
     "hp": null,
     "types": [],
     "set": {
@@ -36405,7 +36405,7 @@
     "localId": "2015",
     "name": "ออโรราเอนเนอร์จี้",
     "stage": "",
-    "category": "Trainer",
+    "category": "Energy",
     "hp": null,
     "types": [],
     "set": {
@@ -39704,7 +39704,7 @@
     "localId": "2176",
     "name": "เอนเนอร์จี้อโรมา[หญ้า]",
     "stage": "",
-    "category": "Trainer",
+    "category": "Energy",
     "hp": null,
     "types": [],
     "set": {
@@ -39723,7 +39723,7 @@
     "localId": "2177",
     "name": "เอนเนอร์จี้ฮีท[ไฟ]",
     "stage": "",
-    "category": "Trainer",
+    "category": "Energy",
     "hp": null,
     "types": [],
     "set": {
@@ -39742,7 +39742,7 @@
     "localId": "2178",
     "name": "เอนเนอร์จี้วอช [น้ำ]",
     "stage": "",
-    "category": "Trainer",
+    "category": "Energy",
     "hp": null,
     "types": [],
     "set": {
@@ -39761,7 +39761,7 @@
     "localId": "2179",
     "name": "เอนเนอร์จี้สปีด [สายฟ้า]",
     "stage": "",
-    "category": "Trainer",
+    "category": "Energy",
     "hp": null,
     "types": [],
     "set": {
@@ -39780,7 +39780,7 @@
     "localId": "2180",
     "name": "เอนเนอร์จี้เฮอเรอร์ [พลังจิต]",
     "stage": "",
-    "category": "Trainer",
+    "category": "Energy",
     "hp": null,
     "types": [],
     "set": {
@@ -39799,7 +39799,7 @@
     "localId": "2181",
     "name": "เอนเนอร์จี้สโตน[ต่อสู้]",
     "stage": "",
-    "category": "Trainer",
+    "category": "Energy",
     "hp": null,
     "types": [],
     "set": {
@@ -39818,7 +39818,7 @@
     "localId": "2182",
     "name": "เอนเนอร์จี้ไฮด์ [ความมืด]",
     "stage": "",
-    "category": "Trainer",
+    "category": "Energy",
     "hp": null,
     "types": [],
     "set": {
@@ -39837,7 +39837,7 @@
     "localId": "2183",
     "name": "เอนเนอร์จี้โค้ตติ้ง [โลหะ]",
     "stage": "",
-    "category": "Trainer",
+    "category": "Energy",
     "hp": null,
     "types": [],
     "set": {
@@ -39856,7 +39856,7 @@
     "localId": "2184",
     "name": "เอนเนอร์จี้พาวเวอร์ฟูล[ไร้สี]",
     "stage": "",
-    "category": "Trainer",
+    "category": "Energy",
     "hp": null,
     "types": [],
     "set": {
@@ -39875,7 +39875,7 @@
     "localId": "2185",
     "name": "ออโรราเอนเนอร์จี้",
     "stage": "",
-    "category": "Trainer",
+    "category": "Energy",
     "hp": null,
     "types": [],
     "set": {
@@ -42997,7 +42997,7 @@
     "localId": "2338",
     "name": "เอนเนอร์จี้อโรมา[หญ้า]",
     "stage": "",
-    "category": "Trainer",
+    "category": "Energy",
     "hp": null,
     "types": [],
     "set": {
@@ -43016,7 +43016,7 @@
     "localId": "2339",
     "name": "เอนเนอร์จี้ฮีท[ไฟ]",
     "stage": "",
-    "category": "Trainer",
+    "category": "Energy",
     "hp": null,
     "types": [],
     "set": {
@@ -43035,7 +43035,7 @@
     "localId": "2340",
     "name": "เอนเนอร์จี้วอช [น้ำ]",
     "stage": "",
-    "category": "Trainer",
+    "category": "Energy",
     "hp": null,
     "types": [],
     "set": {
@@ -43054,7 +43054,7 @@
     "localId": "2341",
     "name": "เอนเนอร์จี้สปีด [สายฟ้า]",
     "stage": "",
-    "category": "Trainer",
+    "category": "Energy",
     "hp": null,
     "types": [],
     "set": {
@@ -43073,7 +43073,7 @@
     "localId": "2342",
     "name": "เอนเนอร์จี้เฮอเรอร์ [พลังจิต]",
     "stage": "",
-    "category": "Trainer",
+    "category": "Energy",
     "hp": null,
     "types": [],
     "set": {
@@ -43092,7 +43092,7 @@
     "localId": "2343",
     "name": "เอนเนอร์จี้สโตน[ต่อสู้]",
     "stage": "",
-    "category": "Trainer",
+    "category": "Energy",
     "hp": null,
     "types": [],
     "set": {
@@ -43111,7 +43111,7 @@
     "localId": "2344",
     "name": "เอนเนอร์จี้ไฮด์ [ความมืด]",
     "stage": "",
-    "category": "Trainer",
+    "category": "Energy",
     "hp": null,
     "types": [],
     "set": {
@@ -43130,7 +43130,7 @@
     "localId": "2345",
     "name": "ออโรราเอนเนอร์จี้",
     "stage": "",
-    "category": "Trainer",
+    "category": "Energy",
     "hp": null,
     "types": [],
     "set": {
@@ -46574,7 +46574,7 @@
     "localId": "2513",
     "name": "เอนเนอร์จี้อโรมา[พืช]",
     "stage": "",
-    "category": "Trainer",
+    "category": "Energy",
     "hp": null,
     "types": [],
     "set": {
@@ -46593,7 +46593,7 @@
     "localId": "2514",
     "name": "เอนเนอร์จี้ฮีท[ไฟ]",
     "stage": "",
-    "category": "Trainer",
+    "category": "Energy",
     "hp": null,
     "types": [],
     "set": {
@@ -46612,7 +46612,7 @@
     "localId": "2515",
     "name": "เอนเนอร์จี้วอช [น้ำ]",
     "stage": "",
-    "category": "Trainer",
+    "category": "Energy",
     "hp": null,
     "types": [],
     "set": {
@@ -46631,7 +46631,7 @@
     "localId": "2516",
     "name": "เอนเนอร์จี้สปีด[สายฟ้า]",
     "stage": "",
-    "category": "Trainer",
+    "category": "Energy",
     "hp": null,
     "types": [],
     "set": {
@@ -46650,7 +46650,7 @@
     "localId": "2517",
     "name": "เอนเนอร์จี้เฮอเรอร์[พลังจิต]",
     "stage": "",
-    "category": "Trainer",
+    "category": "Energy",
     "hp": null,
     "types": [],
     "set": {
@@ -46669,7 +46669,7 @@
     "localId": "2518",
     "name": "เอนเนอร์จี้สโตน[ต่อสู้]",
     "stage": "",
-    "category": "Trainer",
+    "category": "Energy",
     "hp": null,
     "types": [],
     "set": {
@@ -46688,7 +46688,7 @@
     "localId": "2519",
     "name": "เอนเนอร์จี้ไฮด์ [ความมืด]",
     "stage": "",
-    "category": "Trainer",
+    "category": "Energy",
     "hp": null,
     "types": [],
     "set": {
@@ -46707,7 +46707,7 @@
     "localId": "2520",
     "name": "เอนเนอร์จี้โค้ตติ้ง [โลหะ]",
     "stage": "",
-    "category": "Trainer",
+    "category": "Energy",
     "hp": null,
     "types": [],
     "set": {
@@ -46726,7 +46726,7 @@
     "localId": "2521",
     "name": "เอนเนอร์จี้พาวเวอร์ฟูล[ไร้สี]",
     "stage": "",
-    "category": "Trainer",
+    "category": "Energy",
     "hp": null,
     "types": [],
     "set": {
@@ -46745,7 +46745,7 @@
     "localId": "2522",
     "name": "พลังงานจู่โจมครั้งเดียว",
     "stage": "",
-    "category": "Trainer",
+    "category": "Energy",
     "hp": null,
     "types": [],
     "set": {
@@ -46764,7 +46764,7 @@
     "localId": "2523",
     "name": "ออโรราเอนเนอร์จี้",
     "stage": "",
-    "category": "Trainer",
+    "category": "Energy",
     "hp": null,
     "types": [],
     "set": {
@@ -46783,7 +46783,7 @@
     "localId": "2524",
     "name": "แคปเจอร์เอนเนอร์จี้",
     "stage": "",
-    "category": "Trainer",
+    "category": "Energy",
     "hp": null,
     "types": [],
     "set": {
@@ -46802,7 +46802,7 @@
     "localId": "2525",
     "name": "ทวินเอนเนอร์จี้",
     "stage": "",
-    "category": "Trainer",
+    "category": "Energy",
     "hp": null,
     "types": [],
     "set": {
@@ -46821,7 +46821,7 @@
     "localId": "2526",
     "name": "พลังงานจู่โจมต่อเนื่อง",
     "stage": "",
-    "category": "Trainer",
+    "category": "Energy",
     "hp": null,
     "types": [],
     "set": {
@@ -48895,7 +48895,7 @@
     "localId": "2626",
     "name": "ดับเบิลเทอร์โบเอนเนอร์จี้",
     "stage": "",
-    "category": "Trainer",
+    "category": "Energy",
     "hp": null,
     "types": [],
     "set": {
@@ -53670,7 +53670,7 @@
     "localId": "2857",
     "name": "เอนเนอร์จี้อโรมา[หญ้า]",
     "stage": "",
-    "category": "Trainer",
+    "category": "Energy",
     "hp": null,
     "types": [],
     "set": {
@@ -53689,7 +53689,7 @@
     "localId": "2858",
     "name": "เอนเนอร์จี้ฮีท[ไฟ]",
     "stage": "",
-    "category": "Trainer",
+    "category": "Energy",
     "hp": null,
     "types": [],
     "set": {
@@ -53708,7 +53708,7 @@
     "localId": "2859",
     "name": "เอนเนอร์จี้วอช [น้ำ]",
     "stage": "",
-    "category": "Trainer",
+    "category": "Energy",
     "hp": null,
     "types": [],
     "set": {
@@ -53727,7 +53727,7 @@
     "localId": "2860",
     "name": "เอนเนอร์จี้สปีด [สายฟ้า]",
     "stage": "",
-    "category": "Trainer",
+    "category": "Energy",
     "hp": null,
     "types": [],
     "set": {
@@ -53746,7 +53746,7 @@
     "localId": "2861",
     "name": "เอนเนอร์จี้เฮอเรอร์ [พลังจิต]",
     "stage": "",
-    "category": "Trainer",
+    "category": "Energy",
     "hp": null,
     "types": [],
     "set": {
@@ -53765,7 +53765,7 @@
     "localId": "2862",
     "name": "เอนเนอร์จี้สโตน[ต่อสู้]",
     "stage": "",
-    "category": "Trainer",
+    "category": "Energy",
     "hp": null,
     "types": [],
     "set": {
@@ -53784,7 +53784,7 @@
     "localId": "2863",
     "name": "เอนเนอร์จี้ไฮด์ [ความมืด]",
     "stage": "",
-    "category": "Trainer",
+    "category": "Energy",
     "hp": null,
     "types": [],
     "set": {
@@ -53803,7 +53803,7 @@
     "localId": "2864",
     "name": "เอนเนอร์จี้โค้ตติ้ง [โลหะ]",
     "stage": "",
-    "category": "Trainer",
+    "category": "Energy",
     "hp": null,
     "types": [],
     "set": {
@@ -53822,7 +53822,7 @@
     "localId": "2865",
     "name": "ออโรราเอนเนอร์จี้",
     "stage": "",
-    "category": "Trainer",
+    "category": "Energy",
     "hp": null,
     "types": [],
     "set": {
@@ -53841,7 +53841,7 @@
     "localId": "2866",
     "name": "พลังงานพื้นฐาน [หญ้า]",
     "stage": "",
-    "category": "Trainer",
+    "category": "Energy",
     "hp": null,
     "types": [],
     "set": {
@@ -53860,7 +53860,7 @@
     "localId": "2867",
     "name": "พลังงานพื้นฐาน [ไฟ]",
     "stage": "",
-    "category": "Trainer",
+    "category": "Energy",
     "hp": null,
     "types": [],
     "set": {
@@ -53879,7 +53879,7 @@
     "localId": "2868",
     "name": "พลังงานพื้นฐาน [น้ำ]",
     "stage": "",
-    "category": "Trainer",
+    "category": "Energy",
     "hp": null,
     "types": [],
     "set": {
@@ -53898,7 +53898,7 @@
     "localId": "2869",
     "name": "พลังงานพื้นฐาน [สายฟ้า]",
     "stage": "",
-    "category": "Trainer",
+    "category": "Energy",
     "hp": null,
     "types": [],
     "set": {
@@ -53917,7 +53917,7 @@
     "localId": "2870",
     "name": "พลังงานพื้นฐาน [พลังจิต]",
     "stage": "",
-    "category": "Trainer",
+    "category": "Energy",
     "hp": null,
     "types": [],
     "set": {
@@ -53936,7 +53936,7 @@
     "localId": "2871",
     "name": "พลังงานพื้นฐาน [ต่อสู้]",
     "stage": "",
-    "category": "Trainer",
+    "category": "Energy",
     "hp": null,
     "types": [],
     "set": {
@@ -53955,7 +53955,7 @@
     "localId": "2872",
     "name": "พลังงานพื้นฐาน [ความมืด]",
     "stage": "",
-    "category": "Trainer",
+    "category": "Energy",
     "hp": null,
     "types": [],
     "set": {
@@ -53974,7 +53974,7 @@
     "localId": "2873",
     "name": "พลังงานพื้นฐาน [โลหะ]",
     "stage": "",
-    "category": "Trainer",
+    "category": "Energy",
     "hp": null,
     "types": [],
     "set": {
@@ -60139,7 +60139,7 @@
     "localId": "3297",
     "name": "พลังงานพื้นฐาน [หญ้า]",
     "stage": "",
-    "category": "Trainer",
+    "category": "Energy",
     "hp": null,
     "types": [],
     "set": {
@@ -60158,7 +60158,7 @@
     "localId": "3298",
     "name": "พลังงานพื้นฐาน [ไฟ]",
     "stage": "",
-    "category": "Trainer",
+    "category": "Energy",
     "hp": null,
     "types": [],
     "set": {
@@ -60177,7 +60177,7 @@
     "localId": "3299",
     "name": "พลังงานพื้นฐาน [น้ำ]",
     "stage": "",
-    "category": "Trainer",
+    "category": "Energy",
     "hp": null,
     "types": [],
     "set": {
@@ -60196,7 +60196,7 @@
     "localId": "3300",
     "name": "พลังงานพื้นฐาน [สายฟ้า]",
     "stage": "",
-    "category": "Trainer",
+    "category": "Energy",
     "hp": null,
     "types": [],
     "set": {
@@ -60215,7 +60215,7 @@
     "localId": "3301",
     "name": "พลังงานพื้นฐาน [พลังจิต]",
     "stage": "",
-    "category": "Trainer",
+    "category": "Energy",
     "hp": null,
     "types": [],
     "set": {
@@ -60234,7 +60234,7 @@
     "localId": "3302",
     "name": "พลังงานพื้นฐาน [ต่อสู้]",
     "stage": "",
-    "category": "Trainer",
+    "category": "Energy",
     "hp": null,
     "types": [],
     "set": {
@@ -60253,7 +60253,7 @@
     "localId": "3303",
     "name": "พลังงานพื้นฐาน [ความมืด]",
     "stage": "",
-    "category": "Trainer",
+    "category": "Energy",
     "hp": null,
     "types": [],
     "set": {
@@ -60272,7 +60272,7 @@
     "localId": "3304",
     "name": "พลังงานพื้นฐาน [โลหะ]",
     "stage": "",
-    "category": "Trainer",
+    "category": "Energy",
     "hp": null,
     "types": [],
     "set": {
@@ -60773,7 +60773,7 @@
     "localId": "3329",
     "name": "พลังงานพื้นฐาน [หญ้า]",
     "stage": "",
-    "category": "Trainer",
+    "category": "Energy",
     "hp": null,
     "types": [],
     "set": {
@@ -60792,7 +60792,7 @@
     "localId": "3330",
     "name": "พลังงานพื้นฐาน [ไฟ]",
     "stage": "",
-    "category": "Trainer",
+    "category": "Energy",
     "hp": null,
     "types": [],
     "set": {
@@ -61293,7 +61293,7 @@
     "localId": "3355",
     "name": "พลังงานพื้นฐาน [น้ำ]",
     "stage": "",
-    "category": "Trainer",
+    "category": "Energy",
     "hp": null,
     "types": [],
     "set": {
@@ -61312,7 +61312,7 @@
     "localId": "3356",
     "name": "พลังงานพื้นฐาน [สายฟ้า]",
     "stage": "",
-    "category": "Trainer",
+    "category": "Energy",
     "hp": null,
     "types": [],
     "set": {
@@ -65237,7 +65237,7 @@
     "localId": "3643",
     "name": "กิฟต์เอนเนอร์จี้",
     "stage": "",
-    "category": "Trainer",
+    "category": "Energy",
     "hp": null,
     "types": [],
     "set": {
@@ -66792,7 +66792,7 @@
     "localId": "3818",
     "name": "ดับเบิลเทอร์โบเอนเนอร์จี้",
     "stage": "",
-    "category": "Trainer",
+    "category": "Energy",
     "hp": null,
     "types": [],
     "set": {
@@ -66811,7 +66811,7 @@
     "localId": "3819",
     "name": "วีการ์ดเอนเนอร์จี้",
     "stage": "",
-    "category": "Trainer",
+    "category": "Energy",
     "hp": null,
     "types": [],
     "set": {
@@ -70515,7 +70515,7 @@
     "localId": "4528",
     "name": "พลังงานพื้นฐาน [หญ้า]",
     "stage": "",
-    "category": "Trainer",
+    "category": "Energy",
     "hp": null,
     "types": [],
     "set": {
@@ -70534,7 +70534,7 @@
     "localId": "4529",
     "name": "พลังงานพื้นฐาน [ไฟ]",
     "stage": "",
-    "category": "Trainer",
+    "category": "Energy",
     "hp": null,
     "types": [],
     "set": {
@@ -70553,7 +70553,7 @@
     "localId": "4530",
     "name": "พลังงานพื้นฐาน [น้ำ]",
     "stage": "",
-    "category": "Trainer",
+    "category": "Energy",
     "hp": null,
     "types": [],
     "set": {
@@ -70572,7 +70572,7 @@
     "localId": "4531",
     "name": "พลังงานพื้นฐาน [สายฟ้า]",
     "stage": "",
-    "category": "Trainer",
+    "category": "Energy",
     "hp": null,
     "types": [],
     "set": {
@@ -70591,7 +70591,7 @@
     "localId": "4532",
     "name": "พลังงานพื้นฐาน [พลังจิต]",
     "stage": "",
-    "category": "Trainer",
+    "category": "Energy",
     "hp": null,
     "types": [],
     "set": {
@@ -70610,7 +70610,7 @@
     "localId": "4533",
     "name": "พลังงานพื้นฐาน [ต่อสู้]",
     "stage": "",
-    "category": "Trainer",
+    "category": "Energy",
     "hp": null,
     "types": [],
     "set": {
@@ -70629,7 +70629,7 @@
     "localId": "4534",
     "name": "พลังงานพื้นฐาน [ความมืด]",
     "stage": "",
-    "category": "Trainer",
+    "category": "Energy",
     "hp": null,
     "types": [],
     "set": {
@@ -70648,7 +70648,7 @@
     "localId": "4535",
     "name": "พลังงานพื้นฐาน [โลหะ]",
     "stage": "",
-    "category": "Trainer",
+    "category": "Energy",
     "hp": null,
     "types": [],
     "set": {
@@ -72686,7 +72686,7 @@
     "localId": "4634",
     "name": "พลังงานฟื้นคืน",
     "stage": "",
-    "category": "Trainer",
+    "category": "Energy",
     "hp": null,
     "types": [],
     "set": {
@@ -72789,7 +72789,7 @@
     "localId": "4639",
     "name": "ดับเบิลเทอร์โบเอนเนอร์จี้",
     "stage": "",
-    "category": "Trainer",
+    "category": "Energy",
     "hp": null,
     "types": [],
     "set": {
@@ -76445,7 +76445,7 @@
     "localId": "4963",
     "name": "ดับเบิลเทอร์โบเอนเนอร์จี้",
     "stage": "",
-    "category": "Trainer",
+    "category": "Energy",
     "hp": null,
     "types": [],
     "set": {
@@ -76464,7 +76464,7 @@
     "localId": "4964",
     "name": "พลังงานจู่โจมแบบฟิวชัน",
     "stage": "",
-    "category": "Trainer",
+    "category": "Energy",
     "hp": null,
     "types": [],
     "set": {
@@ -80138,7 +80138,7 @@
     "localId": "5142",
     "name": "พลังงานพื้นฐาน[ไฟ]",
     "stage": "",
-    "category": "Trainer",
+    "category": "Energy",
     "hp": null,
     "types": [],
     "set": {
@@ -80157,7 +80157,7 @@
     "localId": "5143",
     "name": "พลังงานพื้นฐาน[สายฟ้า]",
     "stage": "",
-    "category": "Trainer",
+    "category": "Energy",
     "hp": null,
     "types": [],
     "set": {
@@ -80635,7 +80635,7 @@
     "localId": "5182",
     "name": "พลังงานพื้นฐาน[หญ้า]",
     "stage": "",
-    "category": "Trainer",
+    "category": "Energy",
     "hp": null,
     "types": [],
     "set": {
@@ -80654,7 +80654,7 @@
     "localId": "5183",
     "name": "พลังงานพื้นฐาน[ต่อสู้]",
     "stage": "",
-    "category": "Trainer",
+    "category": "Energy",
     "hp": null,
     "types": [],
     "set": {
@@ -81130,7 +81130,7 @@
     "localId": "5207",
     "name": "พลังงานพื้นฐาน[น้ำ]",
     "stage": "",
-    "category": "Trainer",
+    "category": "Energy",
     "hp": null,
     "types": [],
     "set": {
@@ -81149,7 +81149,7 @@
     "localId": "5208",
     "name": "พลังงานพื้นฐาน[พลังจิต]",
     "stage": "",
-    "category": "Trainer",
+    "category": "Energy",
     "hp": null,
     "types": [],
     "set": {
@@ -83040,7 +83040,7 @@
     "localId": "5299",
     "name": "เจ็ตเอนเนอร์จี้",
     "stage": "",
-    "category": "Trainer",
+    "category": "Energy",
     "hp": null,
     "types": [],
     "set": {
@@ -83059,7 +83059,7 @@
     "localId": "5300",
     "name": "ลูมินัสเอนเนอร์จี้",
     "stage": "",
-    "category": "Trainer",
+    "category": "Energy",
     "hp": null,
     "types": [],
     "set": {
@@ -84643,7 +84643,7 @@
     "localId": "5964",
     "name": "รีเวอร์ซัลเอนเนอร์จี้",
     "stage": "",
-    "category": "Trainer",
+    "category": "Energy",
     "hp": null,
     "types": [],
     "set": {
@@ -86122,7 +86122,7 @@
     "localId": "6063",
     "name": "เทอราปีเอนเนอร์จี้",
     "stage": "",
-    "category": "Trainer",
+    "category": "Energy",
     "hp": null,
     "types": [],
     "set": {
@@ -94989,7 +94989,7 @@
     "localId": "6614",
     "name": "เมดิคัลเอนเนอร์จี้",
     "stage": "",
-    "category": "Trainer",
+    "category": "Energy",
     "hp": null,
     "types": [],
     "set": {
@@ -98356,7 +98356,7 @@
     "localId": "6807",
     "name": "เมดิคัลเอนเนอร์จี้",
     "stage": "",
-    "category": "Trainer",
+    "category": "Energy",
     "hp": null,
     "types": [],
     "set": {
@@ -98375,7 +98375,7 @@
     "localId": "6808",
     "name": "รีเวอร์ซัลเอนเนอร์จี้ [พลังงานพิเศษ]",
     "stage": "",
-    "category": "Trainer",
+    "category": "Energy",
     "hp": null,
     "types": [],
     "set": {
@@ -98394,7 +98394,7 @@
     "localId": "6809",
     "name": "พลังงานพื้นฐาน[หญ้า]",
     "stage": "",
-    "category": "Trainer",
+    "category": "Energy",
     "hp": null,
     "types": [],
     "set": {
@@ -98413,7 +98413,7 @@
     "localId": "6810",
     "name": "พลังงานพื้นฐาน[ไฟ]",
     "stage": "",
-    "category": "Trainer",
+    "category": "Energy",
     "hp": null,
     "types": [],
     "set": {
@@ -98432,7 +98432,7 @@
     "localId": "6811",
     "name": "พลังงานพื้นฐาน[น้ำ]",
     "stage": "",
-    "category": "Trainer",
+    "category": "Energy",
     "hp": null,
     "types": [],
     "set": {
@@ -98451,7 +98451,7 @@
     "localId": "6812",
     "name": "พลังงานพื้นฐาน[สายฟ้า]",
     "stage": "",
-    "category": "Trainer",
+    "category": "Energy",
     "hp": null,
     "types": [],
     "set": {
@@ -98470,7 +98470,7 @@
     "localId": "6813",
     "name": "พลังงานพื้นฐาน[พลังจิต]",
     "stage": "",
-    "category": "Trainer",
+    "category": "Energy",
     "hp": null,
     "types": [],
     "set": {
@@ -98489,7 +98489,7 @@
     "localId": "6814",
     "name": "พลังงานพื้นฐาน[ต่อสู้]",
     "stage": "",
-    "category": "Trainer",
+    "category": "Energy",
     "hp": null,
     "types": [],
     "set": {
@@ -98508,7 +98508,7 @@
     "localId": "6815",
     "name": "พลังงานพื้นฐาน[ความมืด]",
     "stage": "",
-    "category": "Trainer",
+    "category": "Energy",
     "hp": null,
     "types": [],
     "set": {
@@ -98527,7 +98527,7 @@
     "localId": "6816",
     "name": "พลังงานพื้นฐาน[โลหะ]",
     "stage": "",
-    "category": "Trainer",
+    "category": "Energy",
     "hp": null,
     "types": [],
     "set": {
@@ -107698,7 +107698,7 @@
     "localId": "7798",
     "name": "เทอราปีเอนเนอร์จี้",
     "stage": "",
-    "category": "Trainer",
+    "category": "Energy",
     "hp": null,
     "types": [],
     "set": {
@@ -107717,7 +107717,7 @@
     "localId": "7799",
     "name": "รีเวอร์ซัลเอนเนอร์จี้",
     "stage": "",
-    "category": "Trainer",
+    "category": "Energy",
     "hp": null,
     "types": [],
     "set": {
@@ -107736,7 +107736,7 @@
     "localId": "7800",
     "name": "ลูมินัสเอนเนอร์จี้",
     "stage": "",
-    "category": "Trainer",
+    "category": "Energy",
     "hp": null,
     "types": [],
     "set": {
@@ -109520,7 +109520,7 @@
     "localId": "7896",
     "name": "นีโออัปเปอร์เอนเนอร์จี้",
     "stage": "",
-    "category": "Trainer",
+    "category": "Energy",
     "hp": null,
     "types": [],
     "set": {
@@ -110989,7 +110989,7 @@
     "localId": "7967",
     "name": "มิสต์เอนเนอร์จี้",
     "stage": "",
-    "category": "Trainer",
+    "category": "Energy",
     "hp": null,
     "types": [],
     "set": {
@@ -111665,7 +111665,7 @@
     "localId": "8039",
     "name": "พลังงานพื้นฐาน[ไฟ]",
     "stage": "",
-    "category": "Trainer",
+    "category": "Energy",
     "hp": null,
     "types": [],
     "set": {
@@ -111684,7 +111684,7 @@
     "localId": "8040",
     "name": "พลังงานพื้นฐาน[ต่อสู้]",
     "stage": "",
-    "category": "Trainer",
+    "category": "Energy",
     "hp": null,
     "types": [],
     "set": {
@@ -112141,7 +112141,7 @@
     "localId": "8063",
     "name": "พลังงานพื้นฐาน[สายฟ้า]",
     "stage": "",
-    "category": "Trainer",
+    "category": "Energy",
     "hp": null,
     "types": [],
     "set": {
@@ -112160,7 +112160,7 @@
     "localId": "8064",
     "name": "พลังงานพื้นฐาน[พลังจิต]",
     "stage": "",
-    "category": "Trainer",
+    "category": "Energy",
     "hp": null,
     "types": [],
     "set": {
@@ -114590,7 +114590,7 @@
     "localId": "8182",
     "name": "บูมเมอแรงเอนเนอร์จี้",
     "stage": "",
-    "category": "Trainer",
+    "category": "Energy",
     "hp": null,
     "types": [],
     "set": {
@@ -116687,7 +116687,7 @@
     "localId": "8283",
     "name": "พลังงานสืบทอด",
     "stage": "",
-    "category": "Trainer",
+    "category": "Energy",
     "hp": null,
     "types": [],
     "set": {
@@ -121884,7 +121884,7 @@
     "localId": "8697",
     "name": "พลังงานพื้นฐาน[ไฟ]",
     "stage": "",
-    "category": "Trainer",
+    "category": "Energy",
     "hp": null,
     "types": [],
     "set": {
@@ -122318,7 +122318,7 @@
     "localId": "8719",
     "name": "ดับเบิลเทอร์โบเอนเนอร์จี้",
     "stage": "",
-    "category": "Trainer",
+    "category": "Energy",
     "hp": null,
     "types": [],
     "set": {
@@ -122337,7 +122337,7 @@
     "localId": "8720",
     "name": "พลังงานพื้นฐาน[หญ้า]",
     "stage": "",
-    "category": "Trainer",
+    "category": "Energy",
     "hp": null,
     "types": [],
     "set": {
@@ -122790,7 +122790,7 @@
     "localId": "8743",
     "name": "พลังงานพื้นฐาน[พลังจิต]",
     "stage": "",
-    "category": "Trainer",
+    "category": "Energy",
     "hp": null,
     "types": [],
     "set": {
@@ -123186,7 +123186,7 @@
     "localId": "8763",
     "name": "พลังงานพื้นฐาน[ต่อสู้]",
     "stage": "",
-    "category": "Trainer",
+    "category": "Energy",
     "hp": null,
     "types": [],
     "set": {
@@ -123601,7 +123601,7 @@
     "localId": "8784",
     "name": "ดับเบิลเทอร์โบเอนเนอร์จี้",
     "stage": "",
-    "category": "Trainer",
+    "category": "Energy",
     "hp": null,
     "types": [],
     "set": {
@@ -123620,7 +123620,7 @@
     "localId": "8785",
     "name": "พลังงานพื้นฐาน[สายฟ้า]",
     "stage": "",
-    "category": "Trainer",
+    "category": "Energy",
     "hp": null,
     "types": [],
     "set": {
@@ -123995,7 +123995,7 @@
     "localId": "8804",
     "name": "พลังงานพื้นฐาน[โลหะ]",
     "stage": "",
-    "category": "Trainer",
+    "category": "Energy",
     "hp": null,
     "types": [],
     "set": {
@@ -129073,7 +129073,7 @@
     "localId": "10011",
     "name": "ดับเบิลเทอร์โบเอนเนอร์จี้",
     "stage": "",
-    "category": "Trainer",
+    "category": "Energy",
     "hp": null,
     "types": [],
     "set": {
@@ -130238,7 +130238,7 @@
     "localId": "10114",
     "name": "เจ็ตเอนเนอร์จี้",
     "stage": "",
-    "category": "Trainer",
+    "category": "Energy",
     "hp": null,
     "types": [],
     "set": {
@@ -130257,7 +130257,7 @@
     "localId": "10115",
     "name": "รีเวอร์ซัลเอนเนอร์จี้",
     "stage": "",
-    "category": "Trainer",
+    "category": "Energy",
     "hp": null,
     "types": [],
     "set": {
@@ -130276,7 +130276,7 @@
     "localId": "10116",
     "name": "ลูมินัสเอนเนอร์จี้",
     "stage": "",
-    "category": "Trainer",
+    "category": "Energy",
     "hp": null,
     "types": [],
     "set": {
@@ -130295,7 +130295,7 @@
     "localId": "10117",
     "name": "พลังงานพื้นฐาน[หญ้า]",
     "stage": "",
-    "category": "Trainer",
+    "category": "Energy",
     "hp": null,
     "types": [],
     "set": {
@@ -130314,7 +130314,7 @@
     "localId": "10118",
     "name": "พลังงานพื้นฐาน[ไฟ]",
     "stage": "",
-    "category": "Trainer",
+    "category": "Energy",
     "hp": null,
     "types": [],
     "set": {
@@ -130333,7 +130333,7 @@
     "localId": "10119",
     "name": "พลังงานพื้นฐาน[น้ำ]",
     "stage": "",
-    "category": "Trainer",
+    "category": "Energy",
     "hp": null,
     "types": [],
     "set": {
@@ -130352,7 +130352,7 @@
     "localId": "10120",
     "name": "พลังงานพื้นฐาน[สายฟ้า]",
     "stage": "",
-    "category": "Trainer",
+    "category": "Energy",
     "hp": null,
     "types": [],
     "set": {
@@ -130371,7 +130371,7 @@
     "localId": "10121",
     "name": "พลังงานพื้นฐาน[พลังจิต]",
     "stage": "",
-    "category": "Trainer",
+    "category": "Energy",
     "hp": null,
     "types": [],
     "set": {
@@ -130390,7 +130390,7 @@
     "localId": "10122",
     "name": "พลังงานพื้นฐาน[ต่อสู้]",
     "stage": "",
-    "category": "Trainer",
+    "category": "Energy",
     "hp": null,
     "types": [],
     "set": {
@@ -130409,7 +130409,7 @@
     "localId": "10123",
     "name": "พลังงานพื้นฐาน[ความมืด]",
     "stage": "",
-    "category": "Trainer",
+    "category": "Energy",
     "hp": null,
     "types": [],
     "set": {
@@ -130428,7 +130428,7 @@
     "localId": "10124",
     "name": "พลังงานพื้นฐาน[โลหะ]",
     "stage": "",
-    "category": "Trainer",
+    "category": "Energy",
     "hp": null,
     "types": [],
     "set": {
@@ -134446,7 +134446,7 @@
     "localId": "10318",
     "name": "ริชเอนเนอร์จี้",
     "stage": "",
-    "category": "Trainer",
+    "category": "Energy",
     "hp": null,
     "types": [],
     "set": {
@@ -138019,7 +138019,7 @@
     "localId": "10676",
     "name": "เทอราปีเอนเนอร์จี้",
     "stage": "",
-    "category": "Trainer",
+    "category": "Energy",
     "hp": null,
     "types": [],
     "set": {
@@ -138038,7 +138038,7 @@
     "localId": "10677",
     "name": "พลังงานพื้นฐาน[หญ้า]",
     "stage": "",
-    "category": "Trainer",
+    "category": "Energy",
     "hp": null,
     "types": [],
     "set": {
@@ -138057,7 +138057,7 @@
     "localId": "10678",
     "name": "พลังงานพื้นฐาน[ไฟ]",
     "stage": "",
-    "category": "Trainer",
+    "category": "Energy",
     "hp": null,
     "types": [],
     "set": {
@@ -138076,7 +138076,7 @@
     "localId": "10679",
     "name": "พลังงานพื้นฐาน[น้ำ]",
     "stage": "",
-    "category": "Trainer",
+    "category": "Energy",
     "hp": null,
     "types": [],
     "set": {
@@ -138095,7 +138095,7 @@
     "localId": "10680",
     "name": "พลังงานพื้นฐาน[สายฟ้า]",
     "stage": "",
-    "category": "Trainer",
+    "category": "Energy",
     "hp": null,
     "types": [],
     "set": {
@@ -138114,7 +138114,7 @@
     "localId": "10681",
     "name": "พลังงานพื้นฐาน[พลังจิต]",
     "stage": "",
-    "category": "Trainer",
+    "category": "Energy",
     "hp": null,
     "types": [],
     "set": {
@@ -138133,7 +138133,7 @@
     "localId": "10682",
     "name": "พลังงานพื้นฐาน[ต่อสู้]",
     "stage": "",
-    "category": "Trainer",
+    "category": "Energy",
     "hp": null,
     "types": [],
     "set": {
@@ -138152,7 +138152,7 @@
     "localId": "10683",
     "name": "พลังงานพื้นฐาน[ความมืด]",
     "stage": "",
-    "category": "Trainer",
+    "category": "Energy",
     "hp": null,
     "types": [],
     "set": {
@@ -138171,7 +138171,7 @@
     "localId": "10684",
     "name": "พลังงานพื้นฐาน[โลหะ]",
     "stage": "",
-    "category": "Trainer",
+    "category": "Energy",
     "hp": null,
     "types": [],
     "set": {
@@ -141962,7 +141962,7 @@
     "localId": "10869",
     "name": "เจ็ตเอนเนอร์จี้",
     "stage": "",
-    "category": "Trainer",
+    "category": "Energy",
     "hp": null,
     "types": [],
     "set": {
@@ -141981,7 +141981,7 @@
     "localId": "10870",
     "name": "มิสต์เอนเนอร์จี้",
     "stage": "",
-    "category": "Trainer",
+    "category": "Energy",
     "hp": null,
     "types": [],
     "set": {
@@ -142000,7 +142000,7 @@
     "localId": "10871",
     "name": "พลังงานสืบทอด",
     "stage": "",
-    "category": "Trainer",
+    "category": "Energy",
     "hp": null,
     "types": [],
     "set": {
@@ -145142,7 +145142,7 @@
     "localId": "11033",
     "name": "เจ็ตเอนเนอร์จี้",
     "stage": "",
-    "category": "Trainer",
+    "category": "Energy",
     "hp": null,
     "types": [],
     "set": {
@@ -145161,7 +145161,7 @@
     "localId": "11034",
     "name": "มิสต์เอนเนอร์จี้",
     "stage": "",
-    "category": "Trainer",
+    "category": "Energy",
     "hp": null,
     "types": [],
     "set": {
@@ -149058,7 +149058,7 @@
     "localId": "11223",
     "name": "สไปก์เอนเนอร์จี้",
     "stage": "",
-    "category": "Trainer",
+    "category": "Energy",
     "hp": null,
     "types": [],
     "set": {
@@ -150010,7 +150010,7 @@
     "localId": "11269",
     "name": "สไปก์เอนเนอร์จี้",
     "stage": "",
-    "category": "Trainer",
+    "category": "Energy",
     "hp": null,
     "types": [],
     "set": {
@@ -150551,7 +150551,7 @@
     "localId": "11296",
     "name": "พลังงานแก๊งร็อกเกต",
     "stage": "",
-    "category": "Trainer",
+    "category": "Energy",
     "hp": null,
     "types": [],
     "set": {
@@ -153417,7 +153417,7 @@
     "localId": "11434",
     "name": "พลังงานแก๊งร็อกเกต",
     "stage": "",
-    "category": "Trainer",
+    "category": "Energy",
     "hp": null,
     "types": [],
     "set": {
@@ -156978,7 +156978,7 @@
     "localId": "11605",
     "name": "พลังงานจุดระเบิด",
     "stage": "",
-    "category": "Trainer",
+    "category": "Energy",
     "hp": null,
     "types": [],
     "set": {
@@ -156997,7 +156997,7 @@
     "localId": "11606",
     "name": "ปริซึมเอนเนอร์จี้",
     "stage": "",
-    "category": "Trainer",
+    "category": "Energy",
     "hp": null,
     "types": [],
     "set": {
@@ -169297,7 +169297,7 @@
     "localId": "12611",
     "name": "พลังงานจุดระเบิด",
     "stage": "",
-    "category": "Trainer",
+    "category": "Energy",
     "hp": null,
     "types": [],
     "set": {
@@ -170075,7 +170075,7 @@
     "localId": "12649",
     "name": "พลังงานพื้นฐาน[สายฟ้า]",
     "stage": "",
-    "category": "Trainer",
+    "category": "Energy",
     "hp": null,
     "types": [],
     "set": {
@@ -170689,7 +170689,7 @@
     "localId": "12679",
     "name": "พลังงานพื้นฐาน[ต่อสู้]",
     "stage": "",
-    "category": "Trainer",
+    "category": "Energy",
     "hp": null,
     "types": [],
     "set": {
@@ -171862,7 +171862,7 @@
     "localId": "12737",
     "name": "พลังงานพื้นฐาน[น้ำ]",
     "stage": "",
-    "category": "Trainer",
+    "category": "Energy",
     "hp": null,
     "types": [],
     "set": {
@@ -172438,7 +172438,7 @@
     "localId": "12765",
     "name": "พลังงานพื้นฐาน[หญ้า]",
     "stage": "",
-    "category": "Trainer",
+    "category": "Energy",
     "hp": null,
     "types": [],
     "set": {
@@ -172518,7 +172518,7 @@
     "localId": "12769",
     "name": "พลังงานพื้นฐาน【พลังจิต】",
     "stage": "",
-    "category": "Trainer",
+    "category": "Energy",
     "hp": null,
     "types": [],
     "set": {
@@ -172556,7 +172556,7 @@
     "localId": "12772",
     "name": "พลังงานพื้นฐาน【ไฟ】",
     "stage": "",
-    "category": "Trainer",
+    "category": "Energy",
     "hp": null,
     "types": [],
     "set": {
@@ -172615,7 +172615,7 @@
     "localId": "12775",
     "name": "รีเวอร์ซัลเอนเนอร์จี้",
     "stage": "",
-    "category": "Trainer",
+    "category": "Energy",
     "hp": null,
     "types": [],
     "set": {
@@ -172674,7 +172674,7 @@
     "localId": "12778",
     "name": "พลังงานพื้นฐาน[โลหะ]",
     "stage": "",
-    "category": "Trainer",
+    "category": "Energy",
     "hp": null,
     "types": [],
     "set": {
@@ -172733,7 +172733,7 @@
     "localId": "12781",
     "name": "พลังงานพื้นฐาน【ความมืด】",
     "stage": "",
-    "category": "Trainer",
+    "category": "Energy",
     "hp": null,
     "types": [],
     "set": {
@@ -173044,7 +173044,7 @@
     "localId": "12796",
     "name": "ลูมินัสเอนเนอร์จี้",
     "stage": "",
-    "category": "Trainer",
+    "category": "Energy",
     "hp": null,
     "types": [],
     "set": {
@@ -174493,7 +174493,7 @@
     "localId": "12867",
     "name": "เจ็ตเอนเนอร์จี้",
     "stage": "",
-    "category": "Trainer",
+    "category": "Energy",
     "hp": null,
     "types": [],
     "set": {
@@ -178454,7 +178454,7 @@
     "localId": "13101",
     "name": "พลังงานจุดระเบิด",
     "stage": "",
-    "category": "Trainer",
+    "category": "Energy",
     "hp": null,
     "types": [],
     "set": {
@@ -178473,7 +178473,7 @@
     "localId": "13102",
     "name": "ปริซึมเอนเนอร์จี้",
     "stage": "",
-    "category": "Trainer",
+    "category": "Energy",
     "hp": null,
     "types": [],
     "set": {
@@ -178492,7 +178492,7 @@
     "localId": "13103",
     "name": "พลังงานแก๊งร็อกเกต",
     "stage": "",
-    "category": "Trainer",
+    "category": "Energy",
     "hp": null,
     "types": [],
     "set": {
@@ -179092,7 +179092,7 @@
     "localId": "13213",
     "name": "พลังงานพื้นฐาน[ต่อสู้]",
     "stage": "",
-    "category": "Trainer",
+    "category": "Energy",
     "hp": null,
     "types": [],
     "set": {
@@ -179570,7 +179570,7 @@
     "localId": "13237",
     "name": "พลังงานพื้นฐาน[หญ้า]",
     "stage": "",
-    "category": "Trainer",
+    "category": "Energy",
     "hp": null,
     "types": [],
     "set": {
@@ -188193,7 +188193,7 @@
     "localId": "13887",
     "name": "เอนเนอร์จี้โกรว์[หญ้า]",
     "stage": "",
-    "category": "Trainer",
+    "category": "Energy",
     "hp": null,
     "types": [],
     "set": {
@@ -188212,7 +188212,7 @@
     "localId": "13888",
     "name": "เอนเนอร์จี้เทเลพาท[พลังจิต]",
     "stage": "",
-    "category": "Trainer",
+    "category": "Energy",
     "hp": null,
     "types": [],
     "set": {
@@ -188231,7 +188231,7 @@
     "localId": "13889",
     "name": "เอนเนอร์จี้ร็อก[ต่อสู้]",
     "stage": "",
-    "category": "Trainer",
+    "category": "Energy",
     "hp": null,
     "types": [],
     "set": {
@@ -192989,7 +192989,7 @@
     "localId": "14120",
     "name": "เอนเนอร์จี้ไนโตร[ไฟ]",
     "stage": "",
-    "category": "Trainer",
+    "category": "Energy",
     "hp": null,
     "types": [],
     "set": {
@@ -193008,7 +193008,7 @@
     "localId": "14121",
     "name": "เอนเนอร์จี้บับเบิล[น้ำ]",
     "stage": "",
-    "category": "Trainer",
+    "category": "Energy",
     "hp": null,
     "types": [],
     "set": {
@@ -193027,7 +193027,7 @@
     "localId": "14122",
     "name": "เอนเนอร์จี้โวลต์[สายฟ้า]",
     "stage": "",
-    "category": "Trainer",
+    "category": "Energy",
     "hp": null,
     "types": [],
     "set": {
@@ -193046,7 +193046,7 @@
     "localId": "14123",
     "name": "เอนเนอร์จี้ชาโดว์[ความมืด]",
     "stage": "",
-    "category": "Trainer",
+    "category": "Energy",
     "hp": null,
     "types": [],
     "set": {
@@ -193065,7 +193065,7 @@
     "localId": "14124",
     "name": "เอนเนอร์จี้แมกเน็ท[โลหะ]",
     "stage": "",
-    "category": "Trainer",
+    "category": "Energy",
     "hp": null,
     "types": [],
     "set": {
@@ -193796,7 +193796,7 @@
     "localId": "14327",
     "name": "พลังงานพื้นฐาน[ไฟ]",
     "stage": "",
-    "category": "Trainer",
+    "category": "Energy",
     "hp": null,
     "types": [],
     "set": {
@@ -194211,7 +194211,7 @@
     "localId": "14348",
     "name": "พลังงานพื้นฐาน[ความมืด]",
     "stage": "",
-    "category": "Trainer",
+    "category": "Energy",
     "hp": null,
     "types": [],
     "set": {
@@ -194668,7 +194668,7 @@
     "localId": "14371",
     "name": "เอนเนอร์จี้เทเลพาท[พลังจิต]",
     "stage": "",
-    "category": "Trainer",
+    "category": "Energy",
     "hp": null,
     "types": [],
     "set": {
@@ -194687,7 +194687,7 @@
     "localId": "14372",
     "name": "พลังงานพื้นฐาน[พลังจิต]",
     "stage": "",
-    "category": "Trainer",
+    "category": "Energy",
     "hp": null,
     "types": [],
     "set": {
@@ -195165,7 +195165,7 @@
     "localId": "14396",
     "name": "พลังงานพื้นฐาน[น้ำ]",
     "stage": "",
-    "category": "Trainer",
+    "category": "Energy",
     "hp": null,
     "types": [],
     "set": {
@@ -195184,7 +195184,7 @@
     "localId": "14397",
     "name": "พลังงานพื้นฐาน[สายฟ้า]",
     "stage": "",
-    "category": "Trainer",
+    "category": "Energy",
     "hp": null,
     "types": [],
     "set": {
