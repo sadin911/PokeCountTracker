@@ -2,6 +2,78 @@
 
 @custom-variant dark (&:where(.dark, .dark *));
 
+/* ==========================================================================
+   3D Holographic / Foil Card Shimmer Effects (PokeCountTracker & Lorcana Style)
+   ========================================================================== */
+
+@keyframes foil-holo-pulse {
+  0%, 100% { opacity: 0.55; }
+  50%      { opacity: 0.95; }
+}
+
+@utility foil-3d {
+  --foil-rx: 0deg;
+  --foil-ry: 0deg;
+  --foil-mx: 50%;
+  --foil-my: 50%;
+  --foil-sx: 0px;
+  --foil-sy: 8px;
+  --foil-on: 0;
+  --foil-dur: 420ms;
+
+  transform-style: preserve-3d;
+  transform: perspective(900px) rotateX(var(--foil-rx)) rotateY(var(--foil-ry))
+    scale(calc(1 + 0.02 * var(--foil-on))) translateZ(0);
+  transition:
+    transform var(--foil-dur) cubic-bezier(0.16, 1, 0.3, 1),
+    box-shadow var(--foil-dur) ease-out;
+  box-shadow:
+    var(--foil-sx) var(--foil-sy) calc(16px + 10px * var(--foil-on))
+      rgba(0, 0, 0, calc(0.35 + 0.25 * var(--foil-on))),
+    0 0 0 1px rgba(255, 203, 5, calc(0.3 + 0.4 * var(--foil-on)));
+}
+
+@utility foil-holo {
+  position: absolute;
+  inset: 0;
+  overflow: hidden;
+  border-radius: inherit;
+  pointer-events: none;
+  mix-blend-mode: color-dodge;
+  opacity: calc(0.25 + 0.45 * var(--foil-on));
+  transition: opacity var(--foil-dur) ease-out;
+
+  &::before {
+    content: '';
+    position: absolute;
+    inset: -25%;
+    background-image:
+      repeating-linear-gradient(
+        115deg,
+        rgba(255, 203, 5, 0.35) 0%,
+        rgba(255, 105, 180, 0.28) 6%,
+        rgba(138, 43, 226, 0.3) 12%,
+        rgba(0, 191, 255, 0.32) 18%,
+        rgba(0, 255, 127, 0.28) 24%,
+        rgba(255, 215, 0, 0.35) 30%
+      ),
+      radial-gradient(55% 45% at 20% 15%, rgba(255, 235, 150, 0.6), transparent 70%),
+      radial-gradient(50% 45% at 80% 80%, rgba(135, 206, 250, 0.5), transparent 70%);
+    background-size: 250% 250%, auto, auto;
+    background-position: var(--foil-mx) var(--foil-my);
+    transition: background-position var(--foil-dur) ease-out;
+    animation: foil-holo-pulse 8s ease-in-out infinite;
+    animation-delay: inherit;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    &::before {
+      animation: none;
+    }
+  }
+}
+
+
 @layer base {
   :root {
     color-scheme: light dark;

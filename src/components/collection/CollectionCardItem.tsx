@@ -1,4 +1,5 @@
 import { resolveCardImageUrl, handleCardImageError } from '../../utils/cardImage';
+import { isCardFoil, foilPulseDelay } from '../../utils/cardFoil';
 import type { CardVariantCount } from '../../types/collection';
 
 interface Props {
@@ -22,6 +23,8 @@ export function CollectionCardItem({
 }: Props) {
   const totalCount = variants.normal + variants.holo + variants.reverse + variants.promo;
   const isOwned = totalCount > 0;
+  const isFoil = isCardFoil(card, variants);
+  const pulseDelay = foilPulseDelay(card.id || '');
 
   const imgUrl = resolveCardImageUrl(card.imageUrl);
 
@@ -51,6 +54,15 @@ export function CollectionCardItem({
           }`}
           onError={(e) => handleCardImageError(e, card.imageUrl, card.officialImageUrl)}
         />
+
+        {/* Subtle Foil Shimmer Overlay for Foil Cards */}
+        {isFoil && (
+          <div
+            className="foil-holo opacity-30 group-hover:opacity-100 transition-opacity duration-300 pointer-events-none"
+            aria-hidden="true"
+            style={{ animationDelay: `${pulseDelay}s` }}
+          />
+        )}
 
         {/* Owned Badge */}
         {isOwned && (

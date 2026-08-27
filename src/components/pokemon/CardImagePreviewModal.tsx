@@ -1,7 +1,9 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useState, useMemo } from 'react';
 import { createPortal } from 'react-dom';
 import { motion, AnimatePresence } from 'framer-motion';
 import { resolveCardImageUrl, handleCardImageError } from '../../utils/cardImage';
+import { isCardFoil, foilPulseDelay } from '../../utils/cardFoil';
+import { useFoilTilt } from '../../hooks/useFoilTilt';
 import { useCommunityStore } from '../../store/communityStore';
 
 interface Props {
@@ -30,6 +32,13 @@ export function CardImagePreviewModal({
   const [isZoomed, setIsZoomed] = useState(false);
   const getCardStats = useCommunityStore((s) => s.getCardStats);
   const stats = cardId ? getCardStats(cardId) : null;
+
+  const isFoil = useMemo(
+    () => isCardFoil({ id: cardId, name: cardName, rarityCode }),
+    [cardId, cardName, rarityCode]
+  );
+  const tilt = useFoilTilt<HTMLDivElement>(isFoil, { gyro: true });
+  const pulseDelay = useMemo(() => foilPulseDelay(cardId || cardName || 'foil'), [cardId, cardName]);
 
   useEffect(() => {
     const handleKeyDown = (e: KeyboardEvent) => {
@@ -107,12 +116,17 @@ export function CardImagePreviewModal({
             <div className="absolute -inset-4 bg-gradient-to-tr from-amber-500/20 via-indigo-500/20 to-cyan-500/20 rounded-[32px] blur-2xl opacity-75 pointer-events-none" />
 
             <div
+              ref={tilt.ref}
+              onPointerMove={isFoil ? tilt.onPointerMove : undefined}
+              onPointerLeave={isFoil ? tilt.onPointerLeave : undefined}
               onClick={() => setIsZoomed((prev) => !prev)}
               className={`relative w-full ${
                 isZoomed
                   ? 'max-w-[460px] sm:max-w-[560px] md:max-w-[620px]'
                   : 'max-w-[340px] sm:max-w-[420px] md:max-w-[460px]'
-              } aspect-[63/88] max-h-[82vh] rounded-2xl sm:rounded-3xl overflow-hidden shadow-[0_0_60px_rgba(0,0,0,0.95)] border-2 border-slate-700/80 bg-slate-950 flex items-center justify-center transition-all duration-300 cursor-zoom-in group`}
+              } aspect-[63/88] max-h-[82vh] rounded-2xl sm:rounded-3xl overflow-hidden shadow-[0_0_60px_rgba(0,0,0,0.95)] border-2 border-slate-700/80 bg-slate-950 flex items-center justify-center transition-all duration-300 cursor-zoom-in group ${
+                isFoil ? 'foil-3d border-amber-400/60' : ''
+              }`}
               title={isZoomed ? 'คลิกเพื่อย่อกลับขนาดปกติ' : 'คลิกเพื่อขยายดูรายละเอียดชัดเจน'}
             >
               <img
@@ -124,13 +138,34 @@ export function CardImagePreviewModal({
                 }`}
               />
 
+              {/* 3D Holographic / Foil Shimmer Layer */}
+              {isFoil && (
+                <div
+                  className="foil-holo"
+                  aria-hidden="true"
+                  style={{ animationDelay: `${pulseDelay}s` }}
+                />
+              )}
+
               {/* Zoom hint badge on hover */}
-              <div className="absolute bottom-3 right-3 px-3 py-1.5 rounded-xl bg-black/75 hover:bg-black/90 backdrop-blur-md border border-white/20 text-white text-xs font-bold shadow-lg flex items-center gap-1.5 opacity-85 group-hover:opacity-100 transition-opacity">
+              <div className="absolute bottom-3 right-3 px-3 py-1.5 rounded-xl bg-black/75 hover:bg-black/90 backdrop-blur-md border border-white/20 text-white text-xs font-bold shadow-lg flex items-center gap-1.5 opacity-85 group-hover:opacity-100 transition-opacity pointer-events-none">
                 <span>{isZoomed ? '🔍 100%' : '🔍 150%'}</span>
                 <span className="hidden sm:inline">{isZoomed ? 'ย่อขนาด' : 'ขยายใหญ่'}</span>
               </div>
             </div>
           </div>
+
+          {/* iOS Gyroscope Permission / Activation Gesture Button */}
+          {isFoil && tilt.gyro.needsGesture && (
+            <button
+              type="button"
+              onClick={tilt.gyro.enable}
+              className="py-2 px-4 rounded-xl border border-amber-400/50 bg-amber-400/10 dark:bg-amber-500/15 text-xs font-bold text-amber-300 hover:bg-amber-400/20 active:scale-95 transition-all flex items-center justify-center gap-1.5 shadow-sm"
+            >
+              <span>✨</span>
+              <span>เอียงโทรศัพท์เพื่อดูประกายการ์ด 3D</span>
+            </button>
+          )}
 
           {/* Action Row */}
           <div className="flex items-center gap-2.5 w-full max-w-[340px] sm:max-w-[420px] md:max-w-[460px]">

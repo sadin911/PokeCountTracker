@@ -67,12 +67,32 @@ test.describe('Collection Tracker Suite', () => {
     await expect(modal).toBeHidden();
   });
 
-  test('toggles Vivid Full-Color display mode', async ({ page }) => {
-    const fullColorBtn = page.locator('button[title*="โหมดสีสด"]').first();
-    if (await fullColorBtn.isVisible()) {
-      await fullColorBtn.click();
-      await page.waitForTimeout(200);
-      await fullColorBtn.click();
-    }
+  test('displays 3D holographic foil effect on high rarity or special cards in modal', async ({ page }) => {
+    const searchInput = page.getByPlaceholder(/ค้นหาชื่อการ์ด/i);
+    await searchInput.fill('ลิซาร์ดอน ex');
+    await page.waitForTimeout(400);
+
+    const firstCardImage = page.locator('.group.relative.rounded-xl').first();
+    await expect(firstCardImage).toBeVisible({ timeout: 10000 });
+    await firstCardImage.click();
+
+    const modal = page.locator('.fixed.inset-0.z-50');
+    await expect(modal).toBeVisible();
+
+    // Verify foil-3d or foil-holo elements
+    const foilCard = modal.locator('.foil-3d');
+    await expect(foilCard).toBeVisible();
+
+    const foilHoloOverlay = modal.locator('.foil-holo');
+    await expect(foilHoloOverlay).toBeVisible();
+
+    // Hover / move mouse over foil card to trigger 3D perspective tracking
+    await foilCard.hover();
+    await page.mouse.move(200, 200);
+
+    // Close modal via ESC key
+    await page.keyboard.press('Escape');
+    await expect(modal).toBeHidden();
   });
 });
+

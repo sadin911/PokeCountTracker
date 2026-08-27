@@ -6,6 +6,8 @@ import { useDeckStore } from '../../store/deckStore';
 import { useCommunityStore } from '../../store/communityStore';
 import { resolveCardImageUrl, handleCardImageError } from '../../utils/cardImage';
 import { getEnglishCardName } from '../../utils/searchHelpers';
+import { isCardFoil, foilPulseDelay } from '../../utils/cardFoil';
+import { useFoilTilt } from '../../hooks/useFoilTilt';
 import { EvolutionChainSection } from '../pokemon/EvolutionChainSection';
 import { CardImagePreviewModal } from '../pokemon/CardImagePreviewModal';
 import type { CardVariantKey, CardCondition } from '../../types/collection';
@@ -139,13 +141,14 @@ export function CardCollectionModal({ card: initialCard, onClose, deckId }: Prop
 
   const cardEntry = profile?.cards[activeCard.id];
   const variants = cardEntry?.variants || { normal: 0, holo: 0, reverse: 0, promo: 0 };
+  const totalCount = variants.normal + variants.holo + variants.reverse + variants.promo;
   const isWishlist = !!cardEntry?.isWishlist;
   const currentCondition = cardEntry?.condition || 'NM';
   const currentNote = cardEntry?.note || '';
 
-  const totalCount = Object.values(variants).reduce((a, b) => a + b, 0);
-
-  const imgUrl = resolveCardImageUrl(activeCard.imageUrlHigh || activeCard.imageUrl, true);
+  const isFoil = useMemo(() => isCardFoil(activeCard, variants), [activeCard, variants]);
+  const tilt = useFoilTilt<HTMLDivElement>(isFoil, { gyro: true });
+  const pulseDelay = useMemo(() => foilPulseDelay(activeCard.id), [activeCard.id]);
 
   const applicableVariants = useMemo(() => {
     return getApplicableVariants(activeCard, variants);
@@ -170,19 +173,35 @@ export function CardCollectionModal({ card: initialCard, onClose, deckId }: Prop
         {/* Left: Card Preview & Info */}
         <div className="md:w-5/12 bg-slate-100 dark:bg-slate-950 p-5 sm:p-6 flex flex-col items-center justify-center border-b md:border-b-0 md:border-r border-slate-200 dark:border-slate-800/90 relative">
           <div
+            ref={tilt.ref}
+            onPointerMove={isFoil ? tilt.onPointerMove : undefined}
+            onPointerLeave={isFoil ? tilt.onPointerLeave : undefined}
             onClick={() => setShowZoom(true)}
-            className="relative group max-w-[260px] w-full aspect-[2.5/3.5] rounded-2xl overflow-hidden shadow-xl dark:shadow-2xl dark:shadow-black/80 ring-1 ring-slate-300 dark:ring-slate-700/60 cursor-zoom-in transition-all duration-200 hover:ring-2 hover:ring-purple-400 dark:hover:ring-amber-400/80 hover:shadow-purple-500/10"
+            className={`relative group max-w-[260px] w-full aspect-[2.5/3.5] rounded-2xl overflow-hidden shadow-xl dark:shadow-2xl dark:shadow-black/80 ring-1 cursor-zoom-in transition-all duration-200 ${
+              isFoil
+                ? 'foil-3d ring-amber-400/80 hover:ring-amber-300 hover:shadow-amber-500/20'
+                : 'ring-slate-300 dark:ring-slate-700/60 hover:ring-2 hover:ring-purple-400 dark:hover:ring-amber-400/80 hover:shadow-purple-500/10'
+            }`}
             title="คลิกเพื่อขยายดูภาพการ์ดใหญ่เต็มจอ (Fullscreen)"
           >
             <img
-              src={imgUrl}
+              src={resolveCardImageUrl(activeCard.imageUrlHigh || activeCard.imageUrl, true)}
               alt={activeCard.name}
               className="w-full h-full object-cover transition-all duration-300 group-hover:scale-105"
               onError={(e) => handleCardImageError(e, activeCard.imageUrl, activeCard.officialImageUrl)}
             />
 
+            {/* Holographic / Foil Shimmer Overlay */}
+            {isFoil && (
+              <div
+                className="foil-holo"
+                aria-hidden="true"
+                style={{ animationDelay: `${pulseDelay}s` }}
+              />
+            )}
+
             {/* Hover Magnify Overlay */}
-            <div className="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 transition-opacity flex flex-col items-center justify-center gap-1 text-white backdrop-blur-[2px]">
+            <div className="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 transition-opacity flex flex-col items-center justify-center gap-1 text-white backdrop-blur-[2px] pointer-events-none">
               <span className="text-3xl drop-shadow-lg transform group-hover:scale-110 transition-transform">🔍</span>
               <span className="text-xs font-black px-2.5 py-1 rounded-lg bg-black/70 border border-white/20 shadow-lg">
                 แตะเพื่อดูการ์ดเต็มจอ
@@ -190,11 +209,23 @@ export function CardCollectionModal({ card: initialCard, onClose, deckId }: Prop
             </div>
 
             {totalCount > 0 && (
-              <div className="absolute top-2.5 right-2.5 px-3 py-1 rounded-full bg-gradient-to-r from-amber-500 to-amber-600 text-slate-950 font-black text-xs shadow-xl shadow-amber-500/40 flex items-center gap-1 z-10">
+              <div className="absolute top-2.5 right-2.5 px-3 py-1 rounded-full bg-gradient-to-r from-amber-500 to-amber-600 text-slate-950 font-black text-xs shadow-xl shadow-amber-500/40 flex items-center gap-1 z-10 pointer-events-none">
                 <span>มีสะสม {totalCount} ใบ</span>
               </div>
             )}
           </div>
+
+          {/* iOS Gyroscope Permission / Activation Gesture Button */}
+          {isFoil && tilt.gyro.needsGesture && (
+            <button
+              type="button"
+              onClick={tilt.gyro.enable}
+              className="mt-2.5 w-full max-w-[260px] py-2 px-3 rounded-xl border border-amber-400/50 bg-amber-400/10 dark:bg-amber-500/15 text-xs font-bold text-amber-800 dark:text-amber-300 hover:bg-amber-400/20 active:scale-95 transition-all flex items-center justify-center gap-1.5 shadow-sm"
+            >
+              <span>✨</span>
+              <span>เอียงโทรศัพท์เพื่อดูประกายการ์ด 3D</span>
+            </button>
+          )}
 
           {/* Dedicated Fullscreen Button */}
           <button
