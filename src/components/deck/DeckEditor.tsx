@@ -11,6 +11,7 @@ import { SearchableSetSelect } from '../common/SearchableSetSelect';
 import { REGULATION_SERIES_OPTIONS, STANDARD_REGULATION_MARKS } from '../../types/collection';
 import { getCardRarityClass } from '../../utils/rarity';
 import { createCardMatcher } from '../../utils/searchHelpers';
+import { sortSetsByThaiRelease } from '../../utils/setOrder';
 import pokemonCardData from '../../data/pokemonNames.json';
 import { trackEvent } from '../../utils/analytics';
 import type { Deck } from '../../types/deck';
@@ -124,21 +125,21 @@ export function DeckEditor({ deck, onBackToDecks }: Props) {
       }
     });
 
-    return Array.from(map.values())
-      .map((s) => {
-        const marks = Array.from(s.regulationMarks);
-        const primaryMark =
-          marks.find((m) => ['J', 'I', 'H', 'G', 'F', 'E', 'D'].includes(m)) ||
-          marks[0] ||
-          '';
-        return {
-          id: s.id,
-          name: s.name,
-          regulationMark: primaryMark,
-          regulationMarks: marks,
-        };
-      })
-      .sort((a, b) => a.id.localeCompare(b.id));
+    const unsorted = Array.from(map.values()).map((s) => {
+      const marks = Array.from(s.regulationMarks);
+      const primaryMark =
+        marks.find((m) => ['J', 'I', 'H', 'G', 'F', 'E', 'D'].includes(m)) ||
+        marks[0] ||
+        '';
+      return {
+        id: s.id,
+        name: s.name,
+        regulationMark: primaryMark,
+        regulationMarks: marks,
+      };
+    });
+
+    return sortSetsByThaiRelease(unsorted);
   }, []);
 
   const deferredSearch = useDeferredValue(search);

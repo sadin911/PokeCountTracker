@@ -29,16 +29,16 @@ export function CollectionCardItem({
     <div
       className={`group relative rounded-xl p-2 sm:p-2.5 transition-all duration-300 ease-out transform-gpu flex flex-col justify-between select-none hover:scale-[1.06] hover:-translate-y-1.5 hover:z-30 hover:shadow-2xl hover:shadow-black/80 ${
         isOwned
-          ? 'bg-slate-800/90 hover:bg-slate-800 border border-amber-500/50 shadow-lg shadow-black/40 ring-1 ring-amber-500/30 hover:border-amber-400 hover:ring-2 hover:ring-amber-400/50'
+          ? 'bg-white dark:bg-slate-800/90 hover:bg-slate-50 dark:hover:bg-slate-800 border border-amber-400 dark:border-amber-500/50 shadow-md dark:shadow-lg dark:shadow-black/40 ring-1 ring-amber-400/40 hover:border-amber-500 hover:ring-2 hover:ring-amber-400/50'
           : showFullColor
-          ? 'bg-slate-900/70 hover:bg-slate-800/80 border border-slate-700/80 hover:border-amber-500/50'
-          : 'bg-slate-900/50 hover:bg-slate-800/60 border border-slate-800 hover:border-slate-700'
+          ? 'bg-white dark:bg-slate-900/70 hover:bg-slate-50 dark:hover:bg-slate-800/80 border border-slate-200 dark:border-slate-700/80 hover:border-purple-300 dark:hover:border-amber-500/50 shadow-sm'
+          : 'bg-white/80 dark:bg-slate-900/50 hover:bg-white dark:hover:bg-slate-800/60 border border-slate-200 dark:border-slate-800 hover:border-slate-300 dark:hover:border-slate-700 shadow-sm'
       }`}
     >
       {/* Card Image Box */}
       <div
         onClick={() => onSelect(card)}
-        className="relative w-full aspect-[2.5/3.5] rounded-lg overflow-hidden cursor-pointer bg-slate-950 shadow-inner group-hover:scale-[1.02] transition-transform duration-300 ease-out"
+        className="relative w-full aspect-[2.5/3.5] rounded-lg overflow-hidden cursor-pointer bg-slate-100 dark:bg-slate-950 shadow-inner group-hover:scale-[1.02] transition-transform duration-300 ease-out"
       >
         <img
           src={imgUrl}
@@ -94,12 +94,12 @@ export function CollectionCardItem({
       {/* Card Info & Badges */}
       <div className="mt-2 flex flex-col justify-between flex-1">
         <div onClick={() => onSelect(card)} className="cursor-pointer">
-          <div className="flex items-center justify-between text-[10px] text-slate-400 font-mono">
+          <div className="flex items-center justify-between text-[10px] text-slate-500 dark:text-slate-400 font-mono">
             <div className="flex items-center gap-1 min-w-0">
               <span className="truncate">{card.set?.id || 'PROMO'}</span>
               {card.regulationMark && (
                 <span
-                  className="px-1 py-0.2 rounded text-[8px] font-black uppercase bg-slate-800 text-slate-300 border border-slate-700 shrink-0"
+                  className="px-1 py-0.2 rounded text-[8px] font-black uppercase bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-slate-300 border border-slate-300 dark:border-slate-700 shrink-0"
                   title={`Regulation Mark ${card.regulationMark}`}
                 >
                   {card.regulationMark}
@@ -110,7 +110,7 @@ export function CollectionCardItem({
           </div>
           <h4
             className={`text-xs font-bold truncate leading-snug mt-0.5 ${
-              isOwned ? 'text-slate-100' : 'text-slate-400 group-hover:text-slate-200'
+              isOwned ? 'text-slate-900 dark:text-slate-100' : 'text-slate-600 dark:text-slate-400 group-hover:text-slate-900 dark:group-hover:text-slate-200'
             }`}
             title={card.name}
           >
@@ -121,22 +121,22 @@ export function CollectionCardItem({
         {/* Variant Breakdown Badges */}
         <div className="mt-1.5 flex items-center gap-1 flex-wrap text-[9px] font-bold">
           {variants.normal > 0 && (
-            <span className="px-1.5 py-0.5 rounded bg-slate-700/80 text-slate-300 border border-slate-600">
+            <span className="px-1.5 py-0.5 rounded bg-slate-100 dark:bg-slate-700/80 text-slate-700 dark:text-slate-300 border border-slate-300 dark:border-slate-600">
               N:{variants.normal}
             </span>
           )}
           {variants.holo > 0 && (
-            <span className="px-1.5 py-0.5 rounded bg-amber-500/20 text-amber-300 border border-amber-500/30">
+            <span className="px-1.5 py-0.5 rounded bg-amber-100 dark:bg-amber-500/20 text-amber-800 dark:text-amber-300 border border-amber-300 dark:border-amber-500/30">
               H:{variants.holo}
             </span>
           )}
           {variants.reverse > 0 && (
-            <span className="px-1.5 py-0.5 rounded bg-cyan-500/20 text-cyan-300 border border-cyan-500/30">
+            <span className="px-1.5 py-0.5 rounded bg-cyan-100 dark:bg-cyan-500/20 text-cyan-800 dark:text-cyan-300 border border-cyan-300 dark:border-cyan-500/30">
               R:{variants.reverse}
             </span>
           )}
           {variants.promo > 0 && (
-            <span className="px-1.5 py-0.5 rounded bg-purple-500/20 text-purple-300 border border-purple-500/30">
+            <span className="px-1.5 py-0.5 rounded bg-purple-100 dark:bg-purple-500/20 text-purple-800 dark:text-purple-300 border border-purple-300 dark:border-purple-500/30">
               P:{variants.promo}
             </span>
           )}

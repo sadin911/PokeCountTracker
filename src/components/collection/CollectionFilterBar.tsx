@@ -133,7 +133,7 @@ export function CollectionFilterBar({
   ].filter(Boolean).length;
 
   return (
-    <div className="bg-slate-900/90 border-b border-slate-800/90 px-3 sm:px-8 py-2.5 sm:py-3 space-y-2.5 sm:space-y-3 shadow-md">
+    <div className="bg-white/95 dark:bg-slate-900/90 border-b border-slate-200 dark:border-slate-800/90 px-3 sm:px-8 py-2.5 sm:py-3 space-y-2.5 sm:space-y-3 shadow-sm dark:shadow-md transition-colors duration-200">
       {/* Top Row: Search & Set Selector */}
       <div className="flex flex-col lg:flex-row items-stretch lg:items-center justify-between gap-2 sm:gap-3">
         <div className="flex flex-col sm:flex-row items-center gap-2 sm:gap-2.5 flex-1">
@@ -145,13 +145,13 @@ export function CollectionFilterBar({
               placeholder="ค้นหาชื่อการ์ด, เลขการ์ด หรือชื่อชุด..."
               value={search}
               onChange={(e) => onSearchChange(e.target.value)}
-              className="w-full pl-9 pr-8 py-2 sm:py-2.5 bg-slate-950 border border-slate-700/90 rounded-xl text-xs sm:text-sm text-white placeholder-slate-500 focus:outline-none focus:border-amber-500 transition-all shadow-inner"
+              className="w-full pl-9 pr-8 py-2 sm:py-2.5 bg-slate-100 dark:bg-slate-950 border border-slate-300 dark:border-slate-700/90 rounded-xl text-xs sm:text-sm text-slate-900 dark:text-white placeholder-slate-400 dark:placeholder-slate-500 focus:outline-none focus:border-amber-500 transition-all shadow-inner"
             />
             {search && (
               <button
                 type="button"
                 onClick={() => onSearchChange('')}
-                className="absolute right-2.5 top-1/2 -translate-y-1/2 text-slate-400 hover:text-white text-xs font-bold p-1 rounded-md hover:bg-slate-800 transition-colors"
+                className="absolute right-2.5 top-1/2 -translate-y-1/2 text-slate-400 hover:text-slate-800 dark:hover:text-white text-xs font-bold p-1 rounded-md hover:bg-slate-200 dark:hover:bg-slate-800 transition-colors"
                 title="ล้างข้อความค้นหา"
               >
                 ✕
@@ -178,8 +178,8 @@ export function CollectionFilterBar({
             onClick={() => setShowAdvancedMobile(!showAdvancedMobile)}
             className={`lg:hidden flex-1 sm:flex-none px-3 py-2 rounded-xl text-xs font-bold transition-all flex items-center justify-center gap-1.5 border ${
               showAdvancedMobile || activeFilterCount > 0
-                ? 'bg-amber-500/20 border-amber-500/60 text-amber-300'
-                : 'bg-slate-800 text-slate-300 border-slate-700'
+                ? 'bg-amber-100 dark:bg-amber-500/20 border-amber-300 dark:border-amber-500/60 text-amber-800 dark:text-amber-300'
+                : 'bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-slate-300 border-slate-300 dark:border-slate-700'
             }`}
           >
             <span>⚙️</span>
@@ -195,19 +195,19 @@ export function CollectionFilterBar({
           <button
             type="button"
             onClick={onToggleFullColor}
-            className={`px-3 sm:px-4 py-2 rounded-xl text-xs font-black transition-all flex items-center gap-2 shadow-lg cursor-pointer border ${
+            className={`px-3 sm:px-4 py-2 rounded-xl text-xs font-black transition-all flex items-center gap-2 shadow-sm dark:shadow-lg cursor-pointer border ${
               showFullColor
                 ? 'bg-gradient-to-r from-fuchsia-600 via-pink-600 to-amber-500 text-white border-pink-400/80 shadow-pink-500/30 ring-2 ring-pink-400/50 scale-[1.02]'
-                : 'bg-gradient-to-r from-slate-900 via-slate-800 to-indigo-950/80 hover:from-purple-900/40 hover:to-indigo-900/40 text-purple-200 border-purple-500/60 hover:border-purple-400 shadow-purple-950/50'
+                : 'bg-slate-100 dark:bg-gradient-to-r dark:from-slate-900 dark:via-slate-800 dark:to-indigo-950/80 text-purple-700 dark:text-purple-200 border-purple-300 dark:border-purple-500/60 hover:border-purple-400'
             }`}
             title={showFullColor ? 'คลิกเพื่อกลับไปโหมดปกติ (การ์ดที่ยังไม่มีจะแสดงเป็นสีจาง)' : 'คลิกเพื่อเปิดโหมดสีสดใสชัดเจนทุกใบ (เพื่อรับชมภาพการ์ด)'}
           >
             <span className={`text-sm sm:text-base ${showFullColor ? 'animate-bounce' : ''}`}>🎨</span>
             <div className="flex flex-col text-left leading-tight">
-              <span className={`text-[11px] sm:text-xs font-black tracking-wide ${showFullColor ? 'text-yellow-200' : 'text-purple-200'}`}>
+              <span className={`text-[11px] sm:text-xs font-black tracking-wide ${showFullColor ? 'text-white' : 'text-purple-700 dark:text-purple-200'}`}>
                 โหมดชมการ์ดสีสด
               </span>
-              <span className="text-[9px] font-bold text-slate-300 hidden sm:inline">
+              <span className="text-[9px] font-bold text-slate-500 dark:text-slate-300 hidden sm:inline">
                 {showFullColor ? '✨ สีสดชัดทุกใบ (ON)' : '👁️ ชมภาพสีชัด (OFF)'}
               </span>
             </div>
@@ -215,7 +215,7 @@ export function CollectionFilterBar({
               className={`ml-1 px-1.5 py-0.5 rounded-md text-[10px] font-black uppercase ${
                 showFullColor
                   ? 'bg-white/30 text-white shadow-sm'
-                  : 'bg-purple-950/90 text-purple-300 border border-purple-800'
+                  : 'bg-purple-100 dark:bg-purple-950/90 text-purple-700 dark:text-purple-300 border border-purple-200 dark:border-purple-800'
               }`}
             >
               {showFullColor ? 'ON' : 'OFF'}
@@ -223,7 +223,7 @@ export function CollectionFilterBar({
           </button>
 
           {/* Total Count Badge */}
-          <span className="text-xs font-black text-amber-400 px-2.5 py-2 bg-slate-950 rounded-xl border border-slate-800 whitespace-nowrap shadow-inner">
+          <span className="text-xs font-black text-amber-700 dark:text-amber-400 px-2.5 py-2 bg-slate-100 dark:bg-slate-950 rounded-xl border border-slate-300 dark:border-slate-800 whitespace-nowrap shadow-inner">
             {totalFiltered.toLocaleString()} ใบ
           </span>
         </div>
@@ -233,7 +233,7 @@ export function CollectionFilterBar({
       <div className="flex items-center gap-1.5 overflow-x-auto pb-1 scrollbar-none">
         {STATUS_TABS.map((tab) => {
           const isActive = statusFilter === tab.key;
-          let activeClass = 'bg-slate-700 text-white font-black';
+          let activeClass = 'bg-slate-800 text-white font-black';
           if (tab.key === 'owned') {
             activeClass = 'bg-gradient-to-r from-blue-600 to-blue-500 text-white shadow-md shadow-blue-500/25 font-black ring-1 ring-blue-400/40';
           } else if (tab.key === 'missing') {
@@ -253,7 +253,7 @@ export function CollectionFilterBar({
               className={`px-3 py-1.5 rounded-xl text-xs font-bold whitespace-nowrap transition-all flex items-center gap-1 shadow-sm ${
                 isActive
                   ? activeClass
-                  : 'bg-slate-800/80 hover:bg-slate-800 text-slate-300 border border-slate-700/60'
+                  : 'bg-slate-100 dark:bg-slate-800/80 hover:bg-slate-200 dark:hover:bg-slate-800 text-slate-700 dark:text-slate-300 border border-slate-200 dark:border-slate-700/60'
               }`}
             >
               <span>{tab.icon}</span>
@@ -265,7 +265,7 @@ export function CollectionFilterBar({
 
       {/* Row 3: Regulation Series Quick Filter Chips Bar */}
       <div className="flex items-center gap-1.5 overflow-x-auto pb-1 scrollbar-none">
-        <span className="text-[11px] text-slate-400 font-bold whitespace-nowrap shrink-0">
+        <span className="text-[11px] text-slate-500 dark:text-slate-400 font-bold whitespace-nowrap shrink-0">
           ซีรีส์ Regulation:
         </span>
         {REGULATION_SERIES_OPTIONS.map((reg) => {
@@ -281,8 +281,8 @@ export function CollectionFilterBar({
                     ? 'bg-gradient-to-r from-yellow-400 to-amber-400 text-slate-950 font-black shadow-md shadow-yellow-400/25 ring-1 ring-yellow-300/50 scale-105'
                     : 'bg-gradient-to-r from-blue-600 to-blue-500 text-white font-black shadow-md shadow-blue-500/25 scale-105'
                   : isStd
-                  ? 'bg-yellow-500/10 text-yellow-300 border border-yellow-500/40 hover:bg-yellow-500/20'
-                  : 'bg-slate-800 hover:bg-slate-700 text-slate-300 border border-slate-700/60'
+                  ? 'bg-amber-100 dark:bg-yellow-500/10 text-amber-800 dark:text-yellow-300 border border-amber-300 dark:border-yellow-500/40 hover:bg-amber-200'
+                  : 'bg-slate-100 dark:bg-slate-800 hover:bg-slate-200 dark:hover:bg-slate-700 text-slate-700 dark:text-slate-300 border border-slate-200 dark:border-slate-700/60'
               }`}
               title={reg.label}
             >
@@ -294,7 +294,7 @@ export function CollectionFilterBar({
 
       {/* Row 4: Category Quick Filter Chips Bar */}
       <div className="flex items-center gap-1.5 overflow-x-auto pb-1 scrollbar-none">
-        <span className="text-[11px] text-slate-400 font-bold whitespace-nowrap shrink-0">
+        <span className="text-[11px] text-slate-500 dark:text-slate-400 font-bold whitespace-nowrap shrink-0">
           หมวดหมู่:
         </span>
         {CATEGORIES.map((cat) => {
@@ -313,7 +313,7 @@ export function CollectionFilterBar({
               className={`px-2.5 py-1 rounded-xl text-xs font-bold whitespace-nowrap transition-all flex items-center gap-1 shrink-0 ${
                 isSelected
                   ? activeCategoryClass
-                  : 'bg-slate-800 hover:bg-slate-700 text-slate-300 border border-slate-700/60'
+                  : 'bg-slate-100 dark:bg-slate-800 hover:bg-slate-200 dark:hover:bg-slate-700 text-slate-700 dark:text-slate-300 border border-slate-200 dark:border-slate-700/60'
               }`}
             >
               {cat.label}
@@ -324,7 +324,7 @@ export function CollectionFilterBar({
 
       {/* Row 5: Quick Rarity Chips Bar (Visible on Mobile & Desktop for 1-Tap Filter) */}
       <div className="flex items-center gap-1.5 overflow-x-auto pb-1 scrollbar-none">
-        <span className="text-[11px] text-slate-400 font-bold whitespace-nowrap shrink-0">
+        <span className="text-[11px] text-slate-500 dark:text-slate-400 font-bold whitespace-nowrap shrink-0">
           ความหายาก:
         </span>
         {QUICK_RARITIES.map((qr) => {
@@ -336,7 +336,7 @@ export function CollectionFilterBar({
               className={`px-2.5 py-1 rounded-xl text-xs font-bold whitespace-nowrap transition-all flex items-center gap-1 ${
                 isSelected
                   ? 'bg-amber-400 text-slate-950 font-black shadow-md shadow-amber-400/20 scale-105'
-                  : 'bg-slate-800 hover:bg-slate-700 text-slate-300 border border-slate-700/60'
+                  : 'bg-slate-100 dark:bg-slate-800 hover:bg-slate-200 dark:hover:bg-slate-700 text-slate-700 dark:text-slate-300 border border-slate-200 dark:border-slate-700/60'
               }`}
             >
               {qr.label}
@@ -346,14 +346,14 @@ export function CollectionFilterBar({
       </div>
 
       {/* Row 5: Advanced Filter Row (Visible by default on Desktop, Collapsible on Mobile) */}
-      <div className={`${showAdvancedMobile ? 'flex' : 'hidden lg:flex'} flex-wrap items-center justify-between gap-2.5 pt-2 border-t border-slate-800/70 text-xs animate-fade-in`}>
+      <div className={`${showAdvancedMobile ? 'flex' : 'hidden lg:flex'} flex-wrap items-center justify-between gap-2.5 pt-2 border-t border-slate-200 dark:border-slate-800/70 text-xs animate-fade-in`}>
         {/* Dropdowns */}
         <div className="flex items-center gap-2 flex-wrap w-full lg:w-auto">
           {/* Regulation Series Dropdown */}
           <select
             value={selectedRegulation}
             onChange={(e) => onRegulationChange(e.target.value)}
-            className="px-3 py-1.5 bg-slate-950 border border-emerald-500/50 text-emerald-300 rounded-xl text-xs font-bold focus:outline-none focus:border-emerald-400 shadow-inner"
+            className="px-3 py-1.5 bg-slate-100 dark:bg-slate-950 border border-emerald-400 dark:border-emerald-500/50 text-emerald-800 dark:text-emerald-300 rounded-xl text-xs font-bold focus:outline-none focus:border-emerald-400 shadow-inner"
           >
             {REGULATION_SERIES_OPTIONS.map((reg) => (
               <option key={reg.id} value={reg.id}>
@@ -366,7 +366,7 @@ export function CollectionFilterBar({
           <select
             value={selectedRarity}
             onChange={(e) => onRarityChange(e.target.value)}
-            className="px-3 py-1.5 bg-slate-950 border border-amber-500/50 text-amber-300 rounded-xl text-xs font-bold focus:outline-none focus:border-amber-400 shadow-inner"
+            className="px-3 py-1.5 bg-slate-100 dark:bg-slate-950 border border-amber-400 dark:border-amber-500/50 text-amber-800 dark:text-amber-300 rounded-xl text-xs font-bold focus:outline-none focus:border-amber-400 shadow-inner"
           >
             {RARITY_CLASSES.map((r) => (
               <option key={r.id} value={r.id}>
@@ -379,7 +379,7 @@ export function CollectionFilterBar({
           <select
             value={selectedCategory}
             onChange={(e) => onCategoryChange(e.target.value)}
-            className="px-3 py-1.5 bg-slate-950 border border-slate-700 rounded-xl text-slate-200 text-xs font-semibold focus:outline-none focus:border-amber-500 shadow-inner"
+            className="px-3 py-1.5 bg-slate-100 dark:bg-slate-950 border border-slate-300 dark:border-slate-700 rounded-xl text-slate-800 dark:text-slate-200 text-xs font-semibold focus:outline-none focus:border-amber-500 shadow-inner"
           >
             {CATEGORIES.map((c) => (
               <option key={c.id} value={c.id}>
@@ -392,7 +392,7 @@ export function CollectionFilterBar({
           <select
             value={selectedStage}
             onChange={(e) => onStageChange(e.target.value)}
-            className="px-3 py-1.5 bg-slate-950 border border-slate-700 rounded-xl text-slate-200 text-xs font-semibold focus:outline-none focus:border-amber-500 shadow-inner"
+            className="px-3 py-1.5 bg-slate-100 dark:bg-slate-950 border border-slate-300 dark:border-slate-700 rounded-xl text-slate-800 dark:text-slate-200 text-xs font-semibold focus:outline-none focus:border-amber-500 shadow-inner"
           >
             {STAGES.map((st) => (
               <option key={st.id} value={st.id}>
@@ -408,7 +408,7 @@ export function CollectionFilterBar({
               className={`px-2.5 py-1 rounded-xl text-[11px] font-black transition-all ${
                 selectedType === 'ALL'
                   ? 'bg-indigo-600 text-white shadow-sm'
-                  : 'bg-slate-800 hover:bg-slate-700 text-slate-400'
+                  : 'bg-slate-100 dark:bg-slate-800 hover:bg-slate-200 dark:hover:bg-slate-700 text-slate-600 dark:text-slate-400'
               }`}
             >
               ทุกธาตุ
@@ -419,8 +419,8 @@ export function CollectionFilterBar({
                 onClick={() => onTypeChange(t.type === selectedType ? 'ALL' : t.type)}
                 className={`w-7 h-7 rounded-xl flex items-center justify-center text-sm transition-all ${
                   selectedType === t.type
-                    ? 'ring-2 ring-amber-400 bg-slate-700 scale-110 shadow-md'
-                    : 'bg-slate-800/90 hover:bg-slate-700 opacity-75 hover:opacity-100'
+                    ? 'ring-2 ring-amber-400 bg-slate-200 dark:bg-slate-700 scale-110 shadow-md'
+                    : 'bg-slate-100 dark:bg-slate-800/90 hover:bg-slate-200 dark:hover:bg-slate-700 opacity-75 hover:opacity-100'
                 }`}
                 title={t.type}
               >
@@ -432,12 +432,12 @@ export function CollectionFilterBar({
 
         {/* Sort Controls & Reset Filters */}
         <div className="flex items-center gap-2 flex-wrap justify-between lg:justify-end w-full lg:w-auto">
-          <div className="flex items-center gap-1.5 text-xs text-slate-400">
+          <div className="flex items-center gap-1.5 text-xs text-slate-500 dark:text-slate-400">
             <span className="font-semibold hidden sm:inline">เรียงตาม:</span>
             <select
               value={sortBy}
               onChange={(e) => onSortChange(e.target.value as CollectionSortBy, sortOrder)}
-              className="px-2.5 py-1.5 bg-slate-950 border border-slate-700 rounded-xl text-slate-200 text-xs font-semibold focus:outline-none shadow-inner"
+              className="px-2.5 py-1.5 bg-slate-100 dark:bg-slate-950 border border-slate-300 dark:border-slate-700 rounded-xl text-slate-800 dark:text-slate-200 text-xs font-semibold focus:outline-none shadow-inner"
             >
               <option value="number">หมายเลขการ์ด (No.)</option>
               <option value="name">ชื่อการ์ด (ก-ฮ)</option>
@@ -446,7 +446,7 @@ export function CollectionFilterBar({
             </select>
             <button
               onClick={() => onSortChange(sortBy, sortOrder === 'asc' ? 'desc' : 'asc')}
-              className="px-2.5 py-1.5 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-200 text-xs font-black border border-slate-700"
+              className="px-2.5 py-1.5 rounded-xl bg-slate-100 dark:bg-slate-800 hover:bg-slate-200 dark:hover:bg-slate-700 text-slate-700 dark:text-slate-200 text-xs font-black border border-slate-300 dark:border-slate-700"
               title="สลับลำดับ น้อยไปมาก / มากไปน้อย"
             >
               {sortOrder === 'asc' ? '▲' : '▼'}
@@ -457,7 +457,7 @@ export function CollectionFilterBar({
             <button
               type="button"
               onClick={onResetFilters}
-              className="px-2.5 py-1.5 rounded-xl bg-rose-500/20 hover:bg-rose-500/30 text-rose-300 border border-rose-500/40 text-xs font-bold transition-all flex items-center gap-1 shadow-sm"
+              className="px-2.5 py-1.5 rounded-xl bg-rose-100 dark:bg-rose-500/20 hover:bg-rose-200 dark:hover:bg-rose-500/30 text-rose-700 dark:text-rose-300 border border-rose-300 dark:border-rose-500/40 text-xs font-bold transition-all flex items-center gap-1 shadow-sm"
               title="ล้างตัวกรองทั้งหมด"
             >
               <span>✕</span>

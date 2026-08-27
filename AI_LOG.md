@@ -115,3 +115,7 @@
 [2026-08-27 12:04] Major | Antigravity | Command | git tag v2.14.5 & push - Admin Menu Button Visibility Restriction Release
 [2026-08-27 12:09] Major | Antigravity | Write | feature/pokemon-franchise-theme - applied official Pokemon franchise color palette
 [2026-08-27 12:16] Major | Antigravity | Write | src/ - added Pokeball theme with Light, Dark, and Auto system mode switcher
+[2026-08-27 12:22] Major | Antigravity | Write | src/ - added Master Ball icon and ultra-bright clean Light Mode styling
+[2026-08-27 12:28] Major | Antigravity | Write | src/ - added official booster pack images and zoom preview modal
+[2026-08-27 12:32] Major | Antigravity | Write | R2 Sync - uploaded all booster pack images to R2 CDN & added to .gitignore
+[2026-08-27 12:35] Major | Antigravity | Edit | src/ - sorted set filter lists by Thai release date descending (Newest first)

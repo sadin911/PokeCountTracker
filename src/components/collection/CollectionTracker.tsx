@@ -14,6 +14,7 @@ import {
 
 import { getCardRarityClass } from '../../utils/rarity';
 import { createCardMatcher } from '../../utils/searchHelpers';
+import { sortSetsByThaiRelease } from '../../utils/setOrder';
 import { trackEvent } from '../../utils/analytics';
 export { getCardRarityClass };
 
@@ -120,23 +121,23 @@ export function CollectionTracker() {
       }
     }
 
-    return Array.from(map.values())
-      .map((s) => {
-        const marks = Array.from(s.regulationMarks);
-        const primaryMark =
-          marks.find((m) => ['J', 'I', 'H', 'G', 'F', 'E', 'D'].includes(m)) ||
-          marks[0] ||
-          '';
-        return {
-          id: s.id,
-          name: s.name,
-          count: s.count,
-          owned: s.owned,
-          regulationMark: primaryMark,
-          regulationMarks: marks,
-        };
-      })
-      .sort((a, b) => a.id.localeCompare(b.id));
+    const unsorted = Array.from(map.values()).map((s) => {
+      const marks = Array.from(s.regulationMarks);
+      const primaryMark =
+        marks.find((m) => ['J', 'I', 'H', 'G', 'F', 'E', 'D'].includes(m)) ||
+        marks[0] ||
+        '';
+      return {
+        id: s.id,
+        name: s.name,
+        count: s.count,
+        owned: s.owned,
+        regulationMark: primaryMark,
+        regulationMarks: marks,
+      };
+    });
+
+    return sortSetsByThaiRelease(unsorted);
   }, [activeProfile]);
 
   // 2. Compute Overall Collection Stats

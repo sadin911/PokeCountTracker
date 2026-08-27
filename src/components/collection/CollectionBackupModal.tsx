@@ -84,26 +84,26 @@ export function CollectionBackupModal({ onClose }: Props) {
 
   return createPortal(
     <div
-      className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/75 backdrop-blur-sm animate-fade-in"
+      className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/70 dark:bg-black/75 backdrop-blur-sm animate-fade-in"
       onClick={onClose}
     >
       <div 
-        className="bg-slate-900 border border-slate-700 w-full max-w-lg rounded-3xl shadow-2xl overflow-hidden flex flex-col max-h-[90vh]"
+        className="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-700 w-full max-w-lg rounded-3xl shadow-2xl overflow-hidden flex flex-col max-h-[90vh] transition-colors duration-200"
         onClick={e => e.stopPropagation()}
       >
         {/* Header */}
-        <div className="flex items-center justify-between px-6 py-4 border-b border-slate-800 bg-slate-950/60">
+        <div className="flex items-center justify-between px-6 py-4 border-b border-slate-200 dark:border-slate-800 bg-slate-50 dark:bg-slate-950/60">
           <div className="flex items-center gap-3">
             <span className="text-2xl">💾</span>
             <div>
-              <h2 className="text-base font-black text-white">สำรองและกู้คืนข้อมูล (Backup / Restore)</h2>
-              <p className="text-xs text-slate-400">ย้ายข้อมูลคอลเลกชันข้ามเครื่อง หรือเซฟเก็บไว้</p>
+              <h2 className="text-base font-black text-slate-900 dark:text-white">สำรองและกู้คืนข้อมูล (Backup / Restore)</h2>
+              <p className="text-xs text-slate-500 dark:text-slate-400">ย้ายข้อมูลคอลเลกชันข้ามเครื่อง หรือเซฟเก็บไว้</p>
             </div>
           </div>
           <button
             type="button"
             onClick={onClose}
-            className="px-3.5 py-1.5 rounded-xl bg-slate-800 hover:bg-rose-500 text-slate-300 hover:text-white flex items-center gap-1.5 text-xs font-black border border-slate-700 hover:border-rose-400 shadow-md transition-all active:scale-95 group"
+            className="px-3.5 py-1.5 rounded-xl bg-slate-100 dark:bg-slate-800 hover:bg-rose-500 text-slate-700 dark:text-slate-300 hover:text-white flex items-center gap-1.5 text-xs font-black border border-slate-300 dark:border-slate-700 hover:border-rose-400 shadow-sm transition-all active:scale-95 group"
             title="ปิดหน้าต่าง (ESC)"
           >
             <span className="text-sm font-black group-hover:rotate-90 transition-transform">✕</span>
@@ -112,7 +112,7 @@ export function CollectionBackupModal({ onClose }: Props) {
         </div>
 
         {/* Tab Selector */}
-        <div className="flex border-b border-slate-800 bg-slate-950 px-5 pt-2">
+        <div className="flex border-b border-slate-200 dark:border-slate-800 bg-slate-100 dark:bg-slate-950 px-5 pt-2">
           <button
             onClick={() => {
               setActiveTab('export');
@@ -120,8 +120,8 @@ export function CollectionBackupModal({ onClose }: Props) {
             }}
             className={`pb-2.5 px-4 text-xs font-bold border-b-2 transition-all ${
               activeTab === 'export'
-                ? 'border-amber-500 text-amber-400'
-                : 'border-transparent text-slate-400 hover:text-slate-200'
+                ? 'border-amber-500 text-amber-700 dark:text-amber-400 font-black'
+                : 'border-transparent text-slate-500 dark:text-slate-400 hover:text-slate-900 dark:hover:text-slate-200'
             }`}
           >
             📤 ส่งออกข้อมูล (Export)
@@ -133,8 +133,8 @@ export function CollectionBackupModal({ onClose }: Props) {
             }}
             className={`pb-2.5 px-4 text-xs font-bold border-b-2 transition-all ${
               activeTab === 'import'
-                ? 'border-indigo-500 text-indigo-400'
-                : 'border-transparent text-slate-400 hover:text-slate-200'
+                ? 'border-indigo-500 text-indigo-700 dark:text-indigo-400 font-black'
+                : 'border-transparent text-slate-500 dark:text-slate-400 hover:text-slate-900 dark:hover:text-slate-200'
             }`}
           >
             📥 นำเข้าข้อมูล (Import)
@@ -146,8 +146,8 @@ export function CollectionBackupModal({ onClose }: Props) {
           <div
             className={`mx-5 mt-4 p-3 rounded-xl text-xs font-semibold flex items-center gap-2 ${
               statusMessage.type === 'success'
-                ? 'bg-emerald-500/20 text-emerald-300 border border-emerald-500/40'
-                : 'bg-rose-500/20 text-rose-300 border border-rose-500/40'
+                ? 'bg-emerald-100 dark:bg-emerald-500/20 text-emerald-800 dark:text-emerald-300 border border-emerald-300 dark:border-emerald-500/40'
+                : 'bg-rose-100 dark:bg-rose-500/20 text-rose-800 dark:text-rose-300 border border-rose-300 dark:border-rose-500/40'
             }`}
           >
             <span>{statusMessage.type === 'success' ? '✅' : '⚠️'}</span>
@@ -159,7 +159,7 @@ export function CollectionBackupModal({ onClose }: Props) {
         <div className="p-5 overflow-y-auto space-y-4 flex-1">
           {activeTab === 'export' ? (
             <div className="space-y-3">
-              <p className="text-xs text-slate-300 leading-relaxed">
+              <p className="text-xs text-slate-600 dark:text-slate-300 leading-relaxed">
                 ข้อมูลคอลเลกชันของคุณทั้งหมด (ทุกโปรไฟล์และจำนวนการ์ด) จะถูกรวมเป็นไฟล์ JSON เพื่อดาวน์โหลดหรือคัดลอก:
               </p>
 
@@ -173,7 +173,7 @@ export function CollectionBackupModal({ onClose }: Props) {
                 </button>
                 <button
                   onClick={handleCopy}
-                  className="py-2.5 px-4 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-200 font-semibold text-xs border border-slate-600 transition-all flex items-center justify-center gap-1.5"
+                  className="py-2.5 px-4 rounded-xl bg-slate-100 dark:bg-slate-800 hover:bg-slate-200 dark:hover:bg-slate-700 text-slate-800 dark:text-slate-200 font-semibold text-xs border border-slate-300 dark:border-slate-600 transition-all flex items-center justify-center gap-1.5 shadow-sm"
                 >
                   <span>{copied ? '✅' : '📋'}</span>
                   <span>{copied ? 'คัดลอกแล้ว!' : 'คัดลอก JSON'}</span>
@@ -185,34 +185,34 @@ export function CollectionBackupModal({ onClose }: Props) {
                   readOnly
                   value={jsonString}
                   rows={8}
-                  className="w-full p-3 bg-slate-950 border border-slate-800 rounded-xl text-[11px] font-mono text-slate-400 focus:outline-none select-all"
+                  className="w-full p-3 bg-slate-50 dark:bg-slate-950 border border-slate-200 dark:border-slate-800 rounded-xl text-[11px] font-mono text-slate-600 dark:text-slate-400 focus:outline-none select-all"
                 />
               </div>
             </div>
           ) : (
             <div className="space-y-3">
-              <p className="text-xs text-slate-300 leading-relaxed">
+              <p className="text-xs text-slate-600 dark:text-slate-300 leading-relaxed">
                 อัปโหลดไฟล์สำรอง `.json` หรือวางโค้ด JSON ที่คัดลอกมาจากเครื่องอื่นเพื่อกู้คืนคอลเลกชัน:
               </p>
 
               <div>
-                <label className="block text-[11px] text-slate-400 mb-1">เลือกไฟล์จากเครื่อง</label>
+                <label className="block text-[11px] text-slate-500 dark:text-slate-400 mb-1 font-bold">เลือกไฟล์จากเครื่อง</label>
                 <input
                   type="file"
                   accept=".json,application/json"
                   onChange={handleFileUpload}
-                  className="w-full text-xs text-slate-400 file:mr-3 file:py-2 file:px-4 file:rounded-xl file:border-0 file:text-xs file:font-semibold file:bg-indigo-600/30 file:text-indigo-300 hover:file:bg-indigo-600/50 file:cursor-pointer"
+                  className="w-full text-xs text-slate-500 dark:text-slate-400 file:mr-3 file:py-2 file:px-4 file:rounded-xl file:border-0 file:text-xs file:font-semibold file:bg-indigo-100 dark:file:bg-indigo-600/30 file:text-indigo-800 dark:file:text-indigo-300 hover:file:bg-indigo-200 file:cursor-pointer"
                 />
               </div>
 
               <div className="relative">
-                <label className="block text-[11px] text-slate-400 mb-1">หรือวางข้อความ JSON ที่นี่</label>
+                <label className="block text-[11px] text-slate-500 dark:text-slate-400 mb-1 font-bold">หรือวางข้อความ JSON ที่นี่</label>
                 <textarea
                   placeholder='วางข้อมูล JSON {"version": "1.0.0", "profiles": {...}} ที่นี่...'
                   value={importText}
                   onChange={(e) => setImportText(e.target.value)}
                   rows={6}
-                  className="w-full p-3 bg-slate-950 border border-slate-700 rounded-xl text-[11px] font-mono text-white placeholder-slate-600 focus:outline-none focus:border-indigo-500"
+                  className="w-full p-3 bg-slate-50 dark:bg-slate-950 border border-slate-300 dark:border-slate-700 rounded-xl text-[11px] font-mono text-slate-900 dark:text-white placeholder-slate-400 dark:placeholder-slate-600 focus:outline-none focus:border-indigo-500"
                 />
               </div>
 
@@ -229,11 +229,11 @@ export function CollectionBackupModal({ onClose }: Props) {
         </div>
 
         {/* Footer */}
-        <div className="px-6 py-3.5 border-t border-slate-800 bg-slate-950/80 flex items-center justify-end">
+        <div className="px-6 py-3.5 border-t border-slate-200 dark:border-slate-800 bg-slate-50 dark:bg-slate-950/80 flex items-center justify-end">
           <button
             type="button"
             onClick={onClose}
-            className="px-6 py-2.5 rounded-xl bg-slate-800 hover:bg-slate-700 active:scale-95 text-slate-200 hover:text-white text-xs sm:text-sm font-black border border-slate-600 shadow-lg transition-all flex items-center gap-1.5"
+            className="px-6 py-2.5 rounded-xl bg-slate-100 dark:bg-slate-800 hover:bg-slate-200 dark:hover:bg-slate-700 active:scale-95 text-slate-800 dark:text-slate-200 hover:text-slate-950 dark:hover:text-white text-xs sm:text-sm font-black border border-slate-300 dark:border-slate-600 shadow-sm transition-all flex items-center gap-1.5"
           >
             <span>✕</span>
             <span>ปิดหน้าต่าง</span>

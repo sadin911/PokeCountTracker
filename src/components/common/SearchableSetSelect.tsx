@@ -161,16 +161,16 @@ export function SearchableSetSelect({
       <button
         type="button"
         onClick={() => setIsOpen(!isOpen)}
-        className={`w-full px-3.5 py-2.5 bg-slate-950 border rounded-xl text-xs sm:text-sm font-bold flex items-center justify-between gap-2 transition-all shadow-inner text-left group ${
+        className={`w-full px-3.5 py-2.5 bg-slate-100 dark:bg-slate-950 border rounded-xl text-xs sm:text-sm font-bold flex items-center justify-between gap-2 transition-all shadow-inner text-left group ${
           isOpen
             ? isAmber
               ? 'border-amber-500 ring-2 ring-amber-500/20'
               : 'border-indigo-500 ring-2 ring-indigo-500/20'
             : selectedSet !== 'ALL'
             ? isAmber
-              ? 'border-amber-500/60 hover:border-amber-400 text-amber-300'
-              : 'border-indigo-500/60 hover:border-indigo-400 text-indigo-300'
-            : 'border-slate-700/90 hover:border-slate-600 text-slate-200'
+              ? 'border-amber-500/60 hover:border-amber-400 text-amber-800 dark:text-amber-300 bg-amber-50 dark:bg-slate-950'
+              : 'border-indigo-500/60 hover:border-indigo-400 text-indigo-800 dark:text-indigo-300 bg-indigo-50 dark:bg-slate-950'
+            : 'border-slate-300 dark:border-slate-700/90 hover:border-slate-400 dark:hover:border-slate-600 text-slate-800 dark:text-slate-200'
         }`}
         title="คลิกเพื่อค้นหาและเลือกชุดการ์ด"
       >
@@ -180,7 +180,7 @@ export function SearchableSetSelect({
           </span>
           <div className="min-w-0 flex-1 truncate">
             {selectedSet === 'ALL' ? (
-              <span className="font-semibold text-slate-300">
+              <span className="font-semibold text-slate-700 dark:text-slate-300">
                 ทุกชุดการ์ด (All {sets.length} Sets)
               </span>
             ) : selectedSetObj ? (
@@ -188,19 +188,19 @@ export function SearchableSetSelect({
                 <span
                   className={`px-1.5 py-0.5 rounded text-[10px] font-black uppercase shrink-0 ${
                     isAmber
-                      ? 'bg-amber-500/20 text-amber-300 border border-amber-500/40'
-                      : 'bg-indigo-500/20 text-indigo-300 border border-indigo-500/40'
+                      ? 'bg-amber-100 dark:bg-amber-500/20 text-amber-800 dark:text-amber-300 border border-amber-300 dark:border-amber-500/40'
+                      : 'bg-indigo-100 dark:bg-indigo-500/20 text-indigo-800 dark:text-indigo-300 border border-indigo-300 dark:border-indigo-500/40'
                   }`}
                 >
                   {selectedSetObj.id}
                 </span>
-                <span className="truncate font-bold text-white">
+                <span className="truncate font-bold text-slate-900 dark:text-white">
                   {selectedSetObj.name}
                 </span>
                 {showProgress &&
                   selectedSetObj.count !== undefined &&
                   selectedSetObj.owned !== undefined && (
-                    <span className="text-[11px] font-medium text-slate-400 shrink-0 hidden sm:inline">
+                    <span className="text-[11px] font-medium text-slate-500 dark:text-slate-400 shrink-0 hidden sm:inline">
                       ({selectedSetObj.owned}/{selectedSetObj.count} •{' '}
                       {selectedSetObj.count > 0
                         ? Math.round(
@@ -232,7 +232,7 @@ export function SearchableSetSelect({
                   onSelectSet('ALL');
                 }
               }}
-              className="p-1 rounded-md hover:bg-slate-800 text-slate-400 hover:text-rose-400 text-xs transition-colors"
+              className="p-1 rounded-md hover:bg-slate-200 dark:hover:bg-slate-800 text-slate-400 hover:text-rose-500 text-xs transition-colors"
               title="รีเซ็ตเป็นทุกชุดการ์ด"
             >
               ✕
@@ -240,7 +240,7 @@ export function SearchableSetSelect({
           )}
           <span
             className={`text-[10px] text-slate-400 transition-transform duration-200 ${
-              isOpen ? 'rotate-180 text-amber-400' : 'group-hover:text-slate-200'
+              isOpen ? 'rotate-180 text-amber-500' : 'group-hover:text-slate-600 dark:group-hover:text-slate-200'
             }`}
           >
             ▼
@@ -251,15 +251,15 @@ export function SearchableSetSelect({
       {/* Searchable Dropdown Popover */}
       {isOpen && (
         <div
-          className={`absolute left-0 top-full mt-1.5 w-full sm:min-w-[420px] max-w-[95vw] bg-slate-900/98 backdrop-blur-xl border rounded-2xl shadow-2xl z-50 overflow-hidden flex flex-col transition-all duration-150 animate-in fade-in zoom-in-95 ${
+          className={`absolute left-0 top-full mt-1.5 w-full sm:min-w-[420px] max-w-[95vw] bg-white dark:bg-slate-900/98 backdrop-blur-xl border rounded-2xl shadow-2xl z-50 overflow-hidden flex flex-col transition-all duration-150 animate-in fade-in zoom-in-95 ${
             isAmber
-              ? 'border-amber-500/40 ring-1 ring-amber-500/20'
-              : 'border-indigo-500/40 ring-1 ring-indigo-500/20'
+              ? 'border-amber-300 dark:border-amber-500/40 ring-1 ring-amber-400/20'
+              : 'border-indigo-300 dark:border-indigo-500/40 ring-1 ring-indigo-400/20'
           }`}
           style={{ maxHeight: '420px' }}
         >
           {/* Popover Header with Search Box */}
-          <div className="p-2.5 bg-slate-950/80 border-b border-slate-800 flex flex-col gap-2">
+          <div className="p-2.5 bg-slate-50 dark:bg-slate-950/80 border-b border-slate-200 dark:border-slate-800 flex flex-col gap-2">
             <div className="relative">
               <span className="absolute left-3 top-1/2 -translate-y-1/2 text-slate-400 text-xs">
                 🔍
@@ -271,17 +271,17 @@ export function SearchableSetSelect({
                 onChange={(e) => setSearchTerm(e.target.value)}
                 onKeyDown={handleKeyDown}
                 placeholder="พิมพ์ค้นหารหัสหรือชื่อชุด (เช่น SV1a, อัคคี, MA1)..."
-                className={`w-full pl-8 pr-8 py-2 bg-slate-900 border rounded-xl text-xs sm:text-sm text-white placeholder-slate-500 focus:outline-none transition-all ${
+                className={`w-full pl-8 pr-8 py-2 bg-white dark:bg-slate-900 border rounded-xl text-xs sm:text-sm text-slate-900 dark:text-white placeholder-slate-400 dark:placeholder-slate-500 focus:outline-none transition-all ${
                   isAmber
-                    ? 'border-amber-500/50 focus:border-amber-400 focus:ring-1 focus:ring-amber-400/40'
-                    : 'border-indigo-500/50 focus:border-indigo-400 focus:ring-1 focus:ring-indigo-400/40'
+                    ? 'border-amber-400/80 focus:border-amber-500 focus:ring-1 focus:ring-amber-400/40'
+                    : 'border-indigo-400/80 focus:border-indigo-500 focus:ring-1 focus:ring-indigo-400/40'
                 }`}
               />
               {searchTerm && (
                 <button
                   type="button"
                   onClick={() => setSearchTerm('')}
-                  className="absolute right-2.5 top-1/2 -translate-y-1/2 text-slate-400 hover:text-white text-xs font-bold p-0.5"
+                  className="absolute right-2.5 top-1/2 -translate-y-1/2 text-slate-400 hover:text-slate-800 dark:hover:text-white text-xs font-bold p-0.5"
                 >
                   ✕
                 </button>
@@ -302,7 +302,7 @@ export function SearchableSetSelect({
                         ? isAmber
                           ? 'bg-amber-400 text-slate-950 shadow-sm font-black'
                           : 'bg-indigo-400 text-slate-950 shadow-sm font-black'
-                        : 'bg-slate-900 text-slate-400 hover:text-slate-200 hover:bg-slate-800 border border-slate-800'
+                        : 'bg-slate-100 dark:bg-slate-900 text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-slate-200 hover:bg-slate-200 dark:hover:bg-slate-800 border border-slate-200 dark:border-slate-800'
                     }`}
                   >
                     {tab.label}
@@ -311,20 +311,20 @@ export function SearchableSetSelect({
               })}
             </div>
 
-            <div className="flex items-center justify-between px-1 text-[11px] text-slate-400">
+            <div className="flex items-center justify-between px-1 text-[11px] text-slate-500 dark:text-slate-400">
               <span>
                 {searchTerm.trim() || selectedRegTab !== 'ALL'
                   ? `พบ ${filteredSets.length} ชุดการ์ด`
                   : `ชุดการ์ดทั้งหมด ${sets.length} ชุด`}
               </span>
-              <span className="text-[10px] text-slate-500">
+              <span className="text-[10px] text-slate-400 dark:text-slate-500">
                 กด ESC เพื่อปิด • Enter เพื่อเลือก
               </span>
             </div>
           </div>
 
           {/* Sets List Scroll Container */}
-          <div className="overflow-y-auto overflow-x-hidden p-1.5 space-y-1 max-h-[300px] scrollbar-thin scrollbar-thumb-slate-700 scrollbar-track-transparent">
+          <div className="overflow-y-auto overflow-x-hidden p-1.5 space-y-1 max-h-[300px] scrollbar-thin scrollbar-thumb-slate-300 dark:scrollbar-thumb-slate-700 scrollbar-track-transparent">
             {/* Option: ALL SETS */}
             {(!searchTerm.trim() ||
               'ทุกชุดการ์ด all sets'.includes(searchTerm.toLowerCase())) &&
@@ -338,9 +338,9 @@ export function SearchableSetSelect({
                 className={`w-full px-3 py-2 rounded-xl text-left text-xs sm:text-sm font-bold flex items-center justify-between transition-all ${
                   selectedSet === 'ALL'
                     ? isAmber
-                      ? 'bg-amber-500/20 text-amber-300 border border-amber-500/50 font-black'
-                      : 'bg-indigo-500/20 text-indigo-300 border border-indigo-500/50 font-black'
-                    : 'hover:bg-slate-800/80 text-slate-300 hover:text-white'
+                      ? 'bg-amber-100 dark:bg-amber-500/20 text-amber-800 dark:text-amber-300 border border-amber-300 dark:border-amber-500/50 font-black'
+                      : 'bg-indigo-100 dark:bg-indigo-500/20 text-indigo-800 dark:text-indigo-300 border border-indigo-300 dark:border-indigo-500/50 font-black'
+                    : 'hover:bg-slate-100 dark:hover:bg-slate-800/80 text-slate-700 dark:text-slate-300 hover:text-slate-900 dark:hover:text-white'
                 }`}
               >
                 <div className="flex items-center gap-2">
@@ -348,7 +348,7 @@ export function SearchableSetSelect({
                   <span>ทุกชุดการ์ด (All Sets)</span>
                 </div>
                 {selectedSet === 'ALL' && (
-                  <span className="text-xs font-black text-amber-400">✓</span>
+                  <span className="text-xs font-black text-amber-500">✓</span>
                 )}
               </button>
             )}
@@ -372,9 +372,9 @@ export function SearchableSetSelect({
                   className={`w-full px-3 py-2 rounded-xl text-left text-xs sm:text-sm font-semibold flex items-center justify-between gap-2 transition-all ${
                     isSelected
                       ? isAmber
-                        ? 'bg-amber-500/20 text-amber-300 border border-amber-500/50 font-black shadow-sm'
-                        : 'bg-indigo-500/20 text-indigo-300 border border-indigo-500/50 font-black shadow-sm'
-                      : 'hover:bg-slate-800/80 text-slate-200 hover:text-white'
+                        ? 'bg-amber-100 dark:bg-amber-500/20 text-amber-800 dark:text-amber-300 border border-amber-300 dark:border-amber-500/50 font-black shadow-sm'
+                        : 'bg-indigo-100 dark:bg-indigo-500/20 text-indigo-800 dark:text-indigo-300 border border-indigo-300 dark:border-indigo-500/50 font-black shadow-sm'
+                      : 'hover:bg-slate-100 dark:hover:bg-slate-800/80 text-slate-800 dark:text-slate-200 hover:text-slate-950 dark:hover:text-white'
                   }`}
                 >
                   <div className="flex items-center gap-2 min-w-0 flex-1">

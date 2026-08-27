@@ -1,7 +1,9 @@
 import { useState, useEffect, useRef } from 'react';
 import { CollectionCardItem } from './CollectionCardItem';
 import { CardCollectionModal } from './CardCollectionModal';
+import { BoosterPackPreviewModal } from './BoosterPackPreviewModal';
 import { useCollectionStore } from '../../store/collectionStore';
+import { getSetBoosterImage, handleBoosterImageError } from '../../utils/boosterImages';
 import type { CardVariantCount, SetProgress } from '../../types/collection';
 
 interface Props {
@@ -20,8 +22,11 @@ export function CollectionGridView({ cards, currentSetProgress, showFullColor, f
   const toggleWishlist = useCollectionStore((s) => s.toggleWishlist);
 
   const [selectedCard, setSelectedCard] = useState<any | null>(null);
+  const [isBoosterModalOpen, setIsBoosterModalOpen] = useState(false);
   const [displayLimit, setDisplayLimit] = useState(ITEMS_PER_PAGE);
   const sentinelRef = useRef<HTMLDivElement | null>(null);
+
+  const boosterImg = currentSetProgress ? getSetBoosterImage(currentSetProgress.setId) : null;
 
   // Reset pagination ONLY when search/filter/sort criteria change, NOT on card count or wishlist mutations
   useEffect(() => {
@@ -88,32 +93,53 @@ export function CollectionGridView({ cards, currentSetProgress, showFullColor, f
     <div className="flex-1 p-4 sm:p-6 lg:p-8 w-full space-y-4">
       {/* Set Progress Header (If specific set is selected) */}
       {currentSetProgress && (
-        <div className="bg-gradient-to-r from-slate-900 via-slate-800/95 to-slate-900 border border-slate-700/80 hover:border-yellow-500/40 rounded-2xl p-5 shadow-2xl flex flex-col md:flex-row items-center justify-between gap-4 transition-all">
-          <div className="space-y-1.5 w-full md:w-auto">
-            <div className="flex items-center gap-2.5 flex-wrap">
-              <span className="px-2.5 py-1 rounded-lg bg-gradient-to-r from-yellow-400 to-amber-400 text-slate-950 font-black text-xs shadow-md shadow-yellow-400/25 ring-1 ring-yellow-300/50">
-                {currentSetProgress.setId}
-              </span>
-              <h2 className="text-base sm:text-lg font-black text-white">
-                {currentSetProgress.setName}
-              </h2>
+        <div className="bg-white dark:bg-gradient-to-r dark:from-slate-900 dark:via-slate-800/95 dark:to-slate-900 border border-slate-200 dark:border-slate-700/80 hover:border-purple-300 dark:hover:border-yellow-500/40 rounded-2xl p-4 sm:p-5 shadow-md dark:shadow-2xl flex flex-col md:flex-row items-center justify-between gap-4 transition-all">
+          <div className="flex items-center gap-3.5 sm:gap-4 w-full md:w-auto">
+            {boosterImg && (
+              <div 
+                onClick={() => setIsBoosterModalOpen(true)}
+                className="relative group cursor-pointer shrink-0 rounded-xl overflow-hidden shadow-md hover:shadow-lg transition-all active:scale-95 bg-slate-50 dark:bg-slate-950 p-1 border border-slate-200 dark:border-slate-700/80"
+                title="คลิกเพื่อดูรูปปกซองการ์ดแบบขยาย"
+              >
+                <img
+                  src={boosterImg}
+                  alt={`ซอง ${currentSetProgress.setName}`}
+                  className="h-16 sm:h-20 w-auto object-contain drop-shadow-md group-hover:scale-105 transition-transform"
+                  onError={(e) => handleBoosterImageError(e, currentSetProgress.setId)}
+                />
+                <div className="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 flex items-center justify-center transition-opacity rounded-lg">
+                  <span className="text-white text-xs font-black bg-black/60 px-1.5 py-0.5 rounded-md backdrop-blur-xs flex items-center gap-1">
+                    🔍 <span className="hidden sm:inline text-[10px]">ขยาย</span>
+                  </span>
+                </div>
+              </div>
+            )}
+            <div className="space-y-1.5 min-w-0 flex-1">
+              <div className="flex items-center gap-2.5 flex-wrap">
+                <span className="px-2.5 py-1 rounded-lg bg-gradient-to-r from-yellow-400 to-amber-400 text-slate-950 font-black text-xs shadow-md shadow-yellow-400/25 ring-1 ring-yellow-300/50 shrink-0">
+                  {currentSetProgress.setId}
+                </span>
+                <h2 className="text-base sm:text-lg font-black text-slate-900 dark:text-white truncate">
+                  {currentSetProgress.setName}
+                </h2>
+              </div>
+              <p className="text-xs sm:text-sm text-slate-600 dark:text-slate-300">
+                สะสมได้แล้ว <span className="text-purple-700 dark:text-yellow-300 font-extrabold">{currentSetProgress.uniqueOwned}</span> จากทั้งหมด{' '}
+                <span className="text-slate-900 dark:text-slate-100 font-extrabold">{currentSetProgress.totalCards}</span> แบบ (รวม{' '}
+                <span className="text-blue-600 dark:text-blue-300 font-bold">{currentSetProgress.totalCount}</span> ใบ)
+              </p>
             </div>
-            <p className="text-xs sm:text-sm text-slate-300">
-              สะสมได้แล้ว <span className="text-yellow-300 font-extrabold">{currentSetProgress.uniqueOwned}</span> จากทั้งหมด{' '}
-              <span className="text-slate-100 font-extrabold">{currentSetProgress.totalCards}</span> แบบ (รวม{' '}
-              <span className="text-blue-300 font-bold">{currentSetProgress.totalCount}</span> ใบ)
-            </p>
           </div>
 
           {/* Progress Bar & Percentage Pill */}
           <div className="w-full md:w-80 flex items-center gap-3.5">
-            <div className="flex-1 bg-slate-950 rounded-full h-4 p-0.5 overflow-hidden border border-slate-700 shadow-inner">
+            <div className="flex-1 bg-slate-100 dark:bg-slate-950 rounded-full h-4 p-0.5 overflow-hidden border border-slate-200 dark:border-slate-700 shadow-inner">
               <div
                 className="bg-gradient-to-r from-yellow-400 via-amber-400 to-yellow-500 h-full rounded-full transition-all duration-500 shadow-[0_0_12px_rgba(255,203,5,0.5)]"
                 style={{ width: `${currentSetProgress.percentage}%` }}
               />
             </div>
-            <span className="text-sm font-black text-yellow-300 min-w-[50px] text-right">
+            <span className="text-sm font-black text-purple-700 dark:text-yellow-300 min-w-[50px] text-right">
               {currentSetProgress.percentage}%
             </span>
           </div>
@@ -122,9 +148,9 @@ export function CollectionGridView({ cards, currentSetProgress, showFullColor, f
 
       {/* Empty State */}
       {cards.length === 0 ? (
-        <div className="py-20 text-center space-y-3 bg-slate-900/40 rounded-3xl border border-dashed border-slate-800">
+        <div className="py-20 text-center space-y-3 bg-white/60 dark:bg-slate-900/40 rounded-3xl border border-dashed border-slate-300 dark:border-slate-800">
           <span className="text-5xl">🔍</span>
-          <h3 className="text-lg font-bold text-slate-200">ไม่พบการ์ดที่ตรงกับเงื่อนไขการค้นหา</h3>
+          <h3 className="text-lg font-bold text-slate-800 dark:text-slate-200">ไม่พบการ์ดที่ตรงกับเงื่อนไขการค้นหา</h3>
           <p className="text-xs text-slate-500 max-w-md mx-auto">
             ลองเปลี่ยนคำค้นหา หรือเลือกชุดการ์ด / ธาตุ / สถานะอื่นเพื่อดูการ์ด
           </p>
@@ -179,6 +205,20 @@ export function CollectionGridView({ cards, currentSetProgress, showFullColor, f
       {/* Card Detail / Variant Edit Modal */}
       {selectedCard && (
         <CardCollectionModal card={selectedCard} onClose={() => setSelectedCard(null)} />
+      )}
+
+      {/* Booster Pack Cover Zoom Modal */}
+      {isBoosterModalOpen && boosterImg && currentSetProgress && (
+        <BoosterPackPreviewModal
+          setId={currentSetProgress.setId}
+          setName={currentSetProgress.setName}
+          boosterImageUrl={boosterImg}
+          totalCards={currentSetProgress.totalCards}
+          uniqueOwned={currentSetProgress.uniqueOwned}
+          totalCount={currentSetProgress.totalCount}
+          percentage={currentSetProgress.percentage}
+          onClose={() => setIsBoosterModalOpen(false)}
+        />
       )}
     </div>
   );

@@ -161,17 +161,17 @@ export function CardCollectionModal({ card: initialCard, onClose, deckId }: Prop
 
   return createPortal(
     <div
-      className="fixed inset-0 z-50 flex items-center justify-center p-3 sm:p-6 bg-black/85 backdrop-blur-md animate-fade-in"
+      className="fixed inset-0 z-50 flex items-center justify-center p-3 sm:p-6 bg-black/70 dark:bg-black/85 backdrop-blur-md animate-fade-in"
       onClick={(e) => {
         if (e.target === e.currentTarget) onClose();
       }}
     >
-      <div className="relative bg-slate-900 border border-slate-700/90 w-full max-w-4xl rounded-3xl shadow-2xl overflow-hidden flex flex-col md:flex-row max-h-[92vh]">
+      <div className="relative bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-700/90 w-full max-w-4xl rounded-3xl shadow-2xl overflow-hidden flex flex-col md:flex-row max-h-[92vh] transition-colors duration-200">
         {/* Left: Card Preview & Info */}
-        <div className="md:w-5/12 bg-slate-950 p-5 sm:p-6 flex flex-col items-center justify-center border-b md:border-b-0 md:border-r border-slate-800/90 relative">
+        <div className="md:w-5/12 bg-slate-100 dark:bg-slate-950 p-5 sm:p-6 flex flex-col items-center justify-center border-b md:border-b-0 md:border-r border-slate-200 dark:border-slate-800/90 relative">
           <div
             onClick={() => setShowZoom(true)}
-            className="relative group max-w-[260px] w-full aspect-[2.5/3.5] rounded-2xl overflow-hidden shadow-2xl shadow-black/80 ring-1 ring-slate-700/60 cursor-zoom-in transition-all duration-200 hover:ring-2 hover:ring-amber-400/80 hover:shadow-amber-500/10"
+            className="relative group max-w-[260px] w-full aspect-[2.5/3.5] rounded-2xl overflow-hidden shadow-xl dark:shadow-2xl dark:shadow-black/80 ring-1 ring-slate-300 dark:ring-slate-700/60 cursor-zoom-in transition-all duration-200 hover:ring-2 hover:ring-purple-400 dark:hover:ring-amber-400/80 hover:shadow-purple-500/10"
             title="คลิกเพื่อขยายดูภาพการ์ดใหญ่เต็มจอ (Fullscreen)"
           >
             <img
@@ -200,7 +200,7 @@ export function CardCollectionModal({ card: initialCard, onClose, deckId }: Prop
           <button
             type="button"
             onClick={() => setShowZoom(true)}
-            className="mt-3 w-full max-w-[260px] py-2 px-3 rounded-xl bg-slate-800/90 hover:bg-slate-750 active:scale-95 text-amber-300 hover:text-amber-200 border border-slate-700/80 hover:border-amber-500/50 shadow-md font-bold text-xs flex items-center justify-center gap-1.5 transition-all group"
+            className="mt-3 w-full max-w-[260px] py-2 px-3 rounded-xl bg-white dark:bg-slate-800/90 hover:bg-slate-50 dark:hover:bg-slate-750 active:scale-95 text-purple-700 dark:text-amber-300 hover:text-purple-900 dark:hover:text-amber-200 border border-slate-200 dark:border-slate-700/80 hover:border-purple-400 dark:hover:border-amber-500/50 shadow-sm dark:shadow-md font-bold text-xs flex items-center justify-center gap-1.5 transition-all group"
             title="ขยายภาพการ์ดขนาดใหญ่ เต็มจอ"
           >
             <span className="text-sm group-hover:scale-125 transition-transform">🔍</span>
@@ -208,8 +208,8 @@ export function CardCollectionModal({ card: initialCard, onClose, deckId }: Prop
           </button>
 
           <div className="mt-3 text-center w-full">
-            <h3 className="text-base sm:text-lg font-black text-white leading-tight">{activeCard.name}</h3>
-            <p className="text-xs text-slate-400 mt-1 font-medium">
+            <h3 className="text-base sm:text-lg font-black text-slate-900 dark:text-white leading-tight">{activeCard.name}</h3>
+            <p className="text-xs text-slate-500 dark:text-slate-400 mt-1 font-medium">
               {activeCard.set?.name || 'การ์ดเสริม'} · {activeCard.collectorNumber || activeCard.localId}
             </p>
           </div>
@@ -223,24 +223,24 @@ export function CardCollectionModal({ card: initialCard, onClose, deckId }: Prop
             <div className="flex items-start justify-between gap-3">
               <div>
                 <div className="flex items-center gap-2 flex-wrap">
-                  <span className="px-2.5 py-1 rounded-lg bg-amber-500/20 border border-amber-500/40 text-amber-300 text-xs font-black">
+                  <span className="px-2.5 py-1 rounded-lg bg-amber-100 dark:bg-amber-500/20 border border-amber-300 dark:border-amber-500/40 text-amber-800 dark:text-amber-300 text-xs font-black">
                     {activeCard.set?.id || 'PROMO'}
                   </span>
                   {activeCard.regulationMark && (
-                    <span className="px-2 py-1 rounded-lg bg-slate-800 border border-slate-700 text-slate-300 text-xs font-bold font-mono">
+                    <span className="px-2 py-1 rounded-lg bg-slate-100 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 text-slate-700 dark:text-slate-300 text-xs font-bold font-mono">
                       Reg [{activeCard.regulationMark}]
                     </span>
                   )}
                   {activeCard.category && (
-                    <span className="px-2.5 py-1 rounded-lg bg-slate-800/90 text-slate-400 text-xs font-medium">
+                    <span className="px-2.5 py-1 rounded-lg bg-slate-100 dark:bg-slate-800/90 text-slate-600 dark:text-slate-400 text-xs font-medium">
                       {activeCard.category}
                     </span>
                   )}
                 </div>
-                <h2 className="text-lg sm:text-xl font-black text-white mt-2 leading-snug">
+                <h2 className="text-lg sm:text-xl font-black text-slate-900 dark:text-white mt-2 leading-snug">
                   {activeCard.name}
                   {getEnglishCardName(activeCard) && (
-                    <span className="ml-2 text-sm sm:text-base font-semibold text-slate-400 font-sans">
+                    <span className="ml-2 text-sm sm:text-base font-semibold text-slate-500 dark:text-slate-400 font-sans">
                       ({getEnglishCardName(activeCard)})
                     </span>
                   )}
@@ -253,8 +253,8 @@ export function CardCollectionModal({ card: initialCard, onClose, deckId }: Prop
                   onClick={() => toggleWishlist(activeCard.id)}
                   className={`px-3 py-2 rounded-xl border text-xs font-extrabold transition-all flex items-center gap-1.5 shadow-sm whitespace-nowrap ${
                     isWishlist
-                      ? 'bg-amber-500/25 text-amber-300 border-amber-500/60 shadow-amber-500/15'
-                      : 'bg-slate-800 text-slate-400 border-slate-700 hover:text-amber-300 hover:border-slate-600'
+                      ? 'bg-amber-100 dark:bg-amber-500/25 text-amber-800 dark:text-amber-300 border-amber-300 dark:border-amber-500/60 shadow-amber-500/15'
+                      : 'bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-400 border-slate-300 dark:border-slate-700 hover:text-amber-600 dark:hover:text-amber-300 hover:border-slate-400'
                   }`}
                   title="ปักหมุดเป็นการ์ดที่ตามหา (Wishlist)"
                 >
@@ -264,7 +264,7 @@ export function CardCollectionModal({ card: initialCard, onClose, deckId }: Prop
                 <button
                   type="button"
                   onClick={onClose}
-                  className="px-3 py-2 rounded-xl bg-slate-800 hover:bg-rose-500 hover:text-white text-slate-300 border border-slate-700 hover:border-rose-500/60 flex items-center gap-1.5 text-xs font-black transition-all shadow-md active:scale-95 group"
+                  className="px-3 py-2 rounded-xl bg-slate-100 dark:bg-slate-800 hover:bg-rose-500 hover:text-white text-slate-700 dark:text-slate-300 border border-slate-300 dark:border-slate-700 hover:border-rose-500/60 flex items-center gap-1.5 text-xs font-black transition-all shadow-sm active:scale-95 group"
                   title="ปิดหน้าต่าง (ESC)"
                 >
                   <span className="text-sm group-hover:rotate-90 transition-transform duration-200">✕</span>
@@ -308,18 +308,18 @@ export function CardCollectionModal({ card: initialCard, onClose, deckId }: Prop
                     type="button"
                     onClick={() => removeCardFromDeck(deck.id, activeCard.id)}
                     disabled={!deck.cards[activeCard.id]?.count}
-                    className="w-8 h-8 rounded-xl bg-slate-800 hover:bg-slate-700 disabled:opacity-30 text-white font-black text-sm flex items-center justify-center transition-all shadow-inner active:scale-95 cursor-pointer"
+                    className="w-8 h-8 rounded-xl bg-white/10 hover:bg-white/20 disabled:opacity-30 text-white font-black text-sm flex items-center justify-center transition-all shadow-inner active:scale-95 cursor-pointer"
                     title="ถอดออกจากเด็ค (-1)"
                   >
                     −
                   </button>
-                  <span className="w-7 text-center font-mono font-black text-base text-indigo-300">
+                  <span className="w-7 text-center font-mono font-black text-base text-white">
                     {deck.cards[activeCard.id]?.count || 0}
                   </span>
                   <button
                     type="button"
                     onClick={() => addCardToDeck(deck.id, activeCard.id, 1)}
-                    className="px-3 py-1.5 rounded-xl bg-gradient-to-r from-indigo-500 to-purple-600 hover:from-indigo-400 hover:to-purple-500 active:scale-95 text-white font-black text-xs shadow-md shadow-indigo-500/30 flex items-center gap-1 transition-all cursor-pointer"
+                    className="px-3 py-1.5 rounded-xl bg-white hover:bg-slate-100 active:scale-95 text-indigo-900 font-black text-xs shadow-md flex items-center gap-1 transition-all cursor-pointer"
                     title="เพิ่มเข้าเด็ค (+1)"
                   >
                     <span>+ ใส่เด็ค</span>
@@ -330,11 +330,11 @@ export function CardCollectionModal({ card: initialCard, onClose, deckId }: Prop
 
             {/* Community Ownership Stats Section */}
             {communityStats.totalUsers > 0 && (
-              <div className="bg-slate-950/70 border border-slate-800/90 rounded-2xl p-3.5 space-y-2.5 shadow-inner">
+              <div className="bg-slate-50 dark:bg-slate-950/70 border border-slate-200 dark:border-slate-800/90 rounded-2xl p-3.5 space-y-2.5 shadow-sm dark:shadow-inner">
                 <div className="flex items-center justify-between gap-2 flex-wrap">
                   <div className="flex items-center gap-2">
                     <span className="text-sm">👥</span>
-                    <span className="text-xs font-black text-slate-200">สถิติผู้ครอบครองในการ์ดนี้</span>
+                    <span className="text-xs font-black text-slate-800 dark:text-slate-200">สถิติผู้ครอบครองในการ์ดนี้</span>
                   </div>
                   <span className={`px-2.5 py-0.5 rounded-full text-[11px] font-black border ${communityStats.badgeColor}`}>
                     {communityStats.tierLabel}
@@ -343,7 +343,7 @@ export function CardCollectionModal({ card: initialCard, onClose, deckId }: Prop
 
                 {/* Progress bar */}
                 <div className="space-y-1.5">
-                  <div className="h-2 w-full bg-slate-900 rounded-full overflow-hidden border border-slate-800/80">
+                  <div className="h-2 w-full bg-slate-200 dark:bg-slate-900 rounded-full overflow-hidden border border-slate-300 dark:border-slate-800/80">
                     <motion.div
                       initial={{ width: 0 }}
                       animate={{
@@ -363,11 +363,11 @@ export function CardCollectionModal({ card: initialCard, onClose, deckId }: Prop
                   </div>
 
                   <div className="flex items-center justify-between text-[11px] pt-0.5">
-                    <span className="text-slate-400 font-medium">
-                      มีผู้สะสม <strong className="text-white font-bold">{communityStats.count.toLocaleString()}</strong> คนครอบครอง
+                    <span className="text-slate-600 dark:text-slate-400 font-medium">
+                      มีผู้สะสม <strong className="text-slate-900 dark:text-white font-bold">{communityStats.count.toLocaleString()}</strong> คนครอบครอง
                     </span>
-                    <span className="text-amber-400 font-black font-mono">
-                      {communityStats.percentage}% <span className="text-slate-500 font-normal text-[10px]">({communityStats.totalUsers.toLocaleString()} คนทั้งหมด)</span>
+                    <span className="text-amber-600 dark:text-amber-400 font-black font-mono">
+                      {communityStats.percentage}% <span className="text-slate-400 dark:text-slate-500 font-normal text-[10px]">({communityStats.totalUsers.toLocaleString()} คนทั้งหมด)</span>
                     </span>
                   </div>
                 </div>
@@ -376,7 +376,7 @@ export function CardCollectionModal({ card: initialCard, onClose, deckId }: Prop
 
             {/* Applicable Variants List (1 Full-Width Row per Variant) */}
             <div className="space-y-2.5">
-              <label className="block text-xs font-black text-slate-400 uppercase tracking-wider">
+              <label className="block text-xs font-black text-slate-500 dark:text-slate-400 uppercase tracking-wider">
                 จำนวนการ์ดที่มี (Card Quantity)
               </label>
 
@@ -388,18 +388,18 @@ export function CardCollectionModal({ card: initialCard, onClose, deckId }: Prop
                       key={key}
                       className={`p-3.5 rounded-2xl border transition-all flex items-center justify-between gap-3 ${
                         count > 0
-                          ? 'bg-slate-800/90 border-amber-500/50 shadow-md shadow-amber-500/5 ring-1 ring-amber-500/20'
-                          : 'bg-slate-900/80 border-slate-800 hover:border-slate-700'
+                          ? 'bg-amber-50/80 dark:bg-slate-800/90 border-amber-300 dark:border-amber-500/50 shadow-sm dark:shadow-md dark:shadow-amber-500/5 ring-1 ring-amber-400/20'
+                          : 'bg-slate-50 dark:bg-slate-900/80 border-slate-200 dark:border-slate-800 hover:border-slate-300 dark:hover:border-slate-700'
                       }`}
                     >
                       {/* Variant Info */}
                       <div className="flex items-center gap-3 min-w-0 flex-1">
                         <span className="text-2xl flex-shrink-0">{icon}</span>
                         <div className="min-w-0 flex-1">
-                          <h4 className="text-xs sm:text-sm font-black text-slate-100 leading-snug">
+                          <h4 className="text-xs sm:text-sm font-black text-slate-900 dark:text-slate-100 leading-snug">
                             {label}
                           </h4>
-                          <p className="text-[11px] text-slate-400 mt-0.5 leading-tight">
+                          <p className="text-[11px] text-slate-500 dark:text-slate-400 mt-0.5 leading-tight">
                             {desc}
                           </p>
                         </div>
@@ -410,7 +410,7 @@ export function CardCollectionModal({ card: initialCard, onClose, deckId }: Prop
                         <button
                           onClick={() => decrementVariant(activeCard.id, key)}
                           disabled={count === 0}
-                          className="w-8 h-8 rounded-xl bg-slate-700 hover:bg-slate-600 disabled:opacity-30 text-white font-black text-sm flex items-center justify-center transition-all shadow-inner"
+                          className="w-8 h-8 rounded-xl bg-slate-200 dark:bg-slate-700 hover:bg-slate-300 dark:hover:bg-slate-600 disabled:opacity-30 text-slate-800 dark:text-white font-black text-sm flex items-center justify-center transition-all shadow-sm"
                         >
                           −
                         </button>
@@ -420,7 +420,7 @@ export function CardCollectionModal({ card: initialCard, onClose, deckId }: Prop
                           max={999}
                           value={count}
                           onChange={(e) => setVariantCount(activeCard.id, key, parseInt(e.target.value, 10) || 0)}
-                          className="w-12 text-center bg-slate-950 border border-slate-700 rounded-xl py-1.5 text-sm font-black text-amber-300 focus:outline-none focus:border-amber-500 shadow-inner"
+                          className="w-12 text-center bg-white dark:bg-slate-950 border border-slate-300 dark:border-slate-700 rounded-xl py-1.5 text-sm font-black text-amber-600 dark:text-amber-300 focus:outline-none focus:border-amber-500 shadow-inner"
                         />
                         <button
                           onClick={() => incrementVariant(activeCard.id, key)}
@@ -444,21 +444,21 @@ export function CardCollectionModal({ card: initialCard, onClose, deckId }: Prop
             )}
 
             {/* Condition & Note Section */}
-            <div className="space-y-3 pt-2 border-t border-slate-800">
+            <div className="space-y-3 pt-2 border-t border-slate-200 dark:border-slate-800">
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
                 {/* Condition Selector */}
                 <div>
-                  <label className="block text-xs font-bold text-slate-400 mb-1.5">
+                  <label className="block text-xs font-bold text-slate-600 dark:text-slate-400 mb-1.5">
                     สภาพการ์ด (Condition)
                   </label>
                   <select
                     value={currentCondition}
                     onChange={(e) => setCardDetails(activeCard.id, { condition: e.target.value as CardCondition })}
-                    className="w-full px-3 py-2.5 bg-slate-950 border border-slate-700 rounded-xl text-xs text-white font-medium focus:outline-none focus:border-amber-500 shadow-inner"
+                    className="w-full px-3 py-2.5 bg-slate-50 dark:bg-slate-950 border border-slate-300 dark:border-slate-700 rounded-xl text-xs text-slate-900 dark:text-white font-medium focus:outline-none focus:border-amber-500 shadow-inner"
                   >
                     {CONDITIONS.map((c) => (
                       <option key={c.key} value={c.key}>
-                        {c.label} - {c.desc}
+                        {c.label} ({c.desc})
                       </option>
                     ))}
                   </select>
