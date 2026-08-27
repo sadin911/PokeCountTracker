@@ -101,3 +101,4 @@
 [2026-08-27 09:19] Major | Antigravity | Edit | src/ - updated Standard format regulation marks to H, I, J (Standard: H-J)
 [2026-08-27 09:23] Major | Antigravity | Edit | src/data/pokemonNames.json - categorized 234 Basic & Special Energy cards from Trainer to Energy
 [2026-08-27 09:26] Major | Antigravity | Write | src/components/ - added prominent Category quick chips (Pokemon, Trainer, Energy) & populated Energy card types
+[2026-08-27 09:34] Major | Antigravity | Command | git tag v2.13.0 & push - Regulation Mark Series Filter, Data Sanitation & Category Separation Release
