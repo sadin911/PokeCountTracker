@@ -58,16 +58,7 @@ export const RARITY_CLASSES = [
   { id: "REGULAR", label: "⚪ โปเกมอนทั่วไป (Common / Rare)" },
 ];
 
-const QUICK_RARITIES = [
-  { id: "ALL", label: "ทั้งหมด" },
-  { id: "SAR", label: "🌟 SAR" },
-  { id: "AR", label: "🎨 AR" },
-  { id: "SR", label: "💎 SR" },
-  { id: "HR", label: "🌈 HR" },
-  { id: "UR", label: "👑 UR" },
-  { id: "EX", label: "⚡ ex" },
-  { id: "PROMO", label: "🎁 Promo" },
-];
+
 
 const STATUS_TABS: { key: CollectionStatusFilter; label: string; icon: string }[] = [
   { key: "all", label: "ทั้งหมด", icon: "🎴" },
@@ -155,15 +146,40 @@ export function CollectionFilterBar({
           )}
         </div>
 
-        {/* Set Selector Dropdown */}
-        <SearchableSetSelect
-          sets={sets}
-          selectedSet={selectedSet}
-          onSelectSet={onSelectSet}
-          accentColor="amber"
-          showProgress={true}
-          className="w-full lg:w-96"
-        />
+        {/* Set Selector & Outside Rarity Dropdown */}
+        <div className="flex items-center gap-1.5 sm:gap-2 w-full lg:w-auto">
+          <SearchableSetSelect
+            sets={sets}
+            selectedSet={selectedSet}
+            onSelectSet={onSelectSet}
+            accentColor="amber"
+            showProgress={true}
+            className="flex-1 lg:w-80"
+          />
+
+          {/* Compact Outside Rarity Dropdown */}
+          <div className="w-32 sm:w-44 shrink-0">
+            <select
+              value={selectedRarity}
+              onChange={(e) => onRarityChange(e.target.value)}
+              aria-label="เลือกระดับความหายาก"
+              className={`w-full px-2 sm:px-2.5 py-1.5 sm:py-2 rounded-xl text-xs font-bold transition-all shadow-sm focus:outline-none min-h-[38px] sm:min-h-[40px] truncate cursor-pointer ${
+                selectedRarity !== "ALL"
+                  ? "bg-amber-400 dark:bg-amber-500 text-slate-950 border border-amber-300 dark:border-amber-400 ring-1 ring-amber-400/40 font-black shadow-amber-500/20"
+                  : "bg-slate-100 dark:bg-slate-950 text-slate-700 dark:text-slate-200 border border-slate-300 dark:border-slate-700/90 hover:border-amber-400"
+              }`}
+            >
+              <option value="ALL" className="bg-white dark:bg-slate-900 text-slate-900 dark:text-slate-100 font-semibold">
+                ⭐ ความหายาก
+              </option>
+              {RARITY_CLASSES.filter((r) => r.id !== "ALL").map((r) => (
+                <option key={r.id} value={r.id} className="bg-white dark:bg-slate-900 text-slate-900 dark:text-slate-100 font-semibold">
+                  {r.label}
+                </option>
+              ))}
+            </select>
+          </div>
+        </div>
 
         {/* Action Toolbar on Desktop / Single Full-Width Row on Mobile */}
         <div className="flex items-center gap-1.5 sm:gap-2 w-full lg:w-auto justify-between lg:justify-end">
@@ -325,41 +341,12 @@ export function CollectionFilterBar({
             );
           })}
 
-          <span className="text-[11px] text-slate-500 dark:text-slate-400 font-bold whitespace-nowrap shrink-0 ml-2">
-            ความหายาก:
-          </span>
-          {QUICK_RARITIES.map((qr) => {
-            const isSelected = selectedRarity === qr.id;
-            return (
-              <button
-                key={qr.id}
-                onClick={() => onRarityChange(qr.id)}
-                className={`px-2.5 py-1 rounded-xl text-xs font-bold whitespace-nowrap transition-all flex items-center gap-1 shrink-0 active:scale-95 ${
-                  isSelected
-                    ? "bg-amber-400 text-slate-950 font-black shadow-md shadow-amber-400/20"
-                    : "bg-slate-100 dark:bg-slate-800 hover:bg-slate-200 dark:hover:bg-slate-700 text-slate-700 dark:text-slate-300 border border-slate-200 dark:border-slate-700/60"
-                }`}
-              >
-                {qr.label}
-              </button>
-            );
-          })}
+
         </div>
 
         {/* Row C: Detailed Dropdowns & Energy Types Bar */}
         <div className="flex items-center gap-2 flex-wrap pt-1">
-          {/* Detailed Rarity Dropdown */}
-          <select
-            value={selectedRarity}
-            onChange={(e) => onRarityChange(e.target.value)}
-            className="px-2.5 py-1.5 bg-slate-100 dark:bg-slate-950 border border-amber-400 dark:border-amber-500/50 text-amber-800 dark:text-amber-300 rounded-xl text-xs font-bold focus:outline-none shadow-inner"
-          >
-            {RARITY_CLASSES.map((r) => (
-              <option key={r.id} value={r.id}>
-                {r.label}
-              </option>
-            ))}
-          </select>
+
 
           {/* Stage Dropdown */}
           <select
