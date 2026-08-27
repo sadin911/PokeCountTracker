@@ -97,3 +97,4 @@
 [2026-08-27 08:27] Major | Antigravity | Command | git tag v2.12.0 & push - Progressive Web App (PWA) & Mobile Install Release
 [2026-08-27 09:00] Major | Antigravity | Edit | src/components/deck/ & collection/ - unified CardCollectionModal with Deck support & Missing Cards refill
 [2026-08-27 09:06] Major | Antigravity | Write | src/ - added Regulation Mark Series filtering & set grouping across Collection & Deck Builder
+[2026-08-27 09:16] Major | Antigravity | Edit | src/data/pokemonNames.json - fixed 353 mismatched regulation marks from official scrape data
