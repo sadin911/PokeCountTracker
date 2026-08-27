@@ -119,3 +119,4 @@
 [2026-08-27 12:28] Major | Antigravity | Write | src/ - added official booster pack images and zoom preview modal
 [2026-08-27 12:32] Major | Antigravity | Write | R2 Sync - uploaded all booster pack images to R2 CDN & added to .gitignore
 [2026-08-27 12:35] Major | Antigravity | Edit | src/ - sorted set filter lists by Thai release date descending (Newest first)
+[2026-08-27 12:41] Major | Antigravity | Command | git merge & push origin main - Tagged v2.15.0 Release
