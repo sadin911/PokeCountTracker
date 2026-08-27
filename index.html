@@ -1,18 +1,105 @@
 <!doctype html>
-<html lang="en">
+<html lang="th">
   <head>
     <meta charset="UTF-8" />
     <link rel="icon" type="image/svg+xml" href="/PokeCountTracker/favicon.svg" />
     <link rel="apple-touch-icon" href="/PokeCountTracker/apple-touch-icon.png" />
+    <link rel="manifest" href="/PokeCountTracker/manifest.webmanifest" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover" />
-    <title>PokéCount Tracker</title>
-    <meta name="description" content="สมุดสะสมการ์ด จัดเด็ค และตัวนับแต้มดาเมจการ์ดโปเกมอนภาษาไทย" />
+    
+    <!-- Primary SEO Metadata -->
+    <title>PokéCount Tracker | สมุดสะสมการ์ดโปเกมอนไทย จัดเด็ค และคำนวณการ์ดที่ขาด</title>
+    <meta name="title" content="PokéCount Tracker | สมุดสะสมการ์ดโปเกมอนไทย จัดเด็ค และคำนวณการ์ดที่ขาด" />
+    <meta
+      name="description"
+      content="แอปพลิเคชันจัดการคอลเลกชันการ์ดโปเกมอนภาษาไทย (Pokémon TCG Thai) ระบบจัดเด็ค PokéDeck Builder เช็คการ์ดที่ขาด คำนวณค่าพลังชีวิต ดาเมจเคาน์เตอร์ และสถิติการครอบครองการ์ดแบบเรียลไทม์"
+    />
+    <meta
+      name="keywords"
+      content="โปเกมอนการ์ด, Pokemon TCG Thailand, สมุดสะสมการ์ด, เช็คการ์ดโปเกมอน, จัดเด็คโปเกมอน, Pokemon Card Thai, PokéCount Tracker, PTCG Thai, Deck Builder, Regulation Mark, การ์ดที่ขาด, ดาเมจเคาน์เตอร์"
+    />
+    <meta name="author" content="PokéCount Tracker" />
+    <meta name="robots" content="index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1" />
+    <link rel="canonical" href="https://sadin911.github.io/PokeCountTracker/" />
+
+    <!-- Theme & Mobile PWA Styling -->
     <meta name="theme-color" content="#0f172a" />
     <meta name="mobile-web-app-capable" content="yes" />
     <meta name="apple-mobile-web-app-capable" content="yes" />
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
     <meta name="apple-mobile-web-app-title" content="PokéCount" />
     <meta name="application-name" content="PokéCount Tracker" />
+
+    <!-- Open Graph / Facebook / Discord Embeds -->
+    <meta property="og:type" content="website" />
+    <meta property="og:url" content="https://sadin911.github.io/PokeCountTracker/" />
+    <meta property="og:title" content="PokéCount Tracker | สมุดสะสมการ์ดโปเกมอนไทย & จัดเด็ค" />
+    <meta
+      property="og:description"
+      content="จัดการคอลเลกชันการ์ดโปเกมอนไทยกว่า 9,600+ ใบ จัดเด็ค คำนวณการ์ดที่ขาด และบันทึกคลาวด์ฟรี"
+    />
+    <meta property="og:image" content="https://sadin911.github.io/PokeCountTracker/pwa-512x512.png" />
+    <meta property="og:image:alt" content="PokéCount Tracker App Preview" />
+    <meta property="og:site_name" content="PokéCount Tracker" />
+    <meta property="og:locale" content="th_TH" />
+
+    <!-- Twitter Cards -->
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:url" content="https://sadin911.github.io/PokeCountTracker/" />
+    <meta name="twitter:title" content="PokéCount Tracker | สมุดสะสมการ์ดโปเกมอนไทย & จัดเด็ค" />
+    <meta
+      name="twitter:description"
+      content="แอปพลิเคชันคอลเลกชันและจัดเด็คโปเกมอนการ์ดภาษาไทยครบวงจร รองรับ PWA ติดตั้งบนมือถือได้"
+    />
+    <meta name="twitter:image" content="https://sadin911.github.io/PokeCountTracker/pwa-512x512.png" />
+
+    <!-- JSON-LD Structured Data for Google Rich Snippets -->
+    <script type="application/ld+json">
+      {
+        "@context": "https://schema.org",
+        "@graph": [
+          {
+            "@type": "WebApplication",
+            "@id": "https://sadin911.github.io/PokeCountTracker/#webapp",
+            "name": "PokéCount Tracker",
+            "url": "https://sadin911.github.io/PokeCountTracker/",
+            "applicationCategory": "UtilitiesApplication",
+            "operatingSystem": "All",
+            "description": "แอปพลิเคชันจัดการคอลเลกชันการ์ดโปเกมอนภาษาไทย (Pokémon TCG Thai) ระบบจัดเด็ค PokéDeck Builder เช็คการ์ดที่ขาด คำนวณค่าพลังชีวิต ดาเมจเคาน์เตอร์ และสถิติการครอบครองการ์ดแบบเรียลไทม์",
+            "offers": {
+              "@type": "Offer",
+              "price": "0",
+              "priceCurrency": "THB"
+            },
+            "featureList": [
+              "ฐานข้อมูลการ์ดโปเกมอนภาษาไทยครบทุกชุดกว่า 9,600+ ใบ",
+              "ระบบจัดเด็ค PokéDeck Builder พร้อมกฎ 60 ใบ และคำนวณการ์ดที่ยังขาดในคอลเลกชัน",
+              "ระบบกรองการ์ดตาม Regulation Mark (Standard H-J, Series D-J, Expanded A-B)",
+              "แยกหมวดหมู่ โปเกมอน, เทรนเนอร์, พลังงาน และระดับความหายาก SAR, AR, SR, UR, ex",
+              "รองรับการซิงค์ข้อมูลบน Cloud กับ Google Account",
+              "ระบบนับแต้มดาเมจเคาน์เตอร์สำหรับเล่นการ์ดบนโต๊ะจริง (Battle Mode / Mini Mode)",
+              "รองรับการติดตั้ง Progressive Web App (PWA) บน iOS และ Android"
+            ]
+          },
+          {
+            "@type": "WebSite",
+            "@id": "https://sadin911.github.io/PokeCountTracker/#website",
+            "url": "https://sadin911.github.io/PokeCountTracker/",
+            "name": "PokéCount Tracker",
+            "description": "สุดยอดเครื่องมือสำหรับนักสะสมและผู้เล่นโปเกมอนการ์ดภาษาไทย (Pokémon TCG Thai)",
+            "potentialAction": {
+              "@type": "SearchAction",
+              "target": {
+                "@type": "EntryPoint",
+                "urlTemplate": "https://sadin911.github.io/PokeCountTracker/?search={search_term_string}"
+              },
+              "query-input": "required name=search_term_string"
+            }
+          }
+        ]
+      }
+    </script>
+
     <!-- Script to decode SPA GitHub Pages redirect -->
     <script type="text/javascript">
       (function(l) {

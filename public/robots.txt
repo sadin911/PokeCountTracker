@@ -1,0 +1,4 @@
+User-agent: *
+Allow: /
+
+Sitemap: https://sadin911.github.io/PokeCountTracker/sitemap.xml

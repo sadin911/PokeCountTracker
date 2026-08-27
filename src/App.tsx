@@ -3,7 +3,9 @@ import { useGameStore, type GameMode } from './store/gameStore';
 import { GameBoard } from './components/layout/GameBoard';
 import { CollectionTracker } from './components/collection/CollectionTracker';
 import { DeckManager } from './components/deck/DeckManager';
+import { AdminPage } from './components/admin/AdminPage';
 import { BottomNav } from './components/layout/BottomNav';
+import { trackEvent } from './utils/analytics';
 
 // Helper to determine mode from URL pathname, hash, or query params
 function getModeFromURL(): GameMode {
@@ -13,6 +15,14 @@ function getModeFromURL(): GameMode {
   const modeParam = search.get('mode')?.toLowerCase();
   const rawSearch = window.location.search.toLowerCase();
 
+  if (
+    path.includes('/admin') ||
+    hash.includes('admin') ||
+    modeParam === 'admin' ||
+    rawSearch.includes('admin')
+  ) {
+    return 'admin';
+  }
   if (
     path.includes('/deck') ||
     hash.includes('deck') ||
@@ -54,7 +64,9 @@ function updateURLForMode(mode: GameMode) {
   const base = import.meta.env.BASE_URL.replace(/\/+$/, '') || '';
   let targetPath = `${base}/collection`;
 
-  if (mode === 'deck') {
+  if (mode === 'admin') {
+    targetPath = `${base}/admin`;
+  } else if (mode === 'deck') {
     targetPath = `${base}/deck`;
   } else if (mode === 'collection') {
     targetPath = `${base}/collection`;
@@ -92,15 +104,20 @@ function App() {
     };
   }, []);
 
-  // Sync URL when gameMode state changes
+  // Sync URL and log telemetry when gameMode state changes
   useEffect(() => {
     updateURLForMode(gameMode);
+    trackEvent('navigation', 'page_view', gameMode);
   }, [gameMode]);
 
   useEffect(() => {
     document.documentElement.dataset.displayMode = displayMode;
     document.documentElement.dataset.gameMode = gameMode;
   }, [displayMode, gameMode]);
+
+  if (gameMode === 'admin') {
+    return <AdminPage onBackToApp={() => setGameMode('collection')} />;
+  }
 
   return (
     <div className={`w-full ${

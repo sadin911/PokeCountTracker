@@ -14,6 +14,7 @@ import {
 
 import { getCardRarityClass } from '../../utils/rarity';
 import { createCardMatcher } from '../../utils/searchHelpers';
+import { trackEvent } from '../../utils/analytics';
 export { getCardRarityClass };
 
 export function CollectionTracker() {
@@ -316,6 +317,35 @@ export function CollectionTracker() {
 
   // Stable key identifying current filter/search/sort criteria
   const filterKey = `${selectedSet}_${selectedRegulation}_${statusFilter}_${selectedType}_${selectedCategory}_${selectedStage}_${selectedRarity}_${sortBy}_${sortOrder}_${effectiveSearch.trim()}_${activeProfileId}`;
+
+  // Log search telemetry with debounce
+  useEffect(() => {
+    const trimmed = search.trim();
+    if (!trimmed) return;
+
+    const timer = setTimeout(() => {
+      trackEvent('search', 'query', trimmed, {
+        resultsCount: filteredCards.length,
+        regulation: selectedRegulation,
+        category: selectedCategory,
+      });
+    }, 600);
+
+    return () => clearTimeout(timer);
+  }, [search, filteredCards.length, selectedRegulation, selectedCategory]);
+
+  // Log filter changes telemetry
+  useEffect(() => {
+    if (selectedRegulation !== 'ALL') {
+      trackEvent('filter', 'regulation', selectedRegulation);
+    }
+  }, [selectedRegulation]);
+
+  useEffect(() => {
+    if (selectedCategory !== 'ALL') {
+      trackEvent('filter', 'category', selectedCategory);
+    }
+  }, [selectedCategory]);
 
   return (
     <div className="min-h-screen bg-slate-950 text-slate-100 flex flex-col font-sans selection:bg-amber-500 selection:text-slate-950">

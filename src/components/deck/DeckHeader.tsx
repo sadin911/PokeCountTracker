@@ -178,6 +178,17 @@ export function DeckHeader({ isEditing, onBackToDecks, onOpenImportExport }: Pro
                   <button
                     onClick={() => {
                       setShowUserMenu(false);
+                      setGameMode('admin');
+                    }}
+                    className="w-full text-left px-3 py-2 rounded-xl text-xs font-bold text-amber-300 hover:bg-amber-500/20 transition-all flex items-center gap-2"
+                  >
+                    <span>📊</span>
+                    <span>Admin & Analytics</span>
+                  </button>
+
+                  <button
+                    onClick={() => {
+                      setShowUserMenu(false);
                       signOut();
                     }}
                     className="w-full text-left px-3 py-2 rounded-xl text-xs font-bold text-rose-300 hover:bg-rose-500/20 transition-all flex items-center gap-2"

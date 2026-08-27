@@ -12,6 +12,7 @@ import { REGULATION_SERIES_OPTIONS, STANDARD_REGULATION_MARKS } from '../../type
 import { getCardRarityClass } from '../../utils/rarity';
 import { createCardMatcher } from '../../utils/searchHelpers';
 import pokemonCardData from '../../data/pokemonNames.json';
+import { trackEvent } from '../../utils/analytics';
 import type { Deck } from '../../types/deck';
 
 interface Props {
@@ -726,6 +727,10 @@ export function DeckEditor({ deck, onBackToDecks }: Props) {
                         onClick={(e) => {
                           e.stopPropagation();
                           addCardToDeck(deck.id, card.id, 1);
+                          trackEvent('deck', 'add_card', card.name || card.id, {
+                            cardId: card.id,
+                            category: card.category,
+                          });
                         }}
                         className="absolute bottom-1.5 right-1.5 px-2 py-1 sm:px-2.5 rounded-lg bg-indigo-600 hover:bg-indigo-500 active:scale-95 text-white font-black text-[11px] sm:text-xs shadow-lg flex items-center gap-1 opacity-90 sm:opacity-100 xl:opacity-0 xl:group-hover:opacity-100 transition-all"
                         title="เพิ่มการ์ดเข้าเด็ค (+1)"
