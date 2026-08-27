@@ -57,7 +57,7 @@ export const STANDARD_REGULATION_MARKS = ['H', 'I', 'J'] as const;
 
 export const REGULATION_SERIES_OPTIONS = [
   { id: 'ALL', label: 'ทุกซีรีส์ / ทุกเรกูเลชัน (All Regulations)', shortLabel: 'ทั้งหมด' },
-  { id: 'STANDARD', label: '⚡ สแตนดาร์ด (Standard: H, I, J)', shortLabel: '⚡ Standard (H-J)' },
+  { id: 'STANDARD', label: '⚡ สแตนดาร์ด (Standard: HIJ)', shortLabel: '⚡ Standard (HIJ)' },
   { id: 'J', label: '🎴 ซีรีส์ J (Mega Evolution / 2025-2026)', shortLabel: 'Series J' },
   { id: 'I', label: '🌟 ซีรีส์ I (Scarlet & Violet: SV8+)', shortLabel: 'Series I' },
   { id: 'H', label: '💎 ซีรีส์ H (Scarlet & Violet: SV5-SV7)', shortLabel: 'Series H' },

@@ -322,7 +322,7 @@ function AdminDashboardContent({ onBackToApp }: AdminPageProps) {
                         className="flex items-center justify-between p-3 rounded-2xl bg-slate-950 border border-slate-800 text-xs"
                       >
                         <span className="font-bold text-slate-200">
-                          {reg === 'STANDARD' ? '⚡ Standard (H-J)' : `Series ${reg}`}
+                          {reg === 'STANDARD' ? '⚡ Standard (HIJ)' : `Series ${reg}`}
                         </span>
                         <span className="px-2.5 py-1 rounded-lg bg-emerald-500/10 text-emerald-400 border border-emerald-500/30 font-mono font-bold">
                           {count} ครั้ง

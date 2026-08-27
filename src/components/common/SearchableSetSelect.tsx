@@ -22,7 +22,7 @@ export interface SearchableSetSelectProps {
 
 const REGULATION_QUICK_TABS = [
   { id: 'ALL', label: 'ทั้งหมด' },
-  { id: 'STANDARD', label: '⚡ Standard (H-J)' },
+  { id: 'STANDARD', label: '⚡ Standard (HIJ)' },
   { id: 'J', label: 'J' },
   { id: 'I', label: 'I' },
   { id: 'H', label: 'H' },

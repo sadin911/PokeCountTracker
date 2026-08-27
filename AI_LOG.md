@@ -109,3 +109,5 @@
 [2026-08-27 10:55] Major | Antigravity | Command | git tag v2.14.2 & push - Instant Force Redirect & Service Worker Cleanup Release
 [2026-08-27 11:38] Major | Antigravity | Fix | src/components/ - positioned Back to Top above BottomNav & safe area on mobile PWA (Collection & Deck)
 [2026-08-27 11:38] Major | Antigravity | Command | git tag v2.14.3 & push - Mobile PWA Back to Top Button Fix Release
+[2026-08-27 11:41] Major | Antigravity | Edit | src/ - updated Standard regulation filter display label to HIJ (Standard: HIJ)
+[2026-08-27 11:42] Major | Antigravity | Command | git tag v2.14.4 & push - Standard Regulation HIJ Label Update Release
