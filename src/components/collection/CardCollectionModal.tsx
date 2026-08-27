@@ -187,7 +187,7 @@ export function CardCollectionModal({ card: initialCard, onClose, deckId }: Prop
             <img
               src={resolveCardImageUrl(activeCard.imageUrlHigh || activeCard.imageUrl, true)}
               alt={activeCard.name}
-              className="w-full h-full object-cover transition-all duration-300 group-hover:scale-105"
+              className="w-full h-full object-cover transition-all duration-300 group-hover:scale-[1.02]"
               onError={(e) => handleCardImageError(e, activeCard.imageUrl, activeCard.officialImageUrl)}
             />
 
@@ -199,14 +199,6 @@ export function CardCollectionModal({ card: initialCard, onClose, deckId }: Prop
                 style={{ animationDelay: `${pulseDelay}s` }}
               />
             )}
-
-            {/* Hover Magnify Overlay */}
-            <div className="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 transition-opacity flex flex-col items-center justify-center gap-1 text-white backdrop-blur-[2px] pointer-events-none">
-              <span className="text-3xl drop-shadow-lg transform group-hover:scale-110 transition-transform">🔍</span>
-              <span className="text-xs font-black px-2.5 py-1 rounded-lg bg-black/70 border border-white/20 shadow-lg">
-                แตะเพื่อดูการ์ดเต็มจอ
-              </span>
-            </div>
 
             {totalCount > 0 && (
               <div className="absolute top-2.5 right-2.5 px-3 py-1 rounded-full bg-gradient-to-r from-amber-500 to-amber-600 text-slate-950 font-black text-xs shadow-xl shadow-amber-500/40 flex items-center gap-1 z-10 pointer-events-none">
