@@ -105,3 +105,4 @@
 [2026-08-27 09:38] Major | Antigravity | Write | SEO & Admin Dashboard - added robots.txt, sitemap, meta tags, schema & Admin Page
 [2026-08-27 09:40] Major | Antigravity | Command | git tag v2.14.0 & push - SEO Optimization & Admin Analytics Dashboard Release
 [2026-08-27 10:02] Major | Antigravity | Write | Custom Domain - configured poke.tcgcount.com (CNAME, vite root base, sitemap, metadata)
+[2026-08-27 10:08] Major | Antigravity | Command | git tag v2.14.1 & push - Custom Domain poke.tcgcount.com Production Release
