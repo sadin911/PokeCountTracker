@@ -25,8 +25,8 @@ export default defineConfig({
         background_color: '#0f172a',
         display: 'standalone',
         orientation: 'any',
-        start_url: '/PokeCountTracker/',
-        scope: '/PokeCountTracker/',
+        start_url: '/',
+        scope: '/',
         icons: [
           {
             src: 'pwa-192x192.png',
@@ -55,11 +55,10 @@ export default defineConfig({
       workbox: {
         maximumFileSizeToCacheInBytes: 15 * 1024 * 1024,
         globPatterns: ['**/*.{js,css,html,ico,png,svg,webp,json}'],
-        navigateFallback: '/PokeCountTracker/index.html',
+        navigateFallback: '/index.html',
         navigateFallbackDenylist: [/^\/api/],
       },
     }),
   ],
-  base: '/PokeCountTracker/',
+  base: '/',
 })
-
