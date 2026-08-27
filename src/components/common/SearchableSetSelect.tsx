@@ -176,8 +176,9 @@ export function SearchableSetSelect({
           </span>
           <div className="min-w-0 flex-1 truncate">
             {selectedSet === 'ALL' ? (
-              <span className="font-semibold text-slate-700 dark:text-slate-300">
-                ทุกชุดการ์ด (All {sets.length} Sets)
+              <span className="font-semibold text-slate-700 dark:text-slate-300 truncate block">
+                <span className="xs:hidden">ทุกชุด ({sets.length})</span>
+                <span className="hidden xs:inline">ทุกชุดการ์ด ({sets.length})</span>
               </span>
             ) : selectedSetObj ? (
               <div className="flex items-center gap-1.5 truncate">

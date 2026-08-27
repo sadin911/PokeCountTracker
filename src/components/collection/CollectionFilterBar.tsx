@@ -121,7 +121,7 @@ export function CollectionFilterBar({
   ].filter(Boolean).length;
 
   return (
-    <div className="bg-white/95 dark:bg-slate-900/90 border-b border-slate-200 dark:border-slate-800/90 px-3 sm:px-8 py-2.5 sm:py-3 space-y-2 sm:space-y-2.5 shadow-sm dark:shadow-md transition-colors duration-200">
+    <div className="bg-white/95 dark:bg-slate-900/90 border-b border-slate-200 dark:border-slate-800/90 px-3 sm:px-8 py-2.5 sm:py-3 space-y-2 sm:space-y-2.5 shadow-sm dark:shadow-md transition-colors duration-200 overflow-x-hidden max-w-full">
       {/* Top Search & Set Selector Row */}
       <div className="flex flex-col lg:flex-row items-stretch lg:items-center gap-2 sm:gap-2.5">
         {/* Search Input Box */}
@@ -147,18 +147,18 @@ export function CollectionFilterBar({
         </div>
 
         {/* Set Selector & Outside Rarity Dropdown */}
-        <div className="flex items-center gap-1.5 sm:gap-2 w-full lg:w-auto">
+        <div className="flex items-center gap-1.5 sm:gap-2 w-full lg:w-auto min-w-0 max-w-full">
           <SearchableSetSelect
             sets={sets}
             selectedSet={selectedSet}
             onSelectSet={onSelectSet}
             accentColor="amber"
             showProgress={true}
-            className="flex-1 lg:w-80"
+            className="flex-1 min-w-0 lg:w-80"
           />
 
           {/* Compact Outside Rarity Dropdown */}
-          <div className="w-32 sm:w-44 shrink-0">
+          <div className="w-28 xs:w-32 sm:w-44 shrink-0 min-w-0">
             <select
               value={selectedRarity}
               onChange={(e) => onRarityChange(e.target.value)}
@@ -170,7 +170,7 @@ export function CollectionFilterBar({
               }`}
             >
               <option value="ALL" className="bg-white dark:bg-slate-900 text-slate-900 dark:text-slate-100 font-semibold">
-                ⭐ ความหายาก
+                ⭐ ทุกระดับ
               </option>
               {RARITY_CLASSES.filter((r) => r.id !== "ALL").map((r) => (
                 <option key={r.id} value={r.id} className="bg-white dark:bg-slate-900 text-slate-900 dark:text-slate-100 font-semibold">
