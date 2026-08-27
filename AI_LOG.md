@@ -107,3 +107,5 @@
 [2026-08-27 10:02] Major | Antigravity | Write | Custom Domain - configured poke.tcgcount.com (CNAME, vite root base, sitemap, metadata)
 [2026-08-27 10:08] Major | Antigravity | Command | git tag v2.14.1 & push - Custom Domain poke.tcgcount.com Production Release
 [2026-08-27 10:55] Major | Antigravity | Command | git tag v2.14.2 & push - Instant Force Redirect & Service Worker Cleanup Release
+[2026-08-27 11:38] Major | Antigravity | Fix | src/components/ - positioned Back to Top above BottomNav & safe area on mobile PWA (Collection & Deck)
+[2026-08-27 11:38] Major | Antigravity | Command | git tag v2.14.3 & push - Mobile PWA Back to Top Button Fix Release

@@ -77,6 +77,30 @@ export function DeckEditor({ deck, onBackToDecks }: Props) {
   const [selectedRarity, setSelectedRarity] = useState('ALL');
   const [selectedCategory, setSelectedCategory] = useState('ALL');
   const [catalogLimit, setCatalogLimit] = useState(ITEMS_PER_PAGE);
+  const [showBackToTop, setShowBackToTop] = useState(false);
+
+  // Track scrolling for Back to Top button
+  useEffect(() => {
+    const handleScroll = () => {
+      const scrollPos =
+        window.scrollY || document.documentElement.scrollTop || document.body.scrollTop || 0;
+      setShowBackToTop(scrollPos > 200);
+    };
+
+    window.addEventListener('scroll', handleScroll, { passive: true });
+    document.addEventListener('scroll', handleScroll, { passive: true });
+
+    return () => {
+      window.removeEventListener('scroll', handleScroll);
+      document.removeEventListener('scroll', handleScroll);
+    };
+  }, []);
+
+  const scrollToTop = () => {
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+    document.documentElement.scrollTo({ top: 0, behavior: 'smooth' });
+    document.body.scrollTo({ top: 0, behavior: 'smooth' });
+  };
 
   // Sets dropdown list with Regulation metadata
   const setsList = useMemo(() => {
@@ -798,6 +822,19 @@ export function DeckEditor({ deck, onBackToDecks }: Props) {
           deckId={deck.id}
           onClose={() => setPreviewCard(null)}
         />
+      )}
+
+      {/* Floating Back to Top Button */}
+      {showBackToTop && (
+        <button
+          type="button"
+          onClick={scrollToTop}
+          className="fixed bottom-[calc(4.75rem+env(safe-area-inset-bottom,0px))] md:bottom-6 right-4 sm:right-6 z-50 px-3.5 py-2.5 sm:px-4 sm:py-2.5 rounded-full bg-slate-900/95 hover:bg-indigo-600 text-indigo-300 hover:text-white font-black text-xs sm:text-sm border border-indigo-500/50 shadow-[0_8px_30px_rgba(0,0,0,0.8)] backdrop-blur-md transition-all duration-300 hover:scale-110 active:scale-95 flex items-center gap-1.5 sm:gap-2 group ring-1 ring-indigo-400/30"
+          title="เลื่อนกลับขึ้นบนสุด (Back to Top)"
+        >
+          <span className="text-base group-hover:-translate-y-0.5 transition-transform font-black">↑</span>
+          <span className="font-extrabold text-xs sm:text-sm">Back to Top</span>
+        </button>
       )}
 
     </div>

@@ -63,7 +63,7 @@ export function CollectionTracker() {
     const handleScroll = () => {
       const scrollPos =
         window.scrollY || document.documentElement.scrollTop || document.body.scrollTop || 0;
-      setShowBackToTop(scrollPos > 300);
+      setShowBackToTop(scrollPos > 200);
     };
 
     window.addEventListener('scroll', handleScroll, { passive: true });
@@ -394,11 +394,11 @@ export function CollectionTracker() {
         <button
           type="button"
           onClick={scrollToTop}
-          className="fixed bottom-6 right-6 z-40 px-4 py-2.5 rounded-full bg-slate-900/95 hover:bg-amber-500 text-amber-300 hover:text-slate-950 font-black text-xs sm:text-sm border border-amber-500/40 shadow-2xl backdrop-blur-md transition-all duration-300 hover:scale-110 active:scale-95 flex items-center gap-2 group ring-1 ring-white/15"
-          title="Scroll back to top"
+          className="fixed bottom-[calc(4.75rem+env(safe-area-inset-bottom,0px))] md:bottom-6 right-4 sm:right-6 z-50 px-3.5 py-2.5 sm:px-4 sm:py-2.5 rounded-full bg-slate-900/95 hover:bg-amber-500 text-amber-300 hover:text-slate-950 font-black text-xs sm:text-sm border border-amber-500/50 shadow-[0_8px_30px_rgba(0,0,0,0.8)] backdrop-blur-md transition-all duration-300 hover:scale-110 active:scale-95 flex items-center gap-1.5 sm:gap-2 group ring-1 ring-amber-400/30"
+          title="เลื่อนกลับขึ้นบนสุด (Back to Top)"
         >
           <span className="text-base group-hover:-translate-y-0.5 transition-transform font-black">↑</span>
-          <span>Back to Top</span>
+          <span className="font-extrabold text-xs sm:text-sm">Back to Top</span>
         </button>
       )}
     </div>
