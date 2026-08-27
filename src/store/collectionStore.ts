@@ -104,7 +104,7 @@ export const DEFAULT_COLLECTION_FILTERS: CollectionFilters = {
   selectedRarity: 'ALL',
   sortBy: 'number',
   sortOrder: 'asc',
-  showFullColor: false,
+  showFullColor: true,
 };
 
 function loadInitialFilters(): CollectionFilters {

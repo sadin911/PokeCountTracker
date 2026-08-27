@@ -141,3 +141,6 @@
 [2026-08-27 17:25] Major | Antigravity | Feature | src/ - removed static rainbow bars; upgraded to smooth dynamic specular sheen & 60fps physics loop
 [2026-08-27 17:25] Major | Antigravity | Command | npx playwright test - verified 34 E2E tests passed (100% green)
 [2026-08-27 17:25] Major | Antigravity | Command | git push origin main - Deploying clean specular sheen & smooth framerate-controlled 3D tilt
+[2026-08-27 17:33] Major | Antigravity | Feature | src/store/collectionStore.ts - set showFullColor=true (Vivid Color mode) as default
+[2026-08-27 17:33] Major | Antigravity | Command | npx playwright test - verified 34 E2E tests passed (100% green with pull-to-refresh & color mode)
+[2026-08-27 17:33] Major | Antigravity | Command | git push origin main - Deploying Default Color Mode & Pull-To-Refresh Filter Reset
