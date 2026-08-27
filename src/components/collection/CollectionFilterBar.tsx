@@ -121,7 +121,7 @@ export function CollectionFilterBar({
   ].filter(Boolean).length;
 
   return (
-    <div className="bg-white/95 dark:bg-slate-900/90 border-b border-slate-200 dark:border-slate-800/90 px-3 sm:px-8 py-2.5 sm:py-3 space-y-2 sm:space-y-2.5 shadow-sm dark:shadow-md transition-colors duration-200 overflow-x-hidden max-w-full">
+    <div className="relative z-20 bg-white/95 dark:bg-slate-900/90 border-b border-slate-200 dark:border-slate-800/90 px-3 sm:px-8 py-2.5 sm:py-3 space-y-2 sm:space-y-2.5 shadow-sm dark:shadow-md transition-colors duration-200">
       {/* Top Search & Set Selector Row */}
       <div className="flex flex-col lg:flex-row items-stretch lg:items-center gap-2 sm:gap-2.5">
         {/* Search Input Box */}

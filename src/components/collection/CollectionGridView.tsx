@@ -90,7 +90,7 @@ export function CollectionGridView({ cards, currentSetProgress, showFullColor, f
   };
 
   return (
-    <div className="flex-1 p-4 sm:p-6 lg:p-8 w-full space-y-4">
+    <div className="relative z-0 flex-1 p-4 sm:p-6 lg:p-8 w-full space-y-4">
       {/* Set Progress Header (If specific set is selected) */}
       {currentSetProgress && (
         <div className="bg-white dark:bg-gradient-to-r dark:from-slate-900 dark:via-slate-800/95 dark:to-slate-900 border border-slate-200 dark:border-slate-700/80 hover:border-purple-300 dark:hover:border-yellow-500/40 rounded-2xl p-4 sm:p-5 shadow-md dark:shadow-2xl flex flex-col md:flex-row items-center justify-between gap-4 transition-all">

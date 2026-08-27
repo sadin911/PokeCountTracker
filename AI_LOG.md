@@ -123,3 +123,4 @@
 [2026-08-27 12:50] Major | Antigravity | Write | src/ - added mobile PWA Pull-to-Refresh & filter reset + fixed top safe-area insets
 [2026-08-27 14:58] Major | Antigravity | Commit | PokeCountTracker mobile header and filter layout cleanup
 [2026-08-27 15:10] Major | Antigravity | Feature | Move Rarity filter to main toolbar as compact dropdown
+[2026-08-27 15:21] Major | Antigravity | Fix | Fixed mobile horizontal overflow in Set & Rarity filter bar

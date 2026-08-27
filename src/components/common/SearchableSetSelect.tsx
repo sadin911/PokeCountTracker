@@ -152,7 +152,7 @@ export function SearchableSetSelect({
   const isAmber = accentColor === 'amber';
 
   return (
-    <div ref={containerRef} className={`relative ${className}`}>
+    <div ref={containerRef} className={`relative ${isOpen ? 'z-50' : 'z-10'} ${className}`}>
       {/* Trigger Button */}
       <button
         type="button"
