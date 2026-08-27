@@ -125,8 +125,8 @@ function App() {
   return (
     <div className={`w-full ${
       gameMode === 'pokemon'
-        ? 'h-dvh h-screen overflow-hidden flex flex-col pb-16 md:pb-0'
-        : 'min-h-screen pb-16 md:pb-0'
+        ? 'h-dvh h-screen overflow-hidden flex flex-col pt-[env(safe-area-inset-top,0px)] pb-[calc(4.25rem+env(safe-area-inset-bottom,0px))] md:pb-0'
+        : 'min-h-screen pb-[calc(4.5rem+env(safe-area-inset-bottom,0px))] md:pb-0'
     }`}>
       {gameMode === 'deck' && <DeckManager />}
       {gameMode === 'collection' && <CollectionTracker />}

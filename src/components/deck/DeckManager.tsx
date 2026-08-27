@@ -9,6 +9,7 @@ import { DeckImportExportModal } from './DeckImportExportModal';
 import { DeckCoverPickerModal } from './DeckCoverPickerModal';
 import { calculateMissingCards } from '../../utils/deckCalculator';
 import { resolveCardImageUrl, handleCardImageError } from '../../utils/cardImage';
+import { PullToRefresh } from '../common/PullToRefresh';
 import pokemonCardData from '../../data/pokemonNames.json';
 
 export function DeckManager() {
@@ -63,14 +64,21 @@ export function DeckManager() {
   const missingDeck = selectedMissingDeckId ? decks[selectedMissingDeckId] : null;
   const coverDeck = selectedCoverDeckId ? decks[selectedCoverDeckId] : null;
 
+  const handleRefresh = async () => {
+    if (user?.uid) {
+      await loadUserDecksFromCloud(user.uid);
+    }
+  };
+
   return (
-    <div className="min-h-screen bg-slate-100 dark:bg-slate-950 text-slate-900 dark:text-slate-100 flex flex-col font-sans selection:bg-blue-600 selection:text-white transition-colors duration-200">
-      {/* Top Header */}
-      <DeckHeader
-        isEditing={!!editingDeck}
-        onBackToDecks={() => setEditingDeckId(null)}
-        onOpenImportExport={() => setShowImportExport(true)}
-      />
+    <PullToRefresh onRefresh={handleRefresh} disabled={!!editingDeck}>
+      <div className="min-h-screen bg-slate-100 dark:bg-slate-950 text-slate-900 dark:text-slate-100 flex flex-col font-sans selection:bg-blue-600 selection:text-white transition-colors duration-200">
+        {/* Top Header */}
+        <DeckHeader
+          isEditing={!!editingDeck}
+          onBackToDecks={() => setEditingDeckId(null)}
+          onOpenImportExport={() => setShowImportExport(true)}
+        />
 
       {/* Main Content: If editing, show Editor; otherwise show Deck List */}
       {editingDeck ? (
@@ -358,6 +366,7 @@ export function DeckManager() {
           activeDeckId={activeDeckId}
         />
       )}
-    </div>
+      </div>
+    </PullToRefresh>
   );
 }

@@ -12,6 +12,12 @@
     --pokeball-black: #0F172A;
     --pokeball-yellow: #FFCB05;
     --pokeball-blue: #2A75BB;
+
+    /* Mobile Safe Area Insets (iOS Notch / Dynamic Island / Navigation Bar) */
+    --sat: env(safe-area-inset-top, 0px);
+    --sab: env(safe-area-inset-bottom, 0px);
+    --sal: env(safe-area-inset-left, 0px);
+    --sar: env(safe-area-inset-right, 0px);
   }
 
   html.dark {
@@ -27,6 +33,7 @@
     width: 100%;
     margin: 0;
     padding: 0;
+    overscroll-behavior-y: contain;
   }
 
   body {

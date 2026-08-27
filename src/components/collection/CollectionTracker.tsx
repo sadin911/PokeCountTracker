@@ -12,6 +12,7 @@ import {
   STANDARD_REGULATION_MARKS,
 } from '../../types/collection';
 
+import { PullToRefresh } from '../common/PullToRefresh';
 import { getCardRarityClass } from '../../utils/rarity';
 import { createCardMatcher } from '../../utils/searchHelpers';
 import { sortSetsByThaiRelease } from '../../utils/setOrder';
@@ -348,60 +349,79 @@ export function CollectionTracker() {
     }
   }, [selectedCategory]);
 
+  const handleRefresh = async () => {
+    // 1. Reset all active filters
+    resetFilters();
+    trackEvent('filter', 'pull_to_refresh_reset');
+
+    // 2. Reload user data from cloud if logged in
+    if (user?.uid) {
+      await loadUserFromCloud(user.uid);
+    }
+
+    // 3. Fetch latest community stats
+    await fetchCommunityStats();
+
+    // 4. Smooth scroll to top
+    scrollToTop();
+  };
+
   return (
-    <div className="min-h-screen bg-slate-100 dark:bg-slate-950 text-slate-900 dark:text-slate-100 flex flex-col font-sans selection:bg-red-500 selection:text-white transition-colors duration-200">
-      {/* Top Header */}
-      <CollectionHeader stats={overallStats} />
+    <PullToRefresh onRefresh={handleRefresh}>
+      <div className="min-h-screen bg-slate-100 dark:bg-slate-950 text-slate-900 dark:text-slate-100 flex flex-col font-sans selection:bg-red-500 selection:text-white transition-colors duration-200">
+        {/* Top Header */}
+        <CollectionHeader stats={overallStats} />
 
-      {/* Filter and Search Bar */}
-      <CollectionFilterBar
-        sets={setsList}
-        selectedSet={selectedSet}
-        onSelectSet={(val) => setFilters({ selectedSet: val })}
-        selectedRegulation={selectedRegulation}
-        onRegulationChange={(val) => setFilters({ selectedRegulation: val })}
-        statusFilter={statusFilter}
-        onStatusFilterChange={(val) => setFilters({ statusFilter: val })}
-        search={search}
-        onSearchChange={(val) => setFilters({ search: val })}
-        selectedType={selectedType}
-        onTypeChange={(val) => setFilters({ selectedType: val })}
-        selectedCategory={selectedCategory}
-        onCategoryChange={(val) => setFilters({ selectedCategory: val })}
-        selectedStage={selectedStage}
-        onStageChange={(val) => setFilters({ selectedStage: val })}
-        selectedRarity={selectedRarity}
-        onRarityChange={(val) => setFilters({ selectedRarity: val })}
-        sortBy={sortBy}
-        sortOrder={sortOrder}
-        onSortChange={(sb, so) => setFilters({ sortBy: sb, sortOrder: so })}
-        showFullColor={showFullColor}
-        onToggleFullColor={() => setFilters({ showFullColor: !showFullColor })}
-        onResetFilters={resetFilters}
-        isFiltered={isFiltered}
-        totalFiltered={filteredCards.length}
-      />
+        {/* Filter and Search Bar */}
+        <CollectionFilterBar
+          sets={setsList}
+          selectedSet={selectedSet}
+          onSelectSet={(val) => setFilters({ selectedSet: val })}
+          selectedRegulation={selectedRegulation}
+          onRegulationChange={(val) => setFilters({ selectedRegulation: val })}
+          statusFilter={statusFilter}
+          onStatusFilterChange={(val) => setFilters({ statusFilter: val })}
+          search={search}
+          onSearchChange={(val) => setFilters({ search: val })}
+          selectedType={selectedType}
+          onTypeChange={(val) => setFilters({ selectedType: val })}
+          selectedCategory={selectedCategory}
+          onCategoryChange={(val) => setFilters({ selectedCategory: val })}
+          selectedStage={selectedStage}
+          onStageChange={(val) => setFilters({ selectedStage: val })}
+          selectedRarity={selectedRarity}
+          onRarityChange={(val) => setFilters({ selectedRarity: val })}
+          sortBy={sortBy}
+          sortOrder={sortOrder}
+          onSortChange={(sb, so) => setFilters({ sortBy: sb, sortOrder: so })}
+          showFullColor={showFullColor}
+          onToggleFullColor={() => setFilters({ showFullColor: !showFullColor })}
+          onResetFilters={resetFilters}
+          isFiltered={isFiltered}
+          totalFiltered={filteredCards.length}
+        />
 
-      {/* Main Binder Grid */}
-      <CollectionGridView
-        cards={filteredCards}
-        currentSetProgress={currentSetProgress}
-        showFullColor={showFullColor}
-        filterKey={filterKey}
-      />
+        {/* Main Binder Grid */}
+        <CollectionGridView
+          cards={filteredCards}
+          currentSetProgress={currentSetProgress}
+          showFullColor={showFullColor}
+          filterKey={filterKey}
+        />
 
-      {/* Floating Back to Top Button */}
-      {showBackToTop && (
-        <button
-          type="button"
-          onClick={scrollToTop}
-          className="fixed bottom-[calc(4.75rem+env(safe-area-inset-bottom,0px))] md:bottom-6 right-4 sm:right-6 z-50 px-3.5 py-2.5 sm:px-4 sm:py-2.5 rounded-full bg-slate-900/95 hover:bg-amber-500 text-amber-300 hover:text-slate-950 font-black text-xs sm:text-sm border border-amber-500/50 shadow-[0_8px_30px_rgba(0,0,0,0.8)] backdrop-blur-md transition-all duration-300 hover:scale-110 active:scale-95 flex items-center gap-1.5 sm:gap-2 group ring-1 ring-amber-400/30"
-          title="เลื่อนกลับขึ้นบนสุด (Back to Top)"
-        >
-          <span className="text-base group-hover:-translate-y-0.5 transition-transform font-black">↑</span>
-          <span className="font-extrabold text-xs sm:text-sm">Back to Top</span>
-        </button>
-      )}
-    </div>
+        {/* Floating Back to Top Button */}
+        {showBackToTop && (
+          <button
+            type="button"
+            onClick={scrollToTop}
+            className="fixed bottom-[calc(4.75rem+env(safe-area-inset-bottom,0px))] md:bottom-6 right-4 sm:right-6 z-50 px-3.5 py-2.5 sm:px-4 sm:py-2.5 rounded-full bg-slate-900/95 hover:bg-amber-500 text-amber-300 hover:text-slate-950 font-black text-xs sm:text-sm border border-amber-500/50 shadow-[0_8px_30px_rgba(0,0,0,0.8)] backdrop-blur-md transition-all duration-300 hover:scale-110 active:scale-95 flex items-center gap-1.5 sm:gap-2 group ring-1 ring-amber-400/30"
+            title="เลื่อนกลับขึ้นบนสุด (Back to Top)"
+          >
+            <span className="text-base group-hover:-translate-y-0.5 transition-transform font-black">↑</span>
+            <span className="font-extrabold text-xs sm:text-sm">Back to Top</span>
+          </button>
+        )}
+      </div>
+    </PullToRefresh>
   );
 }

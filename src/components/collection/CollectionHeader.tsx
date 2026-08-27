@@ -32,7 +32,7 @@ export function CollectionHeader({ stats }: Props) {
   const activeProfile = profiles[activeProfileId];
 
   return (
-    <header className="sticky top-0 z-30 bg-white/95 dark:bg-slate-900/95 backdrop-blur-md border-b border-slate-200 dark:border-slate-700/80 px-3 sm:px-8 py-2.5 sm:py-3 shadow-md dark:shadow-2xl transition-colors duration-200">
+    <header className="sticky top-0 z-30 bg-white/95 dark:bg-slate-900/95 backdrop-blur-md border-b border-slate-200 dark:border-slate-700/80 px-3 sm:px-8 pt-[max(0.625rem,env(safe-area-inset-top,0px))] pb-2.5 sm:py-3 shadow-md dark:shadow-2xl transition-colors duration-200">
       <div className="w-full flex flex-col md:flex-row items-center justify-between gap-2.5 sm:gap-3">
         {/* Left: App Branding & Desktop Navigation Bar */}
         <div className="flex items-center justify-between w-full md:w-auto gap-3">

@@ -31,6 +31,12 @@ function applyThemeToDOM(resolved: 'light' | 'dark') {
     root.setAttribute('data-theme', 'light');
     root.style.colorScheme = 'light';
   }
+
+  // Sync meta theme-color for mobile PWA status bar
+  const metaThemeColor = document.querySelector('meta[name="theme-color"]');
+  if (metaThemeColor) {
+    metaThemeColor.setAttribute('content', resolved === 'dark' ? '#0f172a' : '#f8fafc');
+  }
 }
 
 export const useThemeStore = create<ThemeState>((set, get) => ({
