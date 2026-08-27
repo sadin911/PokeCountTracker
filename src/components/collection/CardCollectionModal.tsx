@@ -6,7 +6,7 @@ import { useDeckStore } from '../../store/deckStore';
 import { useCommunityStore } from '../../store/communityStore';
 import { resolveCardImageUrl, handleCardImageError } from '../../utils/cardImage';
 import { getEnglishCardName } from '../../utils/searchHelpers';
-import { isCardFoil, foilPulseDelay } from '../../utils/cardFoil';
+import { isCardFoil } from '../../utils/cardFoil';
 import { useFoilTilt } from '../../hooks/useFoilTilt';
 import { EvolutionChainSection } from '../pokemon/EvolutionChainSection';
 import { CardImagePreviewModal } from '../pokemon/CardImagePreviewModal';
@@ -148,7 +148,6 @@ export function CardCollectionModal({ card: initialCard, onClose, deckId }: Prop
 
   const isFoil = useMemo(() => isCardFoil(activeCard, variants), [activeCard, variants]);
   const tilt = useFoilTilt<HTMLDivElement>(isFoil, { gyro: true });
-  const pulseDelay = useMemo(() => foilPulseDelay(activeCard.id), [activeCard.id]);
 
   const applicableVariants = useMemo(() => {
     return getApplicableVariants(activeCard, variants);
@@ -180,7 +179,7 @@ export function CardCollectionModal({ card: initialCard, onClose, deckId }: Prop
             onTouchMove={isFoil ? tilt.onTouchMove : undefined}
             onTouchEnd={isFoil ? tilt.onTouchEnd : undefined}
             onClick={() => setShowZoom(true)}
-            className={`relative group max-w-[260px] w-full aspect-[2.5/3.5] rounded-2xl overflow-hidden shadow-xl dark:shadow-2xl dark:shadow-black/80 ring-1 cursor-zoom-in transition-all duration-200 ${
+            className={`relative group max-w-[260px] w-full aspect-[2.5/3.5] rounded-2xl overflow-hidden shadow-xl dark:shadow-2xl dark:shadow-black/80 ring-1 cursor-zoom-in transition-all duration-200 select-none touch-none ${
               isFoil
                 ? 'foil-3d ring-amber-400/80 hover:ring-amber-300 hover:shadow-amber-500/20'
                 : 'ring-slate-300 dark:ring-slate-700/60 hover:ring-2 hover:ring-purple-400 dark:hover:ring-amber-400/80 hover:shadow-purple-500/10'
@@ -190,18 +189,12 @@ export function CardCollectionModal({ card: initialCard, onClose, deckId }: Prop
             <img
               src={resolveCardImageUrl(activeCard.imageUrlHigh || activeCard.imageUrl, true)}
               alt={activeCard.name}
-              className="w-full h-full object-cover transition-all duration-300 group-hover:scale-[1.02]"
+              className="w-full h-full object-cover transition-all duration-300 group-hover:scale-[1.02] pointer-events-none"
               onError={(e) => handleCardImageError(e, activeCard.imageUrl, activeCard.officialImageUrl)}
             />
 
             {/* Holographic / Foil Shimmer Overlay */}
-            {isFoil && (
-              <div
-                className="foil-holo"
-                aria-hidden="true"
-                style={{ animationDelay: `${pulseDelay}s` }}
-              />
-            )}
+            {isFoil && <div className="foil-holo" aria-hidden="true" />}
 
             {totalCount > 0 && (
               <div className="absolute top-2.5 right-2.5 px-3 py-1 rounded-full bg-gradient-to-r from-amber-500 to-amber-600 text-slate-950 font-black text-xs shadow-xl shadow-amber-500/40 flex items-center gap-1 z-10 pointer-events-none">

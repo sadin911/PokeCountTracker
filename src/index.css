@@ -3,13 +3,8 @@
 @custom-variant dark (&:where(.dark, .dark *));
 
 /* ==========================================================================
-   3D Holographic / Foil Card Shimmer Effects (PokeCountTracker & Lorcana Style)
+   3D Foil & Dynamic Specular Sheen (Clean, Smooth, Non-flickering)
    ========================================================================== */
-
-@keyframes foil-holo-pulse {
-  0%, 100% { opacity: 0.6; }
-  50%      { opacity: 1; }
-}
 
 @utility foil-3d {
   --foil-rx: 0deg;
@@ -19,22 +14,18 @@
   --foil-sx: 0px;
   --foil-sy: 8px;
   --foil-on: 0;
-  --foil-dur: 420ms;
 
-  transform-style: preserve-3d;
-  /* translateZ keeps the card on its own compositor layer, so tracking the
-     input never triggers layout. */
-  transform: perspective(900px) rotateX(var(--foil-rx)) rotateY(var(--foil-ry))
-    scale(calc(1 + 0.02 * var(--foil-on))) translateZ(0);
-  transition:
-    transform var(--foil-dur) cubic-bezier(0.16, 1, 0.3, 1),
-    box-shadow var(--foil-dur) ease-out;
-  /* Shadow leans opposite the tilt. Kept subtle: with a shallow rotation a heavy
-     shadow is the thing that would look overdone. */
+  transform-style: flat;
+  -webkit-transform-style: flat;
+  isolation: isolate;
+  backface-visibility: hidden;
+  -webkit-backface-visibility: hidden;
+  will-change: transform;
+  transform: perspective(1000px) rotateX(var(--foil-rx)) rotateY(var(--foil-ry)) translateZ(0);
   box-shadow:
-    var(--foil-sx) var(--foil-sy) calc(14px + 8px * var(--foil-on))
-      rgba(0, 0, 0, calc(0.28 + 0.2 * var(--foil-on))),
-    0 0 0 1px rgba(255, 203, 5, calc(0.3 + 0.35 * var(--foil-on)));
+    var(--foil-sx) var(--foil-sy) calc(16px + 10px * var(--foil-on))
+      rgba(0, 0, 0, calc(0.32 + 0.18 * var(--foil-on))),
+    0 0 0 1px rgba(255, 203, 5, calc(0.2 + 0.3 * var(--foil-on)));
 }
 
 @utility foil-holo {
@@ -43,36 +34,24 @@
   overflow: hidden;
   border-radius: inherit;
   pointer-events: none;
-  mix-blend-mode: color-dodge;
-  opacity: calc(0.22 + 0.4 * var(--foil-on));
-  transition: opacity var(--foil-dur) ease-out;
+  mix-blend-mode: screen;
+  isolation: isolate;
+  opacity: calc(0.1 + 0.45 * var(--foil-on));
 
   &::before {
     content: '';
     position: absolute;
-    inset: -25%;
-    background-image:
-      repeating-linear-gradient(
-        112deg,
-        rgba(255, 214, 148, 0.3) 0%,
-        rgba(150, 226, 255, 0.26) 7%,
-        rgba(206, 164, 255, 0.24) 14%,
-        rgba(255, 236, 176, 0.3) 21%,
-        rgba(255, 214, 148, 0.3) 28%
-      ),
-      radial-gradient(58% 42% at 24% 14%, rgba(223, 199, 146, 0.48), transparent 70%),
-      radial-gradient(52% 44% at 78% 78%, rgba(146, 206, 232, 0.4), transparent 70%);
-    background-size: 240% 240%, auto, auto;
-    background-position: var(--foil-mx) var(--foil-my);
-    transition: background-position var(--foil-dur) ease-out;
-    animation: foil-holo-pulse 9s ease-in-out infinite;
-    animation-delay: inherit;
-  }
-
-  @media (prefers-reduced-motion: reduce) {
-    &::before {
-      animation: none;
-    }
+    inset: -30%;
+    /* Smooth, dynamic specular light flare that glides across card without static stripes */
+    background:
+      radial-gradient(
+        circle 220px at var(--foil-mx) var(--foil-my),
+        rgba(255, 255, 255, 0.45) 0%,
+        rgba(255, 235, 170, 0.25) 30%,
+        rgba(170, 225, 255, 0.15) 55%,
+        transparent 75%
+      );
+    will-change: background;
   }
 }
 

@@ -2,7 +2,7 @@ import { useEffect, useState, useMemo } from 'react';
 import { createPortal } from 'react-dom';
 import { motion, AnimatePresence } from 'framer-motion';
 import { resolveCardImageUrl, handleCardImageError } from '../../utils/cardImage';
-import { isCardFoil, foilPulseDelay } from '../../utils/cardFoil';
+import { isCardFoil } from '../../utils/cardFoil';
 import { useFoilTilt } from '../../hooks/useFoilTilt';
 import { useCommunityStore } from '../../store/communityStore';
 
@@ -38,7 +38,6 @@ export function CardImagePreviewModal({
     [cardId, cardName, rarityCode]
   );
   const tilt = useFoilTilt<HTMLDivElement>(isFoil, { gyro: true });
-  const pulseDelay = useMemo(() => foilPulseDelay(cardId || cardName || 'foil'), [cardId, cardName]);
 
   useEffect(() => {
     const handleKeyDown = (e: KeyboardEvent) => {
@@ -120,7 +119,7 @@ export function CardImagePreviewModal({
               onTouchMove={isFoil ? tilt.onTouchMove : undefined}
               onTouchEnd={isFoil ? tilt.onTouchEnd : undefined}
               onClick={() => setIsZoomed((prev) => !prev)}
-              className={`relative w-full ${
+              className={`relative w-full select-none touch-none ${
                 isZoomed
                   ? 'max-w-[460px] sm:max-w-[560px] md:max-w-[620px]'
                   : 'max-w-[340px] sm:max-w-[420px] md:max-w-[460px]'
@@ -133,19 +132,13 @@ export function CardImagePreviewModal({
                 src={resolvedUrl}
                 alt={cardName || 'Pokemon Card'}
                 onError={(e) => handleCardImageError(e, imageUrl, officialImageUrl)}
-                className={`w-full h-full object-contain transition-transform duration-300 ${
+                className={`w-full h-full object-contain transition-transform duration-300 pointer-events-none ${
                   isZoomed ? 'scale-105' : 'group-hover:scale-[1.02]'
                 }`}
               />
 
-              {/* 3D Holographic / Foil Shimmer Layer */}
-              {isFoil && (
-                <div
-                  className="foil-holo"
-                  aria-hidden="true"
-                  style={{ animationDelay: `${pulseDelay}s` }}
-                />
-              )}
+              {/* 3D Dynamic Specular Sheen Layer */}
+              {isFoil && <div className="foil-holo" aria-hidden="true" />}
 
               {/* Zoom hint badge on hover */}
               <div className="absolute bottom-3 right-3 px-3 py-1.5 rounded-xl bg-black/75 hover:bg-black/90 backdrop-blur-md border border-white/20 text-white text-xs font-bold shadow-lg flex items-center gap-1.5 opacity-85 group-hover:opacity-100 transition-opacity pointer-events-none">
