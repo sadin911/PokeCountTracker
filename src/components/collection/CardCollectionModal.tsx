@@ -2,6 +2,7 @@ import { useState, useMemo, useEffect } from 'react';
 import { createPortal } from 'react-dom';
 import { motion } from 'framer-motion';
 import { useCollectionStore } from '../../store/collectionStore';
+import { useDeckStore } from '../../store/deckStore';
 import { useCommunityStore } from '../../store/communityStore';
 import { resolveCardImageUrl, handleCardImageError } from '../../utils/cardImage';
 import { getEnglishCardName } from '../../utils/searchHelpers';
@@ -12,6 +13,7 @@ import type { CardVariantKey, CardCondition } from '../../types/collection';
 interface Props {
   card: any;
   onClose: () => void;
+  deckId?: string;
 }
 
 interface VariantDef {
@@ -110,7 +112,7 @@ function getApplicableVariants(card: any, variants: Record<string, number> | Par
   return list;
 }
 
-export function CardCollectionModal({ card: initialCard, onClose }: Props) {
+export function CardCollectionModal({ card: initialCard, onClose, deckId }: Props) {
   const [activeCard, setActiveCard] = useState(initialCard);
   const [showZoom, setShowZoom] = useState(false);
 
@@ -126,6 +128,11 @@ export function CardCollectionModal({ card: initialCard, onClose }: Props) {
   const toggleWishlist = useCollectionStore((s) => s.toggleWishlist);
   const setCardDetails = useCollectionStore((s) => s.setCardDetails);
   const clearCard = useCollectionStore((s) => s.clearCard);
+
+  // Deck Store Integration (if opened within a Deck context)
+  const deck = useDeckStore((s) => (deckId ? s.decks[deckId] : undefined));
+  const addCardToDeck = useDeckStore((s) => s.addCardToDeck);
+  const removeCardFromDeck = useDeckStore((s) => s.removeCardFromDeck);
 
   const getCardStats = useCommunityStore((s) => s.getCardStats);
   const communityStats = getCardStats(activeCard.id);
@@ -265,6 +272,61 @@ export function CardCollectionModal({ card: initialCard, onClose }: Props) {
                 </button>
               </div>
             </div>
+
+            {/* Deck Context Integration (If opened from Deck Editor) */}
+            {deck && (
+              <div className="p-3.5 rounded-2xl bg-gradient-to-r from-indigo-950/90 to-purple-950/80 border border-indigo-500/40 shadow-lg flex items-center justify-between gap-3">
+                <div className="flex items-center gap-3 min-w-0">
+                  <div className="w-10 h-10 rounded-xl bg-indigo-600/30 border border-indigo-500/50 flex items-center justify-center text-xl shrink-0">
+                    🃏
+                  </div>
+                  <div className="min-w-0">
+                    <div className="text-[10px] text-indigo-300 font-bold uppercase tracking-wider truncate">
+                      ใส่ในเด็ค: {deck.name}
+                    </div>
+                    <div className="text-xs font-black text-white mt-0.5">
+                      {(deck.cards[activeCard.id]?.count || 0) > 0 ? (
+                        <span className="text-emerald-300">
+                          ในเด็คนี้มี {deck.cards[activeCard.id]?.count} ใบ
+                          {totalCount < (deck.cards[activeCard.id]?.count || 0) ? (
+                            <span className="ml-1.5 text-rose-400 font-bold text-[11px]">
+                              (⚠️ มีในสมุด {totalCount} ใบ ขาด {(deck.cards[activeCard.id]?.count || 0) - totalCount} ใบ)
+                            </span>
+                          ) : (
+                            <span className="ml-1.5 text-emerald-400 font-bold text-[11px]">(✅ มีในสมุดพอแล้ว)</span>
+                          )}
+                        </span>
+                      ) : (
+                        <span className="text-slate-400">ยังไม่ได้ใส่การ์ดนี้ในเด็ค</span>
+                      )}
+                    </div>
+                  </div>
+                </div>
+
+                <div className="flex items-center gap-1.5 shrink-0">
+                  <button
+                    type="button"
+                    onClick={() => removeCardFromDeck(deck.id, activeCard.id)}
+                    disabled={!deck.cards[activeCard.id]?.count}
+                    className="w-8 h-8 rounded-xl bg-slate-800 hover:bg-slate-700 disabled:opacity-30 text-white font-black text-sm flex items-center justify-center transition-all shadow-inner active:scale-95 cursor-pointer"
+                    title="ถอดออกจากเด็ค (-1)"
+                  >
+                    −
+                  </button>
+                  <span className="w-7 text-center font-mono font-black text-base text-indigo-300">
+                    {deck.cards[activeCard.id]?.count || 0}
+                  </span>
+                  <button
+                    type="button"
+                    onClick={() => addCardToDeck(deck.id, activeCard.id, 1)}
+                    className="px-3 py-1.5 rounded-xl bg-gradient-to-r from-indigo-500 to-purple-600 hover:from-indigo-400 hover:to-purple-500 active:scale-95 text-white font-black text-xs shadow-md shadow-indigo-500/30 flex items-center gap-1 transition-all cursor-pointer"
+                    title="เพิ่มเข้าเด็ค (+1)"
+                  >
+                    <span>+ ใส่เด็ค</span>
+                  </button>
+                </div>
+              </div>
+            )}
 
             {/* Community Ownership Stats Section */}
             {communityStats.totalUsers > 0 && (

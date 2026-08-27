@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import { ENERGY_TYPES } from '../../constants/energyTypes';
 import type { CollectionStatusFilter, CollectionSortBy, SortOrder } from '../../types/collection';
+import { REGULATION_SERIES_OPTIONS } from '../../types/collection';
 import { SearchableSetSelect, type SetOption } from '../common/SearchableSetSelect';
 
 interface Props {
@@ -8,8 +9,12 @@ interface Props {
   selectedSet: string;
   onSelectSet: (setId: string) => void;
 
+  selectedRegulation: string;
+  onRegulationChange: (reg: string) => void;
+
   statusFilter: CollectionStatusFilter;
   onStatusFilterChange: (status: CollectionStatusFilter) => void;
+
 
   search: string;
   onSearchChange: (val: string) => void;
@@ -91,6 +96,8 @@ export function CollectionFilterBar({
   sets,
   selectedSet,
   onSelectSet,
+  selectedRegulation,
+  onRegulationChange,
   statusFilter,
   onStatusFilterChange,
   search,
@@ -116,6 +123,7 @@ export function CollectionFilterBar({
 
   // Count active non-default filters
   const activeFilterCount = [
+    selectedRegulation !== 'ALL',
     selectedRarity !== 'ALL',
     selectedCategory !== 'ALL',
     selectedStage !== 'ALL',
@@ -242,7 +250,59 @@ export function CollectionFilterBar({
         })}
       </div>
 
-      {/* Row 3: Quick Rarity Chips Bar (Visible on Mobile & Desktop for 1-Tap Filter) */}
+      {/* Row 3: Regulation Series Quick Filter Chips Bar */}
+      <div className="flex items-center gap-1.5 overflow-x-auto pb-1 scrollbar-none">
+        <span className="text-[11px] text-slate-400 font-bold whitespace-nowrap shrink-0">
+          ซีรีส์ Regulation:
+        </span>
+        {REGULATION_SERIES_OPTIONS.map((reg) => {
+          const isSelected = selectedRegulation === reg.id;
+          const isStd = reg.id === 'STANDARD';
+          return (
+            <button
+              key={reg.id}
+              onClick={() => onRegulationChange(reg.id)}
+              className={`px-2.5 py-1 rounded-xl text-xs font-bold whitespace-nowrap transition-all flex items-center gap-1 shrink-0 ${
+                isSelected
+                  ? isStd
+                    ? 'bg-gradient-to-r from-emerald-400 to-teal-400 text-slate-950 font-black shadow-md shadow-emerald-500/20 scale-105'
+                    : 'bg-amber-400 text-slate-950 font-black shadow-md shadow-amber-400/20 scale-105'
+                  : isStd
+                  ? 'bg-emerald-950/60 text-emerald-300 border border-emerald-500/50 hover:bg-emerald-900/60'
+                  : 'bg-slate-800 hover:bg-slate-700 text-slate-300 border border-slate-700/60'
+              }`}
+              title={reg.label}
+            >
+              {reg.shortLabel}
+            </button>
+          );
+        })}
+      </div>
+
+      {/* Row 4: Category Quick Filter Chips Bar */}
+      <div className="flex items-center gap-1.5 overflow-x-auto pb-1 scrollbar-none">
+        <span className="text-[11px] text-slate-400 font-bold whitespace-nowrap shrink-0">
+          หมวดหมู่:
+        </span>
+        {CATEGORIES.map((cat) => {
+          const isSelected = selectedCategory === cat.id;
+          return (
+            <button
+              key={cat.id}
+              onClick={() => onCategoryChange(cat.id)}
+              className={`px-2.5 py-1 rounded-xl text-xs font-bold whitespace-nowrap transition-all flex items-center gap-1 shrink-0 ${
+                isSelected
+                  ? 'bg-amber-400 text-slate-950 font-black shadow-md shadow-amber-400/20 scale-105'
+                  : 'bg-slate-800 hover:bg-slate-700 text-slate-300 border border-slate-700/60'
+              }`}
+            >
+              {cat.label}
+            </button>
+          );
+        })}
+      </div>
+
+      {/* Row 5: Quick Rarity Chips Bar (Visible on Mobile & Desktop for 1-Tap Filter) */}
       <div className="flex items-center gap-1.5 overflow-x-auto pb-1 scrollbar-none">
         <span className="text-[11px] text-slate-400 font-bold whitespace-nowrap shrink-0">
           ความหายาก:
@@ -265,10 +325,23 @@ export function CollectionFilterBar({
         })}
       </div>
 
-      {/* Row 4: Advanced Filter Row (Visible by default on Desktop, Collapsible on Mobile) */}
+      {/* Row 5: Advanced Filter Row (Visible by default on Desktop, Collapsible on Mobile) */}
       <div className={`${showAdvancedMobile ? 'flex' : 'hidden lg:flex'} flex-wrap items-center justify-between gap-2.5 pt-2 border-t border-slate-800/70 text-xs animate-fade-in`}>
         {/* Dropdowns */}
         <div className="flex items-center gap-2 flex-wrap w-full lg:w-auto">
+          {/* Regulation Series Dropdown */}
+          <select
+            value={selectedRegulation}
+            onChange={(e) => onRegulationChange(e.target.value)}
+            className="px-3 py-1.5 bg-slate-950 border border-emerald-500/50 text-emerald-300 rounded-xl text-xs font-bold focus:outline-none focus:border-emerald-400 shadow-inner"
+          >
+            {REGULATION_SERIES_OPTIONS.map((reg) => (
+              <option key={reg.id} value={reg.id}>
+                {reg.label}
+              </option>
+            ))}
+          </select>
+
           {/* Full Rarity Class Selector Dropdown */}
           <select
             value={selectedRarity}

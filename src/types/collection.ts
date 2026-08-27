@@ -41,6 +41,7 @@ export type SortOrder = 'asc' | 'desc';
 
 export interface CollectionFilters {
   selectedSet: string;
+  selectedRegulation: string;
   statusFilter: CollectionStatusFilter;
   search: string;
   selectedType: string;
@@ -51,6 +52,22 @@ export interface CollectionFilters {
   sortOrder: SortOrder;
   showFullColor: boolean;
 }
+
+export const STANDARD_REGULATION_MARKS = ['H', 'I', 'J'] as const;
+
+export const REGULATION_SERIES_OPTIONS = [
+  { id: 'ALL', label: 'ทุกซีรีส์ / ทุกเรกูเลชัน (All Regulations)', shortLabel: 'ทั้งหมด' },
+  { id: 'STANDARD', label: '⚡ สแตนดาร์ด (Standard: H, I, J)', shortLabel: '⚡ Standard (H-J)' },
+  { id: 'J', label: '🎴 ซีรีส์ J (Mega Evolution / 2025-2026)', shortLabel: 'Series J' },
+  { id: 'I', label: '🌟 ซีรีส์ I (Scarlet & Violet: SV8+)', shortLabel: 'Series I' },
+  { id: 'H', label: '💎 ซีรีส์ H (Scarlet & Violet: SV5-SV7)', shortLabel: 'Series H' },
+  { id: 'G', label: '🌿 ซีรีส์ G (Scarlet & Violet: SV1-SV4)', shortLabel: 'Series G' },
+  { id: 'F', label: '⚔️ ซีรีส์ F (Sword & Shield: S9-S12 / VSTAR)', shortLabel: 'Series F' },
+  { id: 'E', label: '🛡️ ซีรีส์ E (Sword & Shield: S5-S8 / VMAX)', shortLabel: 'Series E' },
+  { id: 'D', label: '🗡️ ซีรีส์ D (Sword & Shield: S1-S4 / V)', shortLabel: 'Series D' },
+  { id: 'EXPANDED', label: '📜 ซีรีส์ดั้งเดิม / Expanded (A, B)', shortLabel: 'Series A/B' },
+] as const;
+
 
 export type CardRarityClass =
   | 'ALL'

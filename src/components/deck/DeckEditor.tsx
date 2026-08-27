@@ -4,10 +4,11 @@ import { useCollectionStore } from '../../store/collectionStore';
 import { calculateDeckStats, calculateMissingCards } from '../../utils/deckCalculator';
 import { resolveCardImageUrl, handleCardImageError } from '../../utils/cardImage';
 import { MissingCardsModal } from './MissingCardsModal';
-import { CardImagePreviewModal } from '../pokemon/CardImagePreviewModal';
+import { CardCollectionModal } from '../collection/CardCollectionModal';
 import { DeckCoverPickerModal } from './DeckCoverPickerModal';
 import { RARITY_CLASSES } from '../collection/CollectionFilterBar';
 import { SearchableSetSelect } from '../common/SearchableSetSelect';
+import { REGULATION_SERIES_OPTIONS, STANDARD_REGULATION_MARKS } from '../../types/collection';
 import { getCardRarityClass } from '../../utils/rarity';
 import { createCardMatcher } from '../../utils/searchHelpers';
 import pokemonCardData from '../../data/pokemonNames.json';
@@ -41,8 +42,9 @@ export function DeckEditor({ deck, onBackToDecks }: Props) {
   const setDeckCover = useDeckStore((s) => s.setDeckCover);
 
   const activeProfileId = useCollectionStore((s) => s.activeProfileId);
-  const profile = useCollectionStore((s) => s.profiles[activeProfileId]);
-  const userCollectionCards = profile?.cards || {};
+  const profiles = useCollectionStore((s) => s.profiles);
+  const activeProfile = profiles[activeProfileId];
+  const userCollectionCards = activeProfile?.cards || {};
 
   // Card lookup map
   const cardDataMap = useMemo(() => {
@@ -69,20 +71,49 @@ export function DeckEditor({ deck, onBackToDecks }: Props) {
   // Catalog Filters
   const [search, setSearch] = useState('');
   const [selectedSet, setSelectedSet] = useState('ALL');
+  const [selectedRegulation, setSelectedRegulation] = useState('ALL');
   const [selectedType, setSelectedType] = useState('ALL');
   const [selectedRarity, setSelectedRarity] = useState('ALL');
   const [selectedCategory, setSelectedCategory] = useState('ALL');
   const [catalogLimit, setCatalogLimit] = useState(ITEMS_PER_PAGE);
 
-  // Sets dropdown list
+  // Sets dropdown list with Regulation metadata
   const setsList = useMemo(() => {
-    const map = new Map<string, { id: string; name: string }>();
+    const map = new Map<
+      string,
+      {
+        id: string;
+        name: string;
+        regulationMarks: Set<string>;
+      }
+    >();
+
     (pokemonCardData as any[]).forEach((c) => {
       const sId = c.set?.id || 'PROMO';
       const sName = c.set?.name || 'การ์ดโปรโม / อื่น ๆ';
-      if (!map.has(sId)) map.set(sId, { id: sId, name: sName });
+      if (!map.has(sId)) {
+        map.set(sId, { id: sId, name: sName, regulationMarks: new Set<string>() });
+      }
+      if (c.regulationMark) {
+        map.get(sId)!.regulationMarks.add(c.regulationMark);
+      }
     });
-    return Array.from(map.values());
+
+    return Array.from(map.values())
+      .map((s) => {
+        const marks = Array.from(s.regulationMarks);
+        const primaryMark =
+          marks.find((m) => ['J', 'I', 'H', 'G', 'F', 'E', 'D'].includes(m)) ||
+          marks[0] ||
+          '';
+        return {
+          id: s.id,
+          name: s.name,
+          regulationMark: primaryMark,
+          regulationMarks: marks,
+        };
+      })
+      .sort((a, b) => a.id.localeCompare(b.id));
   }, []);
 
   const deferredSearch = useDeferredValue(search);
@@ -105,6 +136,18 @@ export function DeckEditor({ deck, onBackToDecks }: Props) {
         if (cSet !== selectedSet) return false;
       }
 
+      // Regulation Mark
+      if (selectedRegulation !== 'ALL') {
+        const mark = c.regulationMark || '';
+        if (selectedRegulation === 'STANDARD') {
+          if (!STANDARD_REGULATION_MARKS.includes(mark as any)) return false;
+        } else if (selectedRegulation === 'EXPANDED') {
+          if (!['A', 'B'].includes(mark)) return false;
+        } else {
+          if (mark !== selectedRegulation) return false;
+        }
+      }
+
       // Type
       if (selectedType !== 'ALL') {
         const types = c.types || [];
@@ -123,7 +166,15 @@ export function DeckEditor({ deck, onBackToDecks }: Props) {
 
       return true;
     });
-  }, [effectiveSearch, selectedSet, selectedType, selectedRarity, selectedCategory, cardMatcher]);
+  }, [
+    effectiveSearch,
+    selectedSet,
+    selectedRegulation,
+    selectedType,
+    selectedRarity,
+    selectedCategory,
+    cardMatcher,
+  ]);
 
   const displayedCatalog = filteredCatalog.slice(0, catalogLimit);
   const hasMoreCatalog = catalogLimit < filteredCatalog.length;
@@ -131,7 +182,7 @@ export function DeckEditor({ deck, onBackToDecks }: Props) {
 
   useEffect(() => {
     setCatalogLimit(ITEMS_PER_PAGE);
-  }, [search, selectedSet, selectedType, selectedRarity, selectedCategory]);
+  }, [search, selectedSet, selectedRegulation, selectedType, selectedRarity, selectedCategory]);
 
   useEffect(() => {
     if (!hasMoreCatalog) return;
@@ -485,8 +536,23 @@ export function DeckEditor({ deck, onBackToDecks }: Props) {
               className="w-full md:w-64"
             />
 
-            {/* Rarity Dropdown */}
+            {/* Regulation Series Dropdown */}
             <div className="relative w-full md:w-56">
+              <select
+                value={selectedRegulation}
+                onChange={(e) => setSelectedRegulation(e.target.value)}
+                className="w-full px-3 py-2 bg-slate-950 border border-emerald-500/50 text-emerald-300 rounded-xl text-xs sm:text-sm font-bold focus:outline-none focus:border-emerald-400 shadow-inner"
+              >
+                {REGULATION_SERIES_OPTIONS.map((r) => (
+                  <option key={r.id} value={r.id}>
+                    {r.label}
+                  </option>
+                ))}
+              </select>
+            </div>
+
+            {/* Rarity Dropdown */}
+            <div className="relative w-full md:w-52">
               <select
                 value={selectedRarity}
                 onChange={(e) => setSelectedRarity(e.target.value)}
@@ -501,7 +567,7 @@ export function DeckEditor({ deck, onBackToDecks }: Props) {
             </div>
 
             {/* Category Dropdown */}
-            <div className="relative w-full md:w-44">
+            <div className="relative w-full md:w-40">
               <select
                 value={selectedCategory}
                 onChange={(e) => setSelectedCategory(e.target.value)}
@@ -513,6 +579,63 @@ export function DeckEditor({ deck, onBackToDecks }: Props) {
                 <option value="Energy">⚡ พลังงาน</option>
               </select>
             </div>
+          </div>
+
+          {/* Regulation Quick Chips */}
+          <div className="flex items-center gap-1.5 overflow-x-auto scrollbar-none py-0.5">
+            <span className="text-[11px] text-slate-400 font-bold whitespace-nowrap shrink-0">
+              Regulation:
+            </span>
+            {REGULATION_SERIES_OPTIONS.map((reg) => {
+              const isSelected = selectedRegulation === reg.id;
+              const isStd = reg.id === 'STANDARD';
+              return (
+                <button
+                  key={reg.id}
+                  onClick={() => setSelectedRegulation(reg.id)}
+                  className={`px-2.5 py-1 rounded-lg text-[11px] font-bold whitespace-nowrap transition-all shrink-0 ${
+                    isSelected
+                      ? isStd
+                        ? 'bg-gradient-to-r from-emerald-400 to-teal-400 text-slate-950 font-black shadow-md'
+                        : 'bg-indigo-500 text-white font-black shadow-md'
+                      : isStd
+                      ? 'bg-emerald-950/60 text-emerald-300 border border-emerald-500/50 hover:bg-emerald-900/60'
+                      : 'bg-slate-800 hover:bg-slate-700 text-slate-300 border border-slate-700/60'
+                  }`}
+                  title={reg.label}
+                >
+                  {reg.shortLabel}
+                </button>
+              );
+            })}
+          </div>
+
+          {/* Category Quick Chips */}
+          <div className="flex items-center gap-1.5 overflow-x-auto scrollbar-none py-0.5">
+            <span className="text-[11px] text-slate-400 font-bold whitespace-nowrap shrink-0">
+              หมวดหมู่:
+            </span>
+            {[
+              { id: 'ALL', label: 'ทั้งหมด' },
+              { id: 'Pokemon', label: '👾 โปเกมอน' },
+              { id: 'Trainer', label: '🎒 เทรนเนอร์' },
+              { id: 'Energy', label: '⚡ พลังงาน' },
+            ].map((cat) => {
+              const isSelected = selectedCategory === cat.id;
+              return (
+                <button
+                  key={cat.id}
+                  onClick={() => setSelectedCategory(cat.id)}
+                  className={`px-2.5 py-1 rounded-lg text-[11px] font-bold whitespace-nowrap transition-all shrink-0 ${
+                    isSelected
+                      ? 'bg-amber-400 text-slate-950 font-black shadow-md'
+                      : 'bg-slate-800 hover:bg-slate-700 text-slate-300 border border-slate-700/60'
+                  }`}
+                >
+                  {cat.label}
+                </button>
+              );
+            })}
           </div>
 
           {/* Energy Types Row */}
@@ -613,7 +736,17 @@ export function DeckEditor({ deck, onBackToDecks }: Props) {
 
                     <div className="mt-1.5 cursor-pointer" onClick={() => setPreviewCard(card)}>
                       <div className="flex items-center justify-between text-[10px] text-slate-400 font-mono">
-                        <span className="truncate max-w-[60%]">{card.set?.id || 'PROMO'}</span>
+                        <div className="flex items-center gap-1 min-w-0">
+                          <span className="truncate">{card.set?.id || 'PROMO'}</span>
+                          {card.regulationMark && (
+                            <span
+                              className="px-1 py-0.2 rounded text-[8px] font-black uppercase bg-slate-800 text-slate-300 border border-slate-700 shrink-0"
+                              title={`Regulation Mark ${card.regulationMark}`}
+                            >
+                              {card.regulationMark}
+                            </span>
+                          )}
+                        </div>
                         <span>{card.collectorNumber || card.localId}</span>
                       </div>
                       <h4 className="text-xs font-bold truncate text-slate-200 mt-0.5 hover:text-indigo-300" title={card.name}>
@@ -653,17 +786,12 @@ export function DeckEditor({ deck, onBackToDecks }: Props) {
         />
       )}
 
-      {/* Card High-Res Preview Modal */}
+      {/* Card Collection & Deck Details Modal */}
       {previewCard && (
-        <CardImagePreviewModal
-          imageUrl={previewCard.imageUrlHigh || previewCard.imageUrl}
-          officialImageUrl={previewCard.officialImageUrl}
-          cardName={previewCard.name}
-          setInfo={previewCard.set?.id || previewCard.set?.name}
-          collectorNumber={previewCard.collectorNumber || previewCard.localId}
-          rarityCode={previewCard.rarityCode}
+        <CardCollectionModal
+          card={previewCard}
+          deckId={deck.id}
           onClose={() => setPreviewCard(null)}
-          onSelect={() => addCardToDeck(deck.id, previewCard.id, 1)}
         />
       )}
 

@@ -95,6 +95,7 @@ function pruneProfile(profile: CollectionProfile): { profile: CollectionProfile;
 
 export const DEFAULT_COLLECTION_FILTERS: CollectionFilters = {
   selectedSet: 'ALL',
+  selectedRegulation: 'ALL',
   statusFilter: 'all',
   search: '',
   selectedType: 'ALL',

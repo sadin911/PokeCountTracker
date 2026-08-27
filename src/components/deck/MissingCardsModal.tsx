@@ -2,6 +2,7 @@ import { useState, useMemo } from 'react';
 import { useCollectionStore } from '../../store/collectionStore';
 import { calculateMissingCards, generateShoppingListText } from '../../utils/deckCalculator';
 import { resolveCardImageUrl, handleCardImageError } from '../../utils/cardImage';
+import { CardCollectionModal } from '../collection/CardCollectionModal';
 import type { Deck } from '../../types/deck';
 
 interface Props {
@@ -17,6 +18,7 @@ export function MissingCardsModal({ deck, cardDataMap, onClose }: Props) {
 
   const [filterTab, setFilterTab] = useState<'missing' | 'complete' | 'all'>('missing');
   const [copied, setCopied] = useState(false);
+  const [selectedCardForCollection, setSelectedCardForCollection] = useState<any | null>(null);
 
   const report = useMemo(() => {
     return calculateMissingCards(deck, cardDataMap, userCollectionCards);
@@ -51,7 +53,7 @@ export function MissingCardsModal({ deck, cardDataMap, onClose }: Props) {
                 <span className="text-amber-400">{deck.name}</span>
               </h3>
               <p className="text-xs text-slate-400">
-                เปรียบเทียบกับสมุดสะสมโปรไฟล์ "{profile?.name || 'My Collection'}"
+                เปรียบเทียบกับสมุดสะสมโปรไฟล์ "{profile?.name || 'My Collection'}" · แตะการ์ดเพื่อเติมเข้าสมุดสะสมได้ทันที
               </p>
             </div>
           </div>
@@ -192,18 +194,28 @@ export function MissingCardsModal({ deck, cardDataMap, onClose }: Props) {
             displayedItems.map((item) => {
               const imgUrl = resolveCardImageUrl(item.imageUrl);
               const isMissing = item.missingCount > 0;
+              const fullCard = cardDataMap.get(item.cardId) || {
+                id: item.cardId,
+                name: item.name,
+                imageUrl: item.imageUrl,
+                category: item.category,
+                set: { id: item.setId },
+                collectorNumber: item.collectorNumber,
+              };
 
               return (
                 <div
                   key={item.cardId}
-                  className={`p-3 rounded-2xl border transition-all flex items-center justify-between gap-3 ${
+                  onClick={() => setSelectedCardForCollection(fullCard)}
+                  className={`group p-3 rounded-2xl border transition-all flex items-center justify-between gap-3 cursor-pointer select-none active:scale-[0.99] ${
                     isMissing
-                      ? 'bg-slate-900/90 border-rose-500/30 hover:border-rose-500/60'
-                      : 'bg-slate-900/60 border-emerald-500/30 hover:border-emerald-500/60'
+                      ? 'bg-slate-900/90 hover:bg-slate-850 border-rose-500/30 hover:border-rose-500/70 hover:shadow-lg hover:shadow-rose-950/30'
+                      : 'bg-slate-900/60 hover:bg-slate-850 border-emerald-500/30 hover:border-emerald-500/70 hover:shadow-lg hover:shadow-emerald-950/30'
                   }`}
+                  title="คลิกเพื่อเปิดหน้าจัดการการ์ด / เติมเข้าสมุดสะสม"
                 >
                   <div className="flex items-center gap-3 min-w-0">
-                    <div className="w-12 h-16 rounded-lg overflow-hidden bg-slate-950 shrink-0 shadow-md">
+                    <div className="w-12 h-16 rounded-lg overflow-hidden bg-slate-950 shrink-0 shadow-md group-hover:scale-105 transition-transform">
                       <img
                         src={imgUrl}
                         alt={item.name}
@@ -218,17 +230,22 @@ export function MissingCardsModal({ deck, cardDataMap, onClose }: Props) {
                         </span>
                         <span>{item.collectorNumber}</span>
                       </div>
-                      <h4 className="text-xs sm:text-sm font-bold text-white truncate mt-0.5">
+                      <h4 className="text-xs sm:text-sm font-bold text-white truncate mt-0.5 group-hover:text-amber-300 transition-colors">
                         {item.name}
                       </h4>
-                      <p className="text-[11px] text-slate-400">
-                        {item.category === 'Pokemon' ? '👾 โปเกมอน' : item.category === 'Trainer' ? '🎒 เทรนเนอร์' : '⚡ พลังงาน'}
-                      </p>
+                      <div className="flex items-center gap-2 mt-0.5 text-[11px] text-slate-400">
+                        <span>
+                          {item.category === 'Pokemon' ? '👾 โปเกมอน' : item.category === 'Trainer' ? '🎒 เทรนเนอร์' : '⚡ พลังงาน'}
+                        </span>
+                        <span className="text-amber-400/80 font-semibold group-hover:text-amber-300">
+                          · แตะเพื่อเติมเข้าสมุด ➔
+                        </span>
+                      </div>
                     </div>
                   </div>
 
-                  {/* Quantity Badges */}
-                  <div className="flex items-center gap-3 shrink-0">
+                  {/* Quantity Badges & Quick Action */}
+                  <div className="flex items-center gap-2.5 sm:gap-3 shrink-0">
                     <div className="text-right text-xs">
                       <div className="text-slate-400 text-[10px]">ในเด็ค / มีแล้ว</div>
                       <div className="font-mono font-bold text-slate-200">
@@ -237,13 +254,13 @@ export function MissingCardsModal({ deck, cardDataMap, onClose }: Props) {
                     </div>
 
                     {isMissing ? (
-                      <span className="px-3 py-1.5 rounded-xl bg-rose-500/20 border border-rose-500/50 text-rose-300 font-black text-xs sm:text-sm shadow-sm flex items-center gap-1">
+                      <span className="px-3 py-1.5 rounded-xl bg-rose-500/20 group-hover:bg-rose-500/30 border border-rose-500/50 text-rose-300 font-black text-xs sm:text-sm shadow-sm flex items-center gap-1">
                         <span>ขาดอีก</span>
                         <span className="text-rose-400 font-extrabold text-base">{item.missingCount}</span>
                         <span>ใบ</span>
                       </span>
                     ) : (
-                      <span className="px-3 py-1.5 rounded-xl bg-emerald-500/20 border border-emerald-500/50 text-emerald-300 font-black text-xs shadow-sm">
+                      <span className="px-3 py-1.5 rounded-xl bg-emerald-500/20 group-hover:bg-emerald-500/30 border border-emerald-500/50 text-emerald-300 font-black text-xs shadow-sm">
                         ครบแล้ว ✅
                       </span>
                     )}
@@ -266,6 +283,16 @@ export function MissingCardsModal({ deck, cardDataMap, onClose }: Props) {
           </button>
         </div>
       </div>
+
+      {/* Card Collection & Management Modal */}
+      {selectedCardForCollection && (
+        <CardCollectionModal
+          card={selectedCardForCollection}
+          deckId={deck.id}
+          onClose={() => setSelectedCardForCollection(null)}
+        />
+      )}
     </div>
   );
 }
+

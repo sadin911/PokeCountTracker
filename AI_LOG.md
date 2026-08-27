@@ -95,4 +95,9 @@
 [2026-08-27 01:35] Major | Claude | Command | git tag v2.11.0 & push - Lorcana Split & Firestore Card Deletion Fix Release
 [2026-08-27 08:26] Major | Antigravity | Write | PWA support - integrated vite-plugin-pwa, icons, manifest & install UI
 [2026-08-27 08:27] Major | Antigravity | Command | git tag v2.12.0 & push - Progressive Web App (PWA) & Mobile Install Release
-
+[2026-08-27 09:00] Major | Antigravity | Edit | src/components/deck/ & collection/ - unified CardCollectionModal with Deck support & Missing Cards refill
+[2026-08-27 09:06] Major | Antigravity | Write | src/ - added Regulation Mark Series filtering & set grouping across Collection & Deck Builder
+[2026-08-27 09:16] Major | Antigravity | Edit | src/data/pokemonNames.json - fixed 353 mismatched regulation marks from official scrape data
+[2026-08-27 09:19] Major | Antigravity | Edit | src/ - updated Standard format regulation marks to H, I, J (Standard: H-J)
+[2026-08-27 09:23] Major | Antigravity | Edit | src/data/pokemonNames.json - categorized 234 Basic & Special Energy cards from Trainer to Energy
+[2026-08-27 09:26] Major | Antigravity | Write | src/components/ - added prominent Category quick chips (Pokemon, Trainer, Energy) & populated Energy card types

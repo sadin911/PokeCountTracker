@@ -6,9 +6,10 @@ import { useCommunityStore } from '../../store/communityStore';
 import { CollectionHeader } from './CollectionHeader';
 import { CollectionFilterBar } from './CollectionFilterBar';
 import { CollectionGridView } from './CollectionGridView';
-import type {
-  CollectionStats,
-  SetProgress,
+import {
+  type CollectionStats,
+  type SetProgress,
+  STANDARD_REGULATION_MARKS,
 } from '../../types/collection';
 
 import { getCardRarityClass } from '../../utils/rarity';
@@ -42,6 +43,7 @@ export function CollectionTracker() {
 
   const {
     selectedSet,
+    selectedRegulation = 'ALL',
     statusFilter,
     search,
     selectedType,
@@ -78,20 +80,38 @@ export function CollectionTracker() {
     document.body.scrollTo({ top: 0, behavior: 'smooth' });
   };
 
-  // 1. Build Sets List with Completion Counts
+  // 1. Build Sets List with Completion Counts & Regulation Marks
   const setsList = useMemo(() => {
-    const map = new Map<string, { id: string; name: string; count: number; owned: number }>();
+    const map = new Map<
+      string,
+      {
+        id: string;
+        name: string;
+        count: number;
+        owned: number;
+        regulationMarks: Set<string>;
+      }
+    >();
 
     for (const card of pokemonCardData as any[]) {
       const setId = card.set?.id || 'PROMO';
       const setName = card.set?.name || 'การ์ดโปรโม / อื่น ๆ';
 
       if (!map.has(setId)) {
-        map.set(setId, { id: setId, name: setName, count: 0, owned: 0 });
+        map.set(setId, {
+          id: setId,
+          name: setName,
+          count: 0,
+          owned: 0,
+          regulationMarks: new Set<string>(),
+        });
       }
 
       const item = map.get(setId)!;
       item.count++;
+      if (card.regulationMark) {
+        item.regulationMarks.add(card.regulationMark);
+      }
 
       const entry = activeProfile?.cards[card.id];
       if (entry && Object.values(entry.variants || {}).some((v) => v > 0)) {
@@ -99,7 +119,23 @@ export function CollectionTracker() {
       }
     }
 
-    return Array.from(map.values()).sort((a, b) => a.id.localeCompare(b.id));
+    return Array.from(map.values())
+      .map((s) => {
+        const marks = Array.from(s.regulationMarks);
+        const primaryMark =
+          marks.find((m) => ['J', 'I', 'H', 'G', 'F', 'E', 'D'].includes(m)) ||
+          marks[0] ||
+          '';
+        return {
+          id: s.id,
+          name: s.name,
+          count: s.count,
+          owned: s.owned,
+          regulationMark: primaryMark,
+          regulationMarks: marks,
+        };
+      })
+      .sort((a, b) => a.id.localeCompare(b.id));
   }, [activeProfile]);
 
   // 2. Compute Overall Collection Stats
@@ -194,6 +230,18 @@ export function CollectionTracker() {
       const cardSetId = card.set?.id || 'PROMO';
       if (selectedSet !== 'ALL' && cardSetId !== selectedSet) return false;
 
+      // Regulation Mark Filter
+      if (selectedRegulation !== 'ALL') {
+        const mark = card.regulationMark || '';
+        if (selectedRegulation === 'STANDARD') {
+          if (!STANDARD_REGULATION_MARKS.includes(mark as any)) return false;
+        } else if (selectedRegulation === 'EXPANDED') {
+          if (!['A', 'B'].includes(mark)) return false;
+        } else {
+          if (mark !== selectedRegulation) return false;
+        }
+      }
+
       // Category Filter
       if (selectedCategory !== 'ALL' && card.category !== selectedCategory) return false;
 
@@ -244,6 +292,7 @@ export function CollectionTracker() {
     activeProfile,
     statusFilter,
     selectedSet,
+    selectedRegulation,
     selectedCategory,
     selectedStage,
     selectedRarity,
@@ -257,6 +306,7 @@ export function CollectionTracker() {
   const resetFilters = useCollectionStore((s) => s.resetFilters);
   const isFiltered =
     selectedSet !== 'ALL' ||
+    selectedRegulation !== 'ALL' ||
     statusFilter !== 'all' ||
     search.trim() !== '' ||
     selectedType !== 'ALL' ||
@@ -265,7 +315,7 @@ export function CollectionTracker() {
     selectedRarity !== 'ALL';
 
   // Stable key identifying current filter/search/sort criteria
-  const filterKey = `${selectedSet}_${statusFilter}_${selectedType}_${selectedCategory}_${selectedStage}_${selectedRarity}_${sortBy}_${sortOrder}_${effectiveSearch.trim()}_${activeProfileId}`;
+  const filterKey = `${selectedSet}_${selectedRegulation}_${statusFilter}_${selectedType}_${selectedCategory}_${selectedStage}_${selectedRarity}_${sortBy}_${sortOrder}_${effectiveSearch.trim()}_${activeProfileId}`;
 
   return (
     <div className="min-h-screen bg-slate-950 text-slate-100 flex flex-col font-sans selection:bg-amber-500 selection:text-slate-950">
@@ -277,6 +327,8 @@ export function CollectionTracker() {
         sets={setsList}
         selectedSet={selectedSet}
         onSelectSet={(val) => setFilters({ selectedSet: val })}
+        selectedRegulation={selectedRegulation}
+        onRegulationChange={(val) => setFilters({ selectedRegulation: val })}
         statusFilter={statusFilter}
         onStatusFilterChange={(val) => setFilters({ statusFilter: val })}
         search={search}
