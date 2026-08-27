@@ -26,10 +26,13 @@ export function PullToRefresh({
   const hasTriggeredHapticRef = useRef(false);
 
   const isAtTop = () => {
+    const root = document.getElementById('root');
+    const rootScroll = root ? root.scrollTop : 0;
     return (
       window.scrollY <= 2 &&
       document.documentElement.scrollTop <= 2 &&
-      document.body.scrollTop <= 2
+      document.body.scrollTop <= 2 &&
+      rootScroll <= 2
     );
   };
 
@@ -54,16 +57,14 @@ export function PullToRefresh({
       const deltaY = currentY - startYRef.current;
       const deltaX = currentX - startXRef.current;
 
-      // Only handle downward vertical pulls at the top of the page
-      if (deltaY > 0 && Math.abs(deltaY) > Math.abs(deltaX) * 1.2 && isAtTop()) {
+      // Only engage if pulling downwards at the very top and gesture is predominantly vertical
+      if (deltaY > 0 && Math.abs(deltaY) > Math.abs(deltaX) * 1.3 && isAtTop()) {
         isPullingRef.current = true;
-        // Non-linear damping curve for natural elastic feel
-        const damping = 0.42;
-        const damped = Math.min(deltaY * damping, 120);
+        const damping = 0.38;
+        const damped = Math.min(deltaY * damping, 110);
         pullDistanceRef.current = damped;
         setPullDistance(damped);
 
-        // Haptic feedback when crossing the threshold
         if (damped >= pullThreshold && !hasTriggeredHapticRef.current) {
           hasTriggeredHapticRef.current = true;
           if (typeof navigator !== 'undefined' && navigator.vibrate) {
@@ -75,23 +76,27 @@ export function PullToRefresh({
           hasTriggeredHapticRef.current = false;
         }
 
-        // Prevent native rubber-band conflict if pulling
-        if (e.cancelable && damped > 10) {
+        if (e.cancelable && damped > 15) {
           e.preventDefault();
         }
-      } else if (!isPullingRef.current) {
-        setPullDistance(0);
-        pullDistanceRef.current = 0;
+      } else {
+        // If swiping up (scrolling down), only reset if we were previously pulling
+        if (isPullingRef.current || pullDistanceRef.current > 0) {
+          isPullingRef.current = false;
+          pullDistanceRef.current = 0;
+          setPullDistance(0);
+        }
       }
     };
 
     const handleTouchEnd = async () => {
-      if (!isPullingRef.current) return;
+      if (!isPullingRef.current && pullDistanceRef.current === 0) return;
+      const triggered = pullDistanceRef.current >= pullThreshold;
       isPullingRef.current = false;
 
-      if (pullDistanceRef.current >= pullThreshold && !isRefreshing) {
+      if (triggered && !isRefreshing) {
         setIsRefreshing(true);
-        setPullDistance(56); // Hold at header height during refresh
+        setPullDistance(52);
 
         try {
           await onRefresh();
@@ -101,7 +106,7 @@ export function PullToRefresh({
               navigator.vibrate([10, 30, 20]);
             } catch (_) {}
           }
-          await new Promise((r) => setTimeout(r, 600));
+          await new Promise((r) => setTimeout(r, 650));
         } catch (err) {
           console.error('Pull-to-refresh error:', err);
         } finally {
@@ -133,25 +138,25 @@ export function PullToRefresh({
 
   return (
     <div className="relative w-full min-h-full">
-      {/* Pull-To-Refresh Visual Indicator Banner */}
+      {/* Pull-To-Refresh Floating Indicator */}
       <AnimatePresence>
         {(pullDistance > 0 || isRefreshing) && (
           <motion.div
-            initial={{ opacity: 0, y: -20 }}
+            initial={{ opacity: 0, y: -24 }}
             animate={{
               opacity: 1,
               y: 0,
-              height: pullDistance > 0 ? pullDistance : 56,
+              height: pullDistance > 0 ? Math.min(pullDistance, 56) : 52,
             }}
-            exit={{ opacity: 0, y: -20, height: 0 }}
-            transition={{ type: 'spring', damping: 25, stiffness: 350 }}
-            className="w-full flex items-center justify-center overflow-hidden z-20 pointer-events-none select-none"
+            exit={{ opacity: 0, y: -24, height: 0 }}
+            transition={{ type: 'spring', damping: 28, stiffness: 380 }}
+            className="w-full flex items-center justify-center overflow-hidden z-40 pointer-events-none select-none"
             style={{
               paddingTop: 'env(safe-area-inset-top, 0px)',
             }}
           >
             <div
-              className={`flex items-center gap-2.5 px-4 py-1.5 rounded-full shadow-lg border backdrop-blur-md transition-all duration-200 ${
+              className={`flex items-center gap-2 px-3.5 py-1.5 rounded-full shadow-lg border backdrop-blur-md transition-all duration-200 ${
                 isSuccess
                   ? 'bg-emerald-500/90 text-white border-emerald-300 dark:border-emerald-400/50 shadow-emerald-500/30'
                   : isReadyToRelease || isRefreshing
@@ -159,9 +164,8 @@ export function PullToRefresh({
                   : 'bg-white/95 dark:bg-slate-800/95 text-slate-800 dark:text-slate-100 border-slate-300 dark:border-slate-600 shadow-slate-900/10'
               }`}
             >
-              {/* Spinning/Rotating MasterBall or Check Icon */}
               <div
-                className={`w-6 h-6 flex items-center justify-center transition-transform ${
+                className={`w-5 h-5 flex items-center justify-center transition-transform ${
                   isRefreshing
                     ? 'animate-spin'
                     : isSuccess
@@ -175,13 +179,12 @@ export function PullToRefresh({
                 }}
               >
                 {isSuccess ? (
-                  <span className="text-sm font-black text-white">✓</span>
+                  <span className="text-xs font-black text-white">✓</span>
                 ) : (
                   <MasterBallIcon className="w-full h-full drop-shadow" />
                 )}
               </div>
 
-              {/* Status Message */}
               <span className="text-xs font-bold tracking-tight">
                 {isSuccess
                   ? 'รีเฟรชและล้าง Filter สำเร็จ!'
@@ -196,16 +199,8 @@ export function PullToRefresh({
         )}
       </AnimatePresence>
 
-      {/* Content wrapper */}
-      <div
-        className="w-full min-h-full transition-transform duration-75"
-        style={{
-          transform:
-            pullDistance > 0 && !isRefreshing
-              ? `translateY(${Math.min(pullDistance * 0.35, 30)}px)`
-              : undefined,
-        }}
-      >
+      {/* Children without CSS transform to prevent breaking position:sticky headers */}
+      <div className="w-full min-h-full">
         {children}
       </div>
     </div>

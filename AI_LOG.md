@@ -121,3 +121,4 @@
 [2026-08-27 12:35] Major | Antigravity | Edit | src/ - sorted set filter lists by Thai release date descending (Newest first)
 [2026-08-27 12:41] Major | Antigravity | Command | git merge & push origin main - Tagged v2.15.0 Release
 [2026-08-27 12:50] Major | Antigravity | Write | src/ - added mobile PWA Pull-to-Refresh & filter reset + fixed top safe-area insets
+[2026-08-27 14:58] Major | Antigravity | Commit | PokeCountTracker mobile header and filter layout cleanup

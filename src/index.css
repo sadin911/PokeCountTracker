@@ -28,16 +28,15 @@
     color-scheme: light;
   }
 
-  html, body, #root {
-    height: 100%;
+  html, body {
     width: 100%;
     margin: 0;
     padding: 0;
-    overscroll-behavior-y: contain;
   }
 
   body {
     font-family: system-ui, -apple-system, sans-serif;
+    min-height: 100%;
     @apply transition-colors duration-200;
   }
 
@@ -57,38 +56,14 @@
   }
 
   #root {
-    height: 100%;
-    width: 100%;
-    max-width: 100%;
-    margin: 0;
-    overflow: hidden;
-  }
-
-  /* Collection & Deck mode: 100% full screen, full width, and scrollable */
-  html[data-game-mode="collection"] body,
-  html[data-game-mode="deck"] body {
-    overflow-y: auto;
-    overflow-x: hidden;
-  }
-
-  html[data-game-mode="collection"] #root,
-  html[data-game-mode="deck"] #root {
-    max-width: 100%;
-    width: 100%;
-    margin: 0;
-    overflow-y: auto;
-    overflow-x: hidden;
-    height: auto;
     min-height: 100%;
+    width: 100%;
+    max-width: 100%;
+    margin: 0;
   }
 
   /* Battle mode: full viewport height without outer scroll */
-  html[data-game-mode="pokemon"] body {
-    overflow: hidden;
-    height: 100dvh;
-    width: 100%;
-  }
-
+  html[data-game-mode="pokemon"] body,
   html[data-game-mode="pokemon"] #root {
     overflow: hidden;
     height: 100dvh;
@@ -100,4 +75,3 @@
     touch-action: manipulation;
   }
 }
-
