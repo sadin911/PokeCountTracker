@@ -279,7 +279,30 @@ export function CollectionFilterBar({
         })}
       </div>
 
-      {/* Row 4: Quick Rarity Chips Bar (Visible on Mobile & Desktop for 1-Tap Filter) */}
+      {/* Row 4: Category Quick Filter Chips Bar */}
+      <div className="flex items-center gap-1.5 overflow-x-auto pb-1 scrollbar-none">
+        <span className="text-[11px] text-slate-400 font-bold whitespace-nowrap shrink-0">
+          หมวดหมู่:
+        </span>
+        {CATEGORIES.map((cat) => {
+          const isSelected = selectedCategory === cat.id;
+          return (
+            <button
+              key={cat.id}
+              onClick={() => onCategoryChange(cat.id)}
+              className={`px-2.5 py-1 rounded-xl text-xs font-bold whitespace-nowrap transition-all flex items-center gap-1 shrink-0 ${
+                isSelected
+                  ? 'bg-amber-400 text-slate-950 font-black shadow-md shadow-amber-400/20 scale-105'
+                  : 'bg-slate-800 hover:bg-slate-700 text-slate-300 border border-slate-700/60'
+              }`}
+            >
+              {cat.label}
+            </button>
+          );
+        })}
+      </div>
+
+      {/* Row 5: Quick Rarity Chips Bar (Visible on Mobile & Desktop for 1-Tap Filter) */}
       <div className="flex items-center gap-1.5 overflow-x-auto pb-1 scrollbar-none">
         <span className="text-[11px] text-slate-400 font-bold whitespace-nowrap shrink-0">
           ความหายาก:

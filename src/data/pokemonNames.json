@@ -3145,7 +3145,9 @@
     "stage": "",
     "category": "Energy",
     "hp": null,
-    "types": [],
+    "types": [
+      "Lightning"
+    ],
     "set": {
       "id": "SC1a",
       "name": "การ์ดเสริม \"ซอร์ด แอนด์ ชีลด์\" ชุด A"
@@ -3164,7 +3166,9 @@
     "stage": "",
     "category": "Energy",
     "hp": null,
-    "types": [],
+    "types": [
+      "Psychic"
+    ],
     "set": {
       "id": "SC1a",
       "name": "การ์ดเสริม \"ซอร์ด แอนด์ ชีลด์\" ชุด A"
@@ -12977,7 +12981,9 @@
     "stage": "",
     "category": "Energy",
     "hp": null,
-    "types": [],
+    "types": [
+      "Fire"
+    ],
     "set": {
       "id": "SC3a",
       "name": "ไชนี VMAX คอลเลกชัน ชุด A"
@@ -12996,7 +13002,9 @@
     "stage": "",
     "category": "Energy",
     "hp": null,
-    "types": [],
+    "types": [
+      "Water"
+    ],
     "set": {
       "id": "SC3a",
       "name": "ไชนี VMAX คอลเลกชัน ชุด A"
@@ -13015,7 +13023,9 @@
     "stage": "",
     "category": "Energy",
     "hp": null,
-    "types": [],
+    "types": [
+      "Fighting"
+    ],
     "set": {
       "id": "SC3a",
       "name": "ไชนี VMAX คอลเลกชัน ชุด A"
@@ -13034,7 +13044,9 @@
     "stage": "",
     "category": "Energy",
     "hp": null,
-    "types": [],
+    "types": [
+      "Colorless"
+    ],
     "set": {
       "id": "SC3a",
       "name": "ไชนี VMAX คอลเลกชัน ชุด A"
@@ -16272,7 +16284,9 @@
     "stage": "",
     "category": "Energy",
     "hp": null,
-    "types": [],
+    "types": [
+      "Grass"
+    ],
     "set": {
       "id": "SC3b",
       "name": "ไชนี VMAX คอลเลกชัน ชุด B"
@@ -16291,7 +16305,9 @@
     "stage": "",
     "category": "Energy",
     "hp": null,
-    "types": [],
+    "types": [
+      "Darkness"
+    ],
     "set": {
       "id": "SC3b",
       "name": "ไชนี VMAX คอลเลกชัน ชุด B"
@@ -16310,7 +16326,9 @@
     "stage": "",
     "category": "Energy",
     "hp": null,
-    "types": [],
+    "types": [
+      "Metal"
+    ],
     "set": {
       "id": "SC3b",
       "name": "ไชนี VMAX คอลเลกชัน ชุด B"
@@ -30331,7 +30349,9 @@
     "stage": "",
     "category": "Energy",
     "hp": null,
-    "types": [],
+    "types": [
+      "Grass"
+    ],
     "set": {
       "id": "S8a",
       "name": "คอลเลกชันฉลองครบรอบ 25 ปี"
@@ -30350,7 +30370,9 @@
     "stage": "",
     "category": "Energy",
     "hp": null,
-    "types": [],
+    "types": [
+      "Fire"
+    ],
     "set": {
       "id": "S8a",
       "name": "คอลเลกชันฉลองครบรอบ 25 ปี"
@@ -30369,7 +30391,9 @@
     "stage": "",
     "category": "Energy",
     "hp": null,
-    "types": [],
+    "types": [
+      "Water"
+    ],
     "set": {
       "id": "S8a",
       "name": "คอลเลกชันฉลองครบรอบ 25 ปี"
@@ -30388,7 +30412,9 @@
     "stage": "",
     "category": "Energy",
     "hp": null,
-    "types": [],
+    "types": [
+      "Lightning"
+    ],
     "set": {
       "id": "S8a",
       "name": "คอลเลกชันฉลองครบรอบ 25 ปี"
@@ -30407,7 +30433,9 @@
     "stage": "",
     "category": "Energy",
     "hp": null,
-    "types": [],
+    "types": [
+      "Psychic"
+    ],
     "set": {
       "id": "S8a",
       "name": "คอลเลกชันฉลองครบรอบ 25 ปี"
@@ -30426,7 +30454,9 @@
     "stage": "",
     "category": "Energy",
     "hp": null,
-    "types": [],
+    "types": [
+      "Fighting"
+    ],
     "set": {
       "id": "S8a",
       "name": "คอลเลกชันฉลองครบรอบ 25 ปี"
@@ -30445,7 +30475,9 @@
     "stage": "",
     "category": "Energy",
     "hp": null,
-    "types": [],
+    "types": [
+      "Darkness"
+    ],
     "set": {
       "id": "S8a",
       "name": "คอลเลกชันฉลองครบรอบ 25 ปี"
@@ -30464,7 +30496,9 @@
     "stage": "",
     "category": "Energy",
     "hp": null,
-    "types": [],
+    "types": [
+      "Metal"
+    ],
     "set": {
       "id": "S8a",
       "name": "คอลเลกชันฉลองครบรอบ 25 ปี"
@@ -32960,7 +32994,9 @@
     "stage": "",
     "category": "Energy",
     "hp": null,
-    "types": [],
+    "types": [
+      "Grass"
+    ],
     "set": {
       "id": "SCA",
       "name": "V Starter Deck บัดดี้"
@@ -32979,7 +33015,9 @@
     "stage": "",
     "category": "Energy",
     "hp": null,
-    "types": [],
+    "types": [
+      "Fire"
+    ],
     "set": {
       "id": "SCA",
       "name": "V Starter Deck บัดดี้"
@@ -32998,7 +33036,9 @@
     "stage": "",
     "category": "Energy",
     "hp": null,
-    "types": [],
+    "types": [
+      "Water"
+    ],
     "set": {
       "id": "SCA",
       "name": "V Starter Deck บัดดี้"
@@ -33017,7 +33057,9 @@
     "stage": "",
     "category": "Energy",
     "hp": null,
-    "types": [],
+    "types": [
+      "Lightning"
+    ],
     "set": {
       "id": "SCA",
       "name": "V Starter Deck บัดดี้"
@@ -33036,7 +33078,9 @@
     "stage": "",
     "category": "Energy",
     "hp": null,
-    "types": [],
+    "types": [
+      "Psychic"
+    ],
     "set": {
       "id": "SCA",
       "name": "V Starter Deck บัดดี้"
@@ -33055,7 +33099,9 @@
     "stage": "",
     "category": "Energy",
     "hp": null,
-    "types": [],
+    "types": [
+      "Fighting"
+    ],
     "set": {
       "id": "SCA",
       "name": "V Starter Deck บัดดี้"
@@ -33074,7 +33120,9 @@
     "stage": "",
     "category": "Energy",
     "hp": null,
-    "types": [],
+    "types": [
+      "Darkness"
+    ],
     "set": {
       "id": "SCA",
       "name": "V Starter Deck บัดดี้"
@@ -33093,7 +33141,9 @@
     "stage": "",
     "category": "Energy",
     "hp": null,
-    "types": [],
+    "types": [
+      "Metal"
+    ],
     "set": {
       "id": "SCA",
       "name": "V Starter Deck บัดดี้"
@@ -33112,7 +33162,9 @@
     "stage": "",
     "category": "Energy",
     "hp": null,
-    "types": [],
+    "types": [
+      "Colorless"
+    ],
     "set": {
       "id": "SCA",
       "name": "V Starter Deck บัดดี้"
@@ -36236,7 +36288,9 @@
     "stage": "",
     "category": "Energy",
     "hp": null,
-    "types": [],
+    "types": [
+      "Grass"
+    ],
     "set": {
       "id": "SCB",
       "name": "V Starter Deck ชาเลนจ์"
@@ -36255,7 +36309,9 @@
     "stage": "",
     "category": "Energy",
     "hp": null,
-    "types": [],
+    "types": [
+      "Fire"
+    ],
     "set": {
       "id": "SCB",
       "name": "V Starter Deck ชาเลนจ์"
@@ -36274,7 +36330,9 @@
     "stage": "",
     "category": "Energy",
     "hp": null,
-    "types": [],
+    "types": [
+      "Water"
+    ],
     "set": {
       "id": "SCB",
       "name": "V Starter Deck ชาเลนจ์"
@@ -36293,7 +36351,9 @@
     "stage": "",
     "category": "Energy",
     "hp": null,
-    "types": [],
+    "types": [
+      "Lightning"
+    ],
     "set": {
       "id": "SCB",
       "name": "V Starter Deck ชาเลนจ์"
@@ -36312,7 +36372,9 @@
     "stage": "",
     "category": "Energy",
     "hp": null,
-    "types": [],
+    "types": [
+      "Psychic"
+    ],
     "set": {
       "id": "SCB",
       "name": "V Starter Deck ชาเลนจ์"
@@ -36331,7 +36393,9 @@
     "stage": "",
     "category": "Energy",
     "hp": null,
-    "types": [],
+    "types": [
+      "Fighting"
+    ],
     "set": {
       "id": "SCB",
       "name": "V Starter Deck ชาเลนจ์"
@@ -36350,7 +36414,9 @@
     "stage": "",
     "category": "Energy",
     "hp": null,
-    "types": [],
+    "types": [
+      "Darkness"
+    ],
     "set": {
       "id": "SCB",
       "name": "V Starter Deck ชาเลนจ์"
@@ -36369,7 +36435,9 @@
     "stage": "",
     "category": "Energy",
     "hp": null,
-    "types": [],
+    "types": [
+      "Metal"
+    ],
     "set": {
       "id": "SCB",
       "name": "V Starter Deck ชาเลนจ์"
@@ -36388,7 +36456,9 @@
     "stage": "",
     "category": "Energy",
     "hp": null,
-    "types": [],
+    "types": [
+      "Colorless"
+    ],
     "set": {
       "id": "SCB",
       "name": "V Starter Deck ชาเลนจ์"
@@ -39706,7 +39776,9 @@
     "stage": "",
     "category": "Energy",
     "hp": null,
-    "types": [],
+    "types": [
+      "Grass"
+    ],
     "set": {
       "id": "SCC",
       "name": "V Starter Deck อีโวลูชัน"
@@ -39725,7 +39797,9 @@
     "stage": "",
     "category": "Energy",
     "hp": null,
-    "types": [],
+    "types": [
+      "Fire"
+    ],
     "set": {
       "id": "SCC",
       "name": "V Starter Deck อีโวลูชัน"
@@ -39744,7 +39818,9 @@
     "stage": "",
     "category": "Energy",
     "hp": null,
-    "types": [],
+    "types": [
+      "Water"
+    ],
     "set": {
       "id": "SCC",
       "name": "V Starter Deck อีโวลูชัน"
@@ -39763,7 +39839,9 @@
     "stage": "",
     "category": "Energy",
     "hp": null,
-    "types": [],
+    "types": [
+      "Lightning"
+    ],
     "set": {
       "id": "SCC",
       "name": "V Starter Deck อีโวลูชัน"
@@ -39782,7 +39860,9 @@
     "stage": "",
     "category": "Energy",
     "hp": null,
-    "types": [],
+    "types": [
+      "Psychic"
+    ],
     "set": {
       "id": "SCC",
       "name": "V Starter Deck อีโวลูชัน"
@@ -39801,7 +39881,9 @@
     "stage": "",
     "category": "Energy",
     "hp": null,
-    "types": [],
+    "types": [
+      "Fighting"
+    ],
     "set": {
       "id": "SCC",
       "name": "V Starter Deck อีโวลูชัน"
@@ -39820,7 +39902,9 @@
     "stage": "",
     "category": "Energy",
     "hp": null,
-    "types": [],
+    "types": [
+      "Darkness"
+    ],
     "set": {
       "id": "SCC",
       "name": "V Starter Deck อีโวลูชัน"
@@ -39839,7 +39923,9 @@
     "stage": "",
     "category": "Energy",
     "hp": null,
-    "types": [],
+    "types": [
+      "Metal"
+    ],
     "set": {
       "id": "SCC",
       "name": "V Starter Deck อีโวลูชัน"
@@ -39858,7 +39944,9 @@
     "stage": "",
     "category": "Energy",
     "hp": null,
-    "types": [],
+    "types": [
+      "Colorless"
+    ],
     "set": {
       "id": "SCC",
       "name": "V Starter Deck อีโวลูชัน"
@@ -42999,7 +43087,9 @@
     "stage": "",
     "category": "Energy",
     "hp": null,
-    "types": [],
+    "types": [
+      "Grass"
+    ],
     "set": {
       "id": "SCD",
       "name": "V Starter Deck เกรทพาวเวอร์"
@@ -43018,7 +43108,9 @@
     "stage": "",
     "category": "Energy",
     "hp": null,
-    "types": [],
+    "types": [
+      "Fire"
+    ],
     "set": {
       "id": "SCD",
       "name": "V Starter Deck เกรทพาวเวอร์"
@@ -43037,7 +43129,9 @@
     "stage": "",
     "category": "Energy",
     "hp": null,
-    "types": [],
+    "types": [
+      "Water"
+    ],
     "set": {
       "id": "SCD",
       "name": "V Starter Deck เกรทพาวเวอร์"
@@ -43056,7 +43150,9 @@
     "stage": "",
     "category": "Energy",
     "hp": null,
-    "types": [],
+    "types": [
+      "Lightning"
+    ],
     "set": {
       "id": "SCD",
       "name": "V Starter Deck เกรทพาวเวอร์"
@@ -43075,7 +43171,9 @@
     "stage": "",
     "category": "Energy",
     "hp": null,
-    "types": [],
+    "types": [
+      "Psychic"
+    ],
     "set": {
       "id": "SCD",
       "name": "V Starter Deck เกรทพาวเวอร์"
@@ -43094,7 +43192,9 @@
     "stage": "",
     "category": "Energy",
     "hp": null,
-    "types": [],
+    "types": [
+      "Fighting"
+    ],
     "set": {
       "id": "SCD",
       "name": "V Starter Deck เกรทพาวเวอร์"
@@ -43113,7 +43213,9 @@
     "stage": "",
     "category": "Energy",
     "hp": null,
-    "types": [],
+    "types": [
+      "Darkness"
+    ],
     "set": {
       "id": "SCD",
       "name": "V Starter Deck เกรทพาวเวอร์"
@@ -46576,7 +46678,9 @@
     "stage": "",
     "category": "Energy",
     "hp": null,
-    "types": [],
+    "types": [
+      "Grass"
+    ],
     "set": {
       "id": "S8b",
       "name": "VMAX ไคลแมกซ์"
@@ -46595,7 +46699,9 @@
     "stage": "",
     "category": "Energy",
     "hp": null,
-    "types": [],
+    "types": [
+      "Fire"
+    ],
     "set": {
       "id": "S8b",
       "name": "VMAX ไคลแมกซ์"
@@ -46614,7 +46720,9 @@
     "stage": "",
     "category": "Energy",
     "hp": null,
-    "types": [],
+    "types": [
+      "Water"
+    ],
     "set": {
       "id": "S8b",
       "name": "VMAX ไคลแมกซ์"
@@ -46633,7 +46741,9 @@
     "stage": "",
     "category": "Energy",
     "hp": null,
-    "types": [],
+    "types": [
+      "Lightning"
+    ],
     "set": {
       "id": "S8b",
       "name": "VMAX ไคลแมกซ์"
@@ -46652,7 +46762,9 @@
     "stage": "",
     "category": "Energy",
     "hp": null,
-    "types": [],
+    "types": [
+      "Psychic"
+    ],
     "set": {
       "id": "S8b",
       "name": "VMAX ไคลแมกซ์"
@@ -46671,7 +46783,9 @@
     "stage": "",
     "category": "Energy",
     "hp": null,
-    "types": [],
+    "types": [
+      "Fighting"
+    ],
     "set": {
       "id": "S8b",
       "name": "VMAX ไคลแมกซ์"
@@ -46690,7 +46804,9 @@
     "stage": "",
     "category": "Energy",
     "hp": null,
-    "types": [],
+    "types": [
+      "Darkness"
+    ],
     "set": {
       "id": "S8b",
       "name": "VMAX ไคลแมกซ์"
@@ -46709,7 +46825,9 @@
     "stage": "",
     "category": "Energy",
     "hp": null,
-    "types": [],
+    "types": [
+      "Metal"
+    ],
     "set": {
       "id": "S8b",
       "name": "VMAX ไคลแมกซ์"
@@ -46728,7 +46846,9 @@
     "stage": "",
     "category": "Energy",
     "hp": null,
-    "types": [],
+    "types": [
+      "Colorless"
+    ],
     "set": {
       "id": "S8b",
       "name": "VMAX ไคลแมกซ์"
@@ -53672,7 +53792,9 @@
     "stage": "",
     "category": "Energy",
     "hp": null,
-    "types": [],
+    "types": [
+      "Grass"
+    ],
     "set": {
       "id": "SCE",
       "name": "V Starter Deck ระเบิดพลัง"
@@ -53691,7 +53813,9 @@
     "stage": "",
     "category": "Energy",
     "hp": null,
-    "types": [],
+    "types": [
+      "Fire"
+    ],
     "set": {
       "id": "SCE",
       "name": "V Starter Deck ระเบิดพลัง"
@@ -53710,7 +53834,9 @@
     "stage": "",
     "category": "Energy",
     "hp": null,
-    "types": [],
+    "types": [
+      "Water"
+    ],
     "set": {
       "id": "SCE",
       "name": "V Starter Deck ระเบิดพลัง"
@@ -53729,7 +53855,9 @@
     "stage": "",
     "category": "Energy",
     "hp": null,
-    "types": [],
+    "types": [
+      "Lightning"
+    ],
     "set": {
       "id": "SCE",
       "name": "V Starter Deck ระเบิดพลัง"
@@ -53748,7 +53876,9 @@
     "stage": "",
     "category": "Energy",
     "hp": null,
-    "types": [],
+    "types": [
+      "Psychic"
+    ],
     "set": {
       "id": "SCE",
       "name": "V Starter Deck ระเบิดพลัง"
@@ -53767,7 +53897,9 @@
     "stage": "",
     "category": "Energy",
     "hp": null,
-    "types": [],
+    "types": [
+      "Fighting"
+    ],
     "set": {
       "id": "SCE",
       "name": "V Starter Deck ระเบิดพลัง"
@@ -53786,7 +53918,9 @@
     "stage": "",
     "category": "Energy",
     "hp": null,
-    "types": [],
+    "types": [
+      "Darkness"
+    ],
     "set": {
       "id": "SCE",
       "name": "V Starter Deck ระเบิดพลัง"
@@ -53805,7 +53939,9 @@
     "stage": "",
     "category": "Energy",
     "hp": null,
-    "types": [],
+    "types": [
+      "Metal"
+    ],
     "set": {
       "id": "SCE",
       "name": "V Starter Deck ระเบิดพลัง"
@@ -53843,7 +53979,9 @@
     "stage": "",
     "category": "Energy",
     "hp": null,
-    "types": [],
+    "types": [
+      "Grass"
+    ],
     "set": {
       "id": "SCE",
       "name": "V Starter Deck ระเบิดพลัง"
@@ -53862,7 +54000,9 @@
     "stage": "",
     "category": "Energy",
     "hp": null,
-    "types": [],
+    "types": [
+      "Fire"
+    ],
     "set": {
       "id": "SCE",
       "name": "V Starter Deck ระเบิดพลัง"
@@ -53881,7 +54021,9 @@
     "stage": "",
     "category": "Energy",
     "hp": null,
-    "types": [],
+    "types": [
+      "Water"
+    ],
     "set": {
       "id": "SCE",
       "name": "V Starter Deck ระเบิดพลัง"
@@ -53900,7 +54042,9 @@
     "stage": "",
     "category": "Energy",
     "hp": null,
-    "types": [],
+    "types": [
+      "Lightning"
+    ],
     "set": {
       "id": "SCE",
       "name": "V Starter Deck ระเบิดพลัง"
@@ -53919,7 +54063,9 @@
     "stage": "",
     "category": "Energy",
     "hp": null,
-    "types": [],
+    "types": [
+      "Psychic"
+    ],
     "set": {
       "id": "SCE",
       "name": "V Starter Deck ระเบิดพลัง"
@@ -53938,7 +54084,9 @@
     "stage": "",
     "category": "Energy",
     "hp": null,
-    "types": [],
+    "types": [
+      "Fighting"
+    ],
     "set": {
       "id": "SCE",
       "name": "V Starter Deck ระเบิดพลัง"
@@ -53957,7 +54105,9 @@
     "stage": "",
     "category": "Energy",
     "hp": null,
-    "types": [],
+    "types": [
+      "Darkness"
+    ],
     "set": {
       "id": "SCE",
       "name": "V Starter Deck ระเบิดพลัง"
@@ -53976,7 +54126,9 @@
     "stage": "",
     "category": "Energy",
     "hp": null,
-    "types": [],
+    "types": [
+      "Metal"
+    ],
     "set": {
       "id": "SCE",
       "name": "V Starter Deck ระเบิดพลัง"
@@ -60141,7 +60293,9 @@
     "stage": "",
     "category": "Energy",
     "hp": null,
-    "types": [],
+    "types": [
+      "Grass"
+    ],
     "set": {
       "id": "S10b",
       "name": "Pokémon GO"
@@ -60160,7 +60314,9 @@
     "stage": "",
     "category": "Energy",
     "hp": null,
-    "types": [],
+    "types": [
+      "Fire"
+    ],
     "set": {
       "id": "S10b",
       "name": "Pokémon GO"
@@ -60179,7 +60335,9 @@
     "stage": "",
     "category": "Energy",
     "hp": null,
-    "types": [],
+    "types": [
+      "Water"
+    ],
     "set": {
       "id": "S10b",
       "name": "Pokémon GO"
@@ -60198,7 +60356,9 @@
     "stage": "",
     "category": "Energy",
     "hp": null,
-    "types": [],
+    "types": [
+      "Lightning"
+    ],
     "set": {
       "id": "S10b",
       "name": "Pokémon GO"
@@ -60217,7 +60377,9 @@
     "stage": "",
     "category": "Energy",
     "hp": null,
-    "types": [],
+    "types": [
+      "Psychic"
+    ],
     "set": {
       "id": "S10b",
       "name": "Pokémon GO"
@@ -60236,7 +60398,9 @@
     "stage": "",
     "category": "Energy",
     "hp": null,
-    "types": [],
+    "types": [
+      "Fighting"
+    ],
     "set": {
       "id": "S10b",
       "name": "Pokémon GO"
@@ -60255,7 +60419,9 @@
     "stage": "",
     "category": "Energy",
     "hp": null,
-    "types": [],
+    "types": [
+      "Darkness"
+    ],
     "set": {
       "id": "S10b",
       "name": "Pokémon GO"
@@ -60274,7 +60440,9 @@
     "stage": "",
     "category": "Energy",
     "hp": null,
-    "types": [],
+    "types": [
+      "Metal"
+    ],
     "set": {
       "id": "S10b",
       "name": "Pokémon GO"
@@ -60775,7 +60943,9 @@
     "stage": "",
     "category": "Energy",
     "hp": null,
-    "types": [],
+    "types": [
+      "Grass"
+    ],
     "set": {
       "id": "SH",
       "name": "โปเกมอนเทรดดิ้งการ์ดเกม ชุดแฟมิลีแฮปปี้"
@@ -60794,7 +60964,9 @@
     "stage": "",
     "category": "Energy",
     "hp": null,
-    "types": [],
+    "types": [
+      "Fire"
+    ],
     "set": {
       "id": "SH",
       "name": "โปเกมอนเทรดดิ้งการ์ดเกม ชุดแฟมิลีแฮปปี้"
@@ -61295,7 +61467,9 @@
     "stage": "",
     "category": "Energy",
     "hp": null,
-    "types": [],
+    "types": [
+      "Water"
+    ],
     "set": {
       "id": "SH",
       "name": "โปเกมอนเทรดดิ้งการ์ดเกม ชุดแฟมิลีแฮปปี้"
@@ -61314,7 +61488,9 @@
     "stage": "",
     "category": "Energy",
     "hp": null,
-    "types": [],
+    "types": [
+      "Lightning"
+    ],
     "set": {
       "id": "SH",
       "name": "โปเกมอนเทรดดิ้งการ์ดเกม ชุดแฟมิลีแฮปปี้"
@@ -70517,7 +70693,9 @@
     "stage": "",
     "category": "Energy",
     "hp": null,
-    "types": [],
+    "types": [
+      "Grass"
+    ],
     "set": {
       "id": "SCF",
       "name": "V Starter Deck เปลี่ยนผ่าน"
@@ -70536,7 +70714,9 @@
     "stage": "",
     "category": "Energy",
     "hp": null,
-    "types": [],
+    "types": [
+      "Fire"
+    ],
     "set": {
       "id": "SCF",
       "name": "V Starter Deck เปลี่ยนผ่าน"
@@ -70555,7 +70735,9 @@
     "stage": "",
     "category": "Energy",
     "hp": null,
-    "types": [],
+    "types": [
+      "Water"
+    ],
     "set": {
       "id": "SCF",
       "name": "V Starter Deck เปลี่ยนผ่าน"
@@ -70574,7 +70756,9 @@
     "stage": "",
     "category": "Energy",
     "hp": null,
-    "types": [],
+    "types": [
+      "Lightning"
+    ],
     "set": {
       "id": "SCF",
       "name": "V Starter Deck เปลี่ยนผ่าน"
@@ -70593,7 +70777,9 @@
     "stage": "",
     "category": "Energy",
     "hp": null,
-    "types": [],
+    "types": [
+      "Psychic"
+    ],
     "set": {
       "id": "SCF",
       "name": "V Starter Deck เปลี่ยนผ่าน"
@@ -70612,7 +70798,9 @@
     "stage": "",
     "category": "Energy",
     "hp": null,
-    "types": [],
+    "types": [
+      "Fighting"
+    ],
     "set": {
       "id": "SCF",
       "name": "V Starter Deck เปลี่ยนผ่าน"
@@ -70631,7 +70819,9 @@
     "stage": "",
     "category": "Energy",
     "hp": null,
-    "types": [],
+    "types": [
+      "Darkness"
+    ],
     "set": {
       "id": "SCF",
       "name": "V Starter Deck เปลี่ยนผ่าน"
@@ -70650,7 +70840,9 @@
     "stage": "",
     "category": "Energy",
     "hp": null,
-    "types": [],
+    "types": [
+      "Metal"
+    ],
     "set": {
       "id": "SCF",
       "name": "V Starter Deck เปลี่ยนผ่าน"
@@ -80140,7 +80332,9 @@
     "stage": "",
     "category": "Energy",
     "hp": null,
-    "types": [],
+    "types": [
+      "Fire"
+    ],
     "set": {
       "id": "SVAL",
       "name": "Starter Deck ex โฮเกเตอร์ & เด็นริว ex"
@@ -80159,7 +80353,9 @@
     "stage": "",
     "category": "Energy",
     "hp": null,
-    "types": [],
+    "types": [
+      "Lightning"
+    ],
     "set": {
       "id": "SVAL",
       "name": "Starter Deck ex โฮเกเตอร์ & เด็นริว ex"
@@ -80637,7 +80833,9 @@
     "stage": "",
     "category": "Energy",
     "hp": null,
-    "types": [],
+    "types": [
+      "Grass"
+    ],
     "set": {
       "id": "SVAM",
       "name": "Starter Deck ex เนียวฮะ & ลูคาริโอ ex"
@@ -80656,7 +80854,9 @@
     "stage": "",
     "category": "Energy",
     "hp": null,
-    "types": [],
+    "types": [
+      "Fighting"
+    ],
     "set": {
       "id": "SVAM",
       "name": "Starter Deck ex เนียวฮะ & ลูคาริโอ ex"
@@ -81132,7 +81332,9 @@
     "stage": "",
     "category": "Energy",
     "hp": null,
-    "types": [],
+    "types": [
+      "Water"
+    ],
     "set": {
       "id": "SVAW",
       "name": "Starter Deck ex แคว็กซ์ & มิมิคคิว ex"
@@ -81151,7 +81353,9 @@
     "stage": "",
     "category": "Energy",
     "hp": null,
-    "types": [],
+    "types": [
+      "Psychic"
+    ],
     "set": {
       "id": "SVAW",
       "name": "Starter Deck ex แคว็กซ์ & มิมิคคิว ex"
@@ -98396,7 +98600,9 @@
     "stage": "",
     "category": "Energy",
     "hp": null,
-    "types": [],
+    "types": [
+      "Grass"
+    ],
     "set": {
       "id": "SVDs",
       "name": "ex คอมแพกต์เด็ค"
@@ -98415,7 +98621,9 @@
     "stage": "",
     "category": "Energy",
     "hp": null,
-    "types": [],
+    "types": [
+      "Fire"
+    ],
     "set": {
       "id": "SVDs",
       "name": "ex คอมแพกต์เด็ค"
@@ -98434,7 +98642,9 @@
     "stage": "",
     "category": "Energy",
     "hp": null,
-    "types": [],
+    "types": [
+      "Water"
+    ],
     "set": {
       "id": "SVDs",
       "name": "ex คอมแพกต์เด็ค"
@@ -98453,7 +98663,9 @@
     "stage": "",
     "category": "Energy",
     "hp": null,
-    "types": [],
+    "types": [
+      "Lightning"
+    ],
     "set": {
       "id": "SVDs",
       "name": "ex คอมแพกต์เด็ค"
@@ -98472,7 +98684,9 @@
     "stage": "",
     "category": "Energy",
     "hp": null,
-    "types": [],
+    "types": [
+      "Psychic"
+    ],
     "set": {
       "id": "SVDs",
       "name": "ex คอมแพกต์เด็ค"
@@ -98491,7 +98705,9 @@
     "stage": "",
     "category": "Energy",
     "hp": null,
-    "types": [],
+    "types": [
+      "Fighting"
+    ],
     "set": {
       "id": "SVDs",
       "name": "ex คอมแพกต์เด็ค"
@@ -98510,7 +98726,9 @@
     "stage": "",
     "category": "Energy",
     "hp": null,
-    "types": [],
+    "types": [
+      "Darkness"
+    ],
     "set": {
       "id": "SVDs",
       "name": "ex คอมแพกต์เด็ค"
@@ -98529,7 +98747,9 @@
     "stage": "",
     "category": "Energy",
     "hp": null,
-    "types": [],
+    "types": [
+      "Metal"
+    ],
     "set": {
       "id": "SVDs",
       "name": "ex คอมแพกต์เด็ค"
@@ -111667,7 +111887,9 @@
     "stage": "",
     "category": "Energy",
     "hp": null,
-    "types": [],
+    "types": [
+      "Fire"
+    ],
     "set": {
       "id": "SVHK",
       "name": "Starter Deck \"โคไรดอนex โบราณ\""
@@ -111686,7 +111908,9 @@
     "stage": "",
     "category": "Energy",
     "hp": null,
-    "types": [],
+    "types": [
+      "Fighting"
+    ],
     "set": {
       "id": "SVHK",
       "name": "Starter Deck \"โคไรดอนex โบราณ\""
@@ -112143,7 +112367,9 @@
     "stage": "",
     "category": "Energy",
     "hp": null,
-    "types": [],
+    "types": [
+      "Lightning"
+    ],
     "set": {
       "id": "SVHM",
       "name": "Starter Deck \"มิไรดอนex อนาคต\""
@@ -112162,7 +112388,9 @@
     "stage": "",
     "category": "Energy",
     "hp": null,
-    "types": [],
+    "types": [
+      "Psychic"
+    ],
     "set": {
       "id": "SVHM",
       "name": "Starter Deck \"มิไรดอนex อนาคต\""
@@ -121886,7 +122114,9 @@
     "stage": "",
     "category": "Energy",
     "hp": null,
-    "types": [],
+    "types": [
+      "Fire"
+    ],
     "set": {
       "id": "SVTL",
       "name": "แท็กติกเด็ค ลิซาร์ดอนex เทรัสตัล"
@@ -122339,7 +122569,9 @@
     "stage": "",
     "category": "Energy",
     "hp": null,
-    "types": [],
+    "types": [
+      "Grass"
+    ],
     "set": {
       "id": "SVTM",
       "name": "แท็กติกเด็ค มาสเคอเนียex"
@@ -122792,7 +123024,9 @@
     "stage": "",
     "category": "Energy",
     "hp": null,
-    "types": [],
+    "types": [
+      "Psychic"
+    ],
     "set": {
       "id": "SVTS",
       "name": "แท็กติกเด็ค เซอไนท์ex"
@@ -123188,7 +123422,9 @@
     "stage": "",
     "category": "Energy",
     "hp": null,
-    "types": [],
+    "types": [
+      "Fighting"
+    ],
     "set": {
       "id": "SVTG",
       "name": "แท็กติกเด็ค กาเบรียสex เทรัสตัล"
@@ -123622,7 +123858,9 @@
     "stage": "",
     "category": "Energy",
     "hp": null,
-    "types": [],
+    "types": [
+      "Lightning"
+    ],
     "set": {
       "id": "SVTR",
       "name": "แท็กติกเด็ค มิไรดอนex"
@@ -123997,7 +124235,9 @@
     "stage": "",
     "category": "Energy",
     "hp": null,
-    "types": [],
+    "types": [
+      "Metal"
+    ],
     "set": {
       "id": "SVTH",
       "name": "แท็กติกเด็ค ฮัซซัมex"
@@ -130297,7 +130537,9 @@
     "stage": "",
     "category": "Energy",
     "hp": null,
-    "types": [],
+    "types": [
+      "Grass"
+    ],
     "set": {
       "id": "SVK",
       "name": "ชุดปรับแต่งเด็ค แสงนำทางแห่งสเตลลาร์"
@@ -130316,7 +130558,9 @@
     "stage": "",
     "category": "Energy",
     "hp": null,
-    "types": [],
+    "types": [
+      "Fire"
+    ],
     "set": {
       "id": "SVK",
       "name": "ชุดปรับแต่งเด็ค แสงนำทางแห่งสเตลลาร์"
@@ -130335,7 +130579,9 @@
     "stage": "",
     "category": "Energy",
     "hp": null,
-    "types": [],
+    "types": [
+      "Water"
+    ],
     "set": {
       "id": "SVK",
       "name": "ชุดปรับแต่งเด็ค แสงนำทางแห่งสเตลลาร์"
@@ -130354,7 +130600,9 @@
     "stage": "",
     "category": "Energy",
     "hp": null,
-    "types": [],
+    "types": [
+      "Lightning"
+    ],
     "set": {
       "id": "SVK",
       "name": "ชุดปรับแต่งเด็ค แสงนำทางแห่งสเตลลาร์"
@@ -130373,7 +130621,9 @@
     "stage": "",
     "category": "Energy",
     "hp": null,
-    "types": [],
+    "types": [
+      "Psychic"
+    ],
     "set": {
       "id": "SVK",
       "name": "ชุดปรับแต่งเด็ค แสงนำทางแห่งสเตลลาร์"
@@ -130392,7 +130642,9 @@
     "stage": "",
     "category": "Energy",
     "hp": null,
-    "types": [],
+    "types": [
+      "Fighting"
+    ],
     "set": {
       "id": "SVK",
       "name": "ชุดปรับแต่งเด็ค แสงนำทางแห่งสเตลลาร์"
@@ -130411,7 +130663,9 @@
     "stage": "",
     "category": "Energy",
     "hp": null,
-    "types": [],
+    "types": [
+      "Darkness"
+    ],
     "set": {
       "id": "SVK",
       "name": "ชุดปรับแต่งเด็ค แสงนำทางแห่งสเตลลาร์"
@@ -130430,7 +130684,9 @@
     "stage": "",
     "category": "Energy",
     "hp": null,
-    "types": [],
+    "types": [
+      "Metal"
+    ],
     "set": {
       "id": "SVK",
       "name": "ชุดปรับแต่งเด็ค แสงนำทางแห่งสเตลลาร์"
@@ -138040,7 +138296,9 @@
     "stage": "",
     "category": "Energy",
     "hp": null,
-    "types": [],
+    "types": [
+      "Grass"
+    ],
     "set": {
       "id": "SVM",
       "name": "Starter Deck ดับเบิลex Generations!"
@@ -138059,7 +138317,9 @@
     "stage": "",
     "category": "Energy",
     "hp": null,
-    "types": [],
+    "types": [
+      "Fire"
+    ],
     "set": {
       "id": "SVM",
       "name": "Starter Deck ดับเบิลex Generations!"
@@ -138078,7 +138338,9 @@
     "stage": "",
     "category": "Energy",
     "hp": null,
-    "types": [],
+    "types": [
+      "Water"
+    ],
     "set": {
       "id": "SVM",
       "name": "Starter Deck ดับเบิลex Generations!"
@@ -138097,7 +138359,9 @@
     "stage": "",
     "category": "Energy",
     "hp": null,
-    "types": [],
+    "types": [
+      "Lightning"
+    ],
     "set": {
       "id": "SVM",
       "name": "Starter Deck ดับเบิลex Generations!"
@@ -138116,7 +138380,9 @@
     "stage": "",
     "category": "Energy",
     "hp": null,
-    "types": [],
+    "types": [
+      "Psychic"
+    ],
     "set": {
       "id": "SVM",
       "name": "Starter Deck ดับเบิลex Generations!"
@@ -138135,7 +138401,9 @@
     "stage": "",
     "category": "Energy",
     "hp": null,
-    "types": [],
+    "types": [
+      "Fighting"
+    ],
     "set": {
       "id": "SVM",
       "name": "Starter Deck ดับเบิลex Generations!"
@@ -138154,7 +138422,9 @@
     "stage": "",
     "category": "Energy",
     "hp": null,
-    "types": [],
+    "types": [
+      "Darkness"
+    ],
     "set": {
       "id": "SVM",
       "name": "Starter Deck ดับเบิลex Generations!"
@@ -138173,7 +138443,9 @@
     "stage": "",
     "category": "Energy",
     "hp": null,
-    "types": [],
+    "types": [
+      "Metal"
+    ],
     "set": {
       "id": "SVM",
       "name": "Starter Deck ดับเบิลex Generations!"
@@ -150553,7 +150825,9 @@
     "stage": "",
     "category": "Energy",
     "hp": null,
-    "types": [],
+    "types": [
+      "Fighting"
+    ],
     "set": {
       "id": "SV-P",
       "name": "การ์ดโปรโม สการ์เล็ต แอนด์ ไวโอเล็ต"
@@ -153419,7 +153693,9 @@
     "stage": "",
     "category": "Energy",
     "hp": null,
-    "types": [],
+    "types": [
+      "Fighting"
+    ],
     "set": {
       "id": "SV10s",
       "name": "การ์ดชุดเสริม \"การผงาดของผู้ไร้พ่าย\""
@@ -170077,7 +170353,9 @@
     "stage": "",
     "category": "Energy",
     "hp": null,
-    "types": [],
+    "types": [
+      "Lightning"
+    ],
     "set": {
       "id": "SV1V",
       "name": "การ์ดชุดเสริม \"ไวโอเล็ต ex\""
@@ -170691,7 +170969,9 @@
     "stage": "",
     "category": "Energy",
     "hp": null,
-    "types": [],
+    "types": [
+      "Fighting"
+    ],
     "set": {
       "id": "SV1S",
       "name": "การ์ดชุดเสริม \"สการ์เล็ต ex\""
@@ -171864,7 +172144,9 @@
     "stage": "",
     "category": "Energy",
     "hp": null,
-    "types": [],
+    "types": [
+      "Water"
+    ],
     "set": {
       "id": "SV2P",
       "name": "สการ์เล็ต&ไวโอเล็ต การ์ดชุดเสริม “สโนว์ฮาซาร์ด”"
@@ -172440,7 +172722,9 @@
     "stage": "",
     "category": "Energy",
     "hp": null,
-    "types": [],
+    "types": [
+      "Grass"
+    ],
     "set": {
       "id": "SV2D",
       "name": "การ์ดชุดเสริม “เคลย์เบิสต์”"
@@ -172520,7 +172804,9 @@
     "stage": "",
     "category": "Energy",
     "hp": null,
-    "types": [],
+    "types": [
+      "Psychic"
+    ],
     "set": {
       "id": "SV2a",
       "name": "การ์ดชุดเสริมเพิ่มความแกร่ง \"โปเกมอนการ์ด 151\""
@@ -172558,7 +172844,9 @@
     "stage": "",
     "category": "Energy",
     "hp": null,
-    "types": [],
+    "types": [
+      "Fire"
+    ],
     "set": {
       "id": "SV3",
       "name": "การ์ดชุดเสริม \"ราชาแห่งเพลิงกาฬ\""
@@ -172676,7 +172964,9 @@
     "stage": "",
     "category": "Energy",
     "hp": null,
-    "types": [],
+    "types": [
+      "Metal"
+    ],
     "set": {
       "id": "SV4M",
       "name": "ประกายแสงจากอนาคต"
@@ -172735,7 +173025,9 @@
     "stage": "",
     "category": "Energy",
     "hp": null,
-    "types": [],
+    "types": [
+      "Darkness"
+    ],
     "set": {
       "id": "SV4K",
       "name": "เสียงคำรามจากอดีต"
@@ -178494,7 +178786,9 @@
     "stage": "",
     "category": "Energy",
     "hp": null,
-    "types": [],
+    "types": [
+      "Fighting"
+    ],
     "set": {
       "id": "MA3",
       "name": "การ์ดชุดเสริมไฮคลาส \"วิวัฒนาการเมก้า ดรีมex\""
@@ -179094,7 +179388,9 @@
     "stage": "",
     "category": "Energy",
     "hp": null,
-    "types": [],
+    "types": [
+      "Fighting"
+    ],
     "set": {
       "id": "MAAL",
       "name": "Starter Deck ex เมก้าลูคาริโอ"
@@ -179572,7 +179868,9 @@
     "stage": "",
     "category": "Energy",
     "hp": null,
-    "types": [],
+    "types": [
+      "Grass"
+    ],
     "set": {
       "id": "MAAF",
       "name": "Starter Deck ex เมก้าฟุชิกิบานะ"
@@ -188195,7 +188493,9 @@
     "stage": "",
     "category": "Energy",
     "hp": null,
-    "types": [],
+    "types": [
+      "Grass"
+    ],
     "set": {
       "id": "MA4",
       "name": "การ์ดชุดเสริม \"วอยด์บลาสต์\""
@@ -188214,7 +188514,9 @@
     "stage": "",
     "category": "Energy",
     "hp": null,
-    "types": [],
+    "types": [
+      "Psychic"
+    ],
     "set": {
       "id": "MA4",
       "name": "การ์ดชุดเสริม \"วอยด์บลาสต์\""
@@ -188233,7 +188535,9 @@
     "stage": "",
     "category": "Energy",
     "hp": null,
-    "types": [],
+    "types": [
+      "Fighting"
+    ],
     "set": {
       "id": "MA4",
       "name": "การ์ดชุดเสริม \"วอยด์บลาสต์\""
@@ -192991,7 +193295,9 @@
     "stage": "",
     "category": "Energy",
     "hp": null,
-    "types": [],
+    "types": [
+      "Fire"
+    ],
     "set": {
       "id": "MA5",
       "name": "การ์ดชุดเสริม \"เงามืดคุกคาม\""
@@ -193010,7 +193316,9 @@
     "stage": "",
     "category": "Energy",
     "hp": null,
-    "types": [],
+    "types": [
+      "Water"
+    ],
     "set": {
       "id": "MA5",
       "name": "การ์ดชุดเสริม \"เงามืดคุกคาม\""
@@ -193029,7 +193337,9 @@
     "stage": "",
     "category": "Energy",
     "hp": null,
-    "types": [],
+    "types": [
+      "Lightning"
+    ],
     "set": {
       "id": "MA5",
       "name": "การ์ดชุดเสริม \"เงามืดคุกคาม\""
@@ -193048,7 +193358,9 @@
     "stage": "",
     "category": "Energy",
     "hp": null,
-    "types": [],
+    "types": [
+      "Darkness"
+    ],
     "set": {
       "id": "MA5",
       "name": "การ์ดชุดเสริม \"เงามืดคุกคาม\""
@@ -193067,7 +193379,9 @@
     "stage": "",
     "category": "Energy",
     "hp": null,
-    "types": [],
+    "types": [
+      "Metal"
+    ],
     "set": {
       "id": "MA5",
       "name": "การ์ดชุดเสริม \"เงามืดคุกคาม\""
@@ -193798,7 +194112,9 @@
     "stage": "",
     "category": "Energy",
     "hp": null,
-    "types": [],
+    "types": [
+      "Fire"
+    ],
     "set": {
       "id": "MATL",
       "name": "แท็กติกเด็ค เมก้าลิซาร์ดอนXex"
@@ -194213,7 +194529,9 @@
     "stage": "",
     "category": "Energy",
     "hp": null,
-    "types": [],
+    "types": [
+      "Darkness"
+    ],
     "set": {
       "id": "MATH",
       "name": "แท็กติกเด็ค เมก้าซาเมฮาเดอร์ex"
@@ -194670,7 +194988,9 @@
     "stage": "",
     "category": "Energy",
     "hp": null,
-    "types": [],
+    "types": [
+      "Psychic"
+    ],
     "set": {
       "id": "MATS",
       "name": "แท็กติกเด็ค เมก้าเซอไนท์ex"
@@ -194689,7 +195009,9 @@
     "stage": "",
     "category": "Energy",
     "hp": null,
-    "types": [],
+    "types": [
+      "Psychic"
+    ],
     "set": {
       "id": "MATS",
       "name": "แท็กติกเด็ค เมก้าเซอไนท์ex"
@@ -195167,7 +195489,9 @@
     "stage": "",
     "category": "Energy",
     "hp": null,
-    "types": [],
+    "types": [
+      "Water"
+    ],
     "set": {
       "id": "MATK",
       "name": "แท็กติกเด็ค เมก้าไคริวex"
@@ -195186,7 +195510,9 @@
     "stage": "",
     "category": "Energy",
     "hp": null,
-    "types": [],
+    "types": [
+      "Lightning"
+    ],
     "set": {
       "id": "MATK",
       "name": "แท็กติกเด็ค เมก้าไคริวex"
@@ -197879,7 +198205,10 @@
     "collectorNumber": "083-067",
     "regulationMark": "E",
     "officialImageUrl": null,
-    "rarityCode": "UR"
+    "rarityCode": "UR",
+    "types": [
+      "Lightning"
+    ]
   },
   {
     "id": "TH-SEC-10056",

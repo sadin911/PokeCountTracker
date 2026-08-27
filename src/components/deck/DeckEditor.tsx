@@ -610,6 +610,34 @@ export function DeckEditor({ deck, onBackToDecks }: Props) {
             })}
           </div>
 
+          {/* Category Quick Chips */}
+          <div className="flex items-center gap-1.5 overflow-x-auto scrollbar-none py-0.5">
+            <span className="text-[11px] text-slate-400 font-bold whitespace-nowrap shrink-0">
+              หมวดหมู่:
+            </span>
+            {[
+              { id: 'ALL', label: 'ทั้งหมด' },
+              { id: 'Pokemon', label: '👾 โปเกมอน' },
+              { id: 'Trainer', label: '🎒 เทรนเนอร์' },
+              { id: 'Energy', label: '⚡ พลังงาน' },
+            ].map((cat) => {
+              const isSelected = selectedCategory === cat.id;
+              return (
+                <button
+                  key={cat.id}
+                  onClick={() => setSelectedCategory(cat.id)}
+                  className={`px-2.5 py-1 rounded-lg text-[11px] font-bold whitespace-nowrap transition-all shrink-0 ${
+                    isSelected
+                      ? 'bg-amber-400 text-slate-950 font-black shadow-md'
+                      : 'bg-slate-800 hover:bg-slate-700 text-slate-300 border border-slate-700/60'
+                  }`}
+                >
+                  {cat.label}
+                </button>
+              );
+            })}
+          </div>
+
           {/* Energy Types Row */}
           <div className="flex items-center gap-1.5 overflow-x-auto scrollbar-none py-0.5">
             <button
