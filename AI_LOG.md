@@ -150,4 +150,8 @@
 [2026-08-27 17:46] Major | Antigravity | Refactor | src/ - Fullscreen mode is 100% static clean artwork zoom; 3D tilt is strictly in Detail Modal only
 [2026-08-27 17:46] Major | Antigravity | Command | npx playwright test - verified 34 E2E tests passed (100% green)
 [2026-08-27 17:46] Major | Antigravity | Command | git push origin main - Deploying Lorcana-matched Detail-only 3D Tilt & Pure Static Fullscreen
+[2026-08-27 17:50] Major | Antigravity | Fix | src/components/collection/CardCollectionModal.tsx - removed conflicting nested group-hover:scale & duration-300
+[2026-08-27 17:50] Major | Antigravity | Command | npx playwright test - verified 34 E2E tests passed (100% green)
+[2026-08-27 17:50] Major | Antigravity | Command | git push origin main - Deploying nested scale conflict elimination
+
 

@@ -186,7 +186,7 @@ export function CardCollectionModal({ card: initialCard, onClose, deckId }: Prop
             <img
               src={resolveCardImageUrl(activeCard.imageUrlHigh || activeCard.imageUrl, true)}
               alt={activeCard.name}
-              className="w-full h-full object-cover transition-all duration-300 group-hover:scale-[1.02] pointer-events-none"
+              className="w-full h-full object-cover pointer-events-none"
               onError={(e) => handleCardImageError(e, activeCard.imageUrl, activeCard.officialImageUrl)}
             />
 
