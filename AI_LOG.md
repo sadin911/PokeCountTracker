@@ -177,3 +177,5 @@
 [2026-08-28 15:45] Major | Claude | Feature | CollectionFilterBar - Regulation + Category merged into one row of dropdowns (was two scrolling chip rows)
 [2026-08-28 15:45] Major | Claude | Write | e2e/collection-tracker.spec.ts - category test now drives the select; adds regulation coverage
 [2026-08-28 16:00] Major | Claude | Release | v2.16.1 - Regulation + Category filters folded into one row of dropdowns
+[2026-08-28 16:20] Major | Claude | Fix | .github/workflows/deploy.yml - upgraded all actions to their node24 majors, clearing the Node 20 deprecation
+[2026-08-28 16:20] Major | Claude | Release | v2.16.2 - CI action upgrade; no application code changed
