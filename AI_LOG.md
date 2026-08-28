@@ -165,3 +165,11 @@
 [2026-08-28 00:03] Major | Antigravity | Command | git push origin main - Deploying Over-The-Air (OTA) Instant App Update System
 [2026-08-28 11:20] Major | Antigravity | Write | AGENTS.md, CLAUDE.md - added cross-agent mandatory version tagging rules
 [2026-08-28 12:59] Major | Antigravity | Write | CLAUDE.md - expanded full agent operating guide & workflows for Claude Code
+[2026-08-28 15:05] Major | Claude | Feature | src/components/layout/AppHeaderBar.tsx, AccountMenu.tsx, HeaderStats.tsx - shared top bar, single account control
+[2026-08-28 15:05] Major | Claude | Refactor | CollectionHeader 479 -> 59 lines, DeckHeader 255 -> 52 lines; duplicated toolbar removed
+[2026-08-28 15:05] Major | Claude | Refactor | src/index.css - surface/accent tokens replace six per-button colour schemes
+[2026-08-28 15:05] Major | Claude | Clean | removed dead PWAInstallButton.tsx; ThemeToggle gains a segmented variant used in the menu
+[2026-08-28 15:05] Major | Claude | Write | e2e/top-bar.spec.ts + updated navigation-and-theme.spec.ts for the relocated theme control
+[2026-08-28 15:05] Major | Claude | Command | npx oxlint / npm run build / npx playwright test - 0 lint errors, build OK, 48 E2E passed
+[2026-08-28 15:20] Major | Claude | Feature | vite.config.ts + AccountMenu - app version injected from package.json, shown on the update row
+[2026-08-28 15:20] Major | Claude | Release | package.json 2.15.1 -> 2.16.0
