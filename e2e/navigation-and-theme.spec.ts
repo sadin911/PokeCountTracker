@@ -25,27 +25,21 @@ test.describe('Navigation and Theme Routing', () => {
   test('theme switcher toggles between Light, Dark, and System modes', async ({ page }) => {
     await page.goto('/collection');
 
-    const themeBtn = page.locator('button[title*="ธีม"]:visible').first();
-    await expect(themeBtn).toBeVisible();
-    await themeBtn.click();
+    // The theme control lives in the account menu now, not loose in the top bar
+    await page.locator('[data-testid="account-button"]').click();
+    const segmented = page.locator('[data-testid="theme-segmented"]');
+    await expect(segmented).toBeVisible();
 
-    // Select Light Mode
-    const lightOption = page.locator('button:has-text("สว่าง (Light)")');
-    if (await lightOption.isVisible()) {
-      await lightOption.click();
-      await page.waitForTimeout(200);
-      const isLight = await page.evaluate(() => document.documentElement.classList.contains('light'));
-      expect(isLight).toBe(true);
-    }
+    await segmented.getByRole('button', { name: /สว่าง/ }).click();
+    await expect(page.locator('html')).toHaveClass(/light/);
 
-    // Toggle to Dark Mode
-    await themeBtn.click();
-    const darkOption = page.locator('button:has-text("มืด (Dark)")');
-    if (await darkOption.isVisible()) {
-      await darkOption.click();
-      await page.waitForTimeout(200);
-      const isDark = await page.evaluate(() => document.documentElement.classList.contains('dark'));
-      expect(isDark).toBe(true);
-    }
+    await segmented.getByRole('button', { name: /มืด/ }).click();
+    await expect(page.locator('html')).toHaveClass(/dark/);
+
+    await segmented.getByRole('button', { name: /อัตโนมัติ/ }).click();
+    await expect(segmented.getByRole('button', { name: /อัตโนมัติ/ })).toHaveAttribute(
+      'aria-pressed',
+      'true'
+    );
   });
 });

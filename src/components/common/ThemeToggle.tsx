@@ -2,7 +2,7 @@ import { useState, useRef, useEffect } from 'react';
 import { useThemeStore, type ThemeMode } from '../../store/themeStore';
 
 interface Props {
-  variant?: 'pill' | 'dropdown' | 'icon-only';
+  variant?: 'pill' | 'dropdown' | 'icon-only' | 'segmented';
   className?: string;
 }
 
@@ -32,6 +32,40 @@ export function ThemeToggle({ variant = 'dropdown', className = '' }: Props) {
     { mode: 'dark', label: 'มืด (Dark)', icon: '🌙', desc: 'ธีม Poké Ball กลางคืนสบายตา' },
     { mode: 'system', label: 'อัตโนมัติ (Auto)', icon: '💻', desc: 'ปรับตามการตั้งค่าเครื่อง' },
   ];
+
+  /**
+   * Full-width three-way switch, sized to sit as a row inside the account menu.
+   * Uses the shared surface tokens so it matches every other control in the menu.
+   */
+  if (variant === 'segmented') {
+    return (
+      <div
+        data-testid="theme-segmented"
+        className={`grid grid-cols-3 gap-0.5 p-0.5 rounded-xl bg-[var(--surface)] ${className}`}
+      >
+        {options.map((opt) => {
+          const isActive = themeMode === opt.mode;
+          return (
+            <button
+              key={opt.mode}
+              type="button"
+              onClick={() => setThemeMode(opt.mode)}
+              aria-pressed={isActive}
+              title={opt.desc}
+              className={`h-8 rounded-lg text-[11px] font-bold transition-colors flex items-center justify-center gap-1 ${
+                isActive
+                  ? 'bg-[var(--accent)] text-[var(--accent-fg)]'
+                  : 'text-[var(--surface-muted)] hover:text-[var(--surface-fg)]'
+              }`}
+            >
+              <span aria-hidden="true">{opt.icon}</span>
+              <span>{opt.label.split(' ')[0]}</span>
+            </button>
+          );
+        })}
+      </div>
+    );
+  }
 
   if (variant === 'pill') {
     return (

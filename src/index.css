@@ -95,6 +95,20 @@
     --pokeball-yellow: #FFCB05;
     --pokeball-blue: #2A75BB;
 
+    /* Header control surface tokens.
+
+       The top bar used to give every control its own colour, which read as noise
+       rather than as hierarchy. Controls now share one neutral surface and the
+       accent is spent only on what is active or needs attention. */
+    --surface: #f1f5f9;         /* slate-100 */
+    --surface-hover: #e2e8f0;   /* slate-200 */
+    --surface-border: #e2e8f0;  /* slate-200 */
+    --surface-fg: #334155;      /* slate-700 */
+    --surface-muted: #64748b;   /* slate-500 */
+    --accent: #7c3aed;          /* violet-600 */
+    --accent-hover: #6d28d9;    /* violet-700 */
+    --accent-fg: #ffffff;
+
     /* Mobile Safe Area Insets (iOS Notch / Dynamic Island / Navigation Bar) */
     --sat: env(safe-area-inset-top, 0px);
     --sab: env(safe-area-inset-bottom, 0px);
@@ -104,6 +118,15 @@
 
   html.dark {
     color-scheme: dark;
+
+    --surface: #1e293b;         /* slate-800 */
+    --surface-hover: #334155;   /* slate-700 */
+    --surface-border: #334155;  /* slate-700 */
+    --surface-fg: #e2e8f0;      /* slate-200 */
+    --surface-muted: #94a3b8;   /* slate-400 */
+    --accent: #fbbf24;          /* amber-400 — the wordmark's colour in dark */
+    --accent-hover: #f59e0b;    /* amber-500 */
+    --accent-fg: #0f172a;
   }
 
   html.light {
