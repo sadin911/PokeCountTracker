@@ -86,11 +86,27 @@ for (const [field, value] of Object.entries(changes)) {
   console.log(`\nsetting ${field}=${value} ...`);
 }
 
-await client.request({
-  url: `${url}?${masks.map((m) => `updateMask=${m}`).join('&')}`,
-  method: 'PATCH',
-  data: changes,
-});
+try {
+  await client.request({
+    url: `${url}?${masks.map((m) => `updateMask=${m}`).join('&')}`,
+    method: 'PATCH',
+    data: changes,
+  });
+} catch (err) {
+  const status = err?.response?.status;
+  const message = err?.response?.data?.error?.message || err.message;
+  console.error(`\nFAILED (${status ?? 'error'}): ${message}`);
+  if (status === 403) {
+    console.error(
+      '\nThe service account can read these settings but not change them: updating a\n' +
+        'database needs datastore.databases.update, which the Firebase Admin SDK service\n' +
+        'agent role does not carry. Either change it in the console:\n' +
+        '  Google Cloud Console -> Firestore -> Databases -> (default) -> Edit\n' +
+        'or grant the service account roles/datastore.owner and re-run.'
+    );
+  }
+  process.exit(1);
+}
 
 await show('\nafter:');
 
