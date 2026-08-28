@@ -296,52 +296,65 @@ export function CollectionFilterBar({
           showAdvancedMobile ? "flex" : "hidden lg:flex"
         } flex-col gap-2 pt-2 border-t border-slate-200 dark:border-slate-800/70 text-xs animate-fade-in`}
       >
-        {/* Row A: Regulation & Quick Rarity Bar */}
-        <div className="flex items-center gap-1.5 overflow-x-auto pb-0.5 scrollbar-none">
-          <span className="text-[11px] text-slate-500 dark:text-slate-400 font-bold whitespace-nowrap shrink-0">
-            Regulation:
-          </span>
-          {REGULATION_SERIES_OPTIONS.map((reg) => {
-            const isSelected = selectedRegulation === reg.id;
-            return (
-              <button
-                key={reg.id}
-                onClick={() => onRegulationChange(reg.id)}
-                className={`px-2.5 py-1 rounded-xl text-xs font-bold whitespace-nowrap transition-all flex items-center gap-1 shrink-0 active:scale-95 ${
-                  isSelected
-                    ? "bg-amber-400 text-slate-950 font-black shadow-md shadow-amber-400/20"
-                    : "bg-slate-100 dark:bg-slate-800 hover:bg-slate-200 dark:hover:bg-slate-700 text-slate-700 dark:text-slate-300 border border-slate-200 dark:border-slate-700/60"
-                }`}
-              >
-                {reg.label}
-              </button>
-            );
-          })}
-        </div>
+        {/* Row A: Regulation & Category.
 
-        {/* Row B: Category & Rarity Chips */}
-        <div className="flex items-center gap-1.5 overflow-x-auto pb-0.5 scrollbar-none">
-          <span className="text-[11px] text-slate-500 dark:text-slate-400 font-bold whitespace-nowrap shrink-0">
-            หมวดหมู่:
-          </span>
-          {CATEGORIES.map((cat) => {
-            const isSelected = selectedCategory === cat.id;
-            return (
-              <button
-                key={cat.id}
-                onClick={() => onCategoryChange(cat.id)}
-                className={`px-2.5 py-1 rounded-xl text-xs font-bold whitespace-nowrap transition-all flex items-center gap-1 shrink-0 active:scale-95 ${
-                  isSelected
-                    ? "bg-gradient-to-r from-yellow-400 to-amber-400 text-slate-950 font-black shadow-md shadow-yellow-400/25"
-                    : "bg-slate-100 dark:bg-slate-800 hover:bg-slate-200 dark:hover:bg-slate-700 text-slate-700 dark:text-slate-300 border border-slate-200 dark:border-slate-700/60"
-                }`}
-              >
-                {cat.label}
-              </button>
-            );
-          })}
+            Both were rows of horizontally scrolling chips — ten regulation chips
+            in particular pushed most of the options off-screen. As selects they
+            share one row, show the full label, and cost two rows less height. */}
+        <div className="flex items-center gap-2 flex-wrap">
+          <label className="flex items-center gap-1.5 min-w-0">
+            <span className="text-[11px] text-slate-500 dark:text-slate-400 font-bold whitespace-nowrap shrink-0">
+              Regulation:
+            </span>
+            <select
+              value={selectedRegulation}
+              onChange={(e) => onRegulationChange(e.target.value)}
+              aria-label="กรองตามซีรีส์ / เรกูเลชัน"
+              data-testid="regulation-select"
+              className={`h-8 px-2.5 rounded-xl border text-xs font-bold focus:outline-none transition-colors cursor-pointer max-w-[220px] truncate ${
+                selectedRegulation !== "ALL"
+                  ? "bg-amber-400 border-amber-400 text-slate-950 font-black"
+                  : "bg-slate-100 dark:bg-slate-950 border-slate-300 dark:border-slate-700 text-slate-800 dark:text-slate-200"
+              }`}
+            >
+              {REGULATION_SERIES_OPTIONS.map((reg) => (
+                <option
+                  key={reg.id}
+                  value={reg.id}
+                  className="bg-white dark:bg-slate-900 text-slate-900 dark:text-slate-100 font-semibold"
+                >
+                  {reg.label}
+                </option>
+              ))}
+            </select>
+          </label>
 
-
+          <label className="flex items-center gap-1.5 min-w-0">
+            <span className="text-[11px] text-slate-500 dark:text-slate-400 font-bold whitespace-nowrap shrink-0">
+              หมวดหมู่:
+            </span>
+            <select
+              value={selectedCategory}
+              onChange={(e) => onCategoryChange(e.target.value)}
+              aria-label="กรองตามหมวดหมู่การ์ด"
+              data-testid="category-select"
+              className={`h-8 px-2.5 rounded-xl border text-xs font-bold focus:outline-none transition-colors cursor-pointer max-w-[200px] truncate ${
+                selectedCategory !== "ALL"
+                  ? "bg-amber-400 border-amber-400 text-slate-950 font-black"
+                  : "bg-slate-100 dark:bg-slate-950 border-slate-300 dark:border-slate-700 text-slate-800 dark:text-slate-200"
+              }`}
+            >
+              {CATEGORIES.map((cat) => (
+                <option
+                  key={cat.id}
+                  value={cat.id}
+                  className="bg-white dark:bg-slate-900 text-slate-900 dark:text-slate-100 font-semibold"
+                >
+                  {cat.label}
+                </option>
+              ))}
+            </select>
+          </label>
         </div>
 
         {/* Row C: Detailed Dropdowns & Energy Types Bar */}

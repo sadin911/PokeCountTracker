@@ -174,3 +174,5 @@
 [2026-08-28 15:20] Major | Claude | Feature | vite.config.ts + AccountMenu - app version injected from package.json, shown on the update row
 [2026-08-28 15:20] Major | Claude | Release | package.json 2.15.1 -> 2.16.0
 [2026-08-28 15:25] Major | Claude | Release | v2.16.0 - Top bar rebuilt around a single account control; app version visible
+[2026-08-28 15:45] Major | Claude | Feature | CollectionFilterBar - Regulation + Category merged into one row of dropdowns (was two scrolling chip rows)
+[2026-08-28 15:45] Major | Claude | Write | e2e/collection-tracker.spec.ts - category test now drives the select; adds regulation coverage
