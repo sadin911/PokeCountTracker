@@ -183,3 +183,4 @@
 [2026-08-28 16:05] Major | Claude | Fix | collectionStore - cloudLoadedUid gate; no cloud write until that account's binders have been read
 [2026-08-28 16:05] Major | Claude | Write | vitest + collectionStore.cloudGuard.test.ts - 4 regression tests, confirmed failing before the fix
 [2026-08-28 16:15] Major | Claude | Release | v2.16.3 - cloud-write guard; fixes the empty-binder overwrite that caused production data loss
+[2026-08-28 16:15] Major | Claude | Recover | restored binder (228 cards / 246 copies) + 2 deleted decks from the 08:48Z point-in-time snapshot; verified byte-identical
