@@ -24,6 +24,9 @@ test.describe('Top Bar & Account Menu', () => {
     await expect(menu).toBeVisible();
     await expect(menu.locator('[data-testid="menu-update"]')).toBeVisible();
     await expect(menu.locator('[data-testid="menu-theme"]')).toBeVisible();
+
+    // The update row reports the version currently running
+    await expect(menu.locator('[data-testid="menu-update"]')).toContainText(/v\d+\.\d+\.\d+/);
   });
 
   test('the menu closes on Escape', async ({ page }) => {

@@ -263,7 +263,7 @@ export function AccountMenu() {
                   ? 'มีเวอร์ชันใหม่! แตะเพื่ออัปเดต'
                   : 'ตรวจหาอัปเดต'
               }
-              hint={needRefresh ? 'NEW' : null}
+              hint={needRefresh ? 'NEW' : `v${__APP_VERSION__}`}
               onClick={() => (needRefresh ? updateNow() : checkForUpdates())}
               disabled={isChecking || isUpdating}
               tone={needRefresh ? 'accent' : 'default'}

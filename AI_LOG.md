@@ -171,3 +171,5 @@
 [2026-08-28 15:05] Major | Claude | Clean | removed dead PWAInstallButton.tsx; ThemeToggle gains a segmented variant used in the menu
 [2026-08-28 15:05] Major | Claude | Write | e2e/top-bar.spec.ts + updated navigation-and-theme.spec.ts for the relocated theme control
 [2026-08-28 15:05] Major | Claude | Command | npx oxlint / npm run build / npx playwright test - 0 lint errors, build OK, 48 E2E passed
+[2026-08-28 15:20] Major | Claude | Feature | vite.config.ts + AccountMenu - app version injected from package.json, shown on the update row
+[2026-08-28 15:20] Major | Claude | Release | package.json 2.15.1 -> 2.16.0
