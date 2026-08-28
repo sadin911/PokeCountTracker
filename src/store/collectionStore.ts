@@ -16,6 +16,15 @@ interface CollectionState {
   activeProfileId: string;
   syncStatus: SyncStatus;
   lastSyncedAt: number | null;
+  /**
+   * The uid whose binders have actually been read into this store.
+   *
+   * Writes are whole-document, so pushing before the read completes replaces
+   * the user's binder with whatever the store happens to hold — which, during
+   * the boot window, is the empty guest binder. Nothing writes to a user's
+   * cloud binder until this matches the signed-in uid.
+   */
+  cloudLoadedUid: string | null;
 
   // Filter persistence
   filters: CollectionFilters;
@@ -194,6 +203,7 @@ export const useCollectionStore = create<CollectionState>((set, get) => ({
   activeProfileId: initialGuest.activeProfileId,
   syncStatus: 'idle',
   lastSyncedAt: null,
+  cloudLoadedUid: null,
   filters: loadInitialFilters(),
 
   setFilters: (newFilters: Partial<CollectionFilters>) => {
@@ -477,6 +487,16 @@ export const useCollectionStore = create<CollectionState>((set, get) => ({
     const user = auth.currentUser;
     if (!user) return;
 
+    // The gate. Between Firebase restoring the session and loadUserFromCloud
+    // returning, the user looks signed in while the store still holds the empty
+    // guest binder. A write here would replace their real binder with it.
+    if (get().cloudLoadedUid !== user.uid) {
+      console.warn(
+        '[collection] skipped a cloud write: binders for this account have not been loaded yet'
+      );
+      return;
+    }
+
     const profile = get().profiles[profileId];
     if (!profile) return;
 
@@ -574,6 +594,7 @@ export const useCollectionStore = create<CollectionState>((set, get) => ({
             activeProfileId: activeId,
             syncStatus: 'synced',
             lastSyncedAt: Date.now(),
+            cloudLoadedUid: uid,
           });
 
           // Save to user local cache
@@ -592,6 +613,10 @@ export const useCollectionStore = create<CollectionState>((set, get) => ({
       );
 
       if (hasCards) {
+        // Local edits made before signing in are the only thing there is, so
+        // seeding the cloud from them is correct — and makes the store
+        // authoritative from here on.
+        set({ cloudLoadedUid: uid });
         await get().uploadLocalProfilesToCloud(uid);
       } else {
         // Create initial default profile on cloud
@@ -603,6 +628,7 @@ export const useCollectionStore = create<CollectionState>((set, get) => ({
           activeProfileId: defaultProf.id,
           syncStatus: 'synced',
           lastSyncedAt: Date.now(),
+          cloudLoadedUid: uid,
         });
       }
 
@@ -635,6 +661,13 @@ export const useCollectionStore = create<CollectionState>((set, get) => ({
   },
 
   forceSyncCloud: async (uid: string) => {
+    // Deliberately gated too. If the binders have not been read yet, the safe
+    // action is to read them, not to push whatever is in memory over the top.
+    if (get().cloudLoadedUid !== uid) {
+      console.warn('[collection] force sync skipped: binders have not been loaded yet');
+      return false;
+    }
+
     set({ syncStatus: 'syncing' });
     try {
       const { profiles, activeProfileId } = get();
@@ -664,6 +697,9 @@ export const useCollectionStore = create<CollectionState>((set, get) => ({
       activeProfileId: guestData.activeProfileId,
       syncStatus: 'idle',
       lastSyncedAt: null,
+      // Closing the gate matters as much as opening it: this also runs on a
+      // transient auth blip, and the next session must re-read before writing.
+      cloudLoadedUid: null,
     });
   },
 

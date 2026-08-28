@@ -34,6 +34,7 @@ Whenever releasing changes, merging to `main`, or deploying to production, **ALL
 2. **Quality Gate Verification (0 Errors Allowed)**:
    - Run linter: `npm run lint` (Oxlint)
    - Run typecheck & production build: `npm run build` (`tsc -b && vite build`)
+   - Run unit tests: `npm test` (Vitest — store logic, including the cloud-write guard)
    - Run E2E test suite: `npx playwright test`
    - *Ensure 100% of checks pass with 0 errors before proceeding.*
 
@@ -86,6 +87,9 @@ npm run dev
 
 # Run Oxlint linter
 npm run lint
+
+# Run Vitest unit tests (store logic)
+npm test
 
 # TypeScript check + Production Build
 npm run build
