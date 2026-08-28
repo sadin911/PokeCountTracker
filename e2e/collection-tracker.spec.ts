@@ -17,24 +17,27 @@ test.describe('Collection Tracker Suite', () => {
     await expect(cardItems.first()).toBeVisible({ timeout: 10000 });
   });
 
-  test('filters by Category (Pokemon, Trainer, Energy)', async ({ page }) => {
-    // If on mobile or collapsed, open advanced filter drawer
-    const trainerChip = page.locator('button:has-text("เทรนเนอร์")').first();
-    if (!(await trainerChip.isVisible())) {
-      const filterToggleBtn = page.locator('button:has-text("ตัวกรอง")');
-      if (await filterToggleBtn.isVisible()) {
-        await filterToggleBtn.click();
-        await page.waitForTimeout(200);
-      }
+  test('filters by Category and Regulation via the compact dropdowns', async ({ page }) => {
+    // The advanced filter panel is collapsed below lg, so open it first
+    const categorySelect = page.locator('[data-testid="category-select"]');
+    if (!(await categorySelect.isVisible())) {
+      await page.locator('button:has-text("ตัวกรอง")').first().click();
+      await page.waitForTimeout(200);
     }
+    await expect(categorySelect).toBeVisible({ timeout: 10000 });
 
-    const trainerBtn = page.locator('button:has-text("เทรนเนอร์")').first();
-    await expect(trainerBtn).toBeVisible({ timeout: 10000 });
-    await trainerBtn.click();
-    await page.waitForTimeout(300);
+    await categorySelect.selectOption('Trainer');
+    await expect(categorySelect).toHaveValue('Trainer');
+    await page.waitForTimeout(400);
+    await expect(page.locator('.group.relative.rounded-xl').first()).toBeVisible();
 
-    const cardItems = page.locator('.group.relative.rounded-xl');
-    await expect(cardItems.first()).toBeVisible();
+    // Regulation shares the row and narrows the same list
+    const regulationSelect = page.locator('[data-testid="regulation-select"]');
+    await expect(regulationSelect).toBeVisible();
+    await regulationSelect.selectOption('STANDARD');
+    await expect(regulationSelect).toHaveValue('STANDARD');
+    await page.waitForTimeout(400);
+    await expect(page.locator('.group.relative.rounded-xl').first()).toBeVisible();
   });
 
   test('quick add button increments card count and updates header summary', async ({ page }) => {
