@@ -179,3 +179,6 @@
 [2026-08-28 16:00] Major | Claude | Release | v2.16.1 - Regulation + Category filters folded into one row of dropdowns
 [2026-08-28 16:20] Major | Claude | Fix | .github/workflows/deploy.yml - upgraded all actions to their node24 majors, clearing the Node 20 deprecation
 [2026-08-28 16:20] Major | Claude | Release | v2.16.2 - CI action upgrade; no application code changed
+[2026-08-28 16:05] Major | Claude | Investigate | production data loss - 228-card binder overwritten with an empty one at 08:49Z; recovered via Firestore point-in-time read
+[2026-08-28 16:05] Major | Claude | Fix | collectionStore - cloudLoadedUid gate; no cloud write until that account's binders have been read
+[2026-08-28 16:05] Major | Claude | Write | vitest + collectionStore.cloudGuard.test.ts - 4 regression tests, confirmed failing before the fix
