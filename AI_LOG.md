@@ -164,3 +164,4 @@
 [2026-08-28 00:03] Major | Antigravity | Command | npx playwright test - verified 34 E2E tests passed (100% green)
 [2026-08-28 00:03] Major | Antigravity | Command | git push origin main - Deploying Over-The-Air (OTA) Instant App Update System
 [2026-08-28 11:20] Major | Antigravity | Write | AGENTS.md, CLAUDE.md - added cross-agent mandatory version tagging rules
+[2026-08-28 12:59] Major | Antigravity | Write | CLAUDE.md - expanded full agent operating guide & workflows for Claude Code
