@@ -1,14 +1,21 @@
 /**
- * Turn Firestore point-in-time recovery on or off.
+ * Inspect or change the two Firestore safety settings this project cares about:
+ * point-in-time recovery, and delete protection.
  *
  * Without PITR, Firestore keeps only about an hour of document versions. That
  * hour is the only reason the binder wiped on 2026-08-28 was recoverable at
  * all. With PITR the window is 7 days.
  *
  * Usage:
- *   node scripts/set-firestore-pitr.mjs                 # show current state
- *   node scripts/set-firestore-pitr.mjs --enable        # turn it on
- *   node scripts/set-firestore-pitr.mjs --disable       # turn it off
+ *   node scripts/set-firestore-pitr.mjs                        # show current state
+ *   node scripts/set-firestore-pitr.mjs --enable               # PITR on
+ *   node scripts/set-firestore-pitr.mjs --disable              # PITR off
+ *   node scripts/set-firestore-pitr.mjs --enable-delete-protection
+ *   node scripts/set-firestore-pitr.mjs --disable-delete-protection
+ *
+ * Delete protection blocks deletion of the whole database. It is free, and it
+ * guards a different failure than PITR does: PITR recovers content, delete
+ * protection stops the database itself from being removed.
  *
  * Note: enabling is not retroactive. The window starts at one hour before the
  * moment you enable, and only reaches a full 7 days after PITR has been on for
@@ -45,23 +52,44 @@ async function show(label) {
   return data;
 }
 
-const enable = process.argv.includes('--enable');
-const disable = process.argv.includes('--disable');
+const args = process.argv.slice(2);
+const enable = args.includes('--enable');
+const disable = args.includes('--disable');
+const protect = args.includes('--enable-delete-protection');
+const unprotect = args.includes('--disable-delete-protection');
 
 await show(`project ${sa.project_id} — current:`);
 
-if (!enable && !disable) {
-  console.log('\n(no change requested — pass --enable or --disable)');
+const changes = {};
+const masks = [];
+if (enable || disable) {
+  changes.pointInTimeRecoveryEnablement = enable
+    ? 'POINT_IN_TIME_RECOVERY_ENABLED'
+    : 'POINT_IN_TIME_RECOVERY_DISABLED';
+  masks.push('pointInTimeRecoveryEnablement');
+}
+if (protect || unprotect) {
+  changes.deleteProtectionState = protect
+    ? 'DELETE_PROTECTION_ENABLED'
+    : 'DELETE_PROTECTION_DISABLED';
+  masks.push('deleteProtectionState');
+}
+
+if (masks.length === 0) {
+  console.log(
+    '\n(no change requested — pass --enable / --disable / --enable-delete-protection / --disable-delete-protection)'
+  );
   process.exit(0);
 }
 
-const target = enable ? 'POINT_IN_TIME_RECOVERY_ENABLED' : 'POINT_IN_TIME_RECOVERY_DISABLED';
-console.log(`\nsetting pointInTimeRecoveryEnablement=${target} ...`);
+for (const [field, value] of Object.entries(changes)) {
+  console.log(`\nsetting ${field}=${value} ...`);
+}
 
 await client.request({
-  url: `${url}?updateMask=pointInTimeRecoveryEnablement`,
+  url: `${url}?${masks.map((m) => `updateMask=${m}`).join('&')}`,
   method: 'PATCH',
-  data: { pointInTimeRecoveryEnablement: target },
+  data: changes,
 });
 
 await show('\nafter:');
