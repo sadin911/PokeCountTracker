@@ -14,7 +14,7 @@ import { createCardMatcher } from '../../utils/searchHelpers';
 import { sortSetsByThaiRelease } from '../../utils/setOrder';
 import pokemonCardData from '../../data/pokemonNames.json';
 import { trackEvent } from '../../utils/analytics';
-import type { Deck } from '../../types/deck';
+import type { Deck, MissingCardInfo } from '../../types/deck';
 
 interface Props {
   deck: Deck;
@@ -61,6 +61,13 @@ export function DeckEditor({ deck, onBackToDecks }: Props) {
     () => calculateMissingCards(deck, cardDataMap, userCollectionCards),
     [deck, cardDataMap, userCollectionCards]
   );
+  const missingInfoMap = useMemo(() => {
+    const map = new Map<string, MissingCardInfo>();
+    [...missingReport.missingItems, ...missingReport.completeItems].forEach((item) => {
+      map.set(item.cardId, item);
+    });
+    return map;
+  }, [missingReport]);
 
   // States
   const [deckName, setDeckName] = useState(deck.name);
@@ -442,7 +449,7 @@ export function DeckEditor({ deck, onBackToDecks }: Props) {
                           cardId={cardId}
                           count={count}
                           card={card}
-                          userOwned={userCollectionCards[cardId]}
+                          missingInfo={missingInfoMap.get(cardId)}
                           isCover={deck.coverCardId === cardId}
                           onAdd={() => addCardToDeck(deck.id, cardId, 1)}
                           onRemove={() => removeCardFromDeck(deck.id, cardId)}
@@ -467,7 +474,7 @@ export function DeckEditor({ deck, onBackToDecks }: Props) {
                           cardId={cardId}
                           count={count}
                           card={card}
-                          userOwned={userCollectionCards[cardId]}
+                          missingInfo={missingInfoMap.get(cardId)}
                           isCover={deck.coverCardId === cardId}
                           onAdd={() => addCardToDeck(deck.id, cardId, 1)}
                           onRemove={() => removeCardFromDeck(deck.id, cardId)}
@@ -492,7 +499,7 @@ export function DeckEditor({ deck, onBackToDecks }: Props) {
                           cardId={cardId}
                           count={count}
                           card={card}
-                          userOwned={userCollectionCards[cardId]}
+                          missingInfo={missingInfoMap.get(cardId)}
                           isCover={deck.coverCardId === cardId}
                           onAdd={() => addCardToDeck(deck.id, cardId, 1)}
                           onRemove={() => removeCardFromDeck(deck.id, cardId)}
@@ -847,7 +854,7 @@ function DeckCardRow({
   cardId,
   count,
   card,
-  userOwned,
+  missingInfo,
   isCover,
   onAdd,
   onRemove,
@@ -857,16 +864,18 @@ function DeckCardRow({
   cardId: string;
   count: number;
   card: any;
-  userOwned: any;
+  missingInfo?: MissingCardInfo;
   isCover: boolean;
   onAdd: () => void;
   onRemove: () => void;
   onSetCover: (img: string) => void;
   onPreview: () => void;
 }) {
-  const variants = userOwned?.variants || { normal: 0, holo: 0, reverse: 0, promo: 0 };
-  const totalOwned = variants.normal + variants.holo + variants.reverse + variants.promo;
-  const isMissing = totalOwned < count;
+  const exactOwned = missingInfo?.exactOwned ?? 0;
+  const totalEquivalentOwned = missingInfo?.totalEquivalentOwned ?? exactOwned;
+  const missingCount = missingInfo ? missingInfo.missingCount : Math.max(0, count - exactOwned);
+  const isMissing = missingCount > 0;
+  const hasEquivalentAlternative = !isMissing && exactOwned < count;
   const imgUrl = resolveCardImageUrl(card?.imageUrl);
 
   return (
@@ -874,6 +883,8 @@ function DeckCardRow({
       className={`group p-2 rounded-xl border flex items-center justify-between gap-2 transition-all ${
         isMissing
           ? 'bg-slate-950/80 border-rose-500/30 hover:border-rose-500/50'
+          : hasEquivalentAlternative
+          ? 'bg-slate-950/60 border-teal-500/30 hover:border-teal-500/50'
           : 'bg-slate-950/50 border-slate-800 hover:border-slate-700'
       }`}
     >
@@ -903,11 +914,17 @@ function DeckCardRow({
           <div className="flex items-center gap-2 text-[10px] mt-0.5">
             {isMissing ? (
               <span className="text-rose-400 font-bold flex items-center gap-0.5">
-                <span>⚠️ ขาด {count - totalOwned}</span>
-                <span className="text-slate-500">(มี {totalOwned})</span>
+                <span>⚠️ ขาด {missingCount}</span>
+                {totalEquivalentOwned > 0 && (
+                  <span className="text-slate-500 font-normal">(มีรวม {totalEquivalentOwned})</span>
+                )}
+              </span>
+            ) : hasEquivalentAlternative ? (
+              <span className="text-teal-300 font-bold flex items-center gap-0.5" title={`มีในสมุดรวม ${totalEquivalentOwned} ใบจากชุดอื่น`}>
+                <span>✨ มีชุดอื่น {totalEquivalentOwned} ใบ</span>
               </span>
             ) : (
-              <span className="text-emerald-400 font-bold">✅ มี {totalOwned} ใบ</span>
+              <span className="text-emerald-400 font-bold">✅ มี {exactOwned} ใบ</span>
             )}
           </div>
         </div>

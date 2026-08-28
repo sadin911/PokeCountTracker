@@ -1,4 +1,4 @@
-import type { Deck, DeckStats, DeckMissingReport, MissingCardInfo } from '../types/deck';
+import type { Deck, DeckStats, DeckMissingReport, MissingCardInfo, EquivalentOwnedCard } from '../types/deck';
 import type { CollectionCardEntry } from '../types/collection';
 
 export function isBasicEnergy(name?: string): boolean {
@@ -6,7 +6,7 @@ export function isBasicEnergy(name?: string): boolean {
   return (
     name.includes('พลังงานพื้นฐาน') ||
     name.includes('Basic Energy') ||
-    name.startsWith('Basic ') && name.endsWith(' Energy')
+    (name.startsWith('Basic ') && name.endsWith(' Energy'))
   );
 }
 
@@ -19,6 +19,47 @@ export function isAceSpecCard(name?: string, colNum?: string): boolean {
   if (name && (name.includes('ACE SPEC') || name.includes('เอซสเปก'))) return true;
   if (colNum && colNum.toUpperCase().includes('ACE')) return true;
   return false;
+}
+
+/**
+ * Normalizes card name for equivalence matching across sets and rarities.
+ * - Basic Energy types (Grass, Fire, Water, etc.)
+ * - Subtitles in parentheses (Boss's Orders, Professor's Research)
+ * - Removes bracket role tags e.g. [ซัพพอร์ต], [ไอเท็ม]
+ */
+export function getCardEquivalenceKey(card?: any, fallbackId: string = ''): string {
+  if (!card && !fallbackId) return 'unknown';
+  const name: string = card?.name || fallbackId;
+
+  // 1. Basic Energy normalization
+  if (isBasicEnergy(name)) {
+    const type = card?.types?.[0] || '';
+    if (type) return `energy:basic:${type.toLowerCase()}`;
+    const match = name.match(/\[(.*?)\]/) || name.match(/\((.*?)\)/);
+    if (match && match[1]) {
+      return `energy:basic:${match[1].trim().toLowerCase()}`;
+    }
+    const cleanEnergyName = name.replace(/\s+/g, '').toLowerCase();
+    return `energy:basic:${cleanEnergyName}`;
+  }
+
+  // 2. Special cards with character subtitle variants
+  if (name.includes('คำสั่งของบอส') || name.includes("Boss's Orders")) {
+    return "trainer:supporter:boss's orders";
+  }
+  if (name.includes('งานวิจัยของศาสตราจารย์') || name.includes("Professor's Research")) {
+    return "trainer:supporter:professor's research";
+  }
+
+  // 3. General cards: Normalize spaces, strip bracket tags (like [ซัพพอร์ต]), and trim
+  const cleanName = name
+    .replace(/\[[^\]]*\]/g, '')
+    .replace(/\s+/g, ' ')
+    .trim()
+    .toLowerCase();
+
+  const category = (card?.category || 'Pokemon').toLowerCase();
+  return `${category}:${cleanName}`;
 }
 
 export function calculateDeckStats(
@@ -51,9 +92,10 @@ export function calculateDeckStats(
 
     // Rule: Max 4 per name (except Basic Energy)
     if (!isBasicEnergy(name)) {
-      nameCounts[name] = (nameCounts[name] || 0) + count;
-      if (nameCounts[name] > 4) {
-        ruleViolations.push(`การ์ด "${name}" เกิน 4 ใบ (มี ${nameCounts[name]} ใบ)`);
+      const eqKey = getCardEquivalenceKey(card, cardId);
+      nameCounts[eqKey] = (nameCounts[eqKey] || 0) + count;
+      if (nameCounts[eqKey] > 4) {
+        ruleViolations.push(`การ์ด "${name}" เกิน 4 ใบ (มีรวมทุกแบบ ${nameCounts[eqKey]} ใบ)`);
       }
     }
 
@@ -95,7 +137,8 @@ export function calculateDeckStats(
 export function calculateMissingCards(
   deck: Deck,
   cardDataMap: Map<string, any>,
-  userCollectionCards: Record<string, CollectionCardEntry> = {}
+  userCollectionCards: Record<string, CollectionCardEntry> = {},
+  mode: 'equivalent' | 'exact' = 'equivalent'
 ): DeckMissingReport {
   let totalCardsNeeded = 0;
   let totalCardsOwned = 0;
@@ -104,6 +147,45 @@ export function calculateMissingCards(
   const missingItems: MissingCardInfo[] = [];
   const completeItems: MissingCardInfo[] = [];
 
+  // 1. Group user owned cards by equivalence key
+  const ownedByEquivalence = new Map<string, {
+    totalOwned: number;
+    ownedCards: EquivalentOwnedCard[];
+  }>();
+
+  for (const [collCardId, entry] of Object.entries(userCollectionCards)) {
+    const variants = entry?.variants || { normal: 0, holo: 0, reverse: 0, promo: 0 };
+    const count = (variants.normal || 0) + (variants.holo || 0) + (variants.reverse || 0) + (variants.promo || 0);
+    if (count <= 0) continue;
+
+    const card = cardDataMap.get(collCardId);
+    const eqKey = getCardEquivalenceKey(card, collCardId);
+
+    let group = ownedByEquivalence.get(eqKey);
+    if (!group) {
+      group = { totalOwned: 0, ownedCards: [] };
+      ownedByEquivalence.set(eqKey, group);
+    }
+
+    group.totalOwned += count;
+    group.ownedCards.push({
+      cardId: collCardId,
+      setId: card?.set?.id || 'PROMO',
+      setName: card?.set?.name || 'การ์ดโปรโม / อื่น ๆ',
+      collectorNumber: card?.collectorNumber || card?.localId || '',
+      imageUrl: card?.imageUrl || '',
+      count,
+      isExact: false,
+    });
+  }
+
+  // 2. Track remaining pool for equivalent calculation
+  const remainingOwnedPool = new Map<string, number>();
+  for (const [eqKey, group] of ownedByEquivalence.entries()) {
+    remainingOwnedPool.set(eqKey, group.totalOwned);
+  }
+
+  // 3. Process each card in the deck
   for (const [cardId, entry] of Object.entries(deck.cards)) {
     const countNeeded = entry.count || 0;
     if (countNeeded <= 0) continue;
@@ -118,15 +200,33 @@ export function calculateMissingCards(
     const collectorNumber = card?.collectorNumber || card?.localId || '';
     const imageUrl = card?.imageUrl || '';
 
-    // Calculate total copies owned across variants
     const collEntry = userCollectionCards[cardId];
     const variants = collEntry?.variants || { normal: 0, holo: 0, reverse: 0, promo: 0 };
-    const ownedCount = variants.normal + variants.holo + variants.reverse + variants.promo;
+    const exactOwned = (variants.normal || 0) + (variants.holo || 0) + (variants.reverse || 0) + (variants.promo || 0);
 
-    const countCredited = Math.min(countNeeded, ownedCount);
+    const eqKey = getCardEquivalenceKey(card, cardId);
+    const eqGroup = ownedByEquivalence.get(eqKey);
+    const totalEquivalentOwned = eqGroup?.totalOwned || 0;
+    const equivalentCardsOwned = (eqGroup?.ownedCards || []).map((c) => ({
+      ...c,
+      isExact: c.cardId === cardId,
+    }));
+
+    let countCredited = 0;
+    let missingCount = 0;
+
+    if (mode === 'exact') {
+      countCredited = Math.min(countNeeded, exactOwned);
+      missingCount = Math.max(0, countNeeded - exactOwned);
+    } else {
+      // Equivalent mode: Draw from available pool for this equivalence key
+      const currentPool = remainingOwnedPool.get(eqKey) || 0;
+      countCredited = Math.min(countNeeded, currentPool);
+      remainingOwnedPool.set(eqKey, Math.max(0, currentPool - countCredited));
+      missingCount = Math.max(0, countNeeded - countCredited);
+    }
+
     totalCardsOwned += countCredited;
-
-    const missingCount = Math.max(0, countNeeded - ownedCount);
     totalCardsMissing += missingCount;
 
     const info: MissingCardInfo = {
@@ -139,8 +239,12 @@ export function calculateMissingCards(
       collectorNumber,
       imageUrl,
       countNeeded,
-      countOwned: ownedCount,
+      countOwned: mode === 'exact' ? exactOwned : countCredited,
       missingCount,
+      exactOwned,
+      totalEquivalentOwned,
+      equivalentCardsOwned,
+      isEquivalentComplete: totalEquivalentOwned >= countNeeded,
     };
 
     if (missingCount > 0) {
@@ -163,6 +267,7 @@ export function calculateMissingCards(
     completeItems,
     isComplete: totalCardsMissing === 0 && totalCardsNeeded > 0,
     completionPercentage,
+    calculationMode: mode,
   };
 }
 
@@ -171,8 +276,12 @@ export function generateShoppingListText(deckName: string, report: DeckMissingRe
     return `🎉 เด็ค "${deckName}" มีการ์ดครบทั้งหมดแล้ว (100%) ไม่มีการ์ดที่ต้องหาเพิ่ม`;
   }
 
+  const modeLabel = report.calculationMode === 'equivalent'
+    ? '(คำนวณแบบรวมการ์ดชื่อเดียวกันทุกชุด)'
+    : '(คำนวณแบบตรงชุด/ตรงภาพ)';
+
   const lines = [
-    `📋 [รายการการ์ดที่ยังขาด] สำหรับเด็ค: ${deckName}`,
+    `📋 [รายการการ์ดที่ยังขาด] สำหรับเด็ค: ${deckName} ${modeLabel}`,
     `📊 ขาดทั้งหมด ${report.totalCardsMissing} ใบ (มีแล้ว ${report.totalCardsOwned}/${report.totalCardsNeeded} ใบ - ${report.completionPercentage}%)`,
     `----------------------------------------`,
   ];
@@ -190,7 +299,11 @@ export function generateShoppingListText(deckName: string, report: DeckMissingRe
     if (items.length > 0) {
       lines.push(`\n${catNames[cat]}:`);
       items.forEach((item) => {
-        lines.push(` • ${item.name} (${item.setId} ${item.collectorNumber}) - ขาด ${item.missingCount} ใบ (ต้องการ ${item.countNeeded}, มีแล้ว ${item.countOwned})`);
+        let line = ` • ${item.name} (${item.setId} ${item.collectorNumber}) - ขาด ${item.missingCount} ใบ (ต้องการ ${item.countNeeded}, มีตรงชุด ${item.exactOwned})`;
+        if (item.totalEquivalentOwned > item.exactOwned) {
+          line += ` [มีชุดอื่นรวม ${item.totalEquivalentOwned} ใบ]`;
+        }
+        lines.push(line);
       });
     }
   }

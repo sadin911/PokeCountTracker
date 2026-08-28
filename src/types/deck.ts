@@ -23,6 +23,16 @@ export interface DeckStats {
   ruleViolations: string[];
 }
 
+export interface EquivalentOwnedCard {
+  cardId: string;
+  setId: string;
+  setName: string;
+  collectorNumber: string;
+  imageUrl: string;
+  count: number;
+  isExact: boolean;
+}
+
 export interface MissingCardInfo {
   cardId: string;
   name: string;
@@ -35,6 +45,10 @@ export interface MissingCardInfo {
   countNeeded: number;
   countOwned: number;
   missingCount: number;
+  exactOwned: number;
+  totalEquivalentOwned: number;
+  equivalentCardsOwned?: EquivalentOwnedCard[];
+  isEquivalentComplete?: boolean;
 }
 
 export interface DeckMissingReport {
@@ -45,4 +59,5 @@ export interface DeckMissingReport {
   completeItems: MissingCardInfo[];
   isComplete: boolean;
   completionPercentage: number;
+  calculationMode: 'equivalent' | 'exact';
 }

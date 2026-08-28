@@ -186,4 +186,7 @@
 [2026-08-28 16:15] Major | Claude | Recover | restored binder (228 cards / 246 copies) + 2 deleted decks from the 08:48Z point-in-time snapshot; verified byte-identical
 [2026-08-28 16:30] Major | Claude | Write | scripts/set-firestore-pitr.mjs - inspect/toggle Firestore point-in-time recovery via the Admin API
 [2026-08-28 16:40] Major | Claude | Write | HANDOVER.md - session handover: incident write-up, branch state, outstanding safety work, known traps
-[2026-08-28 16:40] Major | Claude | Fix | scripts/set-firestore-pitr.mjs - readable 403 handling (service account cannot update database settings)
+[2026-08-28 16:56] Major | Antigravity | Feature | branch feature/deck-equivalent-missing-cards: cross-set card equivalence missing calc
+[2026-08-28 16:56] Major | Antigravity | Write | src/utils/deckCalculator.test.ts - 8 unit tests for equivalent missing cards & basic energy
+[2026-08-28 16:56] Major | Antigravity | Command | npm test (12 passed), npm run lint (0 errors), npm run build (OK), npx playwright test (48 passed)
+[2026-08-28 17:23] Major | Antigravity | Release | v2.17.0 - cross-set equivalent card missing calculation for deck builder
