@@ -131,7 +131,7 @@ export function CollectionTextImportModal({ onClose }: Props) {
             </div>
             <p className="text-slate-600 dark:text-slate-300 text-xs leading-relaxed">
               ขึ้นต้นด้วยรหัสชุด เช่น <code className="px-1.5 py-0.5 rounded bg-black/10 dark:bg-black/40 text-amber-600 dark:text-amber-300 font-mono font-bold">Set SC1a</code> หรือ <code className="px-1.5 py-0.5 rounded bg-black/10 dark:bg-black/40 text-amber-600 dark:text-amber-300 font-mono font-bold">ชุด SV8</code> แล้วตามด้วยบรรทัด{' '}
-              <code className="px-1.5 py-0.5 rounded bg-black/10 dark:bg-black/40 text-amber-600 dark:text-amber-300 font-mono font-bold">&lt;เลขการ์ด&gt;,&lt;จำนวน&gt;</code> หากไม่ระบุจำนวน จะตั้งเป็น 1 ใบโดยอัตโนมัติ
+              <code className="px-1.5 py-0.5 rounded bg-black/10 dark:bg-black/40 text-amber-600 dark:text-amber-300 font-mono font-bold">&lt;เลขการ์ด&gt;,&lt;จำนวน&gt;</code> หรือสามารถวางข้อความ JSON ส่งออกจาก Pokillionaire ได้โดยตรง
             </p>
           </div>
 

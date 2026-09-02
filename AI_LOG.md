@@ -203,3 +203,14 @@
 [2026-09-02 13:21] Major | Antigravity | Edit | package.json - bumped version to v2.18.0
 [2026-09-02 13:22] Major | Antigravity | Command | npm run dev - started dev server on http://localhost:5173
 [2026-09-02 13:27] Major | Antigravity | Release | v2.18.0 - bulk card text import by set and number
+[2026-09-02 13:33] Minor | Antigravity | Research | exampleimport.json - mapped 169/169 cards against pokemonNames.json
+[2026-09-02 13:44] Major | Antigravity | Write | src/utils/pokillionaireParser.ts - Pokillionaire JSON format parser
+[2026-09-02 13:44] Major | Antigravity | Write | src/utils/pokillionaireParser.test.ts - parser unit tests
+[2026-09-02 13:44] Major | Antigravity | Edit | src/store/collectionStore.ts - importCollectionJSON Pokillionaire support
+[2026-09-02 13:44] Major | Antigravity | Write | src/store/collectionStore.pokillionaire.test.ts - store import tests
+[2026-09-02 13:44] Major | Antigravity | Edit | src/components/collection/CollectionBackupModal.tsx - Pokillionaire UI
+[2026-09-02 13:44] Major | Antigravity | Edit | src/components/collection/CollectionTextImportModal.tsx - JSON note
+[2026-09-02 13:44] Major | Antigravity | Edit | e2e/collection-tracker.spec.ts - Pokillionaire E2E test
+[2026-09-02 13:47] Major | Antigravity | Edit | package.json - bumped version to v2.19.0
+[2026-09-02 13:49] Major | Antigravity | Release | v2.19.0 - Pokillionaire JSON format import support
+

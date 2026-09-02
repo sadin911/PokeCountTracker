@@ -169,5 +169,24 @@ invalid line text
       expect(result.unmatchedLines[1]).toContain('ไม่พบการ์ด #999');
       expect(result.unmatchedLines[2]).toContain('รูปแบบการ์ดไม่ถูกต้อง');
     });
+
+    it('automatically parses Pokillionaire JSON format input', () => {
+      const jsonInput = JSON.stringify({
+        version: '1.0',
+        collections: {
+          thai: {
+            ownedCards: [
+              { setId: 'sc1a', cardNumber: '001', cardName: '1 สไตรค์', quantity: 4 },
+            ],
+          },
+        },
+      });
+      const result = parseCollectionText(jsonInput, mockCatalog);
+      expect(result.distinctCardsCount).toBe(1);
+      expect(result.totalQuantity).toBe(4);
+      expect(result.cards[0].cardId).toBe('TH-1');
+      expect(result.cards[0].quantity).toBe(4);
+    });
   });
 });
+

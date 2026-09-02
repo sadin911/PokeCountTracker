@@ -1,6 +1,8 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useMemo } from 'react';
 import { createPortal } from 'react-dom';
 import { useCollectionStore } from '../../store/collectionStore';
+import { isPokillionaireFormat, parsePokillionaireExport } from '../../utils/pokillionaireParser';
+import pokemonCardData from '../../data/pokemonNames.json';
 
 interface Props {
   onClose: () => void;
@@ -10,11 +12,30 @@ interface Props {
 export function CollectionBackupModal({ onClose, onOpenTextImport }: Props) {
   const exportCollectionJSON = useCollectionStore((s) => s.exportCollectionJSON);
   const importCollectionJSON = useCollectionStore((s) => s.importCollectionJSON);
+  const activeProfileId = useCollectionStore((s) => s.activeProfileId);
+  const profiles = useCollectionStore((s) => s.profiles);
 
   const [activeTab, setActiveTab] = useState<'export' | 'import'>('export');
   const [importText, setImportText] = useState('');
+  const [pokillionaireMode, setPokillionaireMode] = useState<'merge' | 'new_profile' | 'replace'>('merge');
   const [statusMessage, setStatusMessage] = useState<{ type: 'success' | 'error'; text: string } | null>(null);
   const [copied, setCopied] = useState(false);
+
+  const activeProfile = profiles[activeProfileId];
+
+  const detectedPokillionaire = useMemo(() => {
+    const trimmed = importText.trim();
+    if (!trimmed.startsWith('{')) return null;
+    try {
+      const data = JSON.parse(trimmed);
+      if (isPokillionaireFormat(data)) {
+        return parsePokillionaireExport(data, pokemonCardData as any[]);
+      }
+    } catch {
+      return null;
+    }
+    return null;
+  }, [importText]);
 
   useEffect(() => {
     const handleKeyDown = (e: KeyboardEvent) => {
@@ -68,6 +89,34 @@ export function CollectionBackupModal({ onClose, onOpenTextImport }: Props) {
   const handleImport = () => {
     if (!importText.trim()) {
       setStatusMessage({ type: 'error', text: 'กรุณาวางโค้ด JSON หรืออัปโหลดไฟล์' });
+      return;
+    }
+
+    if (detectedPokillionaire) {
+      const modeText =
+        pokillionaireMode === 'new_profile'
+          ? 'สร้างสมุดสะสมใหม่'
+          : pokillionaireMode === 'replace'
+          ? 'แทนที่การ์ดในสมุดสะสมปัจจุบัน'
+          : `รวมการ์ดเข้ากับสมุด "${activeProfile?.name || 'สมุดหลัก'}"`;
+
+      if (
+        confirm(
+          `ต้องการดำเนินการ "${modeText}" จากไฟล์ Pokillionaire จำนวน ${detectedPokillionaire.totalQuantityCount} ใบ หรือไม่?`
+        )
+      ) {
+        const res = importCollectionJSON(importText, {
+          mode: pokillionaireMode,
+          profileId: activeProfileId,
+        });
+        if (res.success) {
+          setStatusMessage({ type: 'success', text: res.message });
+          setImportText('');
+          setTimeout(() => onClose(), 1800);
+        } else {
+          setStatusMessage({ type: 'error', text: res.message });
+        }
+      }
       return;
     }
 
@@ -232,7 +281,7 @@ export function CollectionBackupModal({ onClose, onOpenTextImport }: Props) {
               <div className="relative">
                 <label className="block text-[11px] text-slate-500 dark:text-slate-400 mb-1 font-bold">หรือวางข้อความ JSON ที่นี่</label>
                 <textarea
-                  placeholder='วางข้อมูล JSON {"version": "1.0.0", "profiles": {...}} ที่นี่...'
+                  placeholder='วางข้อมูล JSON หรือไฟล์ Pokillionaire ที่นี่...'
                   value={importText}
                   onChange={(e) => setImportText(e.target.value)}
                   rows={6}
@@ -240,13 +289,82 @@ export function CollectionBackupModal({ onClose, onOpenTextImport }: Props) {
                 />
               </div>
 
+              {detectedPokillionaire && (
+                <div className="p-3.5 rounded-2xl bg-indigo-50 dark:bg-indigo-950/40 border border-indigo-200 dark:border-indigo-800/60 space-y-2.5 text-xs animate-fade-in">
+                  <div className="flex items-center gap-2 font-bold text-indigo-900 dark:text-indigo-200">
+                    <span className="text-lg">📦</span>
+                    <div>
+                      <p className="leading-tight">ตรวจพบไฟล์ส่งออกจาก Pokillionaire</p>
+                      <p className="text-[11px] font-normal text-slate-500 dark:text-slate-400">
+                        พบการ์ดรวม {detectedPokillionaire.totalQuantityCount} ใบ ({detectedPokillionaire.distinctCardsCount} แบบ) ในชุด {detectedPokillionaire.setsFound.join(', ')}
+                      </p>
+                    </div>
+                  </div>
+
+                  <div className="pt-2 border-t border-indigo-200/60 dark:border-indigo-800/40 space-y-1.5">
+                    <label className="block text-[11px] font-bold text-slate-700 dark:text-slate-300">
+                      เลือกรูปแบบการนำเข้า:
+                    </label>
+                    <div className="space-y-1.5">
+                      <label className="flex items-center gap-2 p-2 rounded-xl bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 cursor-pointer hover:border-indigo-400 text-xs">
+                        <input
+                          type="radio"
+                          name="pokillionaire-mode"
+                          value="merge"
+                          checked={pokillionaireMode === 'merge'}
+                          onChange={() => setPokillionaireMode('merge')}
+                          className="accent-indigo-600"
+                        />
+                        <span className="font-semibold text-slate-800 dark:text-slate-200">
+                          รวมเข้ากับสมุดสะสมปัจจุบัน ({activeProfile?.name || 'สมุดหลัก'})
+                        </span>
+                      </label>
+                      <label className="flex items-center gap-2 p-2 rounded-xl bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 cursor-pointer hover:border-indigo-400 text-xs">
+                        <input
+                          type="radio"
+                          name="pokillionaire-mode"
+                          value="new_profile"
+                          checked={pokillionaireMode === 'new_profile'}
+                          onChange={() => setPokillionaireMode('new_profile')}
+                          className="accent-indigo-600"
+                        />
+                        <span className="font-semibold text-slate-800 dark:text-slate-200">
+                          สร้างเป็นสมุดสะสมใหม่ (Pokillionaire Import)
+                        </span>
+                      </label>
+                      <label className="flex items-center gap-2 p-2 rounded-xl bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 cursor-pointer hover:border-indigo-400 text-xs">
+                        <input
+                          type="radio"
+                          name="pokillionaire-mode"
+                          value="replace"
+                          checked={pokillionaireMode === 'replace'}
+                          onChange={() => setPokillionaireMode('replace')}
+                          className="accent-indigo-600"
+                        />
+                        <span className="font-semibold text-rose-600 dark:text-rose-400">
+                          แทนที่การ์ดทั้งหมดในสมุดสะสมปัจจุบัน
+                        </span>
+                      </label>
+                    </div>
+                  </div>
+                </div>
+              )}
+
               <button
                 onClick={handleImport}
                 disabled={!importText.trim()}
-                className="w-full py-2.5 px-4 rounded-xl bg-indigo-600 hover:bg-indigo-500 disabled:opacity-50 text-white font-bold text-xs shadow-md shadow-indigo-600/30 transition-all flex items-center justify-center gap-1.5"
+                className={`w-full py-2.5 px-4 rounded-xl font-bold text-xs shadow-md transition-all flex items-center justify-center gap-1.5 ${
+                  detectedPokillionaire
+                    ? 'bg-gradient-to-r from-indigo-600 to-indigo-700 hover:from-indigo-500 hover:to-indigo-600 text-white shadow-indigo-600/30'
+                    : 'bg-indigo-600 hover:bg-indigo-500 disabled:opacity-50 text-white shadow-indigo-600/30'
+                }`}
               >
                 <span>📥</span>
-                <span>นำเข้าและกู้คืนข้อมูล (Import)</span>
+                <span>
+                  {detectedPokillionaire
+                    ? `นำเข้าจาก Pokillionaire (${detectedPokillionaire.totalQuantityCount} ใบ)`
+                    : 'นำเข้าและกู้คืนข้อมูล (Import)'}
+                </span>
               </button>
             </div>
           )}

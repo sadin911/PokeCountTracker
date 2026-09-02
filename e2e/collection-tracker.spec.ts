@@ -125,6 +125,41 @@ test.describe('Collection Tracker Suite', () => {
     // Verify success feedback
     await expect(modal.locator('text=นำเข้าสำเร็จ!')).toBeVisible();
   });
+
+  test('imports Pokillionaire JSON format seamlessly', async ({ page }) => {
+    const importBtn = page.locator('[data-testid="text-import-button"]');
+    await expect(importBtn).toBeVisible();
+    await importBtn.click();
+
+    const modal = page.locator('.fixed.inset-0').filter({ hasText: /Card Text Import/i }).first();
+    await expect(modal).toBeVisible();
+
+    const jsonSnippet = JSON.stringify({
+      version: '1.0',
+      collections: {
+        thai: {
+          ownedCards: [
+            { setId: 'sc1a', cardNumber: '001', cardName: '1 สไตรค์', quantity: 2 },
+            { setId: 'sc1a', cardNumber: '020', cardName: '20 เอเลซัน', quantity: 3 },
+          ],
+        },
+      },
+    });
+
+    const textarea = modal.locator('textarea');
+    await textarea.fill(jsonSnippet);
+    await page.waitForTimeout(300);
+
+    await expect(modal).toContainText('5 ใบ');
+    await expect(modal).toContainText('2 แบบ');
+
+    const submitBtn = modal.locator('button:has-text("นำเข้า 5 ใบ")');
+    await expect(submitBtn).toBeVisible();
+    await submitBtn.click();
+
+    await expect(modal.locator('text=นำเข้าสำเร็จ!')).toBeVisible();
+  });
 });
+
 
 

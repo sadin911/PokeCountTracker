@@ -3,6 +3,7 @@ import { doc, setDoc, getDocs, deleteDoc, collection } from 'firebase/firestore'
 import { db, auth } from '../utils/firebase';
 import pokemonCardData from '../data/pokemonNames.json';
 import { parseCollectionText } from '../utils/collectionTextParser';
+import { isPokillionaireFormat, parsePokillionaireExport } from '../utils/pokillionaireParser';
 import type {
   CardVariantKey,
   CardCondition,
@@ -59,7 +60,20 @@ interface CollectionState {
 
   // Backup & Restore
   exportCollectionJSON: () => string;
-  importCollectionJSON: (jsonString: string) => { success: boolean; message: string };
+  importCollectionJSON: (
+    jsonString: string,
+    options?: {
+      mode?: 'merge' | 'replace' | 'new_profile';
+      profileId?: string;
+      profileName?: string;
+    }
+  ) => {
+    success: boolean;
+    message: string;
+    format?: 'native' | 'pokillionaire';
+    cardsImportedCount?: number;
+    distinctCardsCount?: number;
+  };
   importCollectionText: (
     text: string,
     options?: {
@@ -731,11 +745,147 @@ export const useCollectionStore = create<CollectionState>((set, get) => ({
     return JSON.stringify(exportPayload, null, 2);
   },
 
-  importCollectionJSON: (jsonString: string) => {
+  importCollectionJSON: (jsonString: string, options) => {
     try {
       const data = JSON.parse(jsonString);
-      if (!data || typeof data !== 'object' || !data.profiles) {
-        return { success: false, message: 'Invalid JSON format for collection backup.' };
+      if (!data || typeof data !== 'object') {
+        return { success: false, message: 'รูปแบบ JSON ไม่ถูกต้อง' };
+      }
+
+      // 1. Check if the JSON is Pokillionaire export format
+      if (isPokillionaireFormat(data)) {
+        const parseResult = parsePokillionaireExport(data, pokemonCardData as any[]);
+        if (!parseResult.success || parseResult.cards.length === 0) {
+          return {
+            success: false,
+            message: 'ไม่พบรายการการ์ดที่ตรงกับฐานข้อมูลในไฟล์ Pokillionaire',
+            format: 'pokillionaire',
+          };
+        }
+
+        const mode = options?.mode ?? 'merge';
+        const state = get();
+
+        if (mode === 'new_profile') {
+          const newId = `pokillionaire-${Date.now()}`;
+          const profileName =
+            options?.profileName?.trim() ||
+            `Pokillionaire (${parseResult.distinctCardsCount} แบบ)`;
+
+          const newCards: Record<string, CollectionCardEntry> = {};
+          for (const item of parseResult.cards) {
+            const cardId = item.card.id;
+            if (!newCards[cardId]) {
+              newCards[cardId] = {
+                cardId,
+                variants: { normal: item.quantity, holo: 0, reverse: 0, promo: 0 },
+                updatedAt: Date.now(),
+              };
+            } else {
+              newCards[cardId].variants.normal += item.quantity;
+            }
+          }
+
+          const newProfile: CollectionProfile = {
+            id: newId,
+            name: profileName,
+            icon: '📦',
+            description: `นำเข้าจาก Pokillionaire เมื่อ ${new Date().toLocaleDateString('th-TH')}`,
+            cards: newCards,
+            createdAt: Date.now(),
+            updatedAt: Date.now(),
+            schemaVersion: BINDER_SCHEMA_VERSION,
+          };
+
+          set((s) => ({
+            profiles: {
+              ...s.profiles,
+              [newId]: newProfile,
+            },
+            activeProfileId: newId,
+          }));
+
+          triggerSave(get, newId);
+
+          return {
+            success: true,
+            message: `สร้างสมุดสะสมใหม่ "${profileName}" และนำเข้าการ์ดสำเร็จ ${parseResult.totalQuantityCount} ใบ (${parseResult.distinctCardsCount} แบบ)!`,
+            format: 'pokillionaire',
+            cardsImportedCount: parseResult.totalQuantityCount,
+            distinctCardsCount: parseResult.distinctCardsCount,
+          };
+        }
+
+        // Mode is 'merge' or 'replace'
+        const targetProfileId = options?.profileId ?? state.activeProfileId;
+        const targetProfile = state.profiles[targetProfileId] || Object.values(state.profiles)[0];
+
+        if (!targetProfile) {
+          return {
+            success: false,
+            message: 'ไม่พบสมุดสะสมที่ต้องการนำเข้าข้อมูล',
+            format: 'pokillionaire',
+          };
+        }
+
+        const updatedCards: Record<string, CollectionCardEntry> =
+          mode === 'replace' ? {} : { ...(targetProfile.cards || {}) };
+
+        for (const item of parseResult.cards) {
+          const cardId = item.card.id;
+          const existing = updatedCards[cardId];
+          if (existing) {
+            updatedCards[cardId] = {
+              ...existing,
+              variants: {
+                ...existing.variants,
+                normal: (mode === 'replace' ? 0 : (existing.variants?.normal || 0)) + item.quantity,
+              },
+              updatedAt: Date.now(),
+            };
+          } else {
+            updatedCards[cardId] = {
+              cardId,
+              variants: { normal: item.quantity, holo: 0, reverse: 0, promo: 0 },
+              updatedAt: Date.now(),
+            };
+          }
+        }
+
+        const nextProfile: CollectionProfile = {
+          ...targetProfile,
+          cards: updatedCards,
+          updatedAt: Date.now(),
+          schemaVersion: BINDER_SCHEMA_VERSION,
+        };
+
+        set((s) => ({
+          profiles: {
+            ...s.profiles,
+            [targetProfile.id]: nextProfile,
+          },
+          activeProfileId: targetProfile.id,
+        }));
+
+        triggerSave(get, targetProfile.id);
+
+        const actionText = mode === 'replace' ? 'แทนที่' : 'รวมเข้า';
+        return {
+          success: true,
+          message: `นำเข้าจาก Pokillionaire สำเร็จ ${parseResult.totalQuantityCount} ใบ (${parseResult.distinctCardsCount} แบบ) ${actionText}สมุด "${targetProfile.name}"!`,
+          format: 'pokillionaire',
+          cardsImportedCount: parseResult.totalQuantityCount,
+          distinctCardsCount: parseResult.distinctCardsCount,
+        };
+      }
+
+      // 2. PokéCountTracker Native Backup Format
+      if (!data.profiles) {
+        return {
+          success: false,
+          message:
+            'รูปแบบไฟล์ JSON ไม่ถูกต้อง (ไม่พบข้อมูล profiles หรือ collections ของ Pokillionaire)',
+        };
       }
 
       const importedProfiles: Record<string, CollectionProfile> = {};
@@ -750,6 +900,7 @@ export const useCollectionStore = create<CollectionState>((set, get) => ({
             cards: profile.cards || {},
             createdAt: profile.createdAt || Date.now(),
             updatedAt: profile.updatedAt || Date.now(),
+            schemaVersion: BINDER_SCHEMA_VERSION,
           };
         }
       }
@@ -770,7 +921,11 @@ export const useCollectionStore = create<CollectionState>((set, get) => ({
       // Trigger save for current context (User Cloud or Guest)
       triggerSave(get, newActive);
 
-      return { success: true, message: `Successfully imported ${Object.keys(importedProfiles).length} profile(s)!` };
+      return {
+        success: true,
+        message: `Successfully imported ${Object.keys(importedProfiles).length} profile(s)!`,
+        format: 'native',
+      };
     } catch (err: any) {
       return { success: false, message: `Error parsing file: ${err?.message || 'Invalid JSON'}` };
     }

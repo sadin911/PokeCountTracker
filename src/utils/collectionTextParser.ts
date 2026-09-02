@@ -1,3 +1,8 @@
+import {
+  isPokillionaireFormat,
+  parsePokillionaireExport,
+} from './pokillionaireParser';
+
 export interface ParsedCollectionCard {
   cardId: string;
   setCode: string;
@@ -55,22 +60,41 @@ export function extractSetHeader(line: string, knownSets: Set<string>): string |
 }
 
 /**
- * Parses collection text in the format:
- * Set SC1a
- * 1,3
- * 20,5
- * 21
- *
- * Supports:
- * - First value: card collector number
- * - Second value: quantity (default is 1 if omitted)
- * - Multiple sets in one text block (e.g. Set SC1a followed by Set SV8)
- * - Flexible separators: comma (,), 'x', space, colon
+ * Parses collection text or Pokillionaire JSON format.
  */
 export function parseCollectionText(
   text: string,
   catalog: any[]
 ): CollectionTextParseResult {
+  const trimmedText = text.trim();
+
+  // If input starts with JSON object, check for Pokillionaire export format
+  if (trimmedText.startsWith('{')) {
+    try {
+      const jsonData = JSON.parse(trimmedText);
+      if (isPokillionaireFormat(jsonData)) {
+        const pResult = parsePokillionaireExport(jsonData, catalog);
+        return {
+          cards: pResult.cards.map((c) => ({
+            cardId: c.card.id,
+            setCode: c.card.set?.id || c.sourceSetId,
+            collectorNumber: c.sourceCardNumber,
+            quantity: c.quantity,
+            card: c.card,
+          })),
+          totalQuantity: pResult.totalQuantityCount,
+          distinctCardsCount: pResult.distinctCardsCount,
+          unmatchedLines: pResult.unmatched.map(
+            (u) => `ชุด ${u.setId} #${u.cardNumber} (${u.cardName}): ${u.reason}`
+          ),
+          setsFound: pResult.setsFound,
+        };
+      }
+    } catch {
+      // Not valid JSON, proceed with standard text parser
+    }
+  }
+
   // Build lookup index for cards
   const cardLookup = new Map<string, any>();
   const knownSets = new Set<string>();
