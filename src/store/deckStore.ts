@@ -34,6 +34,13 @@ interface DeckState {
   // Export / Import
   exportDeckJSON: (deckId: string) => string;
   importDeckJSON: (jsonString: string) => { success: boolean; message: string; deckId?: string };
+  importParsedDeck: (data: {
+    name: string;
+    description?: string;
+    cards: Record<string, { cardId: string; count: number }>;
+    coverCardId?: string;
+    coverImageUrl?: string;
+  }) => string;
 }
 
 const GUEST_DECKS_STORAGE_KEY = 'pokecount_guest_decks_v1';
@@ -517,5 +524,30 @@ export const useDeckStore = create<DeckState>((set, get) => ({
     } catch (e: any) {
       return { success: false, message: `เกิดข้อผิดพลาดในการนำเข้า: ${e.message}` };
     }
+  },
+
+  importParsedDeck: (data) => {
+    const id = `deck-${Date.now()}-${Math.random().toString(36).substring(2, 6)}`;
+    const newDeck: Deck = {
+      id,
+      name: data.name.trim() || 'Imported Deck',
+      description: data.description || 'นำเข้าจาก Text Decklist',
+      coverCardId: data.coverCardId,
+      coverImageUrl: data.coverImageUrl,
+      cards: data.cards || {},
+      createdAt: Date.now(),
+      updatedAt: Date.now(),
+    };
+
+    set((state) => ({
+      decks: {
+        ...state.decks,
+        [id]: newDeck,
+      },
+      activeDeckId: id,
+    }));
+
+    triggerDeckSave(get, id);
+    return id;
   },
 }));

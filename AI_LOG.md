@@ -213,4 +213,8 @@
 [2026-09-02 13:44] Major | Antigravity | Edit | e2e/collection-tracker.spec.ts - Pokillionaire E2E test
 [2026-09-02 13:47] Major | Antigravity | Edit | package.json - bumped version to v2.19.0
 [2026-09-02 13:49] Major | Antigravity | Release | v2.19.0 - Pokillionaire JSON format import support
-
+[2026-09-02 14:15] Major | Antigravity | Write | src/utils/ptcglDeckParser.ts - Limitless & PTCGL deck parser
+[2026-09-02 14:15] Major | Antigravity | Write | src/utils/ptcglDeckParser.test.ts - deck parser unit tests
+[2026-09-02 14:15] Major | Antigravity | Edit | src/store/deckStore.ts - added importParsedDeck action
+[2026-09-02 14:15] Major | Antigravity | Edit | src/components/deck/DeckImportExportModal.tsx - live preview & import
+[2026-09-02 14:15] Major | Antigravity | Edit | e2e/deck-builder.spec.ts - Limitless deck import E2E test

@@ -66,4 +66,46 @@ test.describe('Deck Builder Suite', () => {
       await page.keyboard.press('Escape');
     }
   });
+
+  test('imports Limitless English decklist text into a new deck with live preview', async ({ page }) => {
+    const importBtn = page.locator('button:has-text("นำเข้าเด็ค"), button[title*="นำเข้า"]').first();
+    await expect(importBtn).toBeVisible();
+    await importBtn.click();
+
+    const modal = page.locator('.fixed.inset-0.z-50');
+    await expect(modal).toBeVisible();
+
+    // Click Import tab
+    const importTab = modal.locator('button:has-text("นำเข้าเด็ค (Import)")');
+    await importTab.click();
+
+    // Paste Limitless English decklist text
+    const sampleLimitlessText = `Pokémon: 10
+4 Dreepy TWM 128
+4 Drakloak TWM 129
+2 Dragapult ex TWM 130
+Trainer: 8
+4 Buddy-Buddy Poffin TEF 144
+4 Ultra Ball PAF 91
+Energy: 4
+4 Fire Energy MEE 2`;
+
+    const textarea = modal.locator('textarea[placeholder*="ตัวอย่างจาก Limitless"]');
+    await textarea.fill(sampleLimitlessText);
+
+    // Verify live preview renders deck title, total count badge, breakdown badges
+    await expect(modal.locator('text=Dragapult ex').first()).toBeVisible({ timeout: 5000 });
+    await expect(modal.locator('text=22 / 60 ใบ')).toBeVisible();
+    await expect(modal.locator('text=โดราพัลท์ex').first()).toBeVisible();
+
+    // Click submit import button
+    const submitBtn = modal.locator('button:has-text("นำเข้าเด็ค \\"Dragapult ex\\"")');
+    await expect(submitBtn).toBeVisible();
+    await submitBtn.click();
+
+    // Verify modal closes and new deck appears in Deck Manager list
+    await expect(modal).not.toBeVisible({ timeout: 5000 });
+    await expect(page.locator('text=Dragapult ex').first()).toBeVisible();
+  });
 });
+
