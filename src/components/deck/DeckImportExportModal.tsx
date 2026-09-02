@@ -4,6 +4,7 @@ import { useAuthStore } from '../../store/authStore';
 import { useCustomMappingStore } from '../../store/customMappingStore';
 import pokemonCardData from '../../data/pokemonNames.json';
 import { parsePTCGLDeck, type UnmatchedDeckCardItem } from '../../utils/ptcglDeckParser';
+import { resolveCardImageUrl, handleCardImageError } from '../../utils/cardImage';
 import { CardMappingPickerModal } from './CardMappingPickerModal';
 
 interface Props {
@@ -362,8 +363,10 @@ export function DeckImportExportModal({ onClose, activeDeckId }: Props) {
                         <div className="flex items-center gap-2">
                           {parsedPTCGL.coverImageUrl ? (
                             <img
-                              src={parsedPTCGL.coverImageUrl}
+                              src={resolveCardImageUrl(parsedPTCGL.coverImageUrl)}
                               alt="Cover"
+                              loading="lazy"
+                              onError={(e) => handleCardImageError(e, parsedPTCGL.coverImageUrl)}
                               className="w-10 h-14 object-cover rounded-lg shadow-md border border-slate-700"
                             />
                           ) : (
@@ -471,8 +474,10 @@ export function DeckImportExportModal({ onClose, activeDeckId }: Props) {
                               </span>
                               {e.cardImage && (
                                 <img
-                                  src={e.cardImage}
+                                  src={resolveCardImageUrl(e.cardImage)}
                                   alt={e.cardNameTh}
+                                  loading="lazy"
+                                  onError={(err) => handleCardImageError(err, e.cardImage)}
                                   className="w-5 h-7 object-cover rounded shadow-sm shrink-0"
                                 />
                               )}
@@ -533,6 +538,15 @@ export function DeckImportExportModal({ onClose, activeDeckId }: Props) {
                               className="flex items-center justify-between p-1.5 rounded-lg bg-slate-900 border border-slate-800"
                             >
                               <div className="min-w-0 flex items-center gap-2">
+                                {m.cardImage && (
+                                  <img
+                                    src={resolveCardImageUrl(m.cardImage)}
+                                    alt={m.cardNameTh}
+                                    loading="lazy"
+                                    onError={(err) => handleCardImageError(err, m.cardImage)}
+                                    className="w-5 h-7 object-cover rounded shadow-sm shrink-0"
+                                  />
+                                )}
                                 <span className="font-bold text-amber-300 font-mono truncate">
                                   {m.enName}
                                 </span>

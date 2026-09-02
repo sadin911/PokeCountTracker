@@ -1,5 +1,6 @@
 import { useState, useMemo, useEffect } from 'react';
 import { type UnmatchedDeckCardItem, translateEnCardNameToTh } from '../../utils/ptcglDeckParser';
+import { resolveCardImageUrl, handleCardImageError } from '../../utils/cardImage';
 
 interface Props {
   unmatchedItem: UnmatchedDeckCardItem;
@@ -151,7 +152,8 @@ export function CardMappingPickerModal({
             </div>
           ) : (
             filteredCards.map((card) => {
-              const imgUrl = card.imageUrl || card.officialImageUrl;
+              const rawImg = card.imageUrl || card.officialImageUrl;
+              const imgUrl = resolveCardImageUrl(rawImg);
               return (
                 <div
                   key={card.id}
@@ -162,6 +164,8 @@ export function CardMappingPickerModal({
                       <img
                         src={imgUrl}
                         alt={card.name}
+                        loading="lazy"
+                        onError={(e) => handleCardImageError(e, card.imageUrl, card.officialImageUrl)}
                         className="w-10 h-14 object-cover rounded-lg shadow-sm border border-slate-700 shrink-0"
                       />
                     ) : (

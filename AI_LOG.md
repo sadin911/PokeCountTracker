@@ -224,3 +224,5 @@
 [2026-09-02 14:44] Major | Antigravity | Edit | src/components/deck/DeckImportExportModal.tsx - interactive mapping for unmatched cards
 [2026-09-02 14:44] Major | Antigravity | Edit | src/utils/ptcglDeckParser.ts - unmatched details and custom mapping dictionary integration
 [2026-09-02 14:44] Major | Antigravity | Release | v2.21.0 - Interactive card mapping & user suggestion system for Limitless deck import
+[2026-09-02 14:54] Major | Antigravity | Fix | src/components/deck/ - resolved card images via resolveCardImageUrl and handleCardImageError
+[2026-09-02 14:54] Major | Antigravity | Release | v2.21.1 - Fix card image URL resolution in Deck Import & Mapping Picker
