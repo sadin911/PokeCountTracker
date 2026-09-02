@@ -202,3 +202,4 @@
 [2026-09-02 13:21] Major | Antigravity | Edit | e2e/collection-tracker.spec.ts - added card text import e2e test
 [2026-09-02 13:21] Major | Antigravity | Edit | package.json - bumped version to v2.18.0
 [2026-09-02 13:22] Major | Antigravity | Command | npm run dev - started dev server on http://localhost:5173
+[2026-09-02 13:27] Major | Antigravity | Release | v2.18.0 - bulk card text import by set and number
