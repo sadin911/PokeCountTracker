@@ -218,3 +218,4 @@
 [2026-09-02 14:15] Major | Antigravity | Edit | src/store/deckStore.ts - added importParsedDeck action
 [2026-09-02 14:15] Major | Antigravity | Edit | src/components/deck/DeckImportExportModal.tsx - live preview & import
 [2026-09-02 14:15] Major | Antigravity | Edit | e2e/deck-builder.spec.ts - Limitless deck import E2E test
+[2026-09-02 14:27] Major | Antigravity | Release | v2.20.0 - Limitless & PTCGL English decklist import support
