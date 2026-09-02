@@ -2,6 +2,7 @@ import { useState, useMemo, useEffect } from 'react';
 import { useDeckStore } from '../../store/deckStore';
 import { useCollectionStore } from '../../store/collectionStore';
 import { useAuthStore } from '../../store/authStore';
+import { useGameStore } from '../../store/gameStore';
 import { DeckHeader } from './DeckHeader';
 import { DeckEditor } from './DeckEditor';
 import { MissingCardsModal } from './MissingCardsModal';
@@ -13,6 +14,7 @@ import { PullToRefresh } from '../common/PullToRefresh';
 import pokemonCardData from '../../data/pokemonNames.json';
 
 export function DeckManager() {
+  const setGameMode = useGameStore((s) => s.setGameMode);
   const decks = useDeckStore((s) => s.decks);
   const activeDeckId = useDeckStore((s) => s.activeDeckId);
   const createDeck = useDeckStore((s) => s.createDeck);
@@ -103,8 +105,18 @@ export function DeckManager() {
               </p>
             </div>
 
-            {/* Actions: Create & Import */}
-            <div className="flex items-center gap-3 w-full sm:w-auto">
+            {/* Actions: Create, Import & Card Mapping */}
+            <div className="flex items-center gap-2.5 w-full sm:w-auto flex-wrap">
+              <button
+                type="button"
+                onClick={() => setGameMode('mapping')}
+                className="flex-1 sm:flex-none px-3.5 py-3 rounded-2xl bg-amber-500/10 hover:bg-amber-500/20 text-amber-300 border border-amber-500/30 font-bold text-xs sm:text-sm shadow-md transition-all flex items-center justify-center gap-1.5 hover:scale-105 active:scale-95"
+                title="จัดการและจับคู่ชื่อการ์ดภาษาอังกฤษเป็นภาษาไทย"
+              >
+                <span>🔗</span>
+                <span>จัดการ Map การ์ด</span>
+              </button>
+
               <button
                 onClick={() => setShowImportExport(true)}
                 className="flex-1 sm:flex-none px-4 py-3 rounded-2xl bg-slate-800 hover:bg-slate-700 text-slate-200 border border-slate-600 font-bold text-xs sm:text-sm shadow-md transition-all flex items-center justify-center gap-2 hover:scale-105 active:scale-95"

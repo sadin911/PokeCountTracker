@@ -1,6 +1,7 @@
 import { useState, useEffect, useMemo } from 'react';
 import { useDeckStore } from '../../store/deckStore';
 import { useAuthStore } from '../../store/authStore';
+import { useGameStore } from '../../store/gameStore';
 import { useCustomMappingStore } from '../../store/customMappingStore';
 import pokemonCardData from '../../data/pokemonNames.json';
 import { parsePTCGLDeck, type UnmatchedDeckCardItem } from '../../utils/ptcglDeckParser';
@@ -13,6 +14,7 @@ interface Props {
 }
 
 export function DeckImportExportModal({ onClose, activeDeckId }: Props) {
+  const setGameMode = useGameStore((s) => s.setGameMode);
   const user = useAuthStore((s) => s.user);
   const decks = useDeckStore((s) => s.decks);
   const importDeckJSON = useDeckStore((s) => s.importDeckJSON);
@@ -734,6 +736,20 @@ export function DeckImportExportModal({ onClose, activeDeckId }: Props) {
 
                   {showMappingsList && (
                     <div className="mt-2 p-3 rounded-xl bg-slate-950 border border-slate-800 space-y-2 animate-fade-in text-xs">
+                      <div className="flex items-center justify-between pb-1.5 border-b border-slate-800">
+                        <span className="text-[11px] text-slate-400 font-bold">รายการที่บันทึกไว้ในเครื่อง</span>
+                        <button
+                          type="button"
+                          onClick={() => {
+                            onClose();
+                            setGameMode('mapping');
+                          }}
+                          className="text-[10px] text-amber-400 hover:text-amber-300 font-black flex items-center gap-1 hover:underline"
+                        >
+                          <span>เปิดหน้า Studio เต็ม</span>
+                          <span>➜</span>
+                        </button>
+                      </div>
                       {customMappingsList.length === 0 ? (
                         <p className="text-slate-500 text-[11px] text-center py-2">
                           ยังไม่มีรายการที่จับคู่เอง เมื่อคุณกด "จับคู่การ์ด" รายการจะถูกบันทึกไว้ที่นี่

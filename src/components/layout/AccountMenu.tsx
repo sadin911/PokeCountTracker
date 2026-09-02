@@ -271,6 +271,15 @@ export function AccountMenu() {
               tone={needRefresh ? 'accent' : 'default'}
               testId="menu-update"
             />
+            <MenuRow
+              icon="🔗"
+              label="จัดการ Map การ์ด (Mapping)"
+              onClick={() => {
+                setIsOpen(false);
+                setGameMode('mapping');
+              }}
+              testId="menu-mapping"
+            />
             {canInstall && (
               <MenuRow
                 icon="📲"

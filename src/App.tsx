@@ -4,6 +4,7 @@ import { GameBoard } from './components/layout/GameBoard';
 import { CollectionTracker } from './components/collection/CollectionTracker';
 import { DeckManager } from './components/deck/DeckManager';
 import { AdminPage } from './components/admin/AdminPage';
+import { CardMappingPage } from './components/mapping/CardMappingPage';
 import { BottomNav } from './components/layout/BottomNav';
 import { OTAUpdateBanner } from './components/common/OTAUpdateBanner';
 import { trackEvent } from './utils/analytics';
@@ -24,6 +25,14 @@ function getModeFromURL(): GameMode {
     rawSearch.includes('admin')
   ) {
     return 'admin';
+  }
+  if (
+    path.includes('/mapping') ||
+    hash.includes('mapping') ||
+    modeParam === 'mapping' ||
+    rawSearch.includes('mapping')
+  ) {
+    return 'mapping';
   }
   if (
     path.includes('/deck') ||
@@ -68,6 +77,8 @@ function updateURLForMode(mode: GameMode) {
 
   if (mode === 'admin') {
     targetPath = `${base}/admin`;
+  } else if (mode === 'mapping') {
+    targetPath = `${base}/mapping`;
   } else if (mode === 'deck') {
     targetPath = `${base}/deck`;
   } else if (mode === 'collection') {
@@ -121,6 +132,10 @@ function App() {
 
   if (gameMode === 'admin') {
     return <AdminPage onBackToApp={() => setGameMode('collection')} />;
+  }
+
+  if (gameMode === 'mapping') {
+    return <CardMappingPage onBack={() => setGameMode('deck')} />;
   }
 
   return (

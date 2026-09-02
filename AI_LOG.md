@@ -230,3 +230,9 @@
 [2026-09-02 15:15] Major | Antigravity | Edit | src/utils/ptcglDeckParser.ts - split autoMatchedEntries and customMappedEntries
 [2026-09-02 15:15] Major | Antigravity | Edit | package.json - bumped version to v2.22.0
 [2026-09-02 15:16] Major | Antigravity | Release | v2.22.0 - Allow re-mapping cards and separate non-auto-selected custom mapped cards
+[2026-09-02 15:46] Major | Antigravity | Write | src/components/mapping/CardMappingPage.tsx - dedicated Card Mapping Studio page
+[2026-09-02 15:46] Major | Antigravity | Edit | src/App.tsx - added mapping route and navigation support
+[2026-09-02 15:46] Major | Antigravity | Edit | src/components/deck/DeckManager.tsx - added mapping studio button in toolbar
+[2026-09-02 15:46] Major | Antigravity | Edit | src/components/layout/AccountMenu.tsx - added mapping studio entry
+[2026-09-02 15:46] Major | Antigravity | Write | e2e/card-mapping.spec.ts - comprehensive E2E tests for mapping studio
+[2026-09-02 15:46] Major | Antigravity | Release | v2.23.0 - Dedicated Card Mapping Studio page

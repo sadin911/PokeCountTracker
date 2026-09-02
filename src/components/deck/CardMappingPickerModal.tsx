@@ -207,6 +207,7 @@ export function CardMappingPickerModal({
 
                   <button
                     type="button"
+                    data-testid="select-card-mapping"
                     onClick={() => onSelect(card)}
                     className="px-3 py-1.5 rounded-xl bg-indigo-600 hover:bg-indigo-500 active:scale-95 text-white text-xs font-black shadow-md transition-all shrink-0 flex items-center gap-1"
                   >
