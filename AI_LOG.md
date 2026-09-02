@@ -190,3 +190,15 @@
 [2026-08-28 16:56] Major | Antigravity | Write | src/utils/deckCalculator.test.ts - 8 unit tests for equivalent missing cards & basic energy
 [2026-08-28 16:56] Major | Antigravity | Command | npm test (12 passed), npm run lint (0 errors), npm run build (OK), npx playwright test (48 passed)
 [2026-08-28 17:23] Major | Antigravity | Release | v2.17.0 - cross-set equivalent card missing calculation for deck builder
+[2026-09-02 13:15] Major | Antigravity | Plan | implementation_plan.md - planned card text import feature
+[2026-09-02 13:21] Major | Antigravity | Write | src/utils/collectionTextParser.ts - set & number card list text parser
+[2026-09-02 13:21] Major | Antigravity | Write | src/utils/collectionTextParser.test.ts - parser unit tests
+[2026-09-02 13:21] Major | Antigravity | Edit | src/store/collectionStore.ts - added importCollectionText action
+[2026-09-02 13:21] Major | Antigravity | Write | src/store/collectionStore.importText.test.ts - store import text tests
+[2026-09-02 13:21] Major | Antigravity | Write | src/components/collection/CollectionTextImportModal.tsx - text import modal
+[2026-09-02 13:21] Major | Antigravity | Edit | src/components/collection/CollectionHeader.tsx - added text import button
+[2026-09-02 13:21] Major | Antigravity | Edit | src/components/collection/CollectionBackupModal.tsx - text import banner
+[2026-09-02 13:21] Major | Antigravity | Edit | src/components/layout/AccountMenu.tsx - connected text import modal
+[2026-09-02 13:21] Major | Antigravity | Edit | e2e/collection-tracker.spec.ts - added card text import e2e test
+[2026-09-02 13:21] Major | Antigravity | Edit | package.json - bumped version to v2.18.0
+[2026-09-02 13:22] Major | Antigravity | Command | npm run dev - started dev server on http://localhost:5173

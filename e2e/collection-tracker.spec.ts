@@ -97,5 +97,34 @@ test.describe('Collection Tracker Suite', () => {
     await page.keyboard.press('Escape');
     await expect(modal).toBeHidden();
   });
+
+  test('opens Collection Text Import modal and imports cards via text', async ({ page }) => {
+    // Click visible Import button in header
+    const importBtn = page.locator('[data-testid="text-import-button"]');
+    await expect(importBtn).toBeVisible();
+    await importBtn.click();
+
+    // Verify modal appears
+    const modal = page.locator('.fixed.inset-0').filter({ hasText: /Card Text Import/i }).first();
+    await expect(modal).toBeVisible();
+
+    // Fill in text
+    const textarea = modal.locator('textarea');
+    await textarea.fill('Set SC1a\n1,3\n20,5\n21');
+    await page.waitForTimeout(300);
+
+    // Verify live preview displays parsed counts
+    await expect(modal).toContainText('9 ใบ');
+    await expect(modal).toContainText('3 แบบ');
+
+    // Click Import button
+    const submitBtn = modal.locator('button:has-text("นำเข้า 9 ใบ")');
+    await expect(submitBtn).toBeVisible();
+    await submitBtn.click();
+
+    // Verify success feedback
+    await expect(modal.locator('text=นำเข้าสำเร็จ!')).toBeVisible();
+  });
 });
+
 

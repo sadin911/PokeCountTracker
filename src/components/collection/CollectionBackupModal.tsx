@@ -4,9 +4,10 @@ import { useCollectionStore } from '../../store/collectionStore';
 
 interface Props {
   onClose: () => void;
+  onOpenTextImport?: () => void;
 }
 
-export function CollectionBackupModal({ onClose }: Props) {
+export function CollectionBackupModal({ onClose, onOpenTextImport }: Props) {
   const exportCollectionJSON = useCollectionStore((s) => s.exportCollectionJSON);
   const importCollectionJSON = useCollectionStore((s) => s.importCollectionJSON);
 
@@ -191,6 +192,29 @@ export function CollectionBackupModal({ onClose }: Props) {
             </div>
           ) : (
             <div className="space-y-3">
+              {onOpenTextImport && (
+                <div className="p-3.5 rounded-2xl bg-amber-500/10 border border-amber-500/30 flex items-center justify-between gap-3 text-xs">
+                  <div className="space-y-0.5">
+                    <p className="font-bold text-amber-800 dark:text-amber-200">
+                      ต้องการนำเข้าการ์ดด้วยรหัสชุดและหมายเลข?
+                    </p>
+                    <p className="text-[11px] text-slate-500 dark:text-slate-400">
+                      เช่น Set SC1a, 1,3 หรือ ชุด SV8, 10,2
+                    </p>
+                  </div>
+                  <button
+                    type="button"
+                    onClick={() => {
+                      onClose();
+                      onOpenTextImport();
+                    }}
+                    className="px-3.5 py-1.5 rounded-xl bg-gradient-to-r from-amber-500 to-yellow-500 hover:brightness-110 active:scale-95 text-slate-950 font-bold text-xs shrink-0 shadow-sm transition-all"
+                  >
+                    นำเข้าจากข้อความ
+                  </button>
+                </div>
+              )}
+
               <p className="text-xs text-slate-600 dark:text-slate-300 leading-relaxed">
                 อัปโหลดไฟล์สำรอง `.json` หรือวางโค้ด JSON ที่คัดลอกมาจากเครื่องอื่นเพื่อกู้คืนคอลเลกชัน:
               </p>

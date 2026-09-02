@@ -1,6 +1,8 @@
 import { create } from 'zustand';
 import { doc, setDoc, getDocs, deleteDoc, collection } from 'firebase/firestore';
 import { db, auth } from '../utils/firebase';
+import pokemonCardData from '../data/pokemonNames.json';
+import { parseCollectionText } from '../utils/collectionTextParser';
 import type {
   CardVariantKey,
   CardCondition,
@@ -58,6 +60,21 @@ interface CollectionState {
   // Backup & Restore
   exportCollectionJSON: () => string;
   importCollectionJSON: (jsonString: string) => { success: boolean; message: string };
+  importCollectionText: (
+    text: string,
+    options?: {
+      mode?: 'merge' | 'replace';
+      finish?: CardVariantKey;
+      profileId?: string;
+    }
+  ) => {
+    success: boolean;
+    message: string;
+    cardsImportedCount: number;
+    distinctCardsCount: number;
+    unmatchedLines: string[];
+    setsFound: string[];
+  };
 }
 
 const DEFAULT_PROFILE_ID = 'default-main-profile';
@@ -757,5 +774,98 @@ export const useCollectionStore = create<CollectionState>((set, get) => ({
     } catch (err: any) {
       return { success: false, message: `Error parsing file: ${err?.message || 'Invalid JSON'}` };
     }
+  },
+
+  importCollectionText: (text: string, options) => {
+    const mode = options?.mode ?? 'merge';
+    const finish = options?.finish ?? 'normal';
+    const profileId = options?.profileId ?? get().activeProfileId;
+    const profile = get().profiles[profileId];
+
+    if (!profile) {
+      return {
+        success: false,
+        message: 'ไม่พบสมุดสะสมที่เลือก (Active binder not found)',
+        cardsImportedCount: 0,
+        distinctCardsCount: 0,
+        unmatchedLines: [],
+        setsFound: [],
+      };
+    }
+
+    const parseResult = parseCollectionText(text, pokemonCardData as any[]);
+    if (parseResult.cards.length === 0) {
+      return {
+        success: false,
+        message:
+          parseResult.unmatchedLines.length > 0
+            ? 'ไม่พบการ์ดที่ตรงกับข้อมูลในระบบจากข้อความที่ระบุ'
+            : 'กรุณาระบุรายการการ์ดใต้รหัสชุด (เช่น Set SC1a\n1,3\n20,5\n21)',
+        cardsImportedCount: 0,
+        distinctCardsCount: 0,
+        unmatchedLines: parseResult.unmatchedLines,
+        setsFound: parseResult.setsFound,
+      };
+    }
+
+    const cards = { ...profile.cards };
+    for (const item of parseResult.cards) {
+      const existingEntry: CollectionCardEntry = cards[item.cardId] || {
+        cardId: item.cardId,
+        variants: emptyVariants(),
+        updatedAt: Date.now(),
+      };
+
+      const currentQty = existingEntry.variants[finish] ?? 0;
+      const nextQty = mode === 'replace' ? item.quantity : currentQty + item.quantity;
+      const newVariants = {
+        ...existingEntry.variants,
+        [finish]: Math.max(0, nextQty),
+      };
+
+      const total = Object.values(newVariants).reduce((a, b) => a + b, 0);
+      if (total === 0 && !existingEntry.isWishlist && !existingEntry.note) {
+        delete cards[item.cardId];
+      } else {
+        cards[item.cardId] = {
+          ...existingEntry,
+          variants: newVariants,
+          updatedAt: Date.now(),
+        };
+      }
+    }
+
+    const nextProfile: CollectionProfile = {
+      ...profile,
+      cards,
+      updatedAt: Date.now(),
+    };
+
+    set((state) => ({
+      profiles: {
+        ...state.profiles,
+        [profileId]: nextProfile,
+      },
+    }));
+
+    triggerSave(get, profileId);
+
+    const finishLabels: Record<CardVariantKey, string> = {
+      normal: 'Normal (ธรรมดา)',
+      holo: 'Holo (โฮโล)',
+      reverse: 'Reverse Holo (เรเวิร์ส)',
+      promo: 'Promo (โปรโม)',
+    };
+    const finishLabel = finishLabels[finish] || finish;
+    const modeLabel = mode === 'replace' ? 'แทนที่' : 'เพิ่ม';
+
+    return {
+      success: true,
+      message: `นำเข้าสำเร็จ! ${modeLabel}จำนวนการ์ด ${parseResult.totalQuantity} ใบ (${parseResult.distinctCardsCount} แบบ) ชนิด ${finishLabel} ในชุด: ${parseResult.setsFound.join(', ')}`,
+      cardsImportedCount: parseResult.totalQuantity,
+      distinctCardsCount: parseResult.distinctCardsCount,
+      unmatchedLines: parseResult.unmatchedLines,
+      setsFound: parseResult.setsFound,
+    };
   },
 }));

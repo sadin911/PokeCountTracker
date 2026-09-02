@@ -8,6 +8,7 @@ import { useAuthStore } from '../../store/authStore';
 import { useOTAUpdate } from '../../hooks/useOTAUpdate';
 import { usePWAInstall } from '../../hooks/usePWAInstall';
 import { CollectionBackupModal } from '../collection/CollectionBackupModal';
+import { CollectionTextImportModal } from '../collection/CollectionTextImportModal';
 import { PWAInstallGuideModal } from '../common/PWAInstallGuideModal';
 import { ThemeToggle } from '../common/ThemeToggle';
 import { isAdminEmail } from '../../utils/adminAuth';
@@ -103,6 +104,7 @@ export function AccountMenu() {
 
   const [isOpen, setIsOpen] = useState(false);
   const [showBackupModal, setShowBackupModal] = useState(false);
+  const [showTextImportModal, setShowTextImportModal] = useState(false);
   const [isManualSyncing, setIsManualSyncing] = useState(false);
   const [syncFeedback, setSyncFeedback] = useState<string | null>(null);
   const containerRef = useRef<HTMLDivElement | null>(null);
@@ -317,7 +319,15 @@ export function AccountMenu() {
         )}
       </div>
 
-      {showBackupModal && <CollectionBackupModal onClose={() => setShowBackupModal(false)} />}
+      {showBackupModal && (
+        <CollectionBackupModal
+          onClose={() => setShowBackupModal(false)}
+          onOpenTextImport={() => setShowTextImportModal(true)}
+        />
+      )}
+      {showTextImportModal && (
+        <CollectionTextImportModal onClose={() => setShowTextImportModal(false)} />
+      )}
       <PWAInstallGuideModal
         isOpen={showGuideModal}
         isIOS={isIOS}
