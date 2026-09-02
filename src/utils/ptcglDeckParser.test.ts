@@ -73,4 +73,28 @@ Energy: 4
     expect(result.totalCards).toBe(12);
     expect(result.matchedEntries.length).toBe(3);
   });
+
+  it('collects unmatched details and resolves them when customMappings are provided', () => {
+    const deckWithUnmatched = `
+4 Dreepy TWM 128
+2 MysteryTrainerXYZ TEF 999
+`;
+    // Without customMappings: MysteryTrainerXYZ is unmatched
+    const result1 = parsePTCGLDeck(deckWithUnmatched, pokemonCardData);
+    expect(result1.totalCards).toBe(4);
+    expect(result1.unmatchedDetails.length).toBe(1);
+    expect(result1.unmatchedDetails[0].rawCardName).toBe('MysteryTrainerXYZ');
+    expect(result1.unmatchedDetails[0].count).toBe(2);
+    expect(result1.unmatchedDetails[0].setCode).toBe('TEF');
+
+    // With customMappings: MysteryTrainerXYZ mapped to 'TH-7791' (คำสั่งของบอส)
+    const customMappings = {
+      mysterytrainerxyz: 'TH-7791',
+    };
+    const result2 = parsePTCGLDeck(deckWithUnmatched, pokemonCardData, customMappings);
+    expect(result2.totalCards).toBe(6);
+    expect(result2.unmatchedDetails.length).toBe(0);
+    expect(result2.matchedEntries.some((e) => e.cardNameEn === 'MysteryTrainerXYZ')).toBe(true);
+  });
 });
+

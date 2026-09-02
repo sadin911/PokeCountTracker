@@ -219,3 +219,8 @@
 [2026-09-02 14:15] Major | Antigravity | Edit | src/components/deck/DeckImportExportModal.tsx - live preview & import
 [2026-09-02 14:15] Major | Antigravity | Edit | e2e/deck-builder.spec.ts - Limitless deck import E2E test
 [2026-09-02 14:27] Major | Antigravity | Release | v2.20.0 - Limitless & PTCGL English decklist import support
+[2026-09-02 14:44] Major | Antigravity | Write | src/store/customMappingStore.ts - custom card mapping store with localStorage and Firestore community suggestions
+[2026-09-02 14:44] Major | Antigravity | Write | src/components/deck/CardMappingPickerModal.tsx - interactive Thai card mapping picker modal
+[2026-09-02 14:44] Major | Antigravity | Edit | src/components/deck/DeckImportExportModal.tsx - interactive mapping for unmatched cards
+[2026-09-02 14:44] Major | Antigravity | Edit | src/utils/ptcglDeckParser.ts - unmatched details and custom mapping dictionary integration
+[2026-09-02 14:44] Major | Antigravity | Release | v2.21.0 - Interactive card mapping & user suggestion system for Limitless deck import

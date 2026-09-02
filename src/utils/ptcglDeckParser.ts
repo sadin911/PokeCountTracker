@@ -12,6 +12,14 @@ export interface ParsedDeckCardEntry {
   stage?: string;
 }
 
+export interface UnmatchedDeckCardItem {
+  rawLine: string;
+  count: number;
+  rawCardName: string;
+  setCode?: string;
+  collectorNumber?: string;
+}
+
 export interface PTCGLParseResult {
   success: boolean;
   deckName: string;
@@ -19,6 +27,7 @@ export interface PTCGLParseResult {
   matchedEntries: ParsedDeckCardEntry[];
   totalCards: number;
   unmatchedLines: string[];
+  unmatchedDetails: UnmatchedDeckCardItem[];
   coverCardId?: string;
   coverImageUrl?: string;
 }
@@ -154,13 +163,18 @@ export function translateEnCardNameToTh(rawName: string): string {
 /**
  * Main parser for PTCGL / Limitless Decklist format
  */
-export function parsePTCGLDeck(text: string, cardDatabase: any[]): PTCGLParseResult {
+export function parsePTCGLDeck(
+  text: string,
+  cardDatabase: any[],
+  customMappings?: Record<string, string>
+): PTCGLParseResult {
   const lines = text.split('\n').map((l) => l.trim());
   let extractedTitle = '';
 
   const matchedEntries: ParsedDeckCardEntry[] = [];
   const cardsRecord: Record<string, { cardId: string; count: number }> = {};
   const unmatchedLines: string[] = [];
+  const unmatchedDetails: UnmatchedDeckCardItem[] = [];
 
   let candidateCover: { cardId: string; imageUrl?: string; priority: number } | null = null;
 
@@ -181,53 +195,85 @@ export function parsePTCGLDeck(text: string, cardDatabase: any[]): PTCGLParseRes
     const match = line.match(/^(\d+)\s+(.+?)(?:\s+([A-Za-z0-9\-]+)\s+(\d+[-/]?\d*|[A-Za-z0-9\-]+))?$/);
     if (!match) {
       unmatchedLines.push(line);
+      unmatchedDetails.push({ rawLine: line, count: 1, rawCardName: line });
       continue;
     }
 
     const count = parseInt(match[1], 10);
     const rawCardName = match[2].trim();
     const rawSetCode = (match[3] || '').toUpperCase();
+    const rawColNum = match[4] || '';
 
-    // Translate name to Thai if English
-    const thName = translateEnCardNameToTh(rawCardName);
-    const queryName = thName.toLowerCase();
+    let best: any = null;
 
-    // Find candidate matches in database
-    const candidates = cardDatabase.filter((c) => {
-      const cName = (c.name || '').toLowerCase();
-      return cName === queryName || cName.includes(queryName) || queryName.includes(cName);
-    });
-
-    if (candidates.length === 0) {
-      unmatchedLines.push(line);
-      continue;
+    // Check user/community custom mappings first
+    const normKey = rawCardName.toLowerCase().trim();
+    const customTarget = customMappings?.[normKey];
+    if (customTarget) {
+      best = cardDatabase.find(
+        (c) => c.id === customTarget || (c.name || '').toLowerCase() === customTarget.toLowerCase()
+      );
     }
 
-    // Determine the best candidate
-    let best = candidates[0];
+    if (!best) {
+      // Translate name to Thai if English
+      const thName = translateEnCardNameToTh(rawCardName);
+      const queryName = thName.toLowerCase();
 
-    // Priority 1: Check if EN set code maps to a Thai set code
-    const mappedThSets = EN_TO_TH_SET_MAP[rawSetCode] || [rawSetCode];
-    const setMatched = candidates.find((c) => {
-      const cSetId = (c.set?.id || '').toUpperCase();
-      return mappedThSets.includes(cSetId);
-    });
-
-    if (setMatched) {
-      best = setMatched;
-    } else {
-      // Priority 2: Prefer standard regulation regular print
-      const regularStandard = candidates.find((c) => {
-        const isReg = c.rarityCode === 'REGULAR';
-        const isStandard = c.regulationMark === 'H' || c.regulationMark === 'G';
-        return isReg && isStandard;
+      // Find candidate matches in database
+      const candidates = cardDatabase.filter((c) => {
+        const cName = (c.name || '').toLowerCase();
+        return cName === queryName || cName.includes(queryName) || queryName.includes(cName);
       });
-      if (regularStandard) {
-        best = regularStandard;
-      } else {
-        const regularOnly = candidates.find((c) => c.rarityCode === 'REGULAR');
-        if (regularOnly) best = regularOnly;
+
+      if (candidates.length === 0) {
+        unmatchedLines.push(line);
+        unmatchedDetails.push({
+          rawLine: line,
+          count,
+          rawCardName,
+          setCode: rawSetCode,
+          collectorNumber: rawColNum,
+        });
+        continue;
       }
+
+      // Priority 1: Check if EN set code maps to a Thai set code
+      const mappedThSets = EN_TO_TH_SET_MAP[rawSetCode] || [rawSetCode];
+      const setMatched = candidates.find((c) => {
+        const cSetId = (c.set?.id || '').toUpperCase();
+        return mappedThSets.includes(cSetId);
+      });
+
+      if (setMatched) {
+        best = setMatched;
+      } else {
+        // Priority 2: Prefer standard regulation regular print
+        const regularStandard = candidates.find((c) => {
+          const isReg = c.rarityCode === 'REGULAR';
+          const isStandard = c.regulationMark === 'H' || c.regulationMark === 'G';
+          return isReg && isStandard;
+        });
+        if (regularStandard) {
+          best = regularStandard;
+        } else {
+          const regularOnly = candidates.find((c) => c.rarityCode === 'REGULAR');
+          if (regularOnly) best = regularOnly;
+          else best = candidates[0];
+        }
+      }
+    }
+
+    if (!best) {
+      unmatchedLines.push(line);
+      unmatchedDetails.push({
+        rawLine: line,
+        count,
+        rawCardName,
+        setCode: rawSetCode,
+        collectorNumber: rawColNum,
+      });
+      continue;
     }
 
     // Register card in deck
@@ -296,6 +342,7 @@ export function parsePTCGLDeck(text: string, cardDatabase: any[]): PTCGLParseRes
     matchedEntries,
     totalCards,
     unmatchedLines,
+    unmatchedDetails,
     coverCardId: candidateCover?.cardId,
     coverImageUrl: candidateCover?.imageUrl,
   };

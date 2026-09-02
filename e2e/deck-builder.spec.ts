@@ -107,5 +107,54 @@ Energy: 4
     await expect(modal).not.toBeVisible({ timeout: 5000 });
     await expect(page.locator('text=Dragapult ex').first()).toBeVisible();
   });
+
+  test('interactively maps an unmatched card via search picker modal and updates deck count', async ({ page }) => {
+    const importBtn = page.locator('button:has-text("นำเข้าเด็ค"), button[title*="นำเข้า"]').first();
+    await expect(importBtn).toBeVisible();
+    await importBtn.click();
+
+    const modal = page.locator('.fixed.inset-0.z-50');
+    await expect(modal).toBeVisible();
+
+    // Click Import tab
+    const importTab = modal.locator('button:has-text("นำเข้าเด็ค (Import)")');
+    await importTab.click();
+
+    // Text with an unmatched card name
+    const deckWithUnmatched = `4 Dreepy TWM 128
+2 MysteryTrainerXYZ TEF 999`;
+
+    const textarea = modal.locator('textarea[placeholder*="ตัวอย่างจาก Limitless"]');
+    await textarea.fill(deckWithUnmatched);
+
+    // Verify unmatched box appears with Map Card button
+    await expect(modal.locator('text=ยังไม่พบการ์ดในระบบ 1 รายการ')).toBeVisible({ timeout: 5000 });
+    await expect(modal.locator('span:has-text("MysteryTrainerXYZ")')).toBeVisible();
+
+    const mapBtn = modal.locator('button:has-text("จับคู่การ์ด")').first();
+    await expect(mapBtn).toBeVisible();
+    await mapBtn.click();
+
+    // CardMappingPickerModal should open
+    const pickerModal = page.locator('.fixed.inset-0.z-60');
+    await expect(pickerModal).toBeVisible();
+    await expect(pickerModal.locator('span:has-text("MysteryTrainerXYZ")')).toBeVisible();
+
+    // Search for a Thai card, e.g. "คำสั่งของบอส"
+    const searchInput = pickerModal.locator('input[placeholder*="ค้นหาชื่อการ์ด"]');
+    await searchInput.fill('คำสั่งของบอส');
+    await page.waitForTimeout(400);
+
+    // Pick the first result
+    const selectBtn = pickerModal.locator('button:has-text("เลือก")').first();
+    await expect(selectBtn).toBeVisible();
+    await selectBtn.click();
+
+    // Picker modal should close, deck preview should now have 6 cards and 0 unmatched cards
+    await expect(pickerModal).not.toBeVisible({ timeout: 5000 });
+    await expect(modal.locator('text=6 / 60 ใบ')).toBeVisible();
+    await expect(modal.locator('text=ยังไม่พบการ์ดในระบบ')).not.toBeVisible();
+  });
 });
+
 
