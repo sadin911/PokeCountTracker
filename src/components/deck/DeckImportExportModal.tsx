@@ -33,8 +33,12 @@ export function DeckImportExportModal({ onClose, activeDeckId }: Props) {
   const [copied, setCopied] = useState(false);
   const [statusMsg, setStatusMsg] = useState<{ type: 'success' | 'error'; text: string } | null>(null);
 
-  // Selected card to map
-  const [mappingTarget, setMappingTarget] = useState<UnmatchedDeckCardItem | null>(null);
+  // Selected card to map or re-map
+  const [mappingTarget, setMappingTarget] = useState<{
+    item: UnmatchedDeckCardItem;
+    currentCardNameTh?: string;
+  } | null>(null);
+  const [selectedCustomKeys, setSelectedCustomKeys] = useState<Set<string>>(new Set());
   const [showMappingsList, setShowMappingsList] = useState(false);
 
   useEffect(() => {
@@ -151,10 +155,42 @@ export function DeckImportExportModal({ onClose, activeDeckId }: Props) {
     }
   };
 
+  // Active custom-mapped cards that the user explicitly chose to include in the deck
+  const activeCustomEntries = useMemo(() => {
+    if (!parsedPTCGL) return [];
+    return parsedPTCGL.customMappedEntries.filter((e) =>
+      selectedCustomKeys.has(e.rawItem.rawCardName.toLowerCase().trim())
+    );
+  }, [parsedPTCGL, selectedCustomKeys]);
+
+  const activeTotalCards = useMemo(() => {
+    if (!parsedPTCGL) return 0;
+    const autoSum = parsedPTCGL.autoMatchedEntries.reduce((sum, e) => sum + e.count, 0);
+    const customSum = activeCustomEntries.reduce((sum, e) => sum + e.count, 0);
+    return autoSum + customSum;
+  }, [parsedPTCGL, activeCustomEntries]);
+
+  const activeCardsRecord = useMemo(() => {
+    if (!parsedPTCGL) return {};
+    const record: Record<string, { cardId: string; count: number }> = {};
+    for (const e of parsedPTCGL.autoMatchedEntries) {
+      if (record[e.cardId]) record[e.cardId].count += e.count;
+      else record[e.cardId] = { cardId: e.cardId, count: e.count };
+    }
+    for (const e of activeCustomEntries) {
+      if (record[e.cardId]) record[e.cardId].count += e.count;
+      else record[e.cardId] = { cardId: e.cardId, count: e.count };
+    }
+    return record;
+  }, [parsedPTCGL, activeCustomEntries]);
+
   const handleImportPTCGL = () => {
     setStatusMsg(null);
-    if (!parsedPTCGL || parsedPTCGL.matchedEntries.length === 0) {
-      setStatusMsg({ type: 'error', text: 'ไม่พบรายการการ์ดที่สามารถนำเข้าได้ กรุณาตรวจสอบข้อความ' });
+    if (!parsedPTCGL || activeTotalCards === 0) {
+      setStatusMsg({
+        type: 'error',
+        text: 'ไม่พบรายการการ์ดที่สามารถนำเข้าได้ (หากมีรายการที่จับคู่เอง กรุณาเลือกติ๊กถูกก่อนนำเข้า)',
+      });
       return;
     }
 
@@ -163,14 +199,14 @@ export function DeckImportExportModal({ onClose, activeDeckId }: Props) {
       importParsedDeck({
         name: finalName,
         description: 'นำเข้าจาก Limitless / PTCGL Text',
-        cards: parsedPTCGL.cards,
+        cards: activeCardsRecord,
         coverCardId: parsedPTCGL.coverCardId,
         coverImageUrl: parsedPTCGL.coverImageUrl,
       });
 
       setStatusMsg({
         type: 'success',
-        text: `นำเข้าเด็ค "${finalName}" สำเร็จ (${parsedPTCGL.totalCards} ใบ)!`,
+        text: `นำเข้าเด็ค "${finalName}" สำเร็จ (${activeTotalCards} ใบ)!`,
       });
       setTimeout(onClose, 1200);
     } catch (e: any) {
@@ -180,8 +216,11 @@ export function DeckImportExportModal({ onClose, activeDeckId }: Props) {
 
   const handleSelectCardMapping = async (chosenCard: any) => {
     if (!mappingTarget) return;
-    const enName = mappingTarget.rawCardName;
+    const enName = mappingTarget.item.rawCardName;
     await setMapping(enName, chosenCard, user?.uid);
+    // Auto-select this newly chosen card in the deck
+    const normKey = enName.toLowerCase().trim();
+    setSelectedCustomKeys((prev) => new Set(prev).add(normKey));
     setMappingTarget(null);
     setStatusMsg({
       type: 'success',
@@ -195,13 +234,14 @@ export function DeckImportExportModal({ onClose, activeDeckId }: Props) {
     let pokemon = 0;
     let trainer = 0;
     let energy = 0;
-    for (const e of parsedPTCGL.matchedEntries) {
+    const allActive = [...parsedPTCGL.autoMatchedEntries, ...activeCustomEntries];
+    for (const e of allActive) {
       if (e.category === 'Pokemon') pokemon += e.count;
       else if (e.category === 'Trainer') trainer += e.count;
       else energy += e.count;
     }
     return { pokemon, trainer, energy };
-  }, [parsedPTCGL]);
+  }, [parsedPTCGL, activeCustomEntries]);
 
   const customMappingsList = Object.values(mappings);
 
@@ -378,17 +418,20 @@ export function DeckImportExportModal({ onClose, activeDeckId }: Props) {
                             <div className="flex items-center gap-2">
                               <span
                                 className={`px-2 py-0.5 rounded-full text-[11px] font-black border ${
-                                  parsedPTCGL.totalCards === 60
+                                  activeTotalCards === 60
                                     ? 'bg-emerald-500/20 text-emerald-300 border-emerald-500/40'
                                     : 'bg-amber-500/20 text-amber-300 border-amber-500/40'
                                 }`}
                               >
-                                {parsedPTCGL.totalCards === 60
+                                {activeTotalCards === 60
                                   ? '✅ ครบ 60 ใบ'
-                                  : `${parsedPTCGL.totalCards} / 60 ใบ`}
+                                  : `${activeTotalCards} / 60 ใบ`}
                               </span>
                               <span className="text-xs text-slate-400">
-                                (พบ {parsedPTCGL.matchedEntries.length} ชนิดการ์ด)
+                                (อัตโนมัติ {parsedPTCGL.autoMatchedEntries.length} ชนิด
+                                {parsedPTCGL.customMappedEntries.length > 0 &&
+                                  `, จับคู่เอง ${activeCustomEntries.length}/${parsedPTCGL.customMappedEntries.length} ชนิด`}
+                                )
                               </span>
                             </div>
                             <div className="flex items-center gap-2 text-[11px] text-slate-400 mt-1">
@@ -415,7 +458,7 @@ export function DeckImportExportModal({ onClose, activeDeckId }: Props) {
                         </div>
                       </div>
 
-                      {/* Unmatched Cards Interactive Warning & Mapping */}
+                      {/* 1. Unmatched Cards Interactive Warning & Mapping */}
                       {parsedPTCGL.unmatchedDetails.length > 0 && (
                         <div className="p-3 rounded-xl bg-rose-500/10 border border-rose-500/30 text-xs text-rose-300 space-y-2">
                           <div className="flex items-center justify-between">
@@ -449,7 +492,7 @@ export function DeckImportExportModal({ onClose, activeDeckId }: Props) {
                                 </div>
                                 <button
                                   type="button"
-                                  onClick={() => setMappingTarget(item)}
+                                  onClick={() => setMappingTarget({ item })}
                                   className="px-2.5 py-1 rounded-lg bg-indigo-600 hover:bg-indigo-500 active:scale-95 text-white text-[11px] font-bold shadow-sm transition-all shrink-0 flex items-center gap-1"
                                 >
                                   <span>🔍</span>
@@ -461,52 +504,217 @@ export function DeckImportExportModal({ onClose, activeDeckId }: Props) {
                         </div>
                       )}
 
-                      {/* Matched Cards Preview List */}
-                      <div className="max-h-48 overflow-y-auto rounded-xl border border-slate-800/80 bg-slate-900/50 p-2 space-y-1 scrollbar-thin">
-                        {parsedPTCGL.matchedEntries.map((e, idx) => (
-                          <div
-                            key={`${e.cardId}-${idx}`}
-                            className="flex items-center justify-between py-1 px-2 rounded-lg hover:bg-slate-800/60 text-xs transition-colors"
-                          >
+                      {/* 2. Custom Mapped Cards Section (Shown Separately & Not Auto-Selected) */}
+                      {parsedPTCGL.customMappedEntries.length > 0 && (
+                        <div className="p-3.5 rounded-2xl bg-amber-500/10 border border-amber-500/30 text-xs text-amber-200 space-y-2.5 animate-fade-in">
+                          <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2">
                             <div className="flex items-center gap-2 min-w-0">
-                              <span className="w-6 font-mono font-bold text-indigo-400 text-right shrink-0">
-                                {e.count}x
+                              <span className="text-base">🔗</span>
+                              <span className="font-bold text-amber-300">
+                                การ์ดที่มาจากการจับคู่ (Custom Mapped) ({parsedPTCGL.customMappedEntries.length} รายการ)
                               </span>
-                              {e.cardImage && (
-                                <img
-                                  src={resolveCardImageUrl(e.cardImage)}
-                                  alt={e.cardNameTh}
-                                  loading="lazy"
-                                  onError={(err) => handleCardImageError(err, e.cardImage)}
-                                  className="w-5 h-7 object-cover rounded shadow-sm shrink-0"
-                                />
-                              )}
-                              <span className="font-semibold text-slate-200 truncate">
-                                {e.cardNameTh}
-                              </span>
-                              {e.cardNameEn !== e.cardNameTh && (
-                                <span className="text-[10px] text-slate-500 truncate hidden sm:inline">
-                                  ({e.cardNameEn})
-                                </span>
-                              )}
                             </div>
-                            <span className="text-[10px] font-mono text-slate-400 shrink-0 ml-2">
-                              {e.setCode || ''} {e.collectorNumber || ''}
+                            <div className="flex items-center gap-2 shrink-0">
+                              <button
+                                type="button"
+                                onClick={() => {
+                                  const allKeys = new Set(
+                                    parsedPTCGL.customMappedEntries.map((e) =>
+                                      e.rawItem.rawCardName.toLowerCase().trim()
+                                    )
+                                  );
+                                  setSelectedCustomKeys(allKeys);
+                                }}
+                                className="text-[10px] font-bold px-2 py-0.5 rounded bg-amber-500/20 hover:bg-amber-500/30 text-amber-300 border border-amber-500/40 transition-colors"
+                              >
+                                ✓ เลือกทั้งหมด
+                              </button>
+                              <button
+                                type="button"
+                                onClick={() => setSelectedCustomKeys(new Set())}
+                                className="text-[10px] font-bold px-2 py-0.5 rounded bg-slate-800 hover:bg-slate-700 text-slate-300 border border-slate-700 transition-colors"
+                              >
+                                ✕ ไม่เลือกทั้งหมด
+                              </button>
+                            </div>
+                          </div>
+                          <p className="text-[11px] text-amber-300/80">
+                            * การ์ดด้านล่างมาจากการจับคู่เอง (ไม่ได้เลือกให้อัตโนมัติ) ติ๊กถูกเพื่อรวมในเด็ค หรือกด <strong>"Map ใหม่"</strong> หากต้องการแก้ไข
+                          </p>
+
+                          <div className="space-y-1.5 max-h-44 overflow-y-auto scrollbar-thin">
+                            {parsedPTCGL.customMappedEntries.map((e, idx) => {
+                              const normKey = e.rawItem.rawCardName.toLowerCase().trim();
+                              const isChecked = selectedCustomKeys.has(normKey);
+                              return (
+                                <div
+                                  key={`custom-${e.cardId}-${idx}`}
+                                  className={`flex items-center justify-between p-2 rounded-xl border transition-all gap-2 ${
+                                    isChecked
+                                      ? 'bg-amber-950/40 border-amber-500/50 shadow-sm'
+                                      : 'bg-slate-900/60 border-slate-800 opacity-75'
+                                  }`}
+                                >
+                                  <div className="flex items-center gap-2 min-w-0">
+                                    <input
+                                      type="checkbox"
+                                      checked={isChecked}
+                                      onChange={(ev) => {
+                                        const next = new Set(selectedCustomKeys);
+                                        if (ev.target.checked) next.add(normKey);
+                                        else next.delete(normKey);
+                                        setSelectedCustomKeys(next);
+                                      }}
+                                      className="w-4 h-4 rounded text-amber-500 focus:ring-amber-500 bg-slate-950 border-slate-700 cursor-pointer shrink-0"
+                                      title={isChecked ? 'ติ๊กออกเพื่อไม่รวมในเด็ค' : 'ติ๊กถูกเพื่อรวมในเด็ค'}
+                                    />
+                                    <span className="w-5 font-mono font-bold text-amber-400 text-right shrink-0">
+                                      {e.count}x
+                                    </span>
+                                    {e.cardImage && (
+                                      <img
+                                        src={resolveCardImageUrl(e.cardImage)}
+                                        alt={e.cardNameTh}
+                                        loading="lazy"
+                                        onError={(err) => handleCardImageError(err, e.cardImage)}
+                                        className="w-6 h-8 object-cover rounded shadow-sm shrink-0 border border-slate-700"
+                                      />
+                                    )}
+                                    <div className="min-w-0">
+                                      <div className="flex items-center gap-1.5 flex-wrap">
+                                        <span className="font-bold text-amber-300 font-mono truncate">
+                                          {e.cardNameEn}
+                                        </span>
+                                        <span className="text-[10px] text-slate-500">➜</span>
+                                        <span className="font-semibold text-slate-100 truncate">
+                                          {e.cardNameTh}
+                                        </span>
+                                      </div>
+                                      <div className="flex items-center gap-2 text-[10px] text-slate-400 mt-0.5">
+                                        <span className="px-1.5 py-0.2 rounded bg-amber-500/20 text-amber-300 font-mono text-[9px] border border-amber-500/30">
+                                          จับคู่เอง
+                                        </span>
+                                        {e.setCode && (
+                                          <span className="font-mono text-slate-400">
+                                            [{e.setCode} {e.collectorNumber || ''}]
+                                          </span>
+                                        )}
+                                      </div>
+                                    </div>
+                                  </div>
+
+                                  <div className="flex items-center gap-1.5 shrink-0 ml-2">
+                                    <button
+                                      type="button"
+                                      onClick={() =>
+                                        setMappingTarget({
+                                          item: e.rawItem,
+                                          currentCardNameTh: e.cardNameTh,
+                                        })
+                                      }
+                                      className="px-2.5 py-1 rounded-lg bg-indigo-600 hover:bg-indigo-500 active:scale-95 text-white text-[11px] font-bold shadow-sm transition-all flex items-center gap-1"
+                                      title="เลือกการ์ดใหม่หากจับคู่ผิด"
+                                    >
+                                      <span>🔄</span>
+                                      <span>Map ใหม่</span>
+                                    </button>
+                                    <button
+                                      type="button"
+                                      onClick={async () => {
+                                        await removeMapping(e.rawItem.rawCardName, user?.uid);
+                                        const next = new Set(selectedCustomKeys);
+                                        next.delete(normKey);
+                                        setSelectedCustomKeys(next);
+                                      }}
+                                      className="px-2 py-1 rounded-lg bg-slate-800 hover:bg-rose-500/20 hover:text-rose-300 text-slate-400 active:scale-95 text-[11px] font-bold border border-slate-700 transition-all"
+                                      title="ยกเลิกการจับคู่ใบนี้"
+                                    >
+                                      ✕
+                                    </button>
+                                  </div>
+                                </div>
+                              );
+                            })}
+                          </div>
+                        </div>
+                      )}
+
+                      {/* 3. Auto-Matched Cards Preview List */}
+                      {parsedPTCGL.autoMatchedEntries.length > 0 && (
+                        <div className="space-y-1.5">
+                          <div className="flex items-center justify-between text-xs text-slate-400 px-1 py-0.5">
+                            <span className="font-bold flex items-center gap-1.5 text-slate-300">
+                              <span>✓</span>
+                              <span>การ์ดที่พบในระบบอัตโนมัติ ({parsedPTCGL.autoMatchedEntries.length} รายการ)</span>
+                            </span>
+                            <span className="text-[10px] text-slate-500">
+                              กด 🔄 หากต้องการเปลี่ยนเป็นใบอื่น
                             </span>
                           </div>
-                        ))}
-                      </div>
+
+                          <div className="max-h-48 overflow-y-auto rounded-xl border border-slate-800/80 bg-slate-900/50 p-2 space-y-1 scrollbar-thin">
+                            {parsedPTCGL.autoMatchedEntries.map((e, idx) => (
+                              <div
+                                key={`auto-${e.cardId}-${idx}`}
+                                className="flex items-center justify-between py-1 px-2 rounded-lg hover:bg-slate-800/60 text-xs transition-colors"
+                              >
+                                <div className="flex items-center gap-2 min-w-0">
+                                  <span className="w-6 font-mono font-bold text-indigo-400 text-right shrink-0">
+                                    {e.count}x
+                                  </span>
+                                  {e.cardImage && (
+                                    <img
+                                      src={resolveCardImageUrl(e.cardImage)}
+                                      alt={e.cardNameTh}
+                                      loading="lazy"
+                                      onError={(err) => handleCardImageError(err, e.cardImage)}
+                                      className="w-5 h-7 object-cover rounded shadow-sm shrink-0"
+                                    />
+                                  )}
+                                  <span className="font-semibold text-slate-200 truncate">
+                                    {e.cardNameTh}
+                                  </span>
+                                  {e.cardNameEn !== e.cardNameTh && (
+                                    <span className="text-[10px] text-slate-500 truncate hidden sm:inline">
+                                      ({e.cardNameEn})
+                                    </span>
+                                  )}
+                                </div>
+
+                                <div className="flex items-center gap-2 shrink-0 ml-2">
+                                  <span className="text-[10px] font-mono text-slate-400">
+                                    {e.setCode || ''} {e.collectorNumber || ''}
+                                  </span>
+                                  <button
+                                    type="button"
+                                    onClick={() =>
+                                      setMappingTarget({
+                                        item: e.rawItem,
+                                        currentCardNameTh: e.cardNameTh,
+                                      })
+                                    }
+                                    className="text-[10px] px-2 py-0.5 rounded bg-slate-800 hover:bg-indigo-600 hover:text-white text-slate-400 border border-slate-700 transition-colors"
+                                    title="เปลี่ยนเป็นการ์ดใบอื่น"
+                                  >
+                                    🔄 เปลี่ยน
+                                  </button>
+                                </div>
+                              </div>
+                            ))}
+                          </div>
+                        </div>
+                      )}
 
                       {/* Submit Button */}
                       <button
                         onClick={handleImportPTCGL}
-                        disabled={parsedPTCGL.totalCards === 0}
+                        disabled={activeTotalCards === 0}
                         className="w-full py-2.5 rounded-xl bg-gradient-to-r from-indigo-600 to-purple-600 hover:from-indigo-500 hover:to-purple-500 disabled:opacity-50 text-white text-xs font-black shadow-lg transition-all flex items-center justify-center gap-2"
                       >
                         <span>📥</span>
                         <span>
                           นำเข้าเด็ค "{customDeckName.trim() || parsedPTCGL.deckName}" (
-                          {parsedPTCGL.totalCards} ใบ)
+                          {activeTotalCards} ใบ)
                         </span>
                       </button>
                     </div>
@@ -558,13 +766,27 @@ export function DeckImportExportModal({ onClose, activeDeckId }: Props) {
                                   </span>
                                 )}
                               </div>
-                              <button
-                                type="button"
-                                onClick={() => removeMapping(m.enName, user?.uid)}
-                                className="text-[10px] text-rose-400 hover:text-rose-300 font-bold px-1.5 py-0.5 rounded hover:bg-rose-500/20 transition-all shrink-0 ml-2"
-                              >
-                                ลบ
-                              </button>
+                              <div className="flex items-center gap-1.5 shrink-0 ml-2">
+                                <button
+                                  type="button"
+                                  onClick={() => setMappingTarget({
+                                    item: { rawLine: m.enName, count: 1, rawCardName: m.enName, setCode: m.setCode },
+                                    currentCardNameTh: m.cardNameTh,
+                                  })}
+                                  className="text-[10px] text-amber-400 hover:text-amber-300 font-bold px-1.5 py-0.5 rounded hover:bg-amber-500/20 border border-amber-500/30 transition-all flex items-center gap-1"
+                                  title="แก้ไขการจับคู่การ์ดนี้"
+                                >
+                                  <span>🔄</span>
+                                  <span>Map ใหม่</span>
+                                </button>
+                                <button
+                                  type="button"
+                                  onClick={() => removeMapping(m.enName, user?.uid)}
+                                  className="text-[10px] text-rose-400 hover:text-rose-300 font-bold px-1.5 py-0.5 rounded hover:bg-rose-500/20 transition-all"
+                                >
+                                  ลบ
+                                </button>
+                              </div>
                             </div>
                           ))}
                         </div>
@@ -612,7 +834,8 @@ export function DeckImportExportModal({ onClose, activeDeckId }: Props) {
       {/* Interactive Card Mapping Picker Modal */}
       {mappingTarget && (
         <CardMappingPickerModal
-          unmatchedItem={mappingTarget}
+          unmatchedItem={mappingTarget.item}
+          currentCardNameTh={mappingTarget.currentCardNameTh}
           cardDatabase={pokemonCardData as any[]}
           onSelect={handleSelectCardMapping}
           onClose={() => setMappingTarget(null)}

@@ -95,6 +95,18 @@ Energy: 4
     expect(result2.totalCards).toBe(6);
     expect(result2.unmatchedDetails.length).toBe(0);
     expect(result2.matchedEntries.some((e) => e.cardNameEn === 'MysteryTrainerXYZ')).toBe(true);
+
+    // Verify separation into autoMatchedEntries vs customMappedEntries
+    expect(result2.autoMatchedEntries.length).toBe(1);
+    expect(result2.autoMatchedEntries[0].cardNameEn).toBe('Dreepy');
+    expect(result2.autoMatchedEntries[0].isCustomMapped).toBeFalsy();
+
+    expect(result2.customMappedEntries.length).toBe(1);
+    expect(result2.customMappedEntries[0].cardNameEn).toBe('MysteryTrainerXYZ');
+    expect(result2.customMappedEntries[0].isCustomMapped).toBe(true);
+    expect(result2.customMappedEntries[0].rawItem).toBeDefined();
+    expect(result2.customMappedEntries[0].rawItem.rawCardName).toBe('MysteryTrainerXYZ');
   });
 });
+
 

@@ -5,6 +5,7 @@ import { resolveCardImageUrl, handleCardImageError } from '../../utils/cardImage
 interface Props {
   unmatchedItem: UnmatchedDeckCardItem;
   cardDatabase: any[];
+  currentCardNameTh?: string;
   onSelect: (card: any) => void;
   onClose: () => void;
 }
@@ -12,6 +13,7 @@ interface Props {
 export function CardMappingPickerModal({
   unmatchedItem,
   cardDatabase,
+  currentCardNameTh,
   onSelect,
   onClose,
 }: Props) {
@@ -76,13 +78,22 @@ export function CardMappingPickerModal({
         <div className="px-5 py-4 border-b border-slate-800 bg-slate-950/70 flex items-center justify-between">
           <div className="min-w-0">
             <div className="flex items-center gap-2">
-              <span className="text-lg">🔗</span>
+              <span className="text-lg">{currentCardNameTh ? '🔄' : '🔗'}</span>
               <h3 className="text-sm sm:text-base font-black text-white truncate">
-                จับคู่การ์ด: <span className="text-amber-300 font-mono">{unmatchedItem.rawCardName}</span>
+                {currentCardNameTh ? 'แก้ไขการจับคู่:' : 'จับคู่การ์ด:'}{' '}
+                <span className="text-amber-300 font-mono">{unmatchedItem.rawCardName}</span>
               </h3>
             </div>
-            <p className="text-[11px] text-slate-400 mt-0.5">
-              เลือกการ์ดเวอร์ชันภาษาไทยที่ตรงกัน (ระบบจะบันทึกไว้และส่งคำแนะนำให้ส่วนกลาง)
+            <p className="text-[11px] text-slate-400 mt-0.5 truncate">
+              {currentCardNameTh ? (
+                <span>
+                  ปัจจุบันจับคู่กับ:{' '}
+                  <strong className="text-indigo-300 font-semibold">{currentCardNameTh}</strong>{' '}
+                  (ค้นหาและกด "เลือก" การ์ดใหม่เพื่อเปลี่ยน)
+                </span>
+              ) : (
+                'เลือกการ์ดเวอร์ชันภาษาไทยที่ตรงกัน (ระบบจะบันทึกไว้และส่งคำแนะนำให้ส่วนกลาง)'
+              )}
             </p>
           </div>
           <button

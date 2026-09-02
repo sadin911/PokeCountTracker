@@ -10,6 +10,8 @@ export interface ParsedDeckCardEntry {
   collectorNumber?: string;
   category?: string;
   stage?: string;
+  isCustomMapped?: boolean;
+  rawItem: UnmatchedDeckCardItem;
 }
 
 export interface UnmatchedDeckCardItem {
@@ -25,6 +27,8 @@ export interface PTCGLParseResult {
   deckName: string;
   cards: Record<string, { cardId: string; count: number }>;
   matchedEntries: ParsedDeckCardEntry[];
+  autoMatchedEntries: ParsedDeckCardEntry[];
+  customMappedEntries: ParsedDeckCardEntry[];
   totalCards: number;
   unmatchedLines: string[];
   unmatchedDetails: UnmatchedDeckCardItem[];
@@ -172,6 +176,8 @@ export function parsePTCGLDeck(
   let extractedTitle = '';
 
   const matchedEntries: ParsedDeckCardEntry[] = [];
+  const autoMatchedEntries: ParsedDeckCardEntry[] = [];
+  const customMappedEntries: ParsedDeckCardEntry[] = [];
   const cardsRecord: Record<string, { cardId: string; count: number }> = {};
   const unmatchedLines: string[] = [];
   const unmatchedDetails: UnmatchedDeckCardItem[] = [];
@@ -205,6 +211,7 @@ export function parsePTCGLDeck(
     const rawColNum = match[4] || '';
 
     let best: any = null;
+    let isCustomMapped = false;
 
     // Check user/community custom mappings first
     const normKey = rawCardName.toLowerCase().trim();
@@ -213,6 +220,9 @@ export function parsePTCGLDeck(
       best = cardDatabase.find(
         (c) => c.id === customTarget || (c.name || '').toLowerCase() === customTarget.toLowerCase()
       );
+      if (best) {
+        isCustomMapped = true;
+      }
     }
 
     if (!best) {
@@ -283,7 +293,7 @@ export function parsePTCGLDeck(
       cardsRecord[best.id] = { cardId: best.id, count };
     }
 
-    matchedEntries.push({
+    const entry: ParsedDeckCardEntry = {
       cardId: best.id,
       count,
       cardNameTh: best.name,
@@ -293,7 +303,22 @@ export function parsePTCGLDeck(
       collectorNumber: best.collectorNumber,
       category: best.category,
       stage: best.stage,
-    });
+      isCustomMapped,
+      rawItem: {
+        rawLine: line,
+        count,
+        rawCardName,
+        setCode: rawSetCode,
+        collectorNumber: rawColNum,
+      },
+    };
+
+    matchedEntries.push(entry);
+    if (isCustomMapped) {
+      customMappedEntries.push(entry);
+    } else {
+      autoMatchedEntries.push(entry);
+    }
 
     // Pick best cover card (e.g. Stage 2 ex > Stage 1 ex > Basic ex > VSTAR > Pokemon)
     let priority = 0;
@@ -340,6 +365,8 @@ export function parsePTCGLDeck(
     deckName,
     cards: cardsRecord,
     matchedEntries,
+    autoMatchedEntries,
+    customMappedEntries,
     totalCards,
     unmatchedLines,
     unmatchedDetails,

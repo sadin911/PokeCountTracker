@@ -226,3 +226,7 @@
 [2026-09-02 14:44] Major | Antigravity | Release | v2.21.0 - Interactive card mapping & user suggestion system for Limitless deck import
 [2026-09-02 14:54] Major | Antigravity | Fix | src/components/deck/ - resolved card images via resolveCardImageUrl and handleCardImageError
 [2026-09-02 14:54] Major | Antigravity | Release | v2.21.1 - Fix card image URL resolution in Deck Import & Mapping Picker
+[2026-09-02 15:15] Major | Antigravity | Edit | src/components/deck/ - added re-mapping button and separated non-auto-selected custom mapped cards
+[2026-09-02 15:15] Major | Antigravity | Edit | src/utils/ptcglDeckParser.ts - split autoMatchedEntries and customMappedEntries
+[2026-09-02 15:15] Major | Antigravity | Edit | package.json - bumped version to v2.22.0
+[2026-09-02 15:16] Major | Antigravity | Release | v2.22.0 - Allow re-mapping cards and separate non-auto-selected custom mapped cards
