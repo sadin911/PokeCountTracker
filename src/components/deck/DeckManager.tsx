@@ -8,6 +8,7 @@ import { DeckEditor } from './DeckEditor';
 import { MissingCardsModal } from './MissingCardsModal';
 import { DeckImportExportModal } from './DeckImportExportModal';
 import { DeckCoverPickerModal } from './DeckCoverPickerModal';
+import { DeckViewModal } from './DeckViewModal';
 import { calculateMissingCards } from '../../utils/deckCalculator';
 import { resolveCardImageUrl, handleCardImageError } from '../../utils/cardImage';
 import { PullToRefresh } from '../common/PullToRefresh';
@@ -37,6 +38,7 @@ export function DeckManager() {
   }, [user?.uid]);
 
   const [editingDeckId, setEditingDeckId] = useState<string | null>(null);
+  const [selectedViewDeckId, setSelectedViewDeckId] = useState<string | null>(null);
   const [selectedMissingDeckId, setSelectedMissingDeckId] = useState<string | null>(null);
   const [selectedCoverDeckId, setSelectedCoverDeckId] = useState<string | null>(null);
   const [showImportExport, setShowImportExport] = useState(false);
@@ -63,6 +65,7 @@ export function DeckManager() {
   };
 
   const editingDeck = editingDeckId ? decks[editingDeckId] : null;
+  const viewDeck = selectedViewDeckId ? decks[selectedViewDeckId] : null;
   const missingDeck = selectedMissingDeckId ? decks[selectedMissingDeckId] : null;
   const coverDeck = selectedCoverDeckId ? decks[selectedCoverDeckId] : null;
 
@@ -194,8 +197,9 @@ export function DeckManager() {
                           </button>
                         </div>
                         <h3
-                          onClick={() => setEditingDeckId(deck.id)}
+                          onClick={() => setSelectedViewDeckId(deck.id)}
                           className="text-base font-black text-white hover:text-indigo-300 cursor-pointer truncate mt-1"
+                          title="คลิกเพื่อดูเด็ค"
                         >
                           {deck.name}
                         </h3>
@@ -249,6 +253,15 @@ export function DeckManager() {
                   {/* Actions Footer */}
                   <div className="mt-5 pt-3 border-t border-slate-800 flex items-center justify-between gap-2">
                     <button
+                      onClick={() => setSelectedViewDeckId(deck.id)}
+                      className="py-2 px-3 rounded-xl bg-slate-800 hover:bg-slate-700 text-indigo-300 hover:text-white font-bold text-xs border border-slate-700 hover:border-indigo-500/50 transition-all flex items-center gap-1.5 shadow-sm"
+                      title="ดูเด็คแบบตารางการ์ด (Grid View) หรือรายการ"
+                    >
+                      <span>👁️</span>
+                      <span>ดูเด็ค</span>
+                    </button>
+
+                    <button
                       onClick={() => setEditingDeckId(deck.id)}
                       className="flex-1 py-2 px-3 rounded-xl bg-indigo-600 hover:bg-indigo-500 text-white font-black text-xs shadow-md transition-all flex items-center justify-center gap-1.5"
                     >
@@ -258,11 +271,11 @@ export function DeckManager() {
 
                     <button
                       onClick={() => setSelectedMissingDeckId(deck.id)}
-                      className="py-2 px-3 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-200 font-bold text-xs border border-slate-700 transition-all flex items-center gap-1"
+                      className="py-2 px-2.5 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-200 font-bold text-xs border border-slate-700 transition-all flex items-center gap-1"
                       title="คำนวณการ์ดที่ขาดและสร้าง Shopping List"
                     >
                       <span>🧮</span>
-                      <span>การ์ดที่ขาด</span>
+                      <span className="hidden sm:inline">การ์ดที่ขาด</span>
                     </button>
 
                     <button
@@ -351,6 +364,20 @@ export function DeckManager() {
             </div>
           </div>
         </div>
+      )}
+
+      {/* Deck View Modal (Grid & List modes) */}
+      {viewDeck && (
+        <DeckViewModal
+          deck={viewDeck}
+          cardDataMap={cardDataMap}
+          onEditDeck={() => {
+            const dId = viewDeck.id;
+            setSelectedViewDeckId(null);
+            setEditingDeckId(dId);
+          }}
+          onClose={() => setSelectedViewDeckId(null)}
+        />
       )}
 
       {/* Missing Cards Modal */}

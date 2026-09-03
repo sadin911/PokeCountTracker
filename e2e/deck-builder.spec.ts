@@ -155,6 +155,149 @@ Energy: 4
     await expect(modal.locator('text=6 / 60 ใบ')).toBeVisible();
     await expect(modal.locator('text=ยังไม่พบการ์ดในระบบ')).not.toBeVisible();
   });
+
+  test('switches Deck Editor between List view and Grid view', async ({ page }) => {
+    // Create new deck with name prompt
+    const createDeckBtn = page.getByRole('button', { name: /สร้างเด็คใหม่/i }).first();
+    await createDeckBtn.click();
+    const nameInput = page.locator('input[placeholder*="Charizard"]');
+    await nameInput.fill('E2E Grid View Deck');
+    await page.locator('button:has-text("สร้างเด็ค")').last().click();
+
+    // Switch to Catalog tab if on mobile
+    const catalogTab = page.locator('button:has-text("ค้นหาการ์ดเพิ่ม"), button:has-text("ค้นหาการ์ด")').first();
+    if (await catalogTab.isVisible()) {
+      await catalogTab.click();
+      await page.waitForTimeout(200);
+    }
+
+    const searchInput = page.locator('input[placeholder*="ค้นหาชื่อการ์ด"]').first();
+    if (await searchInput.isVisible()) {
+      await searchInput.fill('พิคาชู');
+      await page.waitForTimeout(400);
+    }
+
+    const addCardBtn = page.locator('button[title*="เพิ่มเข้าเด็ค (+1)"], button:has-text("+")').first();
+    if (await addCardBtn.isVisible()) {
+      await addCardBtn.click({ force: true });
+      await page.waitForTimeout(200);
+    }
+
+    // If mobile, switch back to Deck tab
+    const deckTab = page.locator('button:has-text("การ์ดในเด็ค")').first();
+    if (await deckTab.isVisible()) {
+      await deckTab.click();
+      await page.waitForTimeout(200);
+    }
+
+    // Verify card is added in List view by default
+    const swapBtn = page.locator('button[title*="Swap Card"], button:has-text("🔄")').first();
+    await expect(swapBtn).toBeVisible();
+
+    // Switch to Grid view
+    const gridBtn = page.locator('button:has-text("ตาราง")').first();
+    await expect(gridBtn).toBeVisible();
+    await gridBtn.click();
+
+    // Verify grid item swap button is visible
+    await expect(page.locator('button[title*="Swap Card"], button:has-text("🔄")').first()).toBeVisible();
+
+    // Switch back to List view
+    const listBtn = page.locator('button:has-text("รายการ")').first();
+    await expect(listBtn).toBeVisible();
+    await listBtn.click();
+
+    await expect(page.locator('button[title*="Swap Card"], button:has-text("🔄")').first()).toBeVisible();
+  });
+
+  test('swaps a card in Deck Editor using CardSwapModal', async ({ page }) => {
+    // Create new deck with name prompt
+    const createDeckBtn = page.getByRole('button', { name: /สร้างเด็คใหม่/i }).first();
+    await createDeckBtn.click();
+    const nameInput = page.locator('input[placeholder*="Charizard"]');
+    await nameInput.fill('E2E Swap Card Deck');
+    await page.locator('button:has-text("สร้างเด็ค")').last().click();
+
+    // Switch to Catalog tab if on mobile
+    const catalogTab = page.locator('button:has-text("ค้นหาการ์ดเพิ่ม"), button:has-text("ค้นหาการ์ด")').first();
+    if (await catalogTab.isVisible()) {
+      await catalogTab.click();
+      await page.waitForTimeout(200);
+    }
+
+    const searchInput = page.locator('input[placeholder*="ค้นหาชื่อการ์ด"]').first();
+    if (await searchInput.isVisible()) {
+      await searchInput.fill('พิคาชู');
+      await page.waitForTimeout(400);
+    }
+
+    const addCardBtn = page.locator('button[title*="เพิ่มเข้าเด็ค (+1)"], button:has-text("+")').first();
+    if (await addCardBtn.isVisible()) {
+      await addCardBtn.click({ force: true });
+      await page.waitForTimeout(200);
+    }
+
+    // Switch to Deck tab if on mobile
+    const deckTab = page.locator('button:has-text("การ์ดในเด็ค")').first();
+    if (await deckTab.isVisible()) {
+      await deckTab.click();
+      await page.waitForTimeout(200);
+    }
+
+    // Click Swap button
+    const swapBtn = page.locator('button[title*="Swap Card"], button:has-text("🔄")').first();
+    await expect(swapBtn).toBeVisible();
+    await swapBtn.click();
+
+    // CardSwapModal should open
+    const swapModal = page.locator('.fixed.inset-0.z-60, .fixed.inset-0:has-text("สลับการ์ดในเด็ค")').first();
+    await expect(swapModal).toBeVisible();
+    await expect(swapModal.locator('text=สลับการ์ดในเด็ค')).toBeVisible();
+
+    // Switch to Search All tab
+    const searchTab = swapModal.locator('button:has-text("ค้นหาการ์ดทั้งหมด")');
+    await searchTab.click();
+
+    const swapSearch = swapModal.locator('input[placeholder*="ค้นหาชื่อการ์ด"]');
+    await swapSearch.fill('อีวุย');
+    await page.waitForTimeout(400);
+
+    // Pick first candidate to swap
+    const selectSwapBtn = swapModal.locator('button:has-text("สลับใบนี้")').first();
+    await expect(selectSwapBtn).toBeVisible();
+    await selectSwapBtn.click();
+
+    // Modal closes and deck now contains Eevee
+    await expect(swapModal).not.toBeVisible({ timeout: 5000 });
+    await expect(page.locator('text=อีวุย').first()).toBeVisible();
+  });
+
+  test('views deck in standalone DeckViewModal and toggles Grid view', async ({ page }) => {
+    // Look for View Deck button in deck manager
+    const viewBtn = page.locator('button:has-text("ดูเด็ค")').first();
+    if (await viewBtn.isVisible()) {
+      await viewBtn.click();
+
+      const viewModal = page.locator('.fixed.inset-0.z-50');
+      await expect(viewModal).toBeVisible();
+      await expect(viewModal.locator('text=Deck View')).toBeVisible();
+
+      // Toggle buttons exist
+      const listBtn = viewModal.locator('button:has-text("รายการ")').first();
+      const gridBtn = viewModal.locator('button:has-text("ตาราง")').first();
+      await expect(listBtn).toBeVisible();
+      await expect(gridBtn).toBeVisible();
+
+      // Switch to list and back to grid
+      await listBtn.click();
+      await gridBtn.click();
+
+      // Close modal
+      const closeBtn = viewModal.locator('button:has-text("✕"), button[title*="ปิด"], button:has-text("ปิด")').first();
+      await closeBtn.click();
+      await expect(viewModal).not.toBeVisible();
+    }
+  });
 });
 
 

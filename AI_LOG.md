@@ -236,3 +236,8 @@
 [2026-09-02 15:46] Major | Antigravity | Edit | src/components/layout/AccountMenu.tsx - added mapping studio entry
 [2026-09-02 15:46] Major | Antigravity | Write | e2e/card-mapping.spec.ts - comprehensive E2E tests for mapping studio
 [2026-09-02 15:46] Major | Antigravity | Release | v2.23.0 - Dedicated Card Mapping Studio page
+[2026-09-03 17:25] Major | Antigravity | Plan | implementation_plan.md - deck card swap & grid view features
+[2026-09-03 17:55] Major | Antigravity | Write | src/components/deck/CardSwapModal.tsx & DeckViewModal.tsx - card swap & grid view
+[2026-09-03 17:55] Major | Antigravity | Edit | src/components/deck/DeckEditor.tsx & DeckManager.tsx - list/grid toggle & swap button
+[2026-09-03 17:55] Major | Antigravity | Write | src/store/deckStore.test.ts & e2e/deck-builder.spec.ts - unit & e2e test suites
+[2026-09-03 17:55] Major | Antigravity | Release | v2.24.0 - Deck Card Swap & Grid View Display Modes

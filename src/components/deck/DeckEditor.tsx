@@ -6,6 +6,7 @@ import { resolveCardImageUrl, handleCardImageError } from '../../utils/cardImage
 import { MissingCardsModal } from './MissingCardsModal';
 import { CardCollectionModal } from '../collection/CardCollectionModal';
 import { DeckCoverPickerModal } from './DeckCoverPickerModal';
+import { CardSwapModal } from './CardSwapModal';
 import { RARITY_CLASSES } from '../collection/CollectionFilterBar';
 import { SearchableSetSelect } from '../common/SearchableSetSelect';
 import { REGULATION_SERIES_OPTIONS, STANDARD_REGULATION_MARKS } from '../../types/collection';
@@ -42,6 +43,7 @@ export function DeckEditor({ deck, onBackToDecks }: Props) {
   const removeCardFromDeck = useDeckStore((s) => s.removeCardFromDeck);
   const clearDeckCards = useDeckStore((s) => s.clearDeckCards);
   const setDeckCover = useDeckStore((s) => s.setDeckCover);
+  const swapCardInDeck = useDeckStore((s) => s.swapCardInDeck);
 
   const activeProfileId = useCollectionStore((s) => s.activeProfileId);
   const profiles = useCollectionStore((s) => s.profiles);
@@ -75,6 +77,9 @@ export function DeckEditor({ deck, onBackToDecks }: Props) {
   const [showMissingModal, setShowMissingModal] = useState(false);
   const [showCoverModal, setShowCoverModal] = useState(false);
   const [previewCard, setPreviewCard] = useState<any | null>(null);
+  const [swapTargetCard, setSwapTargetCard] = useState<{ cardId: string; count: number; card: any } | null>(null);
+  const [deckViewMode, setDeckViewMode] = useState<'list' | 'grid'>('list');
+  const [isDeckExpanded, setIsDeckExpanded] = useState(false);
   const [mobileTab, setMobileTab] = useState<'deck' | 'catalog'>('deck');
 
   // Catalog Filters
@@ -288,7 +293,7 @@ export function DeckEditor({ deck, onBackToDecks }: Props) {
       </div>
 
       {/* LEFT COLUMN: Deck 60 Cards & Stats */}
-      <div className={`w-full xl:w-[480px] 2xl:w-[540px] bg-slate-900/90 border-r border-slate-800 p-4 sm:p-6 flex flex-col justify-between shrink-0 ${mobileTab === 'deck' ? 'flex' : 'hidden xl:flex'}`}>
+      <div className={`w-full ${isDeckExpanded ? 'flex-1' : 'xl:w-[480px] 2xl:w-[540px]'} bg-slate-900/90 border-r border-slate-800 p-4 sm:p-6 flex flex-col justify-between shrink-0 transition-all duration-200 ${mobileTab === 'deck' ? 'flex' : 'hidden xl:flex'}`}>
         <div className="space-y-4">
           {/* Deck Header & Title + Cover preview */}
           <div className="flex items-start justify-between gap-3 pb-3 border-b border-slate-800">
@@ -426,15 +431,151 @@ export function DeckEditor({ deck, onBackToDecks }: Props) {
             )}
           </div>
 
+          {/* Deck Card View Mode Controls (List vs Grid) & Fullscreen Expand */}
+          <div className="flex items-center justify-between pt-1">
+            <span className="text-xs font-black text-slate-300">
+              การ์ดในเด็ค ({stats.totalCards}/60)
+            </span>
+
+            <div className="flex items-center gap-2">
+              {/* List / Grid Mode Toggle */}
+              <div className="flex items-center bg-slate-950 border border-slate-800 rounded-xl p-0.5">
+                <button
+                  type="button"
+                  onClick={() => setDeckViewMode('list')}
+                  className={`px-2.5 py-1 rounded-lg text-xs font-bold transition-all flex items-center gap-1 ${
+                    deckViewMode === 'list'
+                      ? 'bg-indigo-600 text-white shadow-sm'
+                      : 'text-slate-400 hover:text-slate-200'
+                  }`}
+                  title="แสดงการ์ดแบบรายการ (List)"
+                >
+                  <span>📋</span>
+                  <span className="text-[11px]">รายการ</span>
+                </button>
+                <button
+                  type="button"
+                  onClick={() => setDeckViewMode('grid')}
+                  className={`px-2.5 py-1 rounded-lg text-xs font-bold transition-all flex items-center gap-1 ${
+                    deckViewMode === 'grid'
+                      ? 'bg-indigo-600 text-white shadow-sm'
+                      : 'text-slate-400 hover:text-slate-200'
+                  }`}
+                  title="แสดงการ์ดแบบตารางการ์ด (Grid)"
+                >
+                  <span>🖼️</span>
+                  <span className="text-[11px]">ตาราง</span>
+                </button>
+              </div>
+
+              {/* Expand Fullscreen Deck Toggle on desktop */}
+              <button
+                type="button"
+                onClick={() => setIsDeckExpanded((prev) => !prev)}
+                className={`hidden xl:flex items-center gap-1 px-2.5 py-1 rounded-xl text-xs font-bold border transition-all ${
+                  isDeckExpanded
+                    ? 'bg-amber-500/20 text-amber-300 border-amber-500/40 hover:bg-amber-500/30'
+                    : 'bg-slate-950 text-slate-400 border-slate-800 hover:text-slate-200 hover:border-slate-700'
+                }`}
+                title={isDeckExpanded ? 'ยุบกลับเป็น 2 คอลัมน์' : 'ขยายเด็คเต็มหน้าจอ'}
+              >
+                <span>{isDeckExpanded ? '✕' : '⛶'}</span>
+                <span className="text-[11px]">{isDeckExpanded ? 'ย่อคอลัมน์' : 'ขยายเต็ม'}</span>
+              </button>
+            </div>
+          </div>
+
           {/* Grouped Card List in Deck */}
-          <div className="space-y-4 max-h-[calc(100vh-360px)] overflow-y-auto pr-1">
+          <div className="space-y-4 max-h-[calc(100vh-390px)] overflow-y-auto pr-1">
             {stats.totalCards === 0 ? (
               <div className="py-16 text-center text-slate-500 space-y-2 border border-dashed border-slate-800 rounded-2xl">
                 <span className="text-4xl">🃏</span>
                 <p className="text-xs font-bold text-slate-400">เด็คนี้ยังไม่มีการ์ด</p>
                 <p className="text-[11px] text-slate-500">เลือกการ์ดจากคลังด้านขวา แล้วกด + เพื่อใส่เข้าเด็ค</p>
               </div>
+            ) : deckViewMode === 'grid' ? (
+              /* GRID VIEW */
+              <div className="space-y-5">
+                {/* Pokémon Section */}
+                {groupedDeckCards.pokemon.length > 0 && (
+                  <div>
+                    <h4 className="text-xs font-extrabold text-purple-400 uppercase mb-2 flex items-center justify-between">
+                      <span>👾 โปเกมอน ({stats.pokemonCount} ใบ)</span>
+                    </h4>
+                    <div className={`grid ${isDeckExpanded ? 'grid-cols-3 sm:grid-cols-4 md:grid-cols-5 lg:grid-cols-6 xl:grid-cols-7 2xl:grid-cols-8 gap-3 sm:gap-4' : 'grid-cols-2 sm:grid-cols-3 gap-2 sm:gap-2.5'}`}>
+                      {groupedDeckCards.pokemon.map(({ cardId, count, card }) => (
+                        <DeckCardGridItem
+                          key={cardId}
+                          cardId={cardId}
+                          count={count}
+                          card={card}
+                          missingInfo={missingInfoMap.get(cardId)}
+                          isCover={deck.coverCardId === cardId}
+                          onAdd={() => addCardToDeck(deck.id, cardId, 1)}
+                          onRemove={() => removeCardFromDeck(deck.id, cardId)}
+                          onSwap={() => setSwapTargetCard({ cardId, count, card })}
+                          onSetCover={(img) => setDeckCover(deck.id, cardId, img)}
+                          onPreview={() => setPreviewCard(card || { id: cardId, name: cardId })}
+                        />
+                      ))}
+                    </div>
+                  </div>
+                )}
+
+                {/* Trainer Section */}
+                {groupedDeckCards.trainer.length > 0 && (
+                  <div>
+                    <h4 className="text-xs font-extrabold text-cyan-400 uppercase mb-2 flex items-center justify-between">
+                      <span>🎒 เทรนเนอร์ ({stats.trainerCount} ใบ)</span>
+                    </h4>
+                    <div className={`grid ${isDeckExpanded ? 'grid-cols-3 sm:grid-cols-4 md:grid-cols-5 lg:grid-cols-6 xl:grid-cols-7 2xl:grid-cols-8 gap-3 sm:gap-4' : 'grid-cols-2 sm:grid-cols-3 gap-2 sm:gap-2.5'}`}>
+                      {groupedDeckCards.trainer.map(({ cardId, count, card }) => (
+                        <DeckCardGridItem
+                          key={cardId}
+                          cardId={cardId}
+                          count={count}
+                          card={card}
+                          missingInfo={missingInfoMap.get(cardId)}
+                          isCover={deck.coverCardId === cardId}
+                          onAdd={() => addCardToDeck(deck.id, cardId, 1)}
+                          onRemove={() => removeCardFromDeck(deck.id, cardId)}
+                          onSwap={() => setSwapTargetCard({ cardId, count, card })}
+                          onSetCover={(img) => setDeckCover(deck.id, cardId, img)}
+                          onPreview={() => setPreviewCard(card || { id: cardId, name: cardId })}
+                        />
+                      ))}
+                    </div>
+                  </div>
+                )}
+
+                {/* Energy Section */}
+                {groupedDeckCards.energy.length > 0 && (
+                  <div>
+                    <h4 className="text-xs font-extrabold text-amber-400 uppercase mb-2 flex items-center justify-between">
+                      <span>⚡ พลังงาน ({stats.energyCount} ใบ)</span>
+                    </h4>
+                    <div className={`grid ${isDeckExpanded ? 'grid-cols-3 sm:grid-cols-4 md:grid-cols-5 lg:grid-cols-6 xl:grid-cols-7 2xl:grid-cols-8 gap-3 sm:gap-4' : 'grid-cols-2 sm:grid-cols-3 gap-2 sm:gap-2.5'}`}>
+                      {groupedDeckCards.energy.map(({ cardId, count, card }) => (
+                        <DeckCardGridItem
+                          key={cardId}
+                          cardId={cardId}
+                          count={count}
+                          card={card}
+                          missingInfo={missingInfoMap.get(cardId)}
+                          isCover={deck.coverCardId === cardId}
+                          onAdd={() => addCardToDeck(deck.id, cardId, 1)}
+                          onRemove={() => removeCardFromDeck(deck.id, cardId)}
+                          onSwap={() => setSwapTargetCard({ cardId, count, card })}
+                          onSetCover={(img) => setDeckCover(deck.id, cardId, img)}
+                          onPreview={() => setPreviewCard(card || { id: cardId, name: cardId })}
+                        />
+                      ))}
+                    </div>
+                  </div>
+                )}
+              </div>
             ) : (
+              /* LIST VIEW */
               <>
                 {/* Pokémon Section */}
                 {groupedDeckCards.pokemon.length > 0 && (
@@ -453,6 +594,7 @@ export function DeckEditor({ deck, onBackToDecks }: Props) {
                           isCover={deck.coverCardId === cardId}
                           onAdd={() => addCardToDeck(deck.id, cardId, 1)}
                           onRemove={() => removeCardFromDeck(deck.id, cardId)}
+                          onSwap={() => setSwapTargetCard({ cardId, count, card })}
                           onSetCover={(img) => setDeckCover(deck.id, cardId, img)}
                           onPreview={() => setPreviewCard(card || { id: cardId, name: cardId })}
                         />
@@ -478,6 +620,7 @@ export function DeckEditor({ deck, onBackToDecks }: Props) {
                           isCover={deck.coverCardId === cardId}
                           onAdd={() => addCardToDeck(deck.id, cardId, 1)}
                           onRemove={() => removeCardFromDeck(deck.id, cardId)}
+                          onSwap={() => setSwapTargetCard({ cardId, count, card })}
                           onSetCover={(img) => setDeckCover(deck.id, cardId, img)}
                           onPreview={() => setPreviewCard(card || { id: cardId, name: cardId })}
                         />
@@ -503,6 +646,7 @@ export function DeckEditor({ deck, onBackToDecks }: Props) {
                           isCover={deck.coverCardId === cardId}
                           onAdd={() => addCardToDeck(deck.id, cardId, 1)}
                           onRemove={() => removeCardFromDeck(deck.id, cardId)}
+                          onSwap={() => setSwapTargetCard({ cardId, count, card })}
                           onSetCover={(img) => setDeckCover(deck.id, cardId, img)}
                           onPreview={() => setPreviewCard(card || { id: cardId, name: cardId })}
                         />
@@ -533,7 +677,7 @@ export function DeckEditor({ deck, onBackToDecks }: Props) {
       </div>
 
       {/* RIGHT COLUMN: Card Catalog Search & Add */}
-      <div className={`flex-1 p-3 sm:p-6 lg:p-8 flex flex-col space-y-4 overflow-y-auto ${mobileTab === 'catalog' ? 'flex' : 'hidden xl:flex'}`}>
+      <div className={`flex-1 p-3 sm:p-6 lg:p-8 flex flex-col space-y-4 overflow-y-auto ${isDeckExpanded ? 'hidden' : mobileTab === 'catalog' ? 'flex' : 'hidden xl:flex'}`}>
         {/* Search & Filter Bar for Catalog */}
         <div className="bg-slate-900/90 border border-slate-800 p-4 rounded-2xl shadow-xl space-y-3">
           <div className="flex flex-col md:flex-row items-center gap-3">
@@ -832,6 +976,20 @@ export function DeckEditor({ deck, onBackToDecks }: Props) {
         />
       )}
 
+      {/* Card Swap Modal */}
+      {swapTargetCard && (
+        <CardSwapModal
+          oldCardId={swapTargetCard.cardId}
+          currentCard={swapTargetCard.card}
+          cardCount={swapTargetCard.count}
+          onSelectNewCard={(newCard) => {
+            swapCardInDeck(deck.id, swapTargetCard.cardId, newCard.id, newCard.imageUrl);
+            setSwapTargetCard(null);
+          }}
+          onClose={() => setSwapTargetCard(null)}
+        />
+      )}
+
       {/* Floating Back to Top Button */}
       {showBackToTop && (
         <button
@@ -849,7 +1007,7 @@ export function DeckEditor({ deck, onBackToDecks }: Props) {
   );
 }
 
-// Single Card Row in Deck Column
+// Single Card Row in Deck Column (List Mode)
 function DeckCardRow({
   cardId,
   count,
@@ -858,6 +1016,7 @@ function DeckCardRow({
   isCover,
   onAdd,
   onRemove,
+  onSwap,
   onSetCover,
   onPreview,
 }: {
@@ -868,6 +1027,7 @@ function DeckCardRow({
   isCover: boolean;
   onAdd: () => void;
   onRemove: () => void;
+  onSwap: () => void;
   onSetCover: (img: string) => void;
   onPreview: () => void;
 }) {
@@ -930,15 +1090,24 @@ function DeckCardRow({
         </div>
       </div>
 
-      {/* Actions: + / - / Cover */}
+      {/* Actions: Swap / Cover / + / - */}
       <div className="flex items-center gap-1.5 shrink-0" onClick={(e) => e.stopPropagation()}>
+        <button
+          type="button"
+          onClick={onSwap}
+          className="w-6 h-6 rounded-lg bg-slate-900 hover:bg-amber-500/20 text-slate-400 hover:text-amber-300 border border-slate-800 hover:border-amber-500/40 text-[10px] flex items-center justify-center transition-all"
+          title="สลับการ์ดนี้กับใบอื่น (Swap Card)"
+        >
+          🔄
+        </button>
+
         <button
           type="button"
           onClick={() => onSetCover(imgUrl || '')}
           className={`w-6 h-6 rounded-lg text-[10px] flex items-center justify-center transition-all ${
             isCover
               ? 'bg-amber-500 text-slate-950 font-black shadow-sm'
-              : 'bg-slate-900 text-slate-500 hover:text-amber-400 hover:bg-slate-800'
+              : 'bg-slate-900 text-slate-500 hover:text-amber-400 hover:bg-slate-800 border border-slate-800'
           }`}
           title={isCover ? 'การ์ดนี้เป็นรูปหน้าปกเด็ค' : 'ตั้งเป็นการ์ดหน้าปกเด็ค'}
         >
@@ -966,3 +1135,140 @@ function DeckCardRow({
     </div>
   );
 }
+
+// Single Card Grid Item in Deck Column (Grid Mode)
+function DeckCardGridItem({
+  cardId,
+  count,
+  card,
+  missingInfo,
+  isCover,
+  onAdd,
+  onRemove,
+  onSwap,
+  onSetCover,
+  onPreview,
+}: {
+  cardId: string;
+  count: number;
+  card: any;
+  missingInfo?: MissingCardInfo;
+  isCover: boolean;
+  onAdd: () => void;
+  onRemove: () => void;
+  onSwap: () => void;
+  onSetCover: (img: string) => void;
+  onPreview: () => void;
+}) {
+  const exactOwned = missingInfo?.exactOwned ?? 0;
+  const missingCount = missingInfo ? missingInfo.missingCount : Math.max(0, count - exactOwned);
+  const isMissing = missingCount > 0;
+  const imgUrl = resolveCardImageUrl(card?.imageUrl);
+
+  return (
+    <div className="group relative flex flex-col justify-between rounded-xl bg-slate-950/70 hover:bg-slate-900/90 border border-slate-800 hover:border-indigo-500/60 p-2 transition-all duration-200 shadow-md hover:shadow-xl select-none">
+      <div
+        onClick={onPreview}
+        className="relative w-full aspect-[2.5/3.5] rounded-lg overflow-hidden bg-slate-900 shadow-inner cursor-pointer"
+      >
+        <img
+          src={imgUrl}
+          alt={card?.name || cardId}
+          loading="lazy"
+          className="w-full h-full object-cover transition-transform duration-200 group-hover:scale-105"
+          onError={(e) => handleCardImageError(e, card?.imageUrl)}
+        />
+
+        {/* Count Badge (Top Right) */}
+        <div className="absolute top-1 right-1 px-1.5 py-0.5 rounded-md bg-amber-500 text-slate-950 font-black text-[11px] shadow-md shadow-black/70 flex items-center gap-0.5">
+          <span>×</span>
+          <span>{count}</span>
+        </div>
+
+        {/* Cover Star (Top Left) */}
+        {isCover && (
+          <div className="absolute top-1 left-1 px-1.5 py-0.5 rounded bg-amber-500 text-slate-950 text-[8px] font-black shadow-md">
+            ★ ปก
+          </div>
+        )}
+
+        {/* Missing Alert Badge (Bottom Left) */}
+        {isMissing && (
+          <div className="absolute bottom-1 left-1 px-1.5 py-0.5 rounded bg-rose-600/90 text-white font-bold text-[8px] shadow-md">
+            ขาด {missingCount}
+          </div>
+        )}
+
+        {/* Quick Zoom Preview Icon Overlay on hover */}
+        <div className="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center pointer-events-none">
+          <span className="text-white text-xs bg-black/60 w-7 h-7 rounded-full flex items-center justify-center shadow-md">
+            🔍
+          </span>
+        </div>
+      </div>
+
+      <div className="mt-1 min-w-0">
+        <div className="flex items-center justify-between text-[8px] text-slate-400 font-mono">
+          <span className="text-amber-400 font-bold truncate">{card?.set?.id || 'PROMO'}</span>
+          <span>{card?.collectorNumber || card?.localId}</span>
+        </div>
+        <h5
+          onClick={onPreview}
+          className="text-[10px] sm:text-[11px] font-bold text-slate-200 truncate mt-0.5 hover:text-indigo-300 cursor-pointer"
+          title={card?.name}
+        >
+          {card?.name || cardId}
+        </h5>
+      </div>
+
+      {/* Grid Item Action Bar */}
+      <div className="mt-1.5 pt-1.5 border-t border-slate-800/80 flex items-center justify-between gap-1" onClick={(e) => e.stopPropagation()}>
+        {/* Swap Card Button */}
+        <button
+          type="button"
+          onClick={onSwap}
+          className="p-1 rounded-lg bg-slate-900 hover:bg-amber-500/20 text-slate-400 hover:text-amber-300 text-[10px] transition-colors flex items-center justify-center border border-slate-800 hover:border-amber-500/40"
+          title="สลับการ์ดนี้กับใบอื่น (Swap Card)"
+        >
+          🔄
+        </button>
+
+        {/* Cover Star Button */}
+        <button
+          type="button"
+          onClick={() => onSetCover(imgUrl || '')}
+          className={`p-1 rounded-lg text-[10px] transition-colors flex items-center justify-center ${
+            isCover
+              ? 'bg-amber-500 text-slate-950 font-black'
+              : 'bg-slate-900 hover:bg-slate-800 text-slate-400 hover:text-amber-300 border border-slate-800'
+          }`}
+          title={isCover ? 'การ์ดนี้เป็นรูปหน้าปกเด็ค' : 'ตั้งเป็นการ์ดหน้าปกเด็ค'}
+        >
+          ★
+        </button>
+
+        {/* Plus / Minus Buttons */}
+        <div className="flex items-center bg-slate-900 border border-slate-800 rounded-lg p-0.5">
+          <button
+            type="button"
+            onClick={onRemove}
+            className="w-4 h-4 rounded flex items-center justify-center text-slate-300 hover:bg-slate-800 hover:text-white font-bold text-[10px]"
+            title="ลด 1 ใบ"
+          >
+            -
+          </button>
+          <span className="w-4 text-center text-[10px] font-black text-white">{count}</span>
+          <button
+            type="button"
+            onClick={onAdd}
+            className="w-4 h-4 rounded flex items-center justify-center text-slate-300 hover:bg-slate-800 hover:text-white font-bold text-[10px]"
+            title="เพิ่ม 1 ใบ"
+          >
+            +
+          </button>
+        </div>
+      </div>
+    </div>
+  );
+}
+

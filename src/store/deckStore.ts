@@ -23,6 +23,7 @@ interface DeckState {
   addCardToDeck: (deckId: string, cardId: string, count?: number) => void;
   removeCardFromDeck: (deckId: string, cardId: string) => void;
   setCardCountInDeck: (deckId: string, cardId: string, count: number) => void;
+  swapCardInDeck: (deckId: string, oldCardId: string, newCardId: string, newCoverImageUrl?: string) => void;
   clearDeckCards: (deckId: string) => void;
 
   // Cloud Sync
@@ -336,6 +337,49 @@ export const useDeckStore = create<DeckState>((set, get) => ({
           ...state.decks,
           [deckId]: {
             ...deck,
+            cards: newCards,
+            updatedAt: Date.now(),
+          },
+        },
+      };
+    });
+
+    triggerDeckSave(get, deckId);
+  },
+
+  swapCardInDeck: (deckId: string, oldCardId: string, newCardId: string, newCoverImageUrl?: string) => {
+    set((state) => {
+      const deck = state.decks[deckId];
+      if (!deck || !deck.cards[oldCardId] || oldCardId === newCardId) return state;
+
+      const oldCount = deck.cards[oldCardId].count;
+      const targetExistingCount = deck.cards[newCardId]?.count || 0;
+      const combinedCount = Math.min(60, targetExistingCount + oldCount);
+
+      const newCards = { ...deck.cards };
+      delete newCards[oldCardId];
+      newCards[newCardId] = {
+        cardId: newCardId,
+        count: combinedCount,
+      };
+
+      let coverCardId = deck.coverCardId;
+      let coverImageUrl = deck.coverImageUrl;
+
+      if (deck.coverCardId === oldCardId) {
+        coverCardId = newCardId;
+        if (newCoverImageUrl) {
+          coverImageUrl = newCoverImageUrl;
+        }
+      }
+
+      return {
+        decks: {
+          ...state.decks,
+          [deckId]: {
+            ...deck,
+            coverCardId,
+            coverImageUrl,
             cards: newCards,
             updatedAt: Date.now(),
           },
