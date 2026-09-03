@@ -201,6 +201,38 @@ export function CollectionTextImportModal({ onClose, initialTab }: Props) {
     }
   };
 
+  const handleDownloadSampleExcel = async () => {
+    try {
+      const XLSX = await import('xlsx');
+      const sampleData = [
+        { 'Set': 'SV8a', 'Number': '025/187', 'Quantity': 4, 'Variant': 'Normal' },
+        { 'Set': 'SV8a', 'Number': '120/187', 'Quantity': 2, 'Variant': 'Holo' },
+        { 'Set': 'SC1a', 'Number': '001', 'Quantity': 1, 'Variant': 'Normal' },
+        { 'Set': 'SC1a', 'Number': '020', 'Quantity': 3, 'Variant': 'Reverse' },
+        { 'Set': 'SV-P', 'Number': '001', 'Quantity': 1, 'Variant': 'Promo' },
+      ];
+      const ws = XLSX.utils.json_to_sheet(sampleData);
+      const wb = XLSX.utils.book_new();
+      XLSX.utils.book_append_sheet(wb, ws, 'Cards');
+      XLSX.writeFile(wb, 'pokemon_cards_sample.xlsx');
+    } catch {
+      window.open('/sample_cards.xlsx', '_blank');
+    }
+  };
+
+  const handleDownloadSampleCsv = () => {
+    const csvContent = 'Set,Number,Quantity,Variant\nSV8a,025/187,4,Normal\nSV8a,120/187,2,Holo\nSC1a,001,1,Normal\nSC1a,020,3,Reverse\nSV-P,001,1,Promo\n';
+    const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
+    const url = URL.createObjectURL(blob);
+    const link = document.createElement('a');
+    link.href = url;
+    link.download = 'pokemon_cards_sample.csv';
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+    URL.revokeObjectURL(url);
+  };
+
   const binderList = Object.values(profiles);
 
   return createPortal(
@@ -394,14 +426,34 @@ export function CollectionTextImportModal({ onClose, initialTab }: Props) {
                 </div>
               </div>
 
-              {/* Format Hint */}
-              <div className="p-3 rounded-xl bg-slate-100 dark:bg-slate-800/60 border border-slate-200 dark:border-slate-700 text-[11px] text-slate-600 dark:text-slate-300 space-y-1">
-                <span className="font-bold text-slate-900 dark:text-slate-100 block">💡 รูปแบบคอลัมน์ที่รองรับอัตโนมัติ:</span>
+              {/* Format Hint & Template Download */}
+              <div className="p-3.5 rounded-xl bg-slate-100 dark:bg-slate-800/60 border border-slate-200 dark:border-slate-700 text-[11px] text-slate-600 dark:text-slate-300 space-y-2">
+                <div className="flex flex-wrap items-center justify-between gap-2">
+                  <span className="font-bold text-slate-900 dark:text-slate-100">💡 รูปแบบคอลัมน์ที่รองรับอัตโนมัติ:</span>
+                  <div className="flex items-center gap-1.5">
+                    <button
+                      type="button"
+                      onClick={handleDownloadSampleExcel}
+                      className="px-2.5 py-1 rounded-lg bg-emerald-600 hover:bg-emerald-500 text-white font-bold text-[11px] shadow-sm transition-all flex items-center gap-1"
+                    >
+                      <span>📥</span>
+                      <span>โหลดตัวอย่าง Excel (.xlsx)</span>
+                    </button>
+                    <button
+                      type="button"
+                      onClick={handleDownloadSampleCsv}
+                      className="px-2.5 py-1 rounded-lg bg-slate-200 dark:bg-slate-700 hover:bg-slate-300 dark:hover:bg-slate-600 text-slate-800 dark:text-slate-200 font-bold text-[11px] shadow-sm transition-all flex items-center gap-1"
+                    >
+                      <span>📄</span>
+                      <span>โหลดตัวอย่าง CSV (.csv)</span>
+                    </button>
+                  </div>
+                </div>
                 <p>
                   คอลัมน์ <code className="font-mono text-amber-600 dark:text-amber-400">Set</code> (เช่น SV8a, SC1a) +{' '}
                   <code className="font-mono text-amber-600 dark:text-amber-400">Number</code> (เช่น 025/187 หรือ 25) +{' '}
                   <code className="font-mono text-amber-600 dark:text-amber-400">Quantity</code> (จำนวน) หรือ{' '}
-                  <code className="font-mono text-amber-600 dark:text-amber-400">Variant</code> (ธรรมดา/โฮโล)
+                  <code className="font-mono text-amber-600 dark:text-amber-400">Variant</code> (Normal, Holo, Reverse, Promo)
                 </p>
               </div>
 

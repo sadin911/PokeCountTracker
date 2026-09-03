@@ -252,3 +252,4 @@
 [2026-09-03 23:00] Major | Antigravity | Edit | src/store/collectionStore.ts - added importCollectionParsedCards action
 [2026-09-03 23:00] Major | Antigravity | Edit | package.json - bumped version to v2.26.0
 [2026-09-03 23:00] Major | Antigravity | Release | v2.26.0 - Excel/CSV card import, continuous live camera OCR, & draft persistence
+[2026-09-03 23:03] Major | Antigravity | Write | public/sample_cards.xlsx & sample_cards.csv - added downloadable sample templates
