@@ -15,6 +15,9 @@ import type { CollectionStats } from '../../types/collection';
  * binder is open, and how much is in it.
  */
 
+// Feature flag: ปิดใช้งานกล้องชั่วคราวตามคำขอของผู้ใช้ (เก็บโค้ดไว้ไม่ลบ)
+const ENABLE_CAMERA_SCANNER = false;
+
 interface Props {
   stats: CollectionStats;
 }
@@ -36,16 +39,18 @@ export function CollectionHeader({ stats }: Props) {
         titleClassName="bg-gradient-to-r from-purple-600 via-indigo-600 to-pink-500 dark:from-yellow-300 dark:via-amber-400 dark:to-yellow-500"
         contextSlot={
           <>
-            <button
-              type="button"
-              onClick={() => setShowCameraScanner(true)}
-              data-testid="camera-scan-button"
-              title="สแกนการ์ดต่อเนื่องด้วยกล้อง OCR (Camera OCR Scanner)"
-              className="h-8 sm:h-9 px-2.5 sm:px-3 rounded-xl bg-indigo-600/15 hover:bg-indigo-600/25 border border-indigo-500/40 text-indigo-600 dark:text-indigo-400 text-xs font-bold flex items-center gap-1.5 transition-colors shrink-0 shadow-sm"
-            >
-              <span className="text-sm shrink-0">📷</span>
-              <span className="font-extrabold hidden xs:inline sm:inline">สแกน</span>
-            </button>
+            {ENABLE_CAMERA_SCANNER && (
+              <button
+                type="button"
+                onClick={() => setShowCameraScanner(true)}
+                data-testid="camera-scan-button"
+                title="สแกนการ์ดต่อเนื่องด้วยกล้อง OCR (Camera OCR Scanner)"
+                className="h-8 sm:h-9 px-2.5 sm:px-3 rounded-xl bg-indigo-600/15 hover:bg-indigo-600/25 border border-indigo-500/40 text-indigo-600 dark:text-indigo-400 text-xs font-bold flex items-center gap-1.5 transition-colors shrink-0 shadow-sm"
+              >
+                <span className="text-sm shrink-0">📷</span>
+                <span className="font-extrabold hidden xs:inline sm:inline">สแกน</span>
+              </button>
+            )}
 
             <button
               type="button"
@@ -81,7 +86,9 @@ export function CollectionHeader({ stats }: Props) {
 
       {showProfileModal && <ProfileManagerModal onClose={() => setShowProfileModal(false)} />}
       {showTextImport && <CollectionTextImportModal onClose={() => setShowTextImport(false)} />}
-      {showCameraScanner && <CardCameraScannerModal onClose={() => setShowCameraScanner(false)} />}
+      {ENABLE_CAMERA_SCANNER && showCameraScanner && (
+        <CardCameraScannerModal onClose={() => setShowCameraScanner(false)} />
+      )}
     </>
   );
 }

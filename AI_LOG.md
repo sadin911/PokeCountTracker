@@ -256,3 +256,6 @@
 [2026-09-03 23:10] Major | Antigravity | Edit | src/utils/cardOcrMatcher.ts, CardCameraScannerModal.tsx - upgraded OCR accuracy, auto-inversion, & quick code input
 [2026-09-03 23:10] Major | Antigravity | Edit | package.json - bumped version to v2.26.1
 [2026-09-03 23:10] Major | Antigravity | Release | v2.26.1 - Enhanced OCR camera scanner accuracy, reticle alignment, and quick code search
+[2026-09-03 23:34] Major | Antigravity | Feature | CollectionHeader & ImportModal - disabled camera scanner UI behind feature flag
+[2026-09-03 23:34] Major | Antigravity | Edit | package.json - bumped version to v2.26.2
+[2026-09-03 23:34] Major | Antigravity | Release | v2.26.2 - Temporarily disable camera scanner feature while preserving code

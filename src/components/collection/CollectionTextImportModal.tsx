@@ -19,6 +19,9 @@ const STORAGE_KEY_BINDER = 'pokecount_import_target_binder';
 const STORAGE_KEY_MODE = 'pokecount_import_mode';
 const STORAGE_KEY_FINISH = 'pokecount_import_finish';
 
+// Feature flag: ปิดใช้งานกล้องชั่วคราวตามคำขอของผู้ใช้ (เก็บโค้ดไว้ไม่ลบ)
+const ENABLE_CAMERA_SCANNER = false;
+
 const EXAMPLE_TEXT = `Set SC1a
 1,3
 20,5
@@ -322,15 +325,17 @@ export function CollectionTextImportModal({ onClose, initialTab }: Props) {
             )}
           </button>
 
-          <button
-            type="button"
-            onClick={() => setShowCameraScanner(true)}
-            className="px-3.5 py-2 rounded-t-xl border-b-2 border-transparent text-indigo-600 dark:text-indigo-400 hover:text-indigo-700 dark:hover:text-indigo-300 transition-all flex items-center gap-1.5 ml-auto"
-          >
-            <span>📷</span>
-            <span>สแกนกล้องสด (OCR)</span>
-            <span className="px-1.5 py-0.2 rounded bg-indigo-500/20 text-[9px] font-black uppercase">Live</span>
-          </button>
+          {ENABLE_CAMERA_SCANNER && (
+            <button
+              type="button"
+              onClick={() => setShowCameraScanner(true)}
+              className="px-3.5 py-2 rounded-t-xl border-b-2 border-transparent text-indigo-600 dark:text-indigo-400 hover:text-indigo-700 dark:hover:text-indigo-300 transition-all flex items-center gap-1.5 ml-auto"
+            >
+              <span>📷</span>
+              <span>สแกนกล้องสด (OCR)</span>
+              <span className="px-1.5 py-0.2 rounded bg-indigo-500/20 text-[9px] font-black uppercase">Live</span>
+            </button>
+          )}
         </div>
 
         {/* Modal Body */}
@@ -720,7 +725,7 @@ export function CollectionTextImportModal({ onClose, initialTab }: Props) {
       </div>
 
       {/* Camera OCR Scanner Fullscreen Modal */}
-      {showCameraScanner && (
+      {ENABLE_CAMERA_SCANNER && showCameraScanner && (
         <CardCameraScannerModal
           initialBinderId={targetBinderId}
           onClose={() => setShowCameraScanner(false)}

@@ -201,50 +201,52 @@ test.describe('Collection Tracker Suite', () => {
     await expect(textarea).toHaveValue('');
   });
 
-  test('opens continuous live camera OCR scanner modal and displays viewfinder & controls', async ({ page }) => {
-    const cameraBtn = page.locator('[data-testid="camera-scan-button"]');
-    await expect(cameraBtn).toBeVisible();
-    await cameraBtn.click();
+  test.describe.skip('Camera scanner feature (temporarily disabled per user request)', () => {
+    test('opens continuous live camera OCR scanner modal and displays viewfinder & controls', async ({ page }) => {
+      const cameraBtn = page.locator('[data-testid="camera-scan-button"]');
+      await expect(cameraBtn).toBeVisible();
+      await cameraBtn.click();
 
-    // Camera scanner modal appears
-    const scannerModal = page.locator('[data-testid="camera-scanner-modal"]');
-    await expect(scannerModal).toBeVisible();
+      // Camera scanner modal appears
+      const scannerModal = page.locator('[data-testid="camera-scanner-modal"]');
+      await expect(scannerModal).toBeVisible();
 
-    // Verify header and binder selector exist
-    await expect(scannerModal.locator('text=สแกนกล้องต่อเนื่อง')).toBeVisible();
-    await expect(scannerModal.locator('text=บันทึกลง:')).toBeVisible();
+      // Verify header and binder selector exist
+      await expect(scannerModal.locator('text=สแกนกล้องต่อเนื่อง')).toBeVisible();
+      await expect(scannerModal.locator('text=บันทึกลง:')).toBeVisible();
 
-    // Close scanner modal
-    const closeScannerBtn = scannerModal.locator('button[aria-label="Close"]').or(scannerModal.locator('button:has-text("✕")')).first();
-    await closeScannerBtn.click();
-    await expect(scannerModal).toBeHidden();
-  });
+      // Close scanner modal
+      const closeScannerBtn = scannerModal.locator('button[aria-label="Close"]').or(scannerModal.locator('button:has-text("✕")')).first();
+      await closeScannerBtn.click();
+      await expect(scannerModal).toBeHidden();
+    });
 
-  test('allows quick manual code input fallback in camera scanner modal', async ({ page }) => {
-    const cameraBtn = page.locator('[data-testid="camera-scan-button"]');
-    await expect(cameraBtn).toBeVisible();
-    await cameraBtn.click();
+    test('allows quick manual code input fallback in camera scanner modal', async ({ page }) => {
+      const cameraBtn = page.locator('[data-testid="camera-scan-button"]');
+      await expect(cameraBtn).toBeVisible();
+      await cameraBtn.click();
 
-    const scannerModal = page.locator('[data-testid="camera-scanner-modal"]');
-    await expect(scannerModal).toBeVisible();
+      const scannerModal = page.locator('[data-testid="camera-scanner-modal"]');
+      await expect(scannerModal).toBeVisible();
 
-    // Fill quick code input
-    const codeInput = scannerModal.locator('input[placeholder*="SV8a 025"]');
-    await expect(codeInput).toBeVisible();
-    await codeInput.fill('SV8a 025');
+      // Fill quick code input
+      const codeInput = scannerModal.locator('input[placeholder*="SV8a 025"]');
+      await expect(codeInput).toBeVisible();
+      await codeInput.fill('SV8a 025');
 
-    // Click submit button
-    const addBtn = scannerModal.locator('button:has-text("+ เพิ่มทันที")');
-    await expect(addBtn).toBeEnabled();
-    await addBtn.click();
+      // Click submit button
+      const addBtn = scannerModal.locator('button:has-text("+ เพิ่มทันที")');
+      await expect(addBtn).toBeEnabled();
+      await addBtn.click();
 
-    // Verify card added into horizontal feed
-    await expect(scannerModal.locator('text=รายการที่เพิ่มแล้วในรอบนี้ (1 ใบ)')).toBeVisible();
+      // Verify card added into horizontal feed
+      await expect(scannerModal.locator('text=รายการที่เพิ่มแล้วในรอบนี้ (1 ใบ)')).toBeVisible();
 
-    // Close modal
-    const closeBtn = scannerModal.locator('button:has-text("✕")').first();
-    await closeBtn.click();
-    await expect(scannerModal).toBeHidden();
+      // Close modal
+      const closeBtn = scannerModal.locator('button:has-text("✕")').first();
+      await closeBtn.click();
+      await expect(scannerModal).toBeHidden();
+    });
   });
 });
 
