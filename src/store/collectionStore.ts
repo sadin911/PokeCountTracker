@@ -89,6 +89,19 @@ interface CollectionState {
     unmatchedLines: string[];
     setsFound: string[];
   };
+  importCollectionParsedCards: (
+    cardsList: { cardId: string; quantity: number; variant?: CardVariantKey }[],
+    options?: {
+      mode?: 'merge' | 'replace';
+      defaultFinish?: CardVariantKey;
+      profileId?: string;
+    }
+  ) => {
+    success: boolean;
+    message: string;
+    cardsImportedCount: number;
+    distinctCardsCount: number;
+  };
 }
 
 const DEFAULT_PROFILE_ID = 'default-main-profile';
@@ -1021,6 +1034,86 @@ export const useCollectionStore = create<CollectionState>((set, get) => ({
       distinctCardsCount: parseResult.distinctCardsCount,
       unmatchedLines: parseResult.unmatchedLines,
       setsFound: parseResult.setsFound,
+    };
+  },
+
+  importCollectionParsedCards: (cardsList, options) => {
+    const mode = options?.mode ?? 'merge';
+    const defaultFinish = options?.defaultFinish ?? 'normal';
+    const profileId = options?.profileId ?? get().activeProfileId;
+    const profile = get().profiles[profileId];
+
+    if (!profile) {
+      return {
+        success: false,
+        message: 'ไม่พบสมุดสะสมที่เลือก (Active binder not found)',
+        cardsImportedCount: 0,
+        distinctCardsCount: 0,
+      };
+    }
+
+    if (!cardsList || cardsList.length === 0) {
+      return {
+        success: false,
+        message: 'ไม่มีรายการการ์ดที่จะนำเข้า',
+        cardsImportedCount: 0,
+        distinctCardsCount: 0,
+      };
+    }
+
+    const cards = { ...profile.cards };
+    let importedTotal = 0;
+
+    for (const item of cardsList) {
+      const finish = item.variant || defaultFinish;
+      const existingEntry: CollectionCardEntry = cards[item.cardId] || {
+        cardId: item.cardId,
+        variants: emptyVariants(),
+        updatedAt: Date.now(),
+      };
+
+      const currentQty = existingEntry.variants[finish] ?? 0;
+      const nextQty = mode === 'replace' ? item.quantity : currentQty + item.quantity;
+      const newVariants = {
+        ...existingEntry.variants,
+        [finish]: Math.max(0, nextQty),
+      };
+
+      const total = Object.values(newVariants).reduce((a, b) => a + b, 0);
+      if (total === 0 && !existingEntry.isWishlist && !existingEntry.note) {
+        delete cards[item.cardId];
+      } else {
+        cards[item.cardId] = {
+          ...existingEntry,
+          variants: newVariants,
+          updatedAt: Date.now(),
+        };
+      }
+      importedTotal += item.quantity;
+    }
+
+    const nextProfile: CollectionProfile = {
+      ...profile,
+      cards,
+      updatedAt: Date.now(),
+    };
+
+    set((state) => ({
+      profiles: {
+        ...state.profiles,
+        [profileId]: nextProfile,
+      },
+    }));
+
+    triggerSave(get, profileId);
+
+    const modeLabel = mode === 'replace' ? 'แทนที่' : 'เพิ่ม';
+
+    return {
+      success: true,
+      message: `นำเข้าสำเร็จ! ${modeLabel}จำนวนการ์ด ${importedTotal} ใบ (${cardsList.length} รายการ)`,
+      cardsImportedCount: importedTotal,
+      distinctCardsCount: cardsList.length,
     };
   },
 }));

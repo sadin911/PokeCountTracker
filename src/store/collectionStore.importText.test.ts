@@ -70,6 +70,22 @@ Set SC1a
     expect(activeProfile.cards['TH-1']?.variants?.normal).toBe(0);
   });
 
+  it('imports parsed cards directly via importCollectionParsedCards', () => {
+    const list = [
+      { cardId: 'TH-1', quantity: 3, variant: 'normal' as const },
+      { cardId: 'TH-2', quantity: 2, variant: 'holo' as const },
+    ];
+
+    const res = useCollectionStore.getState().importCollectionParsedCards(list, { mode: 'merge' });
+    expect(res.success).toBe(true);
+    expect(res.cardsImportedCount).toBe(5);
+
+    const activeProfile =
+      useCollectionStore.getState().profiles[useCollectionStore.getState().activeProfileId];
+    expect(activeProfile.cards['TH-1']?.variants?.normal).toBe(3);
+    expect(activeProfile.cards['TH-2']?.variants?.holo).toBe(2);
+  });
+
   it('reports error when no cards can be parsed', () => {
     const result = useCollectionStore.getState().importCollectionText('invalid text content');
     expect(result.success).toBe(false);

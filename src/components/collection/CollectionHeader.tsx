@@ -4,6 +4,7 @@ import { AppHeaderBar } from '../layout/AppHeaderBar';
 import { HeaderStats } from '../layout/HeaderStats';
 import { ProfileManagerModal } from './ProfileManagerModal';
 import { CollectionTextImportModal } from './CollectionTextImportModal';
+import { CardCameraScannerModal } from './CardCameraScannerModal';
 import type { CollectionStats } from '../../types/collection';
 
 /**
@@ -25,6 +26,7 @@ export function CollectionHeader({ stats }: Props) {
 
   const [showProfileModal, setShowProfileModal] = useState(false);
   const [showTextImport, setShowTextImport] = useState(false);
+  const [showCameraScanner, setShowCameraScanner] = useState(false);
 
   return (
     <>
@@ -36,9 +38,20 @@ export function CollectionHeader({ stats }: Props) {
           <>
             <button
               type="button"
+              onClick={() => setShowCameraScanner(true)}
+              data-testid="camera-scan-button"
+              title="สแกนการ์ดต่อเนื่องด้วยกล้อง OCR (Camera OCR Scanner)"
+              className="h-8 sm:h-9 px-2.5 sm:px-3 rounded-xl bg-indigo-600/15 hover:bg-indigo-600/25 border border-indigo-500/40 text-indigo-600 dark:text-indigo-400 text-xs font-bold flex items-center gap-1.5 transition-colors shrink-0 shadow-sm"
+            >
+              <span className="text-sm shrink-0">📷</span>
+              <span className="font-extrabold hidden xs:inline sm:inline">สแกน</span>
+            </button>
+
+            <button
+              type="button"
               onClick={() => setShowTextImport(true)}
               data-testid="text-import-button"
-              title="นำเข้าการ์ดจากข้อความด้วยรหัสชุดและหมายเลข (Import from text)"
+              title="นำเข้าการ์ดจาก Excel, CSV หรือข้อความ (Import from Excel, CSV, text)"
               className="h-8 sm:h-9 px-2.5 sm:px-3 rounded-xl bg-[var(--surface)] hover:bg-[var(--surface-hover)] border border-[var(--surface-border)] text-[var(--surface-fg)] text-xs font-bold flex items-center gap-1.5 transition-colors shrink-0 shadow-sm"
             >
               <span className="text-sm shrink-0">📥</span>
@@ -68,6 +81,7 @@ export function CollectionHeader({ stats }: Props) {
 
       {showProfileModal && <ProfileManagerModal onClose={() => setShowProfileModal(false)} />}
       {showTextImport && <CollectionTextImportModal onClose={() => setShowTextImport(false)} />}
+      {showCameraScanner && <CardCameraScannerModal onClose={() => setShowCameraScanner(false)} />}
     </>
   );
 }

@@ -159,6 +159,66 @@ test.describe('Collection Tracker Suite', () => {
 
     await expect(modal.locator('text=นำเข้าสำเร็จ!')).toBeVisible();
   });
+
+  test('persists draft in Import Modal across modal close and allows clearing form', async ({ page }) => {
+    const importBtn = page.locator('[data-testid="text-import-button"]');
+    await expect(importBtn).toBeVisible();
+    await importBtn.click();
+
+    const modal = page.locator('.fixed.inset-0').filter({ hasText: /Card Text Import/i }).first();
+    await expect(modal).toBeVisible();
+
+    // Fill in draft text
+    const textarea = modal.locator('textarea');
+    await textarea.fill('SV8a 025 2\nSV8a 026 1');
+
+    // Switch to Excel / CSV tab
+    const excelTabBtn = modal.locator('button:has-text("Excel / CSV")');
+    await excelTabBtn.click();
+    await expect(modal.locator('text=ลากไฟล์ Excel')).toBeVisible();
+
+    // Close modal via close button
+    const closeBtn = modal.locator('button[aria-label="Close"]');
+    await closeBtn.click();
+    await expect(modal).toBeHidden();
+
+    // Reopen modal - verify tab and draft were persisted in localStorage!
+    await importBtn.click();
+    await expect(modal).toBeVisible();
+    await expect(modal.locator('text=ลากไฟล์ Excel')).toBeVisible();
+
+    // Switch back to text tab and verify text is still there
+    const textTabBtn = modal.locator('button:has-text("ข้อความ / Text")');
+    await textTabBtn.click();
+    await expect(textarea).toHaveValue('SV8a 025 2\nSV8a 026 1');
+
+    // Clear draft via "ล้างฟอร์ม"
+    page.once('dialog', async (dialog) => {
+      await dialog.accept();
+    });
+    const clearDraftBtn = modal.locator('button:has-text("ล้างฟอร์ม")');
+    await clearDraftBtn.click();
+    await expect(textarea).toHaveValue('');
+  });
+
+  test('opens continuous live camera OCR scanner modal and displays viewfinder & controls', async ({ page }) => {
+    const cameraBtn = page.locator('[data-testid="camera-scan-button"]');
+    await expect(cameraBtn).toBeVisible();
+    await cameraBtn.click();
+
+    // Camera scanner modal appears
+    const scannerModal = page.locator('[data-testid="camera-scanner-modal"]');
+    await expect(scannerModal).toBeVisible();
+
+    // Verify header and binder selector exist
+    await expect(scannerModal.locator('text=สแกนกล้องต่อเนื่อง')).toBeVisible();
+    await expect(scannerModal.locator('text=บันทึกลง:')).toBeVisible();
+
+    // Close scanner modal
+    const closeScannerBtn = scannerModal.locator('button[aria-label="Close"]').or(scannerModal.locator('button:has-text("✕")')).first();
+    await closeScannerBtn.click();
+    await expect(scannerModal).toBeHidden();
+  });
 });
 
 
