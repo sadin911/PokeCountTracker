@@ -59,6 +59,30 @@ describe('cardOcrMatcher', () => {
     expect(result.card?.id).toBe('SV8a-025');
   });
 
+  it('matches bracketed set codes with regulation mark [SV8a] F 025/187', () => {
+    const bracketedText = '[SV8a] F 025/187';
+    const result = matchOcrToCard(bracketedText, mockCatalog);
+    expect(result.card?.id).toBe('SV8a-025');
+  });
+
+  it('matches glued set and collector number without spaces SV8a025/187', () => {
+    const gluedText = 'SV8a025/187';
+    const result = matchOcrToCard(gluedText, mockCatalog);
+    expect(result.card?.id).toBe('SV8a-025');
+  });
+
+  it('matches when slash is misrecognized as 1 or | e.g. 0251187', () => {
+    const slashedText = 'SV8a 0251187';
+    const result = matchOcrToCard(slashedText, mockCatalog);
+    expect(result.card?.id).toBe('SV8a-025');
+  });
+
+  it('auto-corrects B to 8 for SVBa', () => {
+    const confusedB = 'SVBa 025/187';
+    const result = matchOcrToCard(confusedB, mockCatalog);
+    expect(result.card?.id).toBe('SV8a-025');
+  });
+
   it('returns null card for irrelevant text', () => {
     const randomText = 'HP 120 Lightning Thunderbolt Attack';
     const result = matchOcrToCard(randomText, mockCatalog);

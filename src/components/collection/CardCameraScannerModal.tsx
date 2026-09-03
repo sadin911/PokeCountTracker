@@ -71,9 +71,11 @@ export function CardCameraScannerModal({ onClose, initialBinderId }: Props) {
   const [history, setHistory] = useState<ScannedHistoryItem[]>([]);
   const [lastDetectedSnippet, setLastDetectedSnippet] = useState<string | null>(null);
   const [isProcessingFrame, setIsProcessingFrame] = useState(false);
+  const [manualInput, setManualInput] = useState('');
 
   const videoRef = useRef<HTMLVideoElement | null>(null);
   const canvasRef = useRef<HTMLCanvasElement | null>(null);
+  const reticleRef = useRef<HTMLDivElement | null>(null);
   const streamRef = useRef<MediaStream | null>(null);
   const workerRef = useRef<any>(null);
   const lastScannedCardRef = useRef<{ id: string; time: number } | null>(null);
@@ -90,7 +92,8 @@ export function CardCameraScannerModal({ onClose, initialBinderId }: Props) {
         const { createWorker } = await import('tesseract.js');
         const worker = await createWorker('eng');
         await worker.setParameters({
-          tessedit_char_whitelist: '0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz/-',
+          tessedit_char_whitelist: '0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz/-[]().@',
+          tessedit_pageseg_mode: '6' as any,
         });
 
         if (!cancelled) {
@@ -116,7 +119,7 @@ export function CardCameraScannerModal({ onClose, initialBinderId }: Props) {
     };
   }, []);
 
-  // 2. Start Camera Video Stream
+  // 2. Camera feed management
   useEffect(() => {
     let active = true;
 
@@ -135,8 +138,9 @@ export function CardCameraScannerModal({ onClose, initialBinderId }: Props) {
         const stream = await navigator.mediaDevices.getUserMedia({
           video: {
             facingMode: { ideal: facingMode },
-            width: { ideal: 1280 },
-            height: { ideal: 720 },
+            width: { ideal: 1920, min: 1280 },
+            height: { ideal: 1080, min: 720 },
+            advanced: [{ focusMode: 'continuous' } as any],
           },
           audio: false,
         });
@@ -210,32 +214,85 @@ export function CardCameraScannerModal({ onClose, initialBinderId }: Props) {
       const vW = video.videoWidth;
       const vH = video.videoHeight;
 
-      // The targeting reticle is in the center-lower region of the frame
-      // Crop 40% width and 20% height around the reticle box
-      const cropW = Math.round(vW * 0.45);
-      const cropH = Math.round(vH * 0.22);
-      const cropX = Math.round((vW - cropW) / 2);
-      const cropY = Math.round(vH * 0.45);
+      let cropX = Math.round(vW * 0.25);
+      let cropY = Math.round(vH * 0.4);
+      let cropW = Math.round(vW * 0.5);
+      let cropH = Math.round(vH * 0.25);
 
-      canvas.width = cropW;
-      canvas.height = cropH;
+      if (reticleRef.current && video) {
+        const vRect = video.getBoundingClientRect();
+        const rRect = reticleRef.current.getBoundingClientRect();
+        if (vRect.width > 0 && vRect.height > 0) {
+          const scale = Math.max(vRect.width / vW, vRect.height / vH);
+          const renderedW = vW * scale;
+          const renderedH = vH * scale;
+          const offsetX = (vRect.width - renderedW) / 2;
+          const offsetY = (vRect.height - renderedH) / 2;
+
+          const rawX = (rRect.left - vRect.left - offsetX) / scale;
+          const rawY = (rRect.top - vRect.top - offsetY) / scale;
+          const rawW = rRect.width / scale;
+          const rawH = rRect.height / scale;
+
+          // Add 20% margin to prevent cutting off boundary digits
+          const marginX = rawW * 0.2;
+          const marginY = rawH * 0.2;
+
+          cropX = Math.max(0, Math.round(rawX - marginX));
+          cropY = Math.max(0, Math.round(rawY - marginY));
+          cropW = Math.min(vW - cropX, Math.round(rawW + marginX * 2));
+          cropH = Math.min(vH - cropY, Math.round(rawH + marginY * 2));
+        }
+      }
+
+      if (cropW <= 10 || cropH <= 10) return;
+
+      // Upscale 2.5x for optimal character size for Tesseract LSTM
+      const scaleFactor = 2.5;
+      const targetW = Math.round(cropW * scaleFactor);
+      const targetH = Math.round(cropH * scaleFactor);
+
+      canvas.width = targetW;
+      canvas.height = targetH;
 
       const ctx = canvas.getContext('2d', { willReadFrequently: true });
       if (!ctx) return;
 
-      // Draw cropped ROI
-      ctx.drawImage(video, cropX, cropY, cropW, cropH, 0, 0, cropW, cropH);
+      ctx.imageSmoothingEnabled = true;
+      ctx.imageSmoothingQuality = 'high';
+      ctx.drawImage(video, cropX, cropY, cropW, cropH, 0, 0, targetW, targetH);
 
-      // Preprocessing: boost contrast & binarize
-      const imgData = ctx.getImageData(0, 0, cropW, cropH);
+      // Preprocessing:
+      // 1. Calculate luminance histogram to detect dark vs light background
+      const imgData = ctx.getImageData(0, 0, targetW, targetH);
       const data = imgData.data;
+      let totalLum = 0;
+      let minLum = 255;
+      let maxLum = 0;
+      const pixelCount = data.length / 4;
+
       for (let i = 0; i < data.length; i += 4) {
-        const avg = (data[i] + data[i + 1] + data[i + 2]) / 3;
-        // High contrast thresholding
-        const val = avg > 115 ? 255 : 0;
-        data[i] = val;
-        data[i + 1] = val;
-        data[i + 2] = val;
+        const lum = Math.round(0.299 * data[i] + 0.587 * data[i + 1] + 0.114 * data[i + 2]);
+        totalLum += lum;
+        if (lum < minLum) minLum = lum;
+        if (lum > maxLum) maxLum = lum;
+      }
+
+      const avgLum = totalLum / pixelCount;
+      const range = Math.max(1, maxLum - minLum);
+      // Invert if background is dark (average luminance < 135, e.g. white text on black footer)
+      const invert = avgLum < 135;
+
+      // Dynamic contrast stretch & auto-invert to ensure black text on light background
+      for (let i = 0; i < data.length; i += 4) {
+        const lum = Math.round(0.299 * data[i] + 0.587 * data[i + 1] + 0.114 * data[i + 2]);
+        let stretched = Math.round(((lum - minLum) / range) * 255);
+        if (invert) {
+          stretched = 255 - stretched;
+        }
+        data[i] = stretched;
+        data[i + 1] = stretched;
+        data[i + 2] = stretched;
       }
       ctx.putImageData(imgData, 0, 0);
 
@@ -287,7 +344,16 @@ export function CardCameraScannerModal({ onClose, initialBinderId }: Props) {
     } finally {
       setIsProcessingFrame(false);
     }
-  }, [isScanning, isWorkerReady, isProcessingFrame, targetBinderId, selectedVariant, incrementVariant]);
+  }, [
+    isScanning,
+    isWorkerReady,
+    isProcessingFrame,
+    targetBinderId,
+    activeProfileId,
+    switchProfile,
+    selectedVariant,
+    incrementVariant,
+  ]);
 
   // 4. Continuous Scanning Loop
   useEffect(() => {
@@ -345,6 +411,38 @@ export function CardCameraScannerModal({ onClose, initialBinderId }: Props) {
     } finally {
       setIsProcessingFrame(false);
       e.target.value = '';
+    }
+  };
+
+  const handleManualAdd = (e?: React.FormEvent) => {
+    if (e) e.preventDefault();
+    const query = manualInput.trim();
+    if (!query) return;
+
+    const matched = matchOcrToCard(query, pokemonCardData as any[], cardLookupRef.current);
+    if (matched.card) {
+      const now = Date.now();
+      if (targetBinderId !== activeProfileId) {
+        switchProfile(targetBinderId);
+      }
+      incrementVariant(matched.card.id, selectedVariant);
+      playSuccessChime();
+      triggerHaptic();
+      setScanFlash(true);
+      setTimeout(() => setScanFlash(false), 500);
+
+      setHistory((prev) => [
+        {
+          id: `${matched.card.id}_${now}`,
+          card: matched.card,
+          variant: selectedVariant,
+          timestamp: now,
+        },
+        ...prev,
+      ]);
+      setManualInput('');
+    } else {
+      alert(`ไม่พบการ์ดที่ตรงกับรหัส "${query}" กรุณาตรวจสอบรหัสชุดและเลขการ์ด เช่น SV8a 025`);
     }
   };
 
@@ -455,6 +553,7 @@ export function CardCameraScannerModal({ onClose, initialBinderId }: Props) {
               <div className="relative w-full max-w-sm px-6 flex flex-col items-center">
                 {/* Aiming Reticle Box */}
                 <div
+                  ref={reticleRef}
                   className={`relative w-full aspect-[2.4/1] rounded-2xl border-2 transition-all duration-300 flex flex-col items-center justify-center ${
                     scanFlash
                       ? 'border-emerald-400 bg-emerald-500/20 shadow-2xl shadow-emerald-500/50 scale-105'
@@ -478,6 +577,14 @@ export function CardCameraScannerModal({ onClose, initialBinderId }: Props) {
                     </p>
                   </div>
                 </div>
+
+                {/* Real-time reading preview badge */}
+                {lastDetectedSnippet && (
+                  <div className="mt-2.5 flex items-center gap-1.5 px-3 py-1 rounded-full bg-slate-950/90 border border-slate-700/80 text-[11px] font-mono text-emerald-300 shadow-lg backdrop-blur">
+                    <span className="text-slate-400">👁️ อ่านได้:</span>
+                    <span className="font-bold">{lastDetectedSnippet}</span>
+                  </div>
+                )}
               </div>
             </div>
 
@@ -586,6 +693,28 @@ export function CardCameraScannerModal({ onClose, initialBinderId }: Props) {
             </button>
           </div>
         </div>
+
+        {/* Quick Manual Code Input Fallback */}
+        <form
+          onSubmit={handleManualAdd}
+          className="flex items-center gap-2 bg-slate-950/80 p-2 rounded-xl border border-slate-800"
+        >
+          <span className="text-[11px] font-bold text-slate-400 pl-1 shrink-0">⚡ ค้นหารหัส:</span>
+          <input
+            type="text"
+            value={manualInput}
+            onChange={(e) => setManualInput(e.target.value)}
+            placeholder="เช่น SV8a 025 หรือ SC1a 001"
+            className="flex-1 min-w-0 bg-slate-900 border border-slate-700 text-xs px-2.5 py-1 rounded-lg text-white placeholder-slate-500 focus:outline-none focus:border-indigo-500 font-mono"
+          />
+          <button
+            type="submit"
+            disabled={!manualInput.trim()}
+            className="px-3 py-1 bg-indigo-600 hover:bg-indigo-500 disabled:opacity-40 text-white rounded-lg text-xs font-bold shrink-0 transition-colors shadow"
+          >
+            + เพิ่มทันที
+          </button>
+        </form>
 
         {/* Scanned Items Feed (Horizontal list of recently scanned cards) */}
         <div className="pt-2 border-t border-slate-800/80">

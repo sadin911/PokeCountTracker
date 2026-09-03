@@ -253,3 +253,6 @@
 [2026-09-03 23:00] Major | Antigravity | Edit | package.json - bumped version to v2.26.0
 [2026-09-03 23:00] Major | Antigravity | Release | v2.26.0 - Excel/CSV card import, continuous live camera OCR, & draft persistence
 [2026-09-03 23:03] Major | Antigravity | Write | public/sample_cards.xlsx & sample_cards.csv - added downloadable sample templates
+[2026-09-03 23:10] Major | Antigravity | Edit | src/utils/cardOcrMatcher.ts, CardCameraScannerModal.tsx - upgraded OCR accuracy, auto-inversion, & quick code input
+[2026-09-03 23:10] Major | Antigravity | Edit | package.json - bumped version to v2.26.1
+[2026-09-03 23:10] Major | Antigravity | Release | v2.26.1 - Enhanced OCR camera scanner accuracy, reticle alignment, and quick code search

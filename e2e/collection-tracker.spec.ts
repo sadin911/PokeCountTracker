@@ -219,6 +219,33 @@ test.describe('Collection Tracker Suite', () => {
     await closeScannerBtn.click();
     await expect(scannerModal).toBeHidden();
   });
+
+  test('allows quick manual code input fallback in camera scanner modal', async ({ page }) => {
+    const cameraBtn = page.locator('[data-testid="camera-scan-button"]');
+    await expect(cameraBtn).toBeVisible();
+    await cameraBtn.click();
+
+    const scannerModal = page.locator('[data-testid="camera-scanner-modal"]');
+    await expect(scannerModal).toBeVisible();
+
+    // Fill quick code input
+    const codeInput = scannerModal.locator('input[placeholder*="SV8a 025"]');
+    await expect(codeInput).toBeVisible();
+    await codeInput.fill('SV8a 025');
+
+    // Click submit button
+    const addBtn = scannerModal.locator('button:has-text("+ เพิ่มทันที")');
+    await expect(addBtn).toBeEnabled();
+    await addBtn.click();
+
+    // Verify card added into horizontal feed
+    await expect(scannerModal.locator('text=รายการที่เพิ่มแล้วในรอบนี้ (1 ใบ)')).toBeVisible();
+
+    // Close modal
+    const closeBtn = scannerModal.locator('button:has-text("✕")').first();
+    await closeBtn.click();
+    await expect(scannerModal).toBeHidden();
+  });
 });
 
 
