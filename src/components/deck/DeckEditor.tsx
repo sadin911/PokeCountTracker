@@ -3,6 +3,7 @@ import { useDeckStore } from '../../store/deckStore';
 import { useCollectionStore } from '../../store/collectionStore';
 import { calculateDeckStats, calculateMissingCards } from '../../utils/deckCalculator';
 import { resolveCardImageUrl, handleCardImageError } from '../../utils/cardImage';
+import { OptimizedCardImage, preloadCardImages } from '../common/OptimizedCardImage';
 import { MissingCardsModal } from './MissingCardsModal';
 import { CardCollectionModal } from '../collection/CardCollectionModal';
 import { DeckCoverPickerModal } from './DeckCoverPickerModal';
@@ -222,6 +223,14 @@ export function DeckEditor({ deck, onBackToDecks }: Props) {
     setCatalogLimit(ITEMS_PER_PAGE);
   }, [search, selectedSet, selectedRegulation, selectedType, selectedRarity, selectedCategory]);
 
+  // Preload upcoming catalog cards in background during idle time
+  useEffect(() => {
+    if (!hasMoreCatalog) return;
+    const nextCards = filteredCatalog.slice(catalogLimit, catalogLimit + 24);
+    const urls = nextCards.map((c) => resolveCardImageUrl(c.imageUrl));
+    preloadCardImages(urls);
+  }, [catalogLimit, hasMoreCatalog, filteredCatalog]);
+
   useEffect(() => {
     if (!hasMoreCatalog) return;
     const observer = new IntersectionObserver(
@@ -230,7 +239,7 @@ export function DeckEditor({ deck, onBackToDecks }: Props) {
           setCatalogLimit((prev) => Math.min(prev + ITEMS_PER_PAGE, filteredCatalog.length));
         }
       },
-      { threshold: 0.1, rootMargin: '300px' }
+      { threshold: 0.01, rootMargin: '1400px 0px' }
     );
     const el = sentinelRef.current;
     if (el) observer.observe(el);
@@ -853,7 +862,7 @@ export function DeckEditor({ deck, onBackToDecks }: Props) {
             </div>
           ) : (
             <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6 2xl:grid-cols-8 gap-3">
-              {displayedCatalog.map((card) => {
+              {displayedCatalog.map((card, idx) => {
                 const countInDeck = deck.cards[card.id]?.count || 0;
                 const imgUrl = resolveCardImageUrl(card.imageUrl);
 
@@ -868,10 +877,10 @@ export function DeckEditor({ deck, onBackToDecks }: Props) {
                       onClick={() => setPreviewCard(card)}
                       className="relative w-full aspect-[2.5/3.5] rounded-lg overflow-hidden cursor-pointer bg-slate-950 shadow-inner group-hover:scale-[1.03] transition-transform duration-200"
                     >
-                      <img
+                      <OptimizedCardImage
                         src={imgUrl}
                         alt={card.name}
-                        loading="lazy"
+                        priority={idx < 12}
                         className="w-full h-full object-cover"
                         onError={(e) => handleCardImageError(e, card.imageUrl, card.officialImageUrl)}
                       />
@@ -1050,9 +1059,10 @@ function DeckCardRow({
     >
       <div className="flex items-center gap-2.5 min-w-0 flex-1 cursor-pointer" onClick={onPreview}>
         <div className="w-9 h-12 rounded-md overflow-hidden bg-slate-900 shrink-0 shadow-sm relative group-hover:ring-1 group-hover:ring-indigo-400 transition-all">
-          <img
+          <OptimizedCardImage
             src={imgUrl}
             alt={card?.name || cardId}
+            priority={true}
             className="w-full h-full object-cover"
             onError={(e) => handleCardImageError(e, card?.imageUrl)}
           />
@@ -1171,10 +1181,10 @@ function DeckCardGridItem({
         onClick={onPreview}
         className="relative w-full aspect-[2.5/3.5] rounded-lg overflow-hidden bg-slate-900 shadow-inner cursor-pointer"
       >
-        <img
+        <OptimizedCardImage
           src={imgUrl}
           alt={card?.name || cardId}
-          loading="lazy"
+          priority={true}
           className="w-full h-full object-cover transition-transform duration-200 group-hover:scale-105"
           onError={(e) => handleCardImageError(e, card?.imageUrl)}
         />

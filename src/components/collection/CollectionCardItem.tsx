@@ -1,5 +1,6 @@
 import { resolveCardImageUrl, handleCardImageError } from '../../utils/cardImage';
 import { isCardFoil, foilPulseDelay } from '../../utils/cardFoil';
+import { OptimizedCardImage } from '../common/OptimizedCardImage';
 import type { CardVariantCount } from '../../types/collection';
 
 interface Props {
@@ -7,6 +8,7 @@ interface Props {
   variants: CardVariantCount;
   isWishlist?: boolean;
   showFullColor?: boolean;
+  priority?: boolean;
   onSelect: (card: any) => void;
   onQuickAdd: (card: any) => void;
   onToggleWishlist: (cardId: string) => void;
@@ -17,6 +19,7 @@ export function CollectionCardItem({
   variants,
   isWishlist,
   showFullColor,
+  priority = false,
   onSelect,
   onQuickAdd,
   onToggleWishlist,
@@ -43,10 +46,10 @@ export function CollectionCardItem({
         onClick={() => onSelect(card)}
         className="relative w-full aspect-[2.5/3.5] rounded-lg overflow-hidden cursor-pointer bg-slate-100 dark:bg-slate-950 shadow-inner group-hover:scale-[1.02] transition-transform duration-300 ease-out"
       >
-        <img
+        <OptimizedCardImage
           src={imgUrl}
           alt={card.name}
-          loading="lazy"
+          priority={priority}
           className={`w-full h-full object-cover transition-all duration-300 ${
             isOwned || showFullColor
               ? 'brightness-100 contrast-[105%]'

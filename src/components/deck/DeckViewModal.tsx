@@ -1,5 +1,6 @@
 import { useState, useMemo, useEffect } from 'react';
 import { resolveCardImageUrl, handleCardImageError } from '../../utils/cardImage';
+import { OptimizedCardImage } from '../common/OptimizedCardImage';
 import { calculateDeckStats, calculateMissingCards } from '../../utils/deckCalculator';
 import { useCollectionStore } from '../../store/collectionStore';
 import { CardCollectionModal } from '../collection/CardCollectionModal';
@@ -458,10 +459,10 @@ function DeckGridCardItem({
       className="group relative flex flex-col justify-between rounded-xl bg-slate-950/60 hover:bg-slate-900 border border-slate-800 hover:border-indigo-500/70 p-2 transition-all duration-200 cursor-pointer shadow-md hover:shadow-xl hover:scale-105 select-none"
     >
       <div className="relative w-full aspect-[2.5/3.5] rounded-lg overflow-hidden bg-slate-900 shadow-inner">
-        <img
+        <OptimizedCardImage
           src={imgUrl}
           alt={card?.name || cardId}
-          loading="lazy"
+          priority={true}
           className="w-full h-full object-cover transition-transform duration-200 group-hover:scale-105"
           onError={(e) => handleCardImageError(e, card?.imageUrl)}
         />
@@ -526,9 +527,10 @@ function DeckListRow({
     >
       <div className="flex items-center gap-3 min-w-0 flex-1">
         <div className="w-8 h-11 rounded-md overflow-hidden bg-slate-900 border border-slate-700 shrink-0">
-          <img
+          <OptimizedCardImage
             src={imgUrl}
             alt={card?.name || cardId}
+            priority={true}
             className="w-full h-full object-cover"
             onError={(e) => handleCardImageError(e, card?.imageUrl)}
           />

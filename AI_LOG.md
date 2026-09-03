@@ -241,3 +241,7 @@
 [2026-09-03 17:55] Major | Antigravity | Edit | src/components/deck/DeckEditor.tsx & DeckManager.tsx - list/grid toggle & swap button
 [2026-09-03 17:55] Major | Antigravity | Write | src/store/deckStore.test.ts & e2e/deck-builder.spec.ts - unit & e2e test suites
 [2026-09-03 17:55] Major | Antigravity | Release | v2.24.0 - Deck Card Swap & Grid View Display Modes
+[2026-09-03 20:45] Major | Antigravity | Feature | src/components/common/OptimizedCardImage.tsx - high-perf ahead-of-time loader
+[2026-09-03 20:45] Major | Antigravity | Edit | vite.config.ts - Workbox CacheFirst runtimeCaching for R2 & Asia CDN images
+[2026-09-03 20:45] Major | Antigravity | Edit | src/components/ - 1400px rootMargin, priority loading, & idle preloading
+[2026-09-03 20:45] Major | Antigravity | Release | v2.25.0 - Ultra-fast card image loading & smooth scrolling UX

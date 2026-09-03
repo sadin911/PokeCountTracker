@@ -63,6 +63,38 @@ export default defineConfig({
         globPatterns: ['**/*.{js,css,html,ico,png,svg,webp,json}'],
         navigateFallback: '/index.html',
         navigateFallbackDenylist: [/^\/api/],
+        runtimeCaching: [
+          {
+            // Cloudflare R2 Card Images (Thumbnails & HD)
+            urlPattern: /^https:\/\/pub-af524b77e8e3403685545bc0a8222090\.r2\.dev\/.*/i,
+            handler: 'CacheFirst',
+            options: {
+              cacheName: 'r2-card-images',
+              expiration: {
+                maxEntries: 4000,
+                maxAgeSeconds: 30 * 24 * 60 * 60, // 30 days
+              },
+              cacheableResponse: {
+                statuses: [0, 200],
+              },
+            },
+          },
+          {
+            // Official Pokémon Card Asia CDN images (fallback)
+            urlPattern: /^https:\/\/asia\.pokemon-card\.com\/.*/i,
+            handler: 'CacheFirst',
+            options: {
+              cacheName: 'official-card-images',
+              expiration: {
+                maxEntries: 1000,
+                maxAgeSeconds: 30 * 24 * 60 * 60, // 30 days
+              },
+              cacheableResponse: {
+                statuses: [0, 200],
+              },
+            },
+          },
+        ],
       },
     }),
   ],

@@ -1,5 +1,6 @@
 import { useState, useMemo, useEffect } from 'react';
 import { resolveCardImageUrl, handleCardImageError } from '../../utils/cardImage';
+import { OptimizedCardImage } from '../common/OptimizedCardImage';
 import { useCollectionStore } from '../../store/collectionStore';
 import { getCardRarityClass } from '../../utils/rarity';
 import pokemonCardData from '../../data/pokemonNames.json';
@@ -151,9 +152,10 @@ export function CardSwapModal({
         {/* Current Card Banner */}
         <div className="p-3.5 sm:p-4 bg-slate-950/60 border-b border-slate-800/90 flex items-center gap-3 sm:gap-4">
           <div className="w-11 h-15 sm:w-14 sm:h-19 rounded-lg overflow-hidden bg-slate-900 border border-slate-700 shrink-0 shadow-md">
-            <img
+            <OptimizedCardImage
               src={currentImgUrl}
               alt={currentCard?.name || oldCardId}
+              priority={true}
               className="w-full h-full object-cover"
               onError={(e) => handleCardImageError(e, currentCard?.imageUrl)}
             />
@@ -286,7 +288,7 @@ export function CardSwapModal({
                   <span>เลือกเวอร์ชัน/ลายการ์ดที่ต้องการ (กดเพื่อสลับทันที):</span>
                   <span className="text-slate-400 font-normal">พบ {sameNameAlternatives.length} เวอร์ชัน</span>
                 </div>
-                {sameNameAlternatives.map((card) => {
+                {sameNameAlternatives.map((card, idx) => {
                   const owned = getCardOwnedTotal(card.id);
                   const isOwned = owned >= cardCount;
                   const hasSome = owned > 0 && owned < cardCount;
@@ -301,9 +303,10 @@ export function CardSwapModal({
                     >
                       <div className="flex items-center gap-3 min-w-0 flex-1">
                         <div className="w-10 h-14 rounded-lg overflow-hidden bg-slate-900 border border-slate-700/80 shrink-0 shadow relative group-hover:ring-2 group-hover:ring-indigo-400 transition-all">
-                          <img
+                          <OptimizedCardImage
                             src={img}
                             alt={card.name}
+                            priority={idx < 8}
                             className="w-full h-full object-cover"
                             onError={(e) => handleCardImageError(e, card.imageUrl)}
                           />
@@ -375,7 +378,7 @@ export function CardSwapModal({
                   <p className="text-[11px] text-slate-500">ลองเปลี่ยนคำค้นหาหรือเลือกหมวดหมู่อื่น</p>
                 </div>
               ) : (
-                searchResults.map((card) => {
+                searchResults.map((card, idx) => {
                   const owned = getCardOwnedTotal(card.id);
                   const isOwned = owned >= cardCount;
                   const hasSome = owned > 0 && owned < cardCount;
@@ -390,9 +393,10 @@ export function CardSwapModal({
                     >
                       <div className="flex items-center gap-3 min-w-0 flex-1">
                         <div className="w-10 h-14 rounded-lg overflow-hidden bg-slate-900 border border-slate-700/80 shrink-0 shadow relative group-hover:ring-2 group-hover:ring-indigo-400 transition-all">
-                          <img
+                          <OptimizedCardImage
                             src={img}
                             alt={card.name}
+                            priority={idx < 8}
                             className="w-full h-full object-cover"
                             onError={(e) => handleCardImageError(e, card.imageUrl)}
                           />

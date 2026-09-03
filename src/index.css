@@ -180,3 +180,17 @@
     touch-action: manipulation;
   }
 }
+
+/* Card Skeleton Loading Shimmer */
+@keyframes card-skeleton-shimmer {
+  0% {
+    transform: translateX(-100%);
+  }
+  100% {
+    transform: translateX(100%);
+  }
+}
+
+.animate-skeleton-shimmer {
+  animation: card-skeleton-shimmer 1.4s ease-in-out infinite;
+}

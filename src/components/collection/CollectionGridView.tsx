@@ -4,6 +4,8 @@ import { CardCollectionModal } from './CardCollectionModal';
 import { BoosterPackPreviewModal } from './BoosterPackPreviewModal';
 import { useCollectionStore } from '../../store/collectionStore';
 import { getSetBoosterImage, handleBoosterImageError } from '../../utils/boosterImages';
+import { resolveCardImageUrl } from '../../utils/cardImage';
+import { preloadCardImages } from '../common/OptimizedCardImage';
 import type { CardVariantCount, SetProgress } from '../../types/collection';
 
 interface Props {
@@ -36,7 +38,15 @@ export function CollectionGridView({ cards, currentSetProgress, showFullColor, f
   const displayedCards = cards.slice(0, displayLimit);
   const hasMore = displayLimit < cards.length;
 
-  // Auto Infinite Scroll with IntersectionObserver
+  // Preload next upcoming cards in background during idle time
+  useEffect(() => {
+    if (!hasMore) return;
+    const nextCards = cards.slice(displayLimit, displayLimit + 30);
+    const urls = nextCards.map((c) => resolveCardImageUrl(c.imageUrl));
+    preloadCardImages(urls);
+  }, [displayLimit, hasMore, cards]);
+
+  // Auto Infinite Scroll with IntersectionObserver (trigger 1,400px in advance)
   useEffect(() => {
     if (!hasMore) return;
 
@@ -49,8 +59,8 @@ export function CollectionGridView({ cards, currentSetProgress, showFullColor, f
       },
       {
         root: null,
-        rootMargin: '400px', // Trigger before reaching the absolute bottom
-        threshold: 0.1,
+        rootMargin: '1400px 0px', // Trigger 1,400px before reaching the absolute bottom
+        threshold: 0.01,
       }
     );
 
@@ -159,7 +169,7 @@ export function CollectionGridView({ cards, currentSetProgress, showFullColor, f
         <>
           {/* Card Grid - Full Screen Multi-Columns */}
           <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6 xl:grid-cols-8 2xl:grid-cols-10 gap-3 sm:gap-4">
-            {displayedCards.map((card) => {
+            {displayedCards.map((card, idx) => {
               const entry = profile?.cards[card.id];
               const variants: CardVariantCount = entry?.variants || {
                 normal: 0,
@@ -175,6 +185,7 @@ export function CollectionGridView({ cards, currentSetProgress, showFullColor, f
                   variants={variants}
                   isWishlist={entry?.isWishlist}
                   showFullColor={showFullColor}
+                  priority={idx < 18}
                   onSelect={(c) => setSelectedCard(c)}
                   onQuickAdd={handleQuickAdd}
                   onToggleWishlist={toggleWishlist}
