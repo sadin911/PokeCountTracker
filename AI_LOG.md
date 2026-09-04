@@ -278,3 +278,7 @@
 [2026-09-05 00:23] Major | Antigravity | Edit | AGENTS.md & CLAUDE.md - added automated E2E only testing rule
 [2026-09-05 00:23] Major | Antigravity | Write | e2e/english-card-catalog.spec.ts - automated Playwright E2E suite
 [2026-09-05 00:24] Major | Antigravity | Command | git checkout -b feature/english-card-catalog-and-bilingual-detail
+[2026-09-05 00:29] Major | Antigravity | Write | scripts/sync-english-cards-to-r2.mjs - R2 English image sync pipeline
+[2026-09-05 00:29] Major | Antigravity | Edit | src/utils/cardImage.ts - added English R2 routing & multi-tier fallback
+[2026-09-05 00:29] Major | Antigravity | Write | src/utils/cardImage.test.ts - unit tests for English R2 card image resolution
+[2026-09-05 00:29] Major | Antigravity | Edit | src/data/pokemonCardsEn.json - updated English cards to R2 CDN URLs
