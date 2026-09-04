@@ -267,5 +267,14 @@
 [2026-09-04 23:01] Major | Antigravity | Edit | e2e/collection-tracker.spec.ts - added voice collector E2E tests
 [2026-09-04 23:01] Major | Antigravity | Edit | package.json - bumped version to v2.27.0
 [2026-09-04 23:01] Major | Antigravity | Release | v2.27.0 - Voice Card Collector with live waveform visualizer & audio cues
-[2026-09-04 23:02] Major | Antigravity | Command | npm run dev - started dev server on http://localhost:5173
-
+[2026-09-05 00:02] Major | Antigravity | Write | scripts/download-english-cards.mjs - 6,779 modern English cards
+[2026-09-05 00:02] Major | Antigravity | Write | scripts/match-thai-english-cards.mjs - multi-signal card matcher
+[2026-09-05 00:02] Major | Antigravity | Write | src/components/collection/CardMappingStudioModal.tsx - mapping studio UI
+[2026-09-05 00:02] Major | Antigravity | Edit | src/components/collection/CollectionHeader.tsx - added mapping studio button
+[2026-09-05 00:02] Major | Antigravity | Write | BACKLOG_V3_MEMO.md - comprehensive v3 vision & roadmap memo
+[2026-09-05 00:13] Major | Antigravity | Write | src/components/collection/EnglishCardBrowser.tsx - 6,779 EN cards browser
+[2026-09-05 00:13] Major | Antigravity | Edit | src/components/collection/CardCollectionModal.tsx - bilingual switch & rematch
+[2026-09-05 00:13] Major | Antigravity | Edit | src/components/collection/CollectionTracker.tsx - wired EN catalog mode
+[2026-09-05 00:23] Major | Antigravity | Edit | AGENTS.md & CLAUDE.md - added automated E2E only testing rule
+[2026-09-05 00:23] Major | Antigravity | Write | e2e/english-card-catalog.spec.ts - automated Playwright E2E suite
+[2026-09-05 00:24] Major | Antigravity | Command | git checkout -b feature/english-card-catalog-and-bilingual-detail

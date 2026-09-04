@@ -33,6 +33,8 @@ export function CollectionCardItem({
 
   return (
     <div
+      data-testid="collection-card-item"
+      data-card-id={card.id}
       className={`group relative rounded-xl p-2 sm:p-2.5 transition-all duration-300 ease-out transform-gpu flex flex-col justify-between select-none hover:scale-[1.06] hover:-translate-y-1.5 hover:z-30 hover:shadow-2xl hover:shadow-black/80 ${
         isOwned
           ? 'bg-white dark:bg-slate-800/90 hover:bg-slate-50 dark:hover:bg-slate-800 border border-amber-400 dark:border-amber-500/50 shadow-md dark:shadow-lg dark:shadow-black/40 ring-1 ring-amber-400/40 hover:border-amber-500 hover:ring-2 hover:ring-amber-400/50'

@@ -5,6 +5,7 @@ import { HeaderStats } from '../layout/HeaderStats';
 import { ProfileManagerModal } from './ProfileManagerModal';
 import { CollectionTextImportModal } from './CollectionTextImportModal';
 import { CardCameraScannerModal } from './CardCameraScannerModal';
+import { CardMappingStudioModal } from './CardMappingStudioModal';
 import type { CollectionStats } from '../../types/collection';
 
 /**
@@ -20,9 +21,11 @@ const ENABLE_CAMERA_SCANNER = false;
 
 interface Props {
   stats: CollectionStats;
+  catalogMode?: 'TH' | 'EN';
+  onToggleCatalogMode?: (mode: 'TH' | 'EN') => void;
 }
 
-export function CollectionHeader({ stats }: Props) {
+export function CollectionHeader({ stats, catalogMode = 'TH', onToggleCatalogMode }: Props) {
   const activeProfileId = useCollectionStore((s) => s.activeProfileId);
   const profiles = useCollectionStore((s) => s.profiles);
   const activeProfile = profiles[activeProfileId];
@@ -31,6 +34,7 @@ export function CollectionHeader({ stats }: Props) {
   const [showTextImport, setShowTextImport] = useState(false);
   const [importInitialTab, setImportInitialTab] = useState<'excel' | 'text' | 'voice' | undefined>(undefined);
   const [showCameraScanner, setShowCameraScanner] = useState(false);
+  const [showMappingStudio, setShowMappingStudio] = useState(false);
 
   return (
     <>
@@ -65,6 +69,36 @@ export function CollectionHeader({ stats }: Props) {
             >
               <span className="text-sm shrink-0">🎙️</span>
               <span className="font-extrabold hidden xs:inline sm:inline">สั่งด้วยเสียง</span>
+            </button>
+
+            <button
+              type="button"
+              onClick={() => onToggleCatalogMode?.(catalogMode === 'TH' ? 'EN' : 'TH')}
+              data-testid="region-catalog-toggle"
+              title={
+                catalogMode === 'TH'
+                  ? 'สลับไปดูคลังการ์ดภาษาอังกฤษ 6,779 ใบ (English Cards)'
+                  : 'สลับกลับไปดูสมุดสะสมการ์ดภาษาไทย (Thai Cards)'
+              }
+              className={`h-8 sm:h-9 px-2.5 sm:px-3 rounded-xl border text-xs font-black flex items-center gap-1.5 transition-all shrink-0 shadow-sm ${
+                catalogMode === 'EN'
+                  ? 'bg-sky-600 hover:bg-sky-500 text-white border-sky-400 shadow-sky-600/30'
+                  : 'bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-slate-200 border-slate-300 dark:border-slate-700 hover:border-sky-500'
+              }`}
+            >
+              <span>{catalogMode === 'TH' ? '🇺🇸' : '🇹🇭'}</span>
+              <span className="hidden sm:inline">{catalogMode === 'TH' ? 'การ์ด EN' : 'การ์ดไทย'}</span>
+            </button>
+
+            <button
+              type="button"
+              onClick={() => setShowMappingStudio(true)}
+              data-testid="card-mapping-button"
+              title="ระบบเชื่อมโยงการ์ดไทย ⇄ อังกฤษ (Thai-English Card Mapping Studio)"
+              className="h-8 sm:h-9 px-2.5 sm:px-3 rounded-xl bg-sky-500/15 hover:bg-sky-500/25 border border-sky-500/30 text-sky-600 dark:text-sky-400 text-xs font-bold flex items-center gap-1.5 transition-all shrink-0 shadow-sm"
+            >
+              <span className="text-sm shrink-0">🔄</span>
+              <span className="font-extrabold hidden md:inline">จับคู่ TH-EN</span>
             </button>
 
             <button
@@ -111,6 +145,9 @@ export function CollectionHeader({ stats }: Props) {
             setImportInitialTab(undefined);
           }}
         />
+      )}
+      {showMappingStudio && (
+        <CardMappingStudioModal onClose={() => setShowMappingStudio(false)} />
       )}
       {ENABLE_CAMERA_SCANNER && showCameraScanner && (
         <CardCameraScannerModal onClose={() => setShowCameraScanner(false)} />

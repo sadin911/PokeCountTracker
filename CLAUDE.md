@@ -18,8 +18,11 @@ Always maintain extreme craftsmanship, clean code architecture, rock-solid stabi
    - **Responsive & Mobile-First**: The UI must adapt seamlessly to both desktop and mobile viewports (e.g. 360px–430px) without button clipping, overlapping headers, or horizontal overflow.
    - **PWA Excellence**: Maintain seamless PWA installability, offline-friendly assets, and instant responsive feedback.
 
-3. **Evidence Before Assertions**:
+3. **Evidence Before Assertions & Automated E2E Testing Only**:
    - Never claim a task, build, or test passes without running the verification commands and verifying the actual output.
+   - **No Manual Screenshots**: Do NOT take, capture, or manually inspect screenshots to test UI behavior.
+   - **Automated Verification**: Use automated Playwright E2E tests (`npx playwright test`) and Vitest unit tests (`npm test`) exclusively. Add new test specs to `e2e/` whenever introducing new views or interactions.
+
 
 ---
 
