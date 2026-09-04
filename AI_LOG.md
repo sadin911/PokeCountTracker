@@ -288,3 +288,6 @@
 [2026-09-05 01:07] Major | Antigravity | Edit | src/data/pokemonCardsEn.json - expanded EN DB to 11,303 modern cards
 [2026-09-05 01:08] Major | Antigravity | Write | scripts/match-cards-by-art.mjs - pure visual illustration art matcher
 [2026-09-05 01:24] Major | Antigravity | Command | node scripts/sync-english-cards-to-r2.mjs - 10,567 EN cards in R2 bucket
+[2026-09-05 01:42] Major | Antigravity | Fix | EnglishCardBrowser & CardCollectionModal - added image fallback pipeline
+[2026-09-05 01:42] Major | Antigravity | Edit | src/data/pokemonSetsEn.json & pokemonCardsEn.json - released sets first
+[2026-09-05 01:42] Major | Antigravity | Command | synced mep (89) and cel25c (25) to R2 and verified 8/8 E2E tests pass

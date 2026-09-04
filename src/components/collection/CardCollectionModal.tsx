@@ -213,6 +213,7 @@ export function CardCollectionModal({ card: initialCard, onClose, deckId }: Prop
           name: counterpartData.enMapping.enName,
           imageUrl: counterpartData.enMapping.enImageUrl,
           imageUrlHigh: counterpartData.enMapping.enImageUrl,
+          officialImageUrl: counterpartData.enMapping.enOfficialImageUrl || '',
           set: {
             id: counterpartData.enMapping.enSetId,
             name: counterpartData.enMapping.enSetName,
@@ -842,6 +843,7 @@ export function CardCollectionModal({ card: initialCard, onClose, deckId }: Prop
                         <img
                           src={resolveCardImageUrl(candidateImg)}
                           alt={candidate.name}
+                          onError={(e) => handleCardImageError(e, candidateImg, candidate.officialImageUrl)}
                           className="w-full h-full object-cover"
                           loading="lazy"
                         />

@@ -1,6 +1,7 @@
 import { useState, useMemo, useEffect, useRef } from 'react';
 import { CardCollectionModal } from './CardCollectionModal';
 import { getThaiCardIdForEnglishCard } from '../../utils/thaiEnglishCardMatcher';
+import { handleCardImageError, resolveCardImageUrl } from '../../utils/cardImage';
 import setsEnMetadata from '../../data/pokemonSetsEn.json';
 
 interface Props {
@@ -42,11 +43,13 @@ export function EnglishCardBrowser({ onBackToThai }: Props) {
 
   // Sets dropdown options
   const setsList = useMemo(() => {
+    const futureSets = new Set(['me5', 'me4', 'me3', 'me2pt5']);
     return (setsEnMetadata as any[]).map((s) => ({
       id: s.id,
       name: s.name,
       series: s.series,
       total: s.total,
+      isUpcoming: futureSets.has(s.id),
     }));
   }, []);
 
@@ -154,7 +157,7 @@ export function EnglishCardBrowser({ onBackToThai }: Props) {
               <option value="ALL">ทุกชุดภาษาอังกฤษ ({setsList.length} ชุด)</option>
               {setsList.map((s) => (
                 <option key={s.id} value={s.id}>
-                  {s.name} ({s.id.toUpperCase()})
+                  {s.isUpcoming ? `⏳ [รอเปิดตัว] ${s.name}` : s.name} ({s.id.toUpperCase()})
                 </option>
               ))}
             </select>
@@ -300,11 +303,25 @@ export function EnglishCardBrowser({ onBackToThai }: Props) {
                   {/* Card Image */}
                   <div className="aspect-[2.5/3.5] bg-slate-100 dark:bg-slate-800 overflow-hidden relative">
                     <img
-                      src={card.imageUrl}
+                      src={resolveCardImageUrl(card.imageUrl)}
                       alt={card.name}
                       loading="lazy"
+                      onError={(e) => handleCardImageError(e, card.imageUrl, card.officialImageUrl)}
                       className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
                     />
+
+                    {/* Upcoming Art Placeholder Overlay for Unreleased Future Sets */}
+                    {['me5', 'me4', 'me3', 'me2pt5'].includes(card.set?.id) && (
+                      <div className="absolute inset-0 bg-slate-900/60 backdrop-blur-[2px] flex flex-col items-center justify-center p-2 text-center pointer-events-none">
+                        <span className="text-2xl mb-1">⏳</span>
+                        <span className="text-[10px] font-black text-amber-300 tracking-tight">
+                          รอภาพเปิดตัว
+                        </span>
+                        <span className="text-[8px] text-slate-300 font-mono">
+                          {card.set?.releaseDate}
+                        </span>
+                      </div>
+                    )}
 
                     {/* Matched Thai Indicator Badge */}
                     <div className="absolute top-2 right-2">
