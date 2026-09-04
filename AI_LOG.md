@@ -287,3 +287,4 @@
 [2026-09-05 01:05] Major | Antigravity | Write | scripts/build-thai-art-hashes.mjs - 9,151 Thai perceptual art hashes
 [2026-09-05 01:07] Major | Antigravity | Edit | src/data/pokemonCardsEn.json - expanded EN DB to 11,303 modern cards
 [2026-09-05 01:08] Major | Antigravity | Write | scripts/match-cards-by-art.mjs - pure visual illustration art matcher
+[2026-09-05 01:24] Major | Antigravity | Command | node scripts/sync-english-cards-to-r2.mjs - 10,567 EN cards in R2 bucket
