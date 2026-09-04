@@ -13,6 +13,7 @@ export interface EnCardMapping {
   verified: boolean;
   matchedAt: string;
   userOverridden?: boolean;
+  enOfficialImageUrl?: string;
 }
 
 const STORAGE_KEY_CUSTOM_MAPPINGS = 'pokecount_custom_thai_en_mappings';

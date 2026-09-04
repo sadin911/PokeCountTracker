@@ -1,6 +1,6 @@
 import { useState, useMemo, useEffect } from 'react';
 import pokemonCardData from '../../data/pokemonNames.json';
-import { resolveCardImageUrl } from '../../utils/cardImage';
+import { resolveCardImageUrl, handleCardImageError } from '../../utils/cardImage';
 import {
   getEnglishMatchForThaiCard,
   saveCardMapping,
@@ -461,6 +461,7 @@ export function CardMappingStudioModal({ onClose }: Props) {
                                 alt={mapping.enName}
                                 className="w-full h-full object-cover"
                                 loading="lazy"
+                                onError={(e) => handleCardImageError(e, enImg, mapping.enOfficialImageUrl)}
                               />
                             </div>
                             <div className="min-w-0 flex-1">
@@ -615,6 +616,7 @@ export function CardMappingStudioModal({ onClose }: Props) {
                         alt={enCard.name}
                         className="w-full h-full object-cover"
                         loading="lazy"
+                        onError={(e) => handleCardImageError(e, enCard.imageUrl, enCard.officialImageUrl)}
                       />
                     </div>
                     <div className="min-w-0 flex-1">
