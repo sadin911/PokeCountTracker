@@ -297,3 +297,7 @@
 [2026-09-05 01:59] Major | Antigravity | Edit | src/components/collection/EnglishCardBrowser.tsx - removed upcoming overlay
 [2026-09-05 02:00] Major | Antigravity | Command | scripts/match-cards-by-art.mjs - mapped Mark J Darkrai ex cards (8,864 total)
 [2026-09-05 02:01] Major | Antigravity | Test | Playwright & Vitest - verified Mark J and Darkrai ex display artwork
+[2026-09-05 02:25] Major | Claude | Command | npm run build && npm test - verified release build (14.4s) and 91/91 unit tests passing
+[2026-09-05 02:25] Major | Claude | Edit | package.json - bumped version 2.27.0 -> 2.28.0
+[2026-09-05 02:25] Major | Claude | Command | git merge feature/english-card-catalog-and-bilingual-detail into main - English card catalog, bilingual TH/EN detail modal, R2 image migration
+[2026-09-05 02:25] Major | Claude | Command | git tag v2.28.0 - tagged English Card Catalog & Bilingual Detail release
