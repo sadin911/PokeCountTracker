@@ -277,7 +277,7 @@ export function EnglishCardBrowser({ onBackToThai }: Props) {
         {loading ? (
           <div className="py-24 text-center flex flex-col items-center justify-center gap-3 text-slate-400">
             <div className="w-8 h-8 border-3 border-sky-500/30 border-t-sky-500 rounded-full animate-spin" />
-            <p className="font-bold text-sm">กำลังโหลดคลังการ์ดภาษาอังกฤษ 6,779 ใบ...</p>
+            <p className="font-bold text-sm">กำลังโหลดคลังการ์ดภาษาอังกฤษ 11,303 ใบ...</p>
           </div>
         ) : filteredCards.length === 0 ? (
           <div className="py-24 text-center text-slate-400">

@@ -9,15 +9,10 @@ const ROOT_DIR = path.resolve(__dirname, '..');
 const OUTPUT_FILE = path.join(ROOT_DIR, 'src', 'data', 'pokemonCardsEn.json');
 const SETS_OUTPUT_FILE = path.join(ROOT_DIR, 'src', 'data', 'pokemonSetsEn.json');
 
-const SET_IDS = [
-  // Scarlet & Violet era (Standard Legal G, H, I)
-  'sv1', 'sv2', 'sv3', 'sv3pt5', 'sv4', 'sv4pt5', 'sv5', 'sv6', 'sv6pt5', 'sv7', 'sv8', 'sv8pt5', 'sv9', 'sv10', 'sve', 'svp',
-  // Sword & Shield era (D, E, F)
-  'swsh1', 'swsh2', 'swsh3', 'swsh35', 'swsh4', 'swsh45', 'swsh45sv', 'swsh5', 'swsh6', 'swsh7', 'swsh8',
-  'swsh9', 'swsh9tg', 'swsh10', 'swsh10tg', 'swsh11', 'swsh11tg', 'swsh12', 'swsh12tg', 'swsh12pt5', 'swsh12pt5gg', 'swshp'
-];
-
 const RAW_BASE_URL = 'https://raw.githubusercontent.com/PokemonTCG/pokemon-tcg-data/master';
+
+// Target all modern eras that exist in Thai Pokémon TCG (Sun & Moon 2019 to Present)
+const TARGET_SERIES = ['Mega Evolution', 'Scarlet & Violet', 'Sword & Shield', 'Sun & Moon'];
 
 async function fetchJson(url) {
   const res = await fetch(url);
@@ -30,20 +25,24 @@ async function fetchJson(url) {
 async function main() {
   console.log(`[EN-Cards] Fetching English sets metadata...`);
   const allSets = await fetchJson(`${RAW_BASE_URL}/sets/en.json`);
-  const targetSetMap = new Map(allSets.map(s => [s.id, s]));
-
-  const validSets = SET_IDS.map(id => targetSetMap.get(id)).filter(Boolean);
+  
+  // Filter all sets matching the modern eras
+  const validSets = allSets.filter(s => TARGET_SERIES.includes(s.series));
+  
+  // Sort sets chronologically by release date (newest first for UI dropdown)
+  validSets.sort((a, b) => new Date(b.releaseDate || '1990-01-01').getTime() - new Date(a.releaseDate || '1990-01-01').getTime());
+  
   await fs.writeFile(SETS_OUTPUT_FILE, JSON.stringify(validSets, null, 2), 'utf-8');
   console.log(`[EN-Cards] Saved ${validSets.length} sets metadata to ${SETS_OUTPUT_FILE}`);
 
-  console.log(`[EN-Cards] Downloading cards for ${SET_IDS.length} sets...`);
+  console.log(`[EN-Cards] Downloading cards for ${validSets.length} modern English sets...`);
   const allCards = [];
 
-  for (const setId of SET_IDS) {
-    const setMeta = targetSetMap.get(setId) || { id: setId, name: setId };
+  for (const setMeta of validSets) {
+    const setId = setMeta.id;
     const url = `${RAW_BASE_URL}/cards/en/${setId}.json`;
     try {
-      console.log(` -> Fetching ${setId} (${setMeta.name})...`);
+      console.log(` -> Fetching ${setId} (${setMeta.name}, ${setMeta.series})...`);
       const cards = await fetchJson(url);
       
       const normalized = cards.map(c => {
@@ -72,7 +71,9 @@ async function main() {
           rarity: c.rarity || 'Common',
           imageUrl: c.images?.small || c.images?.large || '',
           imageUrlHigh: c.images?.large || c.images?.small || '',
-          artist: c.artist || ''
+          artist: c.artist || '',
+          officialImageUrl: c.images?.small || '',
+          officialImageUrlHigh: c.images?.large || ''
         };
       });
 

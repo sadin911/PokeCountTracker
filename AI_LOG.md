@@ -284,4 +284,6 @@
 [2026-09-05 00:29] Major | Antigravity | Edit | src/data/pokemonCardsEn.json - updated English cards to R2 CDN URLs
 [2026-09-05 00:44] Major | Antigravity | Fix | src/components/collection/CardMappingStudioModal.tsx - added image error fallback
 [2026-09-05 00:44] Major | Antigravity | Edit | scripts/match-thai-english-cards.mjs - upgraded matcher to 7,576 cards (82.0%)
-[2026-09-05 00:47] Major | Antigravity | Command | node scripts/sync-english-cards-to-r2.mjs - 6,779 EN cards synced to R2
+[2026-09-05 01:05] Major | Antigravity | Write | scripts/build-thai-art-hashes.mjs - 9,151 Thai perceptual art hashes
+[2026-09-05 01:07] Major | Antigravity | Edit | src/data/pokemonCardsEn.json - expanded EN DB to 11,303 modern cards
+[2026-09-05 01:08] Major | Antigravity | Write | scripts/match-cards-by-art.mjs - pure visual illustration art matcher

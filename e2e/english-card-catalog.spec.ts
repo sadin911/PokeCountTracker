@@ -21,6 +21,9 @@ test.describe('English Card Catalog & Bilingual Pairing E2E Suite', () => {
     await expect(setSelect).toBeVisible();
     await expect(page.locator('option:has-text("Prismatic Evolutions")')).toBeAttached();
 
+    // Ensure English cards are loaded
+    await expect(page.locator('[data-testid="en-card-item"]').first()).toBeVisible({ timeout: 25000 });
+
     // 4. Test searching for an English card
     const searchInput = page.locator('input[placeholder*="ค้นหาชื่อการ์ด / เลข"]');
     await expect(searchInput).toBeVisible();
@@ -28,7 +31,7 @@ test.describe('English Card Catalog & Bilingual Pairing E2E Suite', () => {
 
     // Wait for filtered results
     const cardTitle = page.locator('h4:has-text("Pikachu")').first();
-    await expect(cardTitle).toBeVisible({ timeout: 7000 });
+    await expect(cardTitle).toBeVisible({ timeout: 15000 });
 
     // 5. Switch back to Thai cards
     const switchBackBtn = page.locator('button:has-text("การ์ดไทย")').first();
@@ -88,7 +91,7 @@ test.describe('English Card Catalog & Bilingual Pairing E2E Suite', () => {
 
     // 2. Click on the first English card in the grid
     const firstEnCard = page.locator('[data-testid="en-card-item"]').first();
-    await expect(firstEnCard).toBeVisible({ timeout: 10000 });
+    await expect(firstEnCard).toBeVisible({ timeout: 25000 });
     await firstEnCard.click();
 
     // 3. Detail modal opens for English card

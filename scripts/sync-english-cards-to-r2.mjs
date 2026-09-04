@@ -136,13 +136,15 @@ async function processCard(card) {
     }
 
     // Source URLs
-    const officialThumbUrl = `https://images.pokemontcg.io/${setId}/${localId}.png`;
-    const officialHiresUrl = `https://images.pokemontcg.io/${setId}/${localId}_hires.png`;
+    const officialThumbUrl = card.officialImageUrl || `https://images.pokemontcg.io/${setId}/${localId}.png`;
+    const officialHiresUrl = card.officialImageUrlHigh || `https://images.pokemontcg.io/${setId}/${localId}_hires.png`;
 
     // Download thumbnail or hires
-    const rawBuffer = (await fetchBufferWithRetry(officialThumbUrl)) || (await fetchBufferWithRetry(officialHiresUrl));
+    const rawBuffer = (await fetchBufferWithRetry(officialThumbUrl)) || 
+                      (await fetchBufferWithRetry(officialHiresUrl)) ||
+                      (await fetchBufferWithRetry(`https://images.pokemontcg.io/${setId}/${localId}.png`));
     if (!rawBuffer) {
-      console.warn(`⚠️ [${card.id}] Image not found on pokemontcg.io`);
+      console.warn(`⚠️ [${card.id}] Image not found on official sources`);
       failed++;
       completed++;
       return;
