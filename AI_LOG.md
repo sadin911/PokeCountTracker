@@ -259,3 +259,13 @@
 [2026-09-03 23:34] Major | Antigravity | Feature | CollectionHeader & ImportModal - disabled camera scanner UI behind feature flag
 [2026-09-03 23:34] Major | Antigravity | Edit | package.json - bumped version to v2.26.2
 [2026-09-03 23:34] Major | Antigravity | Release | v2.26.2 - Temporarily disable camera scanner feature while preserving code
+[2026-09-04 23:01] Major | Antigravity | Write | src/utils/voiceCardParser.ts - natural voice card parser
+[2026-09-04 23:01] Major | Antigravity | Write | src/hooks/useVoiceCardRecognition.ts - Web Speech & Audio visualizer
+[2026-09-04 23:01] Major | Antigravity | Write | src/components/collection/VoiceCardCollectorTab.tsx - Voice Studio UI
+[2026-09-04 23:01] Major | Antigravity | Edit | src/components/collection/CollectionTextImportModal.tsx - Voice Tab
+[2026-09-04 23:01] Major | Antigravity | Edit | src/components/collection/CollectionHeader.tsx - header voice button
+[2026-09-04 23:01] Major | Antigravity | Edit | e2e/collection-tracker.spec.ts - added voice collector E2E tests
+[2026-09-04 23:01] Major | Antigravity | Edit | package.json - bumped version to v2.27.0
+[2026-09-04 23:01] Major | Antigravity | Release | v2.27.0 - Voice Card Collector with live waveform visualizer & audio cues
+[2026-09-04 23:02] Major | Antigravity | Command | npm run dev - started dev server on http://localhost:5173
+

@@ -244,9 +244,56 @@ test.describe('Collection Tracker Suite', () => {
 
       // Close modal
       const closeBtn = scannerModal.locator('button:has-text("✕")').first();
-      await closeBtn.click();
-      await expect(scannerModal).toBeHidden();
     });
+  });
+
+  test('voice card input: opens voice tab, simulates speech dictation, stages card, and manages quantities', async ({ page }) => {
+    // 1. Open Voice collector directly via header voice button
+    const voiceBtn = page.locator('[data-testid="voice-import-button"]');
+    await expect(voiceBtn).toBeVisible();
+    await voiceBtn.click();
+
+    // 2. Collection import modal opens directly on Voice tab
+    const modal = page.locator('[data-testid="collection-import-modal"]');
+    await expect(modal).toBeVisible();
+    const voiceTab = modal.locator('[data-testid="voice-tab-button"]');
+    await expect(voiceTab).toBeVisible();
+
+    // Verify main mic button and speech guide exist
+    const micButton = modal.locator('[data-testid="voice-mic-main-button"]');
+    await expect(micButton).toBeVisible();
+    await expect(modal.locator('text=ตัวอย่างคำสั่งเสียง (แตะเพื่อลอง):')).toBeVisible();
+
+    // 3. Click suggestion chip to simulate speech input: "ชุด SV8 เบอร์ 25 สองใบ"
+    const sampleChip = modal.locator('button:has-text("ชุด SV8 เบอร์ 25 สองใบ")');
+    await expect(sampleChip).toBeVisible();
+    await sampleChip.click();
+
+    // 4. Verify card is added into staged cards list
+    await expect(modal.locator('text=รายการการ์ดที่สั่งไว้')).toBeVisible();
+    await expect(modal.locator('text=2 ใบ (1 แบบ)')).toBeVisible();
+
+    // 5. Test quantity stepper (+1)
+    const plusBtn = modal.locator('button:has-text("+")').first();
+    await plusBtn.click();
+    await expect(modal.locator('text=3 ใบ (1 แบบ)')).toBeVisible();
+
+    // 6. Test copy as text
+    const copyAsTextBtn = modal.locator('button:has-text("คัดลอกเป็น Text")');
+    await expect(copyAsTextBtn).toBeVisible();
+    await copyAsTextBtn.click();
+
+    // Text tab should open with copied cards
+    const textTab = modal.locator('button:has-text("ข้อความ / Text")');
+    await expect(textTab).toBeVisible();
+    const textarea = modal.locator('textarea');
+    await expect(textarea).toHaveValue(/Set\s+SV8/i);
+    await expect(textarea).toHaveValue(/0?25,3/);
+
+    // 7. Close modal
+    const closeBtn = modal.locator('button[aria-label="Close"]');
+    await closeBtn.click();
+    await expect(modal).toBeHidden();
   });
 });
 

@@ -5,12 +5,13 @@ import { parseCollectionText } from '../../utils/collectionTextParser';
 import { parseExcelOrCsvData, type CollectionExcelParseResult } from '../../utils/collectionExcelParser';
 import { resolveCardImageUrl } from '../../utils/cardImage';
 import { CardCameraScannerModal } from './CardCameraScannerModal';
+import { VoiceCardCollectorTab } from './VoiceCardCollectorTab';
 import pokemonCardData from '../../data/pokemonNames.json';
 import type { CardVariantKey } from '../../types/collection';
 
 interface Props {
   onClose: () => void;
-  initialTab?: 'excel' | 'text' | 'camera';
+  initialTab?: 'excel' | 'text' | 'voice' | 'camera';
 }
 
 const STORAGE_KEY_TEXT = 'pokecount_import_draft_text';
@@ -38,11 +39,17 @@ export function CollectionTextImportModal({ onClose, initialTab }: Props) {
   const importCollectionParsedCards = useCollectionStore((s) => s.importCollectionParsedCards);
 
   // Restore draft state from localStorage
-  const [activeTab, setActiveTab] = useState<'excel' | 'text' | 'camera'>(() => {
+  const [activeTab, setActiveTab] = useState<'excel' | 'text' | 'voice' | 'camera'>(() => {
     if (initialTab) return initialTab;
     const saved = localStorage.getItem(STORAGE_KEY_TAB);
-    return saved === 'excel' || saved === 'text' || saved === 'camera' ? saved : 'text';
+    return saved === 'excel' || saved === 'text' || saved === 'voice' || saved === 'camera' ? saved : 'text';
   });
+
+  useEffect(() => {
+    if (initialTab) {
+      setActiveTab(initialTab);
+    }
+  }, [initialTab]);
 
   const [text, setText] = useState<string>(() => {
     return localStorage.getItem(STORAGE_KEY_TEXT) || '';
@@ -204,6 +211,35 @@ export function CollectionTextImportModal({ onClose, initialTab }: Props) {
     }
   };
 
+  const handleVoiceImport = (
+    cards: Array<{ cardId: string; quantity: number; variant: CardVariantKey }>
+  ) => {
+    setStatus(null);
+    if (cards.length === 0) {
+      setStatus({ ok: false, message: 'ไม่มีรายการการ์ดที่ต้องการนำเข้า' });
+      return;
+    }
+
+    const list = cards.map((c) => ({
+      cardId: c.cardId,
+      quantity: c.quantity,
+      variant: c.variant || finish,
+    }));
+
+    const res = importCollectionParsedCards(list, {
+      mode,
+      defaultFinish: finish,
+      profileId: targetBinderId,
+    });
+
+    setStatus({ ok: res.success, message: res.message });
+    if (res.success) {
+      setTimeout(() => {
+        onClose();
+      }, 1600);
+    }
+  };
+
   const handleDownloadSampleExcel = async () => {
     try {
       const XLSX = await import('xlsx');
@@ -293,6 +329,23 @@ export function CollectionTextImportModal({ onClose, initialTab }: Props) {
 
         {/* Tab Switcher */}
         <div className="flex items-center gap-1 px-6 pt-3 pb-1 border-b border-slate-200 dark:border-slate-800 bg-slate-100/60 dark:bg-slate-950/30 text-xs font-black">
+          <button
+            type="button"
+            onClick={() => setActiveTab('voice')}
+            data-testid="voice-tab-button"
+            className={`px-3.5 py-2 rounded-t-xl border-b-2 transition-all flex items-center gap-1.5 ${
+              activeTab === 'voice'
+                ? 'border-indigo-500 text-indigo-600 dark:text-indigo-400 bg-white dark:bg-slate-900 shadow-sm'
+                : 'border-transparent text-slate-500 hover:text-slate-800 dark:hover:text-slate-200'
+            }`}
+          >
+            <span>🎙️</span>
+            <span>ด้วยเสียง / Voice</span>
+            <span className="px-1.5 py-0.2 rounded bg-indigo-500/20 text-indigo-600 dark:text-indigo-400 text-[9px] font-black uppercase">
+              Live
+            </span>
+          </button>
+
           <button
             type="button"
             onClick={() => setActiveTab('excel')}
@@ -386,6 +439,20 @@ export function CollectionTextImportModal({ onClose, initialTab }: Props) {
               </select>
             </div>
           </div>
+
+          {/* TAB 0: VOICE INPUT */}
+          {activeTab === 'voice' && (
+            <VoiceCardCollectorTab
+              catalog={pokemonCardData as any[]}
+              defaultFinish={finish}
+              targetBinderName={profiles[targetBinderId]?.name}
+              onImportCards={handleVoiceImport}
+              onCopyToTextTab={(copied) => {
+                setText((prev) => (prev ? `${prev}\n\n${copied}` : copied));
+                setActiveTab('text');
+              }}
+            />
+          )}
 
           {/* TAB 1: EXCEL / CSV */}
           {activeTab === 'excel' && (
@@ -680,6 +747,11 @@ export function CollectionTextImportModal({ onClose, initialTab }: Props) {
         {/* Footer Actions */}
         <div className="flex items-center justify-between gap-3 px-6 py-4 border-t border-slate-200 dark:border-slate-800 bg-slate-50 dark:bg-slate-950/60 shrink-0">
           <div className="text-slate-400 text-[11px]">
+            {activeTab === 'voice' && (
+              <span className="text-xs text-indigo-500 dark:text-indigo-400 font-bold hidden sm:inline">
+                🎙️ สั่งการ์ดด้วยเสียงแล้วกดยืนยันนำเข้าได้เลย
+              </span>
+            )}
             {activeTab === 'excel' && excelResult && (
               <span>พร้อมนำเข้า {excelResult.totalQuantity} ใบ</span>
             )}

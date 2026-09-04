@@ -29,6 +29,7 @@ export function CollectionHeader({ stats }: Props) {
 
   const [showProfileModal, setShowProfileModal] = useState(false);
   const [showTextImport, setShowTextImport] = useState(false);
+  const [importInitialTab, setImportInitialTab] = useState<'excel' | 'text' | 'voice' | undefined>(undefined);
   const [showCameraScanner, setShowCameraScanner] = useState(false);
 
   return (
@@ -54,9 +55,26 @@ export function CollectionHeader({ stats }: Props) {
 
             <button
               type="button"
-              onClick={() => setShowTextImport(true)}
+              onClick={() => {
+                setImportInitialTab('voice');
+                setShowTextImport(true);
+              }}
+              data-testid="voice-import-button"
+              title="สั่งการ์ดเข้าคลังด้วยเสียง (Voice Card Input)"
+              className="h-8 sm:h-9 px-2.5 sm:px-3 rounded-xl bg-gradient-to-r from-indigo-500/15 to-purple-500/15 hover:from-indigo-500/25 hover:to-purple-500/25 border border-indigo-500/30 text-indigo-600 dark:text-indigo-400 text-xs font-bold flex items-center gap-1.5 transition-all shrink-0 shadow-sm"
+            >
+              <span className="text-sm shrink-0">🎙️</span>
+              <span className="font-extrabold hidden xs:inline sm:inline">สั่งด้วยเสียง</span>
+            </button>
+
+            <button
+              type="button"
+              onClick={() => {
+                setImportInitialTab(undefined);
+                setShowTextImport(true);
+              }}
               data-testid="text-import-button"
-              title="นำเข้าการ์ดจาก Excel, CSV หรือข้อความ (Import from Excel, CSV, text)"
+              title="นำเข้าการ์ดจาก Excel, CSV, ข้อความ หรือเสียง (Import from Excel, CSV, text, voice)"
               className="h-8 sm:h-9 px-2.5 sm:px-3 rounded-xl bg-[var(--surface)] hover:bg-[var(--surface-hover)] border border-[var(--surface-border)] text-[var(--surface-fg)] text-xs font-bold flex items-center gap-1.5 transition-colors shrink-0 shadow-sm"
             >
               <span className="text-sm shrink-0">📥</span>
@@ -85,7 +103,15 @@ export function CollectionHeader({ stats }: Props) {
       />
 
       {showProfileModal && <ProfileManagerModal onClose={() => setShowProfileModal(false)} />}
-      {showTextImport && <CollectionTextImportModal onClose={() => setShowTextImport(false)} />}
+      {showTextImport && (
+        <CollectionTextImportModal
+          initialTab={importInitialTab}
+          onClose={() => {
+            setShowTextImport(false);
+            setImportInitialTab(undefined);
+          }}
+        />
+      )}
       {ENABLE_CAMERA_SCANNER && showCameraScanner && (
         <CardCameraScannerModal onClose={() => setShowCameraScanner(false)} />
       )}
