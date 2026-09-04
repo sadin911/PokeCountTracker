@@ -90,11 +90,7 @@ async function main() {
       if (!card) break;
 
       let buf = null;
-      const isUploadedToR2 = ['swsh', 'sv', 'cel25', 'pgo'].some(prefix => (card.set?.id || '').toLowerCase().startsWith(prefix));
-      
-      const urlsToTry = isUploadedToR2 
-        ? [card.imageUrl, card.officialImageUrl].filter(Boolean)
-        : [card.officialImageUrl, card.imageUrl].filter(Boolean);
+      const urlsToTry = [card.imageUrl, card.officialImageUrl].filter(Boolean);
 
       for (const u of urlsToTry) {
         try {

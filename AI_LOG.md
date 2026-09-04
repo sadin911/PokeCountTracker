@@ -293,3 +293,7 @@
 [2026-09-05 01:42] Major | Antigravity | Command | synced mep (89) and cel25c (25) to R2 and verified 8/8 E2E tests pass
 [2026-09-05 01:50] Major | Antigravity | Edit | EnglishCardBrowser.tsx - added Reg J filter option (419 cards)
 [2026-09-05 01:50] Major | Antigravity | Fix | CardMappingStudioModal.tsx - fixed Thai fallback to mapped counterpart
+[2026-09-05 01:58] Major | Antigravity | Command | synced me5 (120), me4 (122), me3 (124), me2pt5 (295), mep (89) to R2
+[2026-09-05 01:59] Major | Antigravity | Edit | src/components/collection/EnglishCardBrowser.tsx - removed upcoming overlay
+[2026-09-05 02:00] Major | Antigravity | Command | scripts/match-cards-by-art.mjs - mapped Mark J Darkrai ex cards (8,864 total)
+[2026-09-05 02:01] Major | Antigravity | Test | Playwright & Vitest - verified Mark J and Darkrai ex display artwork

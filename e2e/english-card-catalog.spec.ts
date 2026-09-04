@@ -123,4 +123,34 @@ test.describe('English Card Catalog & Bilingual Pairing E2E Suite', () => {
     await closeBtn.click();
     await expect(studioHeader).not.toBeVisible();
   });
+
+  test('filters English cards by Mark J and verifies Mega Darkrai ex cards display artwork', async ({ page }) => {
+    // 1. Toggle to English Catalog
+    const catalogToggle = page.locator('[data-testid="region-catalog-toggle"]');
+    await catalogToggle.click();
+    await expect(page.locator('text=English Pokémon TCG Catalog (คลังการ์ดภาษาอังกฤษ)')).toBeVisible({ timeout: 10000 });
+
+    // 2. Select Mark [J] in regulation dropdown
+    const regSelect = page.locator('select').nth(1);
+    await expect(regSelect).toBeVisible();
+    await regSelect.selectOption('J');
+
+    // 3. Search for Darkrai
+    const searchInput = page.locator('input[placeholder*="ค้นหาชื่อการ์ด / เลข"]');
+    await searchInput.fill('Darkrai');
+
+    // 4. Verify Mega Darkrai ex appears
+    const darkraiCard = page.locator('h4:has-text("Mega Darkrai ex")').first();
+    await expect(darkraiCard).toBeVisible({ timeout: 15000 });
+
+    // 5. Verify no "รอภาพเปิดตัว" overlay is displayed
+    const upcomingOverlay = page.locator('text=รอภาพเปิดตัว');
+    await expect(upcomingOverlay).not.toBeVisible();
+
+    // 6. Verify image loads successfully
+    const cardImg = page.locator('[data-testid="en-card-item"] img').first();
+    await expect(cardImg).toBeVisible();
+    const imgSrc = await cardImg.getAttribute('src');
+    expect(imgSrc).toContain('card-images-en/me5/');
+  });
 });

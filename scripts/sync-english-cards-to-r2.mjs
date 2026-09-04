@@ -136,15 +136,17 @@ async function processCard(card) {
     }
 
     // Source URLs
+    const scrydexUrl = `https://images.scrydex.com/pokemon/${setId}-${localId}/large`;
     const officialThumbUrl = card.officialImageUrl || `https://images.pokemontcg.io/${setId}/${localId}.png`;
     const officialHiresUrl = card.officialImageUrlHigh || `https://images.pokemontcg.io/${setId}/${localId}_hires.png`;
 
-    // Download thumbnail or hires
+    // Download thumbnail or hires (check official, scrydex, and pokemontcg.io)
     const rawBuffer = (await fetchBufferWithRetry(officialThumbUrl)) || 
+                      (await fetchBufferWithRetry(scrydexUrl)) ||
                       (await fetchBufferWithRetry(officialHiresUrl)) ||
                       (await fetchBufferWithRetry(`https://images.pokemontcg.io/${setId}/${localId}.png`));
     if (!rawBuffer) {
-      console.warn(`⚠️ [${card.id}] Image not found on official sources`);
+      console.warn(`⚠️ [${card.id}] Image not found on official sources or Scrydex`);
       failed++;
       completed++;
       return;
