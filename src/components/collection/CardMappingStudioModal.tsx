@@ -411,9 +411,9 @@ export function CardMappingStudioModal({ onClose }: Props) {
                             className="w-full h-full object-cover"
                             loading="lazy"
                             onError={(e) => {
-                              if (thaiCard.officialImageUrl) {
-                                (e.target as HTMLImageElement).src = thaiCard.officialImageUrl;
-                              }
+                              // If Thai card image fails, fallback to officialImageUrl, or mapped counterpart image if available
+                              const fallbackUrl = thaiCard.officialImageUrl || mapping?.enImageUrl;
+                              handleCardImageError(e, thaiCard.imageUrl, fallbackUrl);
                             }}
                           />
                         </div>

@@ -291,3 +291,5 @@
 [2026-09-05 01:42] Major | Antigravity | Fix | EnglishCardBrowser & CardCollectionModal - added image fallback pipeline
 [2026-09-05 01:42] Major | Antigravity | Edit | src/data/pokemonSetsEn.json & pokemonCardsEn.json - released sets first
 [2026-09-05 01:42] Major | Antigravity | Command | synced mep (89) and cel25c (25) to R2 and verified 8/8 E2E tests pass
+[2026-09-05 01:50] Major | Antigravity | Edit | EnglishCardBrowser.tsx - added Reg J filter option (419 cards)
+[2026-09-05 01:50] Major | Antigravity | Fix | CardMappingStudioModal.tsx - fixed Thai fallback to mapped counterpart

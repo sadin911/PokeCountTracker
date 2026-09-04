@@ -169,6 +169,7 @@ export function EnglishCardBrowser({ onBackToThai }: Props) {
               className="h-9 px-2.5 rounded-xl border border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-800 text-xs font-bold text-slate-800 dark:text-slate-200 outline-none"
             >
               <option value="ALL">ทุก Mark</option>
+              <option value="J">Mark [J]</option>
               <option value="I">Mark [I]</option>
               <option value="H">Mark [H]</option>
               <option value="G">Mark [G]</option>
