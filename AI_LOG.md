@@ -282,3 +282,5 @@
 [2026-09-05 00:29] Major | Antigravity | Edit | src/utils/cardImage.ts - added English R2 routing & multi-tier fallback
 [2026-09-05 00:29] Major | Antigravity | Write | src/utils/cardImage.test.ts - unit tests for English R2 card image resolution
 [2026-09-05 00:29] Major | Antigravity | Edit | src/data/pokemonCardsEn.json - updated English cards to R2 CDN URLs
+[2026-09-05 00:44] Major | Antigravity | Fix | src/components/collection/CardMappingStudioModal.tsx - added image error fallback
+[2026-09-05 00:44] Major | Antigravity | Edit | scripts/match-thai-english-cards.mjs - upgraded matcher to 7,576 cards (82.0%)
