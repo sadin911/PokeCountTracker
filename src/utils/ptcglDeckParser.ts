@@ -1,4 +1,10 @@
 import translationsData from '../data/pokemonNameTranslations.json';
+import {
+  resolveThaiCardIdFromEnPrint,
+  getEnglishNameForThaiCard,
+  isSameEnglishCardName,
+  preferRegularPrint,
+} from './deckMapAssist';
 
 export interface ParsedDeckCardEntry {
   cardId: string;
@@ -11,6 +17,8 @@ export interface ParsedDeckCardEntry {
   category?: string;
   stage?: string;
   isCustomMapped?: boolean;
+  /** Resolved or corrected using the Thai/English card map rather than name translation alone. */
+  isMapAssisted?: boolean;
   rawItem: UnmatchedDeckCardItem;
 }
 
@@ -212,6 +220,7 @@ export function parsePTCGLDeck(
 
     let best: any = null;
     let isCustomMapped = false;
+    let isMapAssisted = false;
 
     // Check user/community custom mappings first
     const normKey = rawCardName.toLowerCase().trim();
@@ -237,39 +246,69 @@ export function parsePTCGLDeck(
       });
 
       if (candidates.length === 0) {
-        unmatchedLines.push(line);
-        unmatchedDetails.push({
-          rawLine: line,
-          count,
-          rawCardName,
-          setCode: rawSetCode,
-          collectorNumber: rawColNum,
-        });
-        continue;
+        // Name translation found nothing; fall back to the exact English print
+        // via the Thai/English card map before giving up on the line.
+        const mapThaiId = resolveThaiCardIdFromEnPrint(rawSetCode, rawColNum);
+        const mapped = mapThaiId ? cardDatabase.find((c) => c.id === mapThaiId) : null;
+        if (mapped) {
+          best = preferRegularPrint(mapped, cardDatabase);
+          isMapAssisted = true;
+        } else {
+          unmatchedLines.push(line);
+          unmatchedDetails.push({
+            rawLine: line,
+            count,
+            rawCardName,
+            setCode: rawSetCode,
+            collectorNumber: rawColNum,
+          });
+          continue;
+        }
       }
 
-      // Priority 1: Check if EN set code maps to a Thai set code
-      const mappedThSets = EN_TO_TH_SET_MAP[rawSetCode] || [rawSetCode];
-      const setMatched = candidates.find((c) => {
-        const cSetId = (c.set?.id || '').toUpperCase();
-        return mappedThSets.includes(cSetId);
-      });
-
-      if (setMatched) {
-        best = setMatched;
-      } else {
-        // Priority 2: Prefer standard regulation regular print
-        const regularStandard = candidates.find((c) => {
-          const isReg = c.rarityCode === 'REGULAR';
-          const isStandard = c.regulationMark === 'H' || c.regulationMark === 'G';
-          return isReg && isStandard;
+      if (!best) {
+        // Priority 1: Check if EN set code maps to a Thai set code
+        const mappedThSets = EN_TO_TH_SET_MAP[rawSetCode] || [rawSetCode];
+        const setMatched = candidates.find((c) => {
+          const cSetId = (c.set?.id || '').toUpperCase();
+          return mappedThSets.includes(cSetId);
         });
-        if (regularStandard) {
-          best = regularStandard;
+
+        if (setMatched) {
+          best = setMatched;
         } else {
-          const regularOnly = candidates.find((c) => c.rarityCode === 'REGULAR');
-          if (regularOnly) best = regularOnly;
-          else best = candidates[0];
+          // Priority 2: Prefer standard regulation regular print
+          const regularStandard = candidates.find((c) => {
+            const isReg = c.rarityCode === 'REGULAR';
+            const isStandard = c.regulationMark === 'H' || c.regulationMark === 'G';
+            return isReg && isStandard;
+          });
+          if (regularStandard) {
+            best = regularStandard;
+          } else {
+            const regularOnly = candidates.find((c) => c.rarityCode === 'REGULAR');
+            if (regularOnly) best = regularOnly;
+            else best = candidates[0];
+          }
+        }
+      }
+
+      // Cross-check the name-route pick against the Thai/English card map.
+      // Only override when the map proves the pick is a *different* English
+      // card (e.g. a plain Fezandipiti standing in for Fezandipiti ex). When
+      // the names agree, the name route keeps its pick — the map matches by
+      // artwork, so it often points at a promo reprint sharing the same art.
+      if (best && !isMapAssisted) {
+        const mapThaiId = resolveThaiCardIdFromEnPrint(rawSetCode, rawColNum);
+        if (mapThaiId && mapThaiId !== best.id) {
+          const pickedEnName = getEnglishNameForThaiCard(best.id);
+          if (pickedEnName && !isSameEnglishCardName(pickedEnName, rawCardName)) {
+            const mapped = cardDatabase.find((c) => c.id === mapThaiId);
+            if (mapped) {
+              best = preferRegularPrint(mapped, cardDatabase);
+              isMapAssisted = true;
+            }
+          }
         }
       }
     }
@@ -304,6 +343,7 @@ export function parsePTCGLDeck(
       category: best.category,
       stage: best.stage,
       isCustomMapped,
+      isMapAssisted,
       rawItem: {
         rawLine: line,
         count,
