@@ -123,6 +123,19 @@ export function getCardRarityClass(card: any): string {
     return 'RADIANT';
   }
 
+  // 3.1 Direct English/International rarity string mapping
+  if (card.rarity) {
+    const r = card.rarity.toLowerCase();
+    if (r.includes('special illustration') || r.includes('sir')) return 'SAR';
+    if (r.includes('illustration rare') || r.includes('trainer gallery') || r.includes('galarian gallery')) return 'AR';
+    if (r.includes('hyper rare') || r.includes('rainbow') || r.includes('gold')) return 'UR';
+    if (r.includes('ultra rare') || r.includes('secret') || r.includes('shiny ultra')) return 'SR';
+    if (r.includes('double rare') || r.includes('shiny rare')) return 'EX';
+    if (r.includes('promo')) return 'PROMO';
+    if (r.includes('ace spec')) return 'ACE_SPEC';
+    if (r.includes('radiant') || r.includes('amazing')) return 'AR';
+  }
+
   // 4. Check Set Rule table if available
   const match = col.match(/^0*(\d+)[-/]0*(\d+)/);
   if (match) {
