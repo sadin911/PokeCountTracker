@@ -284,3 +284,4 @@
 [2026-09-05 00:29] Major | Antigravity | Edit | src/data/pokemonCardsEn.json - updated English cards to R2 CDN URLs
 [2026-09-05 00:44] Major | Antigravity | Fix | src/components/collection/CardMappingStudioModal.tsx - added image error fallback
 [2026-09-05 00:44] Major | Antigravity | Edit | scripts/match-thai-english-cards.mjs - upgraded matcher to 7,576 cards (82.0%)
+[2026-09-05 00:47] Major | Antigravity | Command | node scripts/sync-english-cards-to-r2.mjs - 6,779 EN cards synced to R2
