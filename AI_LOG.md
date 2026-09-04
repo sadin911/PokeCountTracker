@@ -267,5 +267,37 @@
 [2026-09-04 23:01] Major | Antigravity | Edit | e2e/collection-tracker.spec.ts - added voice collector E2E tests
 [2026-09-04 23:01] Major | Antigravity | Edit | package.json - bumped version to v2.27.0
 [2026-09-04 23:01] Major | Antigravity | Release | v2.27.0 - Voice Card Collector with live waveform visualizer & audio cues
-[2026-09-04 23:02] Major | Antigravity | Command | npm run dev - started dev server on http://localhost:5173
-
+[2026-09-05 00:02] Major | Antigravity | Write | scripts/download-english-cards.mjs - 6,779 modern English cards
+[2026-09-05 00:02] Major | Antigravity | Write | scripts/match-thai-english-cards.mjs - multi-signal card matcher
+[2026-09-05 00:02] Major | Antigravity | Write | src/components/collection/CardMappingStudioModal.tsx - mapping studio UI
+[2026-09-05 00:02] Major | Antigravity | Edit | src/components/collection/CollectionHeader.tsx - added mapping studio button
+[2026-09-05 00:02] Major | Antigravity | Write | BACKLOG_V3_MEMO.md - comprehensive v3 vision & roadmap memo
+[2026-09-05 00:13] Major | Antigravity | Write | src/components/collection/EnglishCardBrowser.tsx - 6,779 EN cards browser
+[2026-09-05 00:13] Major | Antigravity | Edit | src/components/collection/CardCollectionModal.tsx - bilingual switch & rematch
+[2026-09-05 00:13] Major | Antigravity | Edit | src/components/collection/CollectionTracker.tsx - wired EN catalog mode
+[2026-09-05 00:23] Major | Antigravity | Edit | AGENTS.md & CLAUDE.md - added automated E2E only testing rule
+[2026-09-05 00:23] Major | Antigravity | Write | e2e/english-card-catalog.spec.ts - automated Playwright E2E suite
+[2026-09-05 00:24] Major | Antigravity | Command | git checkout -b feature/english-card-catalog-and-bilingual-detail
+[2026-09-05 00:29] Major | Antigravity | Write | scripts/sync-english-cards-to-r2.mjs - R2 English image sync pipeline
+[2026-09-05 00:29] Major | Antigravity | Edit | src/utils/cardImage.ts - added English R2 routing & multi-tier fallback
+[2026-09-05 00:29] Major | Antigravity | Write | src/utils/cardImage.test.ts - unit tests for English R2 card image resolution
+[2026-09-05 00:29] Major | Antigravity | Edit | src/data/pokemonCardsEn.json - updated English cards to R2 CDN URLs
+[2026-09-05 00:44] Major | Antigravity | Fix | src/components/collection/CardMappingStudioModal.tsx - added image error fallback
+[2026-09-05 00:44] Major | Antigravity | Edit | scripts/match-thai-english-cards.mjs - upgraded matcher to 7,576 cards (82.0%)
+[2026-09-05 01:05] Major | Antigravity | Write | scripts/build-thai-art-hashes.mjs - 9,151 Thai perceptual art hashes
+[2026-09-05 01:07] Major | Antigravity | Edit | src/data/pokemonCardsEn.json - expanded EN DB to 11,303 modern cards
+[2026-09-05 01:08] Major | Antigravity | Write | scripts/match-cards-by-art.mjs - pure visual illustration art matcher
+[2026-09-05 01:24] Major | Antigravity | Command | node scripts/sync-english-cards-to-r2.mjs - 10,567 EN cards in R2 bucket
+[2026-09-05 01:42] Major | Antigravity | Fix | EnglishCardBrowser & CardCollectionModal - added image fallback pipeline
+[2026-09-05 01:42] Major | Antigravity | Edit | src/data/pokemonSetsEn.json & pokemonCardsEn.json - released sets first
+[2026-09-05 01:42] Major | Antigravity | Command | synced mep (89) and cel25c (25) to R2 and verified 8/8 E2E tests pass
+[2026-09-05 01:50] Major | Antigravity | Edit | EnglishCardBrowser.tsx - added Reg J filter option (419 cards)
+[2026-09-05 01:50] Major | Antigravity | Fix | CardMappingStudioModal.tsx - fixed Thai fallback to mapped counterpart
+[2026-09-05 01:58] Major | Antigravity | Command | synced me5 (120), me4 (122), me3 (124), me2pt5 (295), mep (89) to R2
+[2026-09-05 01:59] Major | Antigravity | Edit | src/components/collection/EnglishCardBrowser.tsx - removed upcoming overlay
+[2026-09-05 02:00] Major | Antigravity | Command | scripts/match-cards-by-art.mjs - mapped Mark J Darkrai ex cards (8,864 total)
+[2026-09-05 02:01] Major | Antigravity | Test | Playwright & Vitest - verified Mark J and Darkrai ex display artwork
+[2026-09-05 02:25] Major | Claude | Command | npm run build && npm test - verified release build (14.4s) and 91/91 unit tests passing
+[2026-09-05 02:25] Major | Claude | Edit | package.json - bumped version 2.27.0 -> 2.28.0
+[2026-09-05 02:25] Major | Claude | Command | git merge feature/english-card-catalog-and-bilingual-detail into main - English card catalog, bilingual TH/EN detail modal, R2 image migration
+[2026-09-05 02:25] Major | Claude | Command | git tag v2.28.0 - tagged English Card Catalog & Bilingual Detail release

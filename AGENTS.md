@@ -42,3 +42,13 @@ Every agent MUST maintain [`AI_LOG.md`](file:///Users/sadin/Project/PokeCountTra
 ### Rules
 - One line per action, UTF-8, append-only (never overwrite or truncate).
 - Log every Major action immediately after it completes.
+
+---
+
+## 3. Testing Policy: Automated E2E Only (Strictly No Manual Screenshot Verification)
+
+Whenever verifying frontend features, bug fixes, or user flows:
+1. **No Manual Screenshots**: Do NOT take, capture, or view screenshots to test or inspect page states visually.
+2. **Automated E2E Testing Only**: All visual and functional verification MUST be conducted via Playwright automated E2E tests (`npx playwright test`) and Vitest unit tests (`npm test`).
+3. **Write E2E Tests for New Features**: For every new UI flow, catalog, or interactive modal, add corresponding automated test cases under `e2e/*.spec.ts` with explicit locators and assertions.
+

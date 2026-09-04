@@ -6,6 +6,7 @@ import { useCommunityStore } from '../../store/communityStore';
 import { CollectionHeader } from './CollectionHeader';
 import { CollectionFilterBar } from './CollectionFilterBar';
 import { CollectionGridView } from './CollectionGridView';
+import { EnglishCardBrowser } from './EnglishCardBrowser';
 import {
   type CollectionStats,
   type SetProgress,
@@ -59,6 +60,7 @@ export function CollectionTracker() {
   } = filters;
 
   const [showBackToTop, setShowBackToTop] = useState<boolean>(false);
+  const [catalogMode, setCatalogMode] = useState<'TH' | 'EN'>('TH');
 
   // Track scrolling for Back to Top button
   useEffect(() => {
@@ -370,44 +372,54 @@ export function CollectionTracker() {
     <PullToRefresh onRefresh={handleRefresh}>
       <div className="min-h-screen bg-slate-100 dark:bg-slate-950 text-slate-900 dark:text-slate-100 flex flex-col font-sans selection:bg-red-500 selection:text-white transition-colors duration-200">
         {/* Top Header */}
-        <CollectionHeader stats={overallStats} />
-
-        {/* Filter and Search Bar */}
-        <CollectionFilterBar
-          sets={setsList}
-          selectedSet={selectedSet}
-          onSelectSet={(val) => setFilters({ selectedSet: val })}
-          selectedRegulation={selectedRegulation}
-          onRegulationChange={(val) => setFilters({ selectedRegulation: val })}
-          statusFilter={statusFilter}
-          onStatusFilterChange={(val) => setFilters({ statusFilter: val })}
-          search={search}
-          onSearchChange={(val) => setFilters({ search: val })}
-          selectedType={selectedType}
-          onTypeChange={(val) => setFilters({ selectedType: val })}
-          selectedCategory={selectedCategory}
-          onCategoryChange={(val) => setFilters({ selectedCategory: val })}
-          selectedStage={selectedStage}
-          onStageChange={(val) => setFilters({ selectedStage: val })}
-          selectedRarity={selectedRarity}
-          onRarityChange={(val) => setFilters({ selectedRarity: val })}
-          sortBy={sortBy}
-          sortOrder={sortOrder}
-          onSortChange={(sb, so) => setFilters({ sortBy: sb, sortOrder: so })}
-          showFullColor={showFullColor}
-          onToggleFullColor={() => setFilters({ showFullColor: !showFullColor })}
-          onResetFilters={resetFilters}
-          isFiltered={isFiltered}
-          totalFiltered={filteredCards.length}
+        <CollectionHeader
+          stats={overallStats}
+          catalogMode={catalogMode}
+          onToggleCatalogMode={setCatalogMode}
         />
 
-        {/* Main Binder Grid */}
-        <CollectionGridView
-          cards={filteredCards}
-          currentSetProgress={currentSetProgress}
-          showFullColor={showFullColor}
-          filterKey={filterKey}
-        />
+        {catalogMode === 'EN' ? (
+          <EnglishCardBrowser onBackToThai={() => setCatalogMode('TH')} />
+        ) : (
+          <>
+            {/* Filter and Search Bar */}
+            <CollectionFilterBar
+              sets={setsList}
+              selectedSet={selectedSet}
+              onSelectSet={(val) => setFilters({ selectedSet: val })}
+              selectedRegulation={selectedRegulation}
+              onRegulationChange={(val) => setFilters({ selectedRegulation: val })}
+              statusFilter={statusFilter}
+              onStatusFilterChange={(val) => setFilters({ statusFilter: val })}
+              search={search}
+              onSearchChange={(val) => setFilters({ search: val })}
+              selectedType={selectedType}
+              onTypeChange={(val) => setFilters({ selectedType: val })}
+              selectedCategory={selectedCategory}
+              onCategoryChange={(val) => setFilters({ selectedCategory: val })}
+              selectedStage={selectedStage}
+              onStageChange={(val) => setFilters({ selectedStage: val })}
+              selectedRarity={selectedRarity}
+              onRarityChange={(val) => setFilters({ selectedRarity: val })}
+              sortBy={sortBy}
+              sortOrder={sortOrder}
+              onSortChange={(sb, so) => setFilters({ sortBy: sb, sortOrder: so })}
+              showFullColor={showFullColor}
+              onToggleFullColor={() => setFilters({ showFullColor: !showFullColor })}
+              onResetFilters={resetFilters}
+              isFiltered={isFiltered}
+              totalFiltered={filteredCards.length}
+            />
+
+            {/* Main Binder Grid */}
+            <CollectionGridView
+              cards={filteredCards}
+              currentSetProgress={currentSetProgress}
+              showFullColor={showFullColor}
+              filterKey={filterKey}
+            />
+          </>
+        )}
 
         {/* Floating Back to Top Button */}
         {showBackToTop && (

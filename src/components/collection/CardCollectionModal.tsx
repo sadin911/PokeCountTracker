@@ -9,6 +9,13 @@ import { getEnglishCardName } from '../../utils/searchHelpers';
 import { isCardFoil, foilPulseDelay } from '../../utils/cardFoil';
 import { useFoilTilt } from '../../hooks/useFoilTilt';
 import { EvolutionChainSection } from '../pokemon/EvolutionChainSection';
+import {
+  getEnglishMatchForThaiCard,
+  getThaiCardIdForEnglishCard,
+  saveCardMapping,
+  type EnCardMapping,
+} from '../../utils/thaiEnglishCardMatcher';
+import pokemonCardData from '../../data/pokemonNames.json';
 import type { CardVariantKey, CardCondition } from '../../types/collection';
 
 interface Props {
@@ -148,6 +155,142 @@ export function CardCollectionModal({ card: initialCard, onClose, deckId }: Prop
   const isFoil = useMemo(() => isCardFoil(activeCard, variants), [activeCard, variants]);
   const tilt = useFoilTilt<HTMLButtonElement>(isFoil, { gyro: true });
 
+  const isOriginalEn = (activeCard.id || '').startsWith('EN-');
+  const [viewingLang, setViewingLang] = useState<'TH' | 'EN'>(isOriginalEn ? 'EN' : 'TH');
+  const [mappingVersion, setMappingVersion] = useState(0);
+  const [showReMatchModal, setShowReMatchModal] = useState(false);
+  const [enCatalog, setEnCatalog] = useState<any[] | null>(null);
+  const [reMatchSearch, setReMatchSearch] = useState('');
+
+  // Update viewingLang when activeCard changes
+  useEffect(() => {
+    setViewingLang(activeCard.id?.startsWith('EN-') ? 'EN' : 'TH');
+  }, [activeCard.id]);
+
+  // Load English catalog on demand when re-match modal is opened
+  useEffect(() => {
+    if (showReMatchModal && !enCatalog) {
+      import('../../data/pokemonCardsEn.json').then((m) => {
+        setEnCatalog(m.default || m);
+      });
+    }
+  }, [showReMatchModal, enCatalog]);
+
+  // Counterpart resolution
+  const counterpartData = useMemo(() => {
+    void mappingVersion;
+    if (isOriginalEn) {
+      const thId = getThaiCardIdForEnglishCard(activeCard.id);
+      const thCard = thId ? (pokemonCardData as any[]).find((c) => c.id === thId) : null;
+      return {
+        thCard,
+        thId,
+        hasMatch: !!thCard,
+        confidence: thCard ? 100 : 0,
+      };
+    } else {
+      const mapping = getEnglishMatchForThaiCard(activeCard.id);
+      return {
+        enMapping: mapping,
+        hasMatch: !!mapping,
+        confidence: mapping?.confidence || 0,
+      };
+    }
+  }, [activeCard.id, isOriginalEn, mappingVersion]);
+
+  // The active visual card to display in image and titles
+  const displayVisualCard = useMemo(() => {
+    if (viewingLang === 'TH') {
+      if (!isOriginalEn) return activeCard;
+      if (counterpartData.thCard) return counterpartData.thCard;
+      return activeCard;
+    } else {
+      // viewingLang === 'EN'
+      if (isOriginalEn) return activeCard;
+      if (counterpartData.enMapping) {
+        return {
+          id: counterpartData.enMapping.enCardId,
+          name: counterpartData.enMapping.enName,
+          imageUrl: counterpartData.enMapping.enImageUrl,
+          imageUrlHigh: counterpartData.enMapping.enImageUrl,
+          officialImageUrl: counterpartData.enMapping.enOfficialImageUrl || '',
+          set: {
+            id: counterpartData.enMapping.enSetId,
+            name: counterpartData.enMapping.enSetName,
+          },
+          collectorNumber: counterpartData.enMapping.enNumber,
+          category: activeCard.category,
+          hp: activeCard.hp,
+          types: activeCard.types,
+          regulationMark: activeCard.regulationMark,
+        };
+      }
+      return activeCard;
+    }
+  }, [viewingLang, isOriginalEn, activeCard, counterpartData]);
+
+  const reMatchCandidates = useMemo(() => {
+    const q = reMatchSearch.trim().toLowerCase();
+    if (isOriginalEn) {
+      if (!q) return (pokemonCardData as any[]).slice(0, 30);
+      return (pokemonCardData as any[])
+        .filter((c) => {
+          const matchName = (c.name || '').toLowerCase().includes(q);
+          const matchNum = (c.collectorNumber || c.localId || '').toLowerCase().includes(q);
+          const matchSet = (c.set?.name || c.set?.id || '').toLowerCase().includes(q);
+          return matchName || matchNum || matchSet;
+        })
+        .slice(0, 40);
+    } else {
+      if (!enCatalog) return [];
+      if (!q) return enCatalog.slice(0, 30);
+      return enCatalog
+        .filter((c) => {
+          const matchName = (c.name || '').toLowerCase().includes(q);
+          const matchNum = (c.localId || '').toLowerCase() === q;
+          const matchSet = (c.set?.name || c.set?.id || '').toLowerCase().includes(q);
+          return matchName || matchNum || matchSet;
+        })
+        .slice(0, 40);
+    }
+  }, [reMatchSearch, isOriginalEn, enCatalog]);
+
+  const handleSelectReMatch = (candidate: any) => {
+    if (isOriginalEn) {
+      const newMapping: EnCardMapping = {
+        enCardId: activeCard.id,
+        enName: activeCard.name,
+        enSetId: activeCard.set?.id || '',
+        enSetName: activeCard.set?.name || '',
+        enNumber: activeCard.localId || '',
+        enImageUrl: activeCard.imageUrl || '',
+        confidence: 100,
+        matchMethod: 'manual_override',
+        verified: true,
+        matchedAt: new Date().toISOString(),
+        userOverridden: true,
+      };
+      saveCardMapping(candidate.id, newMapping);
+    } else {
+      const newMapping: EnCardMapping = {
+        enCardId: candidate.id,
+        enName: candidate.name,
+        enSetId: candidate.set?.id || '',
+        enSetName: candidate.set?.name || '',
+        enNumber: candidate.localId || '',
+        enImageUrl: candidate.imageUrl || '',
+        confidence: 100,
+        matchMethod: 'manual_override',
+        verified: true,
+        matchedAt: new Date().toISOString(),
+        userOverridden: true,
+      };
+      saveCardMapping(activeCard.id, newMapping);
+    }
+    setMappingVersion((v) => v + 1);
+    setShowReMatchModal(false);
+  };
+
   const applicableVariants = useMemo(() => {
     return getApplicableVariants(activeCard, variants);
   }, [activeCard, variants]);
@@ -174,6 +317,57 @@ export function CardCollectionModal({ card: initialCard, onClose, deckId }: Prop
         <div className="grid grid-cols-1 md:grid-cols-12 gap-5 p-4 sm:p-6">
           {/* Image Column */}
           <div className="md:col-span-5 space-y-3">
+            {/* Bilingual Switcher Bar */}
+            <div className="flex items-center justify-between gap-2 p-1.5 rounded-2xl bg-slate-800/90 border border-slate-700/80 shadow-md">
+              <div className="flex items-center gap-1">
+                <button
+                  type="button"
+                  data-testid="bilingual-tab-th"
+                  onClick={() => setViewingLang('TH')}
+                  className={`px-3 py-1.5 rounded-xl text-xs font-black transition-all flex items-center gap-1.5 ${
+                    viewingLang === 'TH'
+                      ? 'bg-indigo-600 text-white shadow-md shadow-indigo-600/30'
+                      : 'text-slate-400 hover:text-white'
+                  }`}
+                >
+                  <span>🇹🇭</span>
+                  <span>ไทย</span>
+                </button>
+                <button
+                  type="button"
+                  data-testid="bilingual-tab-en"
+                  onClick={() => setViewingLang('EN')}
+                  className={`px-3 py-1.5 rounded-xl text-xs font-black transition-all flex items-center gap-1.5 ${
+                    viewingLang === 'EN'
+                      ? 'bg-sky-600 text-white shadow-md shadow-sky-600/30'
+                      : 'text-slate-400 hover:text-white'
+                  }`}
+                >
+                  <span>🇺🇸</span>
+                  <span>EN</span>
+                  {counterpartData.confidence > 0 && (
+                    <span className="text-[9px] px-1 py-0.5 rounded bg-black/40 text-sky-200 font-black">
+                      {counterpartData.confidence}%
+                    </span>
+                  )}
+                </button>
+              </div>
+
+              <button
+                type="button"
+                data-testid="bilingual-rematch-btn"
+                onClick={() => {
+                  setReMatchSearch('');
+                  setShowReMatchModal(true);
+                }}
+                title="ค้นหาและแก้ไขคู่การ์ดภาษาอังกฤษ / ไทย"
+                className="px-2.5 py-1.5 rounded-xl bg-amber-500/15 hover:bg-amber-500/25 border border-amber-500/40 text-amber-400 text-xs font-bold transition-all flex items-center gap-1 shadow-sm"
+              >
+                <span>✏️</span>
+                <span>แก้ไขคู่</span>
+              </button>
+            </div>
+
             <button
               type="button"
               onClick={() => setShowZoom(true)}
@@ -187,16 +381,13 @@ export function CardCollectionModal({ card: initialCard, onClose, deckId }: Prop
               }`}
             >
               <img
-                src={resolveCardImageUrl(activeCard.imageUrlHigh || activeCard.imageUrl, true)}
-                alt={activeCard.name}
-                onError={(e) => handleCardImageError(e, activeCard.imageUrl, activeCard.officialImageUrl)}
+                src={resolveCardImageUrl(displayVisualCard.imageUrlHigh || displayVisualCard.imageUrl, true)}
+                alt={displayVisualCard.name}
+                onError={(e) => handleCardImageError(e, displayVisualCard.imageUrl, displayVisualCard.officialImageUrl)}
                 className="w-full h-auto transition-transform duration-300 group-hover:scale-[1.02]"
               />
               {isFoil && (
                 <>
-                  {/* The stagger sits on this layer, not on the tilt target: custom
-                      properties inherit down through the wrappers, animation-delay
-                      does not. */}
                   <div
                     className="foil-holo"
                     aria-hidden="true"
@@ -214,9 +405,6 @@ export function CardCollectionModal({ card: initialCard, onClose, deckId }: Prop
               </div>
             )}
 
-            {/* iOS 13+ will only open the motion permission prompt from a user
-                gesture, so the tilt needs a button rather than an effect.
-                Android starts on its own and never renders this. */}
             {isFoil && tilt.gyro.needsGesture && (
               <button
                 type="button"
@@ -242,7 +430,7 @@ export function CardCollectionModal({ card: initialCard, onClose, deckId }: Prop
               <span>View Fullscreen Artwork</span>
             </button>
             <p className="text-[11px] text-slate-400 text-center font-mono font-medium">
-              {activeCard.set?.name || 'การ์ดเสริม'} · {activeCard.collectorNumber || activeCard.localId}
+              {displayVisualCard.set?.name || 'การ์ดเสริม'} · {displayVisualCard.collectorNumber || displayVisualCard.localId}
             </p>
           </div>
 
@@ -269,10 +457,15 @@ export function CardCollectionModal({ card: initialCard, onClose, deckId }: Prop
                   )}
                 </div>
                 <h2 className="text-lg sm:text-xl font-black text-slate-900 dark:text-white mt-2 leading-snug">
-                  {activeCard.name}
-                  {getEnglishCardName(activeCard) && (
+                  {displayVisualCard.name}
+                  {viewingLang === 'TH' && getEnglishCardName(activeCard) && (
                     <span className="ml-2 text-sm sm:text-base font-semibold text-slate-500 dark:text-slate-400 font-sans">
                       ({getEnglishCardName(activeCard)})
+                    </span>
+                  )}
+                  {viewingLang === 'EN' && !isOriginalEn && (
+                    <span className="ml-2 text-xs px-2 py-0.5 rounded-full bg-sky-500/20 text-sky-300 font-bold">
+                      US Version
                     </span>
                   )}
                 </h2>
@@ -564,9 +757,9 @@ export function CardCollectionModal({ card: initialCard, onClose, deckId }: Prop
             }}
           >
             <img
-              src={resolveCardImageUrl(activeCard.imageUrlHigh || activeCard.imageUrl, true)}
-              alt={activeCard.name}
-              onError={(e) => handleCardImageError(e, activeCard.imageUrl, activeCard.officialImageUrl)}
+              src={resolveCardImageUrl(displayVisualCard.imageUrlHigh || displayVisualCard.imageUrl, true)}
+              alt={displayVisualCard.name}
+              onError={(e) => handleCardImageError(e, displayVisualCard.imageUrl, displayVisualCard.officialImageUrl)}
               className="max-w-full max-h-full object-contain rounded-2xl shadow-2xl shadow-black"
             />
             <button
@@ -580,6 +773,100 @@ export function CardCollectionModal({ card: initialCard, onClose, deckId }: Prop
             >
               ✕
             </button>
+          </div>,
+          document.body
+        )}
+
+      {/* Re-match Picker Modal */}
+      {showReMatchModal &&
+        createPortal(
+          <div
+            className="fixed inset-0 z-70 flex items-center justify-center p-3 bg-black/85 backdrop-blur-md animate-fade-in"
+            onClick={(e) => {
+              e.stopPropagation();
+              setShowReMatchModal(false);
+            }}
+          >
+            <div
+              data-testid="rematch-modal"
+              onClick={(e) => e.stopPropagation()}
+              className="bg-slate-900 border border-slate-700/80 rounded-3xl w-full max-w-xl max-h-[85vh] flex flex-col shadow-2xl overflow-hidden"
+            >
+              <div className="p-4 border-b border-slate-800 flex items-center justify-between">
+                <div>
+                  <h3 className="text-sm font-black text-white">
+                    {isOriginalEn
+                      ? 'เลือกการ์ดภาษาไทยเพื่อจับคู่กับ:'
+                      : 'เลือกการ์ดภาษาอังกฤษเพื่อจับคู่กับ:'}
+                  </h3>
+                  <span className="text-xs font-bold text-amber-400 truncate block">
+                    {activeCard.name} ({activeCard.set?.name || activeCard.set?.id} #{activeCard.collectorNumber || activeCard.localId})
+                  </span>
+                </div>
+                <button
+                  type="button"
+                  data-testid="rematch-close-btn"
+                  onClick={() => setShowReMatchModal(false)}
+                  className="p-1.5 rounded-xl text-slate-400 hover:text-white"
+                >
+                  ✕
+                </button>
+              </div>
+
+              <div className="p-3 border-b border-slate-800">
+                <input
+                  type="text"
+                  data-testid="rematch-search-input"
+                  value={reMatchSearch}
+                  onChange={(e) => setReMatchSearch(e.target.value)}
+                  placeholder={
+                    isOriginalEn
+                      ? 'พิมพ์ค้นหาชื่อการ์ดภาษาไทย เช่น พิคาชู, ลิซาร์ดอน...'
+                      : 'พิมพ์ค้นหาชื่อการ์ดภาษาอังกฤษ เช่น Charizard, Iono, Boss...'
+                  }
+                  className="w-full h-10 px-3 rounded-xl border border-slate-700 bg-slate-800 text-xs text-white outline-none focus:border-amber-500"
+                  autoFocus
+                />
+              </div>
+
+              <div className="flex-1 overflow-y-auto p-3 grid grid-cols-1 sm:grid-cols-2 gap-2">
+                {reMatchCandidates.map((candidate) => {
+                  const candidateImg = candidate.imageUrlHigh || candidate.imageUrl;
+                  return (
+                    <button
+                      key={candidate.id}
+                      type="button"
+                      onClick={() => handleSelectReMatch(candidate)}
+                      className="p-2.5 rounded-xl border border-slate-800 hover:border-amber-500 bg-slate-800/60 hover:bg-slate-800 text-left flex items-center gap-3 transition-all group"
+                    >
+                      <div className="w-11 h-15 rounded bg-slate-700 overflow-hidden shrink-0">
+                        <img
+                          src={resolveCardImageUrl(candidateImg)}
+                          alt={candidate.name}
+                          onError={(e) => handleCardImageError(e, candidateImg, candidate.officialImageUrl)}
+                          className="w-full h-full object-cover"
+                          loading="lazy"
+                        />
+                      </div>
+                      <div className="min-w-0 flex-1">
+                        <span className="text-[10px] font-black uppercase text-sky-400 block truncate">
+                          {candidate.set?.name || candidate.set?.id} · #{candidate.collectorNumber || candidate.localId}
+                        </span>
+                        <h5 className="text-xs font-bold text-white truncate group-hover:text-amber-400">
+                          {candidate.name}
+                        </h5>
+                        <span className="text-[10px] text-slate-400">
+                          {candidate.hp ? `${candidate.hp} HP` : candidate.category}
+                        </span>
+                      </div>
+                      <span className="text-xs text-amber-400 font-bold opacity-0 group-hover:opacity-100 transition-opacity">
+                        เลือก ➔
+                      </span>
+                    </button>
+                  );
+                })}
+              </div>
+            </div>
           </div>,
           document.body
         )}
