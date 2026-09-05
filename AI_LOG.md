@@ -301,3 +301,7 @@
 [2026-09-05 02:25] Major | Claude | Edit | package.json - bumped version 2.27.0 -> 2.28.0
 [2026-09-05 02:25] Major | Claude | Command | git merge feature/english-card-catalog-and-bilingual-detail into main - English card catalog, bilingual TH/EN detail modal, R2 image migration
 [2026-09-05 02:25] Major | Claude | Command | git tag v2.28.0 - tagged English Card Catalog & Bilingual Detail release
+[2026-09-05 02:45] Major | Claude | Write | src/utils/deckMapAssist.ts - bridged PTCGL set code -> EN set id (ptcgoCode) -> Thai card via thaiEnglishCardMap
+[2026-09-05 02:45] Major | Claude | Edit | src/utils/ptcglDeckParser.ts - cross-check deck import picks against TH/EN map; fixed Crushing Hammer matching Enhanced Hammer and Fezandipiti ex matching non-ex
+[2026-09-05 02:45] Major | Claude | Test | deckMapAssist.test.ts - 9 new tests; full suite 100/100, tsc clean, exampleENImport still 24/24 lines & 60 cards
+[2026-09-05 02:45] Major | Claude | Edit | package.json - bumped version 2.28.0 -> 2.28.1
