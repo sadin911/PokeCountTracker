@@ -312,3 +312,4 @@
 [2026-09-05 20:21] Major | Antigravity | Edit | src/components/collection/VoiceCardCollectorTab.tsx - wired fast TTS feedback
 [2026-09-05 20:26] Major | Antigravity | Edit | e2e/collection-tracker.spec.ts - added TTS toggle button E2E test
 [2026-09-05 20:29] Major | Antigravity | Test | Vitest & Playwright - 110 unit tests and 82 E2E tests passed cleanly
+[2026-09-05 21:26] Major | Antigravity | Release | v2.29.0 - Voice Card Collector with Android mic fix, iOS silence timeout, & Fast TTS verification
