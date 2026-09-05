@@ -156,6 +156,7 @@ export function SearchableSetSelect({
       {/* Trigger Button */}
       <button
         type="button"
+        data-testid="searchable-set-select-btn"
         onClick={() => setIsOpen(!isOpen)}
         className={`w-full px-3.5 py-2.5 bg-slate-100 dark:bg-slate-950 border rounded-xl text-xs sm:text-sm font-bold flex items-center justify-between gap-2 transition-all shadow-inner text-left group ${
           isOpen

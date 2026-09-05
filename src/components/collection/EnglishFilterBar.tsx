@@ -114,6 +114,7 @@ export function EnglishFilterBar({
           <span className="absolute left-3 top-1/2 -translate-y-1/2 text-slate-400 text-sm">🔍</span>
           <input
             type="text"
+            data-testid="en-search-input"
             placeholder="ค้นหาชื่อการ์ด, เลขการ์ด หรือชื่อชุด..."
             value={search}
             onChange={(e) => onSearchChange(e.target.value)}
@@ -215,6 +216,7 @@ export function EnglishFilterBar({
           {/* Advanced Filters Drawer Toggle */}
           <button
             type="button"
+            data-testid="english-advanced-filter-btn"
             onClick={() => setShowAdvancedMobile(!showAdvancedMobile)}
             className={`px-2.5 py-1.5 sm:px-3 sm:py-2 shrink-0 rounded-xl text-xs font-bold transition-all shadow-sm flex items-center gap-1 min-h-[38px] sm:min-h-[40px] border active:scale-95 ${
               showAdvancedMobile || activeSecondaryFilterCount > 0

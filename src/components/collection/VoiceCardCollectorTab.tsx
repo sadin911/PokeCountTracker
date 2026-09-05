@@ -7,6 +7,14 @@ import {
 } from '../../hooks/useVoiceCardRecognition';
 import { parseVoiceInput, type VoiceCardParseResult } from '../../utils/voiceCardParser';
 import { resolveCardImageUrl, handleCardImageError } from '../../utils/cardImage';
+import {
+  speakVoiceFeedback,
+  formatCardSpokenText,
+  formatCommandSpokenText,
+  initTtsUnlock,
+  stopVoiceFeedback,
+  isTtsSupported,
+} from '../../utils/voiceTts';
 import type { CardVariantKey } from '../../types/collection';
 
 export interface StagedVoiceCard {
@@ -26,6 +34,7 @@ interface Props {
 }
 
 const STORAGE_KEY_VOICE_SET = 'pokecount_voice_active_set';
+const STORAGE_KEY_VOICE_TTS = 'pokecount_voice_tts_enabled';
 
 const SUGGESTED_PHRASES = [
   'ชุด SV8 เบอร์ 25 สองใบ',
@@ -52,6 +61,12 @@ export function VoiceCardCollectorTab({
     return localStorage.getItem(STORAGE_KEY_VOICE_SET) || 'SV8a';
   });
 
+  // Fast TTS confirmation toggle (enabled by default)
+  const [ttsEnabled, setTtsEnabled] = useState<boolean>(() => {
+    const stored = localStorage.getItem(STORAGE_KEY_VOICE_TTS);
+    return stored === null ? true : stored === 'true';
+  });
+
   // Last recognized utterance & parsed info
   const [lastTranscript, setLastTranscript] = useState<string>('');
   const [lastParseResult, setLastParseResult] = useState<VoiceCardParseResult | null>(null);
@@ -71,12 +86,23 @@ export function VoiceCardCollectorTab({
     return Array.from(setMap.entries()).map(([id, name]) => ({ id, name }));
   }, [catalog]);
 
-  // Persist active set
+  // Persist active set & TTS setting
   useEffect(() => {
     if (activeSetId) {
       localStorage.setItem(STORAGE_KEY_VOICE_SET, activeSetId);
     }
   }, [activeSetId]);
+
+  useEffect(() => {
+    localStorage.setItem(STORAGE_KEY_VOICE_TTS, String(ttsEnabled));
+  }, [ttsEnabled]);
+
+  // Stop any ongoing speech on unmount
+  useEffect(() => {
+    return () => {
+      stopVoiceFeedback();
+    };
+  }, []);
 
   const showToast = (text: string, type: 'success' | 'info' | 'warn' = 'info') => {
     if (toastTimeoutRef.current) clearTimeout(toastTimeoutRef.current);
@@ -137,6 +163,9 @@ export function VoiceCardCollectorTab({
             }
             const removed = prev[0];
             showToast(`ยกเลิก ${removed.card.name} #${removed.card.collectorNumber} แล้ว`, 'info');
+            if (ttsEnabled) {
+              speakVoiceFeedback(formatCommandSpokenText('undo', removed.card.name, language), { lang: language, rate: 1.45 });
+            }
             return prev.slice(1);
           });
           break;
@@ -145,6 +174,9 @@ export function VoiceCardCollectorTab({
           if (stagedCards.length > 0) {
             setStagedCards([]);
             showToast('ล้างรายการการ์ดทั้งหมดแล้ว', 'info');
+            if (ttsEnabled) {
+              speakVoiceFeedback(formatCommandSpokenText('clear', undefined, language), { lang: language, rate: 1.45 });
+            }
           }
           break;
 
@@ -154,6 +186,9 @@ export function VoiceCardCollectorTab({
             const updated = [...prev];
             updated[0] = { ...updated[0], quantity: updated[0].quantity + 1 };
             showToast(`เพิ่ม ${updated[0].card.name} เป็น ${updated[0].quantity} ใบ`, 'success');
+            if (ttsEnabled) {
+              speakVoiceFeedback(formatCommandSpokenText('increase_last', `${updated[0].card.name} ${updated[0].quantity} ใบ`, language), { lang: language, rate: 1.45 });
+            }
             return updated;
           });
           break;
@@ -165,9 +200,15 @@ export function VoiceCardCollectorTab({
             if (updated[0].quantity > 1) {
               updated[0] = { ...updated[0], quantity: updated[0].quantity - 1 };
               showToast(`ลด ${updated[0].card.name} เหลือ ${updated[0].quantity} ใบ`, 'info');
+              if (ttsEnabled) {
+                speakVoiceFeedback(formatCommandSpokenText('decrease_last', `${updated[0].card.name} ${updated[0].quantity} ใบ`, language), { lang: language, rate: 1.45 });
+              }
               return updated;
             } else {
               showToast(`ลบ ${updated[0].card.name} ออกแล้ว`, 'info');
+              if (ttsEnabled) {
+                speakVoiceFeedback(formatCommandSpokenText('undo', updated[0].card.name, language), { lang: language, rate: 1.45 });
+              }
               return prev.slice(1);
             }
           });
@@ -177,6 +218,9 @@ export function VoiceCardCollectorTab({
           if (stagedCards.length === 0) {
             showToast('ยังไม่มีรายการการ์ดในรายการที่จะนำเข้า', 'warn');
           } else {
+            if (ttsEnabled) {
+              speakVoiceFeedback(formatCommandSpokenText('confirm', undefined, language), { lang: language, rate: 1.45 });
+            }
             handleConfirmImport();
           }
           break;
@@ -190,6 +234,9 @@ export function VoiceCardCollectorTab({
       playVoiceCommandChime();
       triggerVoiceHaptic('command');
       showToast(`สลับชุดปัจจุบันเป็น: ${parsed.newActiveSet}`, 'success');
+      if (ttsEnabled) {
+        speakVoiceFeedback(formatCommandSpokenText('set_change', parsed.newActiveSet, language), { lang: language, rate: 1.45 });
+      }
       return;
     }
 
@@ -201,6 +248,17 @@ export function VoiceCardCollectorTab({
         setCandidates(parsed.candidates);
       } else {
         setCandidates(null);
+      }
+
+      // Fast TTS confirmation
+      if (ttsEnabled) {
+        const spoken = formatCardSpokenText(
+          parsed.matchedCard.name,
+          parsed.quantity,
+          parsed.variant,
+          language
+        );
+        speakVoiceFeedback(spoken, { lang: language, rate: 1.45 });
       }
 
       showToast(
@@ -225,10 +283,22 @@ export function VoiceCardCollectorTab({
     interimTranscript,
     audioLevel,
     error,
+    isAndroid,
   } = useVoiceCardRecognition({
     onFinalResult: handleSpeechFinal,
+    onTimeout: (reason) => {
+      if (reason === 'inactivity') {
+        showToast('⏳ ไม่ได้ยินเสียงพูดนานเกินไป (แตะพูดใหม่อีกครั้ง หรือแตะตัวอย่างด้านล่าง)', 'warn');
+      }
+    },
     continuous: true,
+    silenceTimeoutMs: 1400, // Auto-finalize after 1.4s of silence on interim
   });
+
+  const handleToggleListeningWithUnlock = () => {
+    initTtsUnlock();
+    toggleListening();
+  };
 
   const handleUpdateQuantity = (id: string, delta: number) => {
     setStagedCards((prev) =>
@@ -337,29 +407,60 @@ export function VoiceCardCollectorTab({
               <span className="text-[10px] text-slate-400 hidden sm:inline">(พูด "ชุด..." เพื่อสลับได้)</span>
             </div>
 
-            <div className="flex items-center gap-1">
-              <button
-                type="button"
-                onClick={() => setLanguage('th-TH')}
-                className={`px-2.5 py-1 rounded-lg font-bold transition-all text-xs ${
-                  language === 'th-TH'
-                    ? 'bg-indigo-600 text-white shadow-sm'
-                    : 'text-slate-500 hover:text-slate-800 dark:hover:text-slate-200'
-                }`}
-              >
-                🇹🇭 ไทย
-              </button>
-              <button
-                type="button"
-                onClick={() => setLanguage('en-US')}
-                className={`px-2.5 py-1 rounded-lg font-bold transition-all text-xs ${
-                  language === 'en-US'
-                    ? 'bg-indigo-600 text-white shadow-sm'
-                    : 'text-slate-500 hover:text-slate-800 dark:hover:text-slate-200'
-                }`}
-              >
-                🇺🇸 English
-              </button>
+            <div className="flex items-center gap-1.5">
+              {/* Android Capability Badge */}
+              {isAndroid && (
+                <span
+                  title="ระบบเสียงได้รับการปรับแต่งพิเศษสำหรับ Android Chrome เรียบร้อย"
+                  className="px-2 py-1 rounded-lg bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 border border-emerald-500/25 text-[11px] font-bold hidden sm:inline-flex items-center gap-1"
+                >
+                  <span>🤖</span> Android
+                </span>
+              )}
+
+              {/* TTS Voice Confirmation Toggle */}
+              {isTtsSupported() && (
+                <button
+                  type="button"
+                  data-testid="voice-tts-toggle-button"
+                  onClick={() => setTtsEnabled(!ttsEnabled)}
+                  title={ttsEnabled ? 'เสียงขานรับ TTS เปิดอยู่ (แตะเพื่อปิด)' : 'เสียงขานรับ TTS ปิดอยู่ (แตะเพื่อเปิด)'}
+                  className={`px-2.5 py-1 rounded-lg font-bold transition-all text-xs flex items-center gap-1 border ${
+                    ttsEnabled
+                      ? 'bg-emerald-500/15 text-emerald-600 dark:text-emerald-400 border-emerald-500/30 shadow-sm'
+                      : 'bg-slate-200/60 dark:bg-slate-800 text-slate-400 border-slate-300 dark:border-slate-700'
+                  }`}
+                >
+                  <span className="text-sm">{ttsEnabled ? '🔊' : '🔈'}</span>
+                  <span className="hidden sm:inline">ขานรับ {ttsEnabled ? 'เปิด' : 'ปิด'}</span>
+                </button>
+              )}
+
+              {/* Language Switcher */}
+              <div className="flex items-center gap-0.5 bg-slate-200/60 dark:bg-slate-800 p-0.5 rounded-lg">
+                <button
+                  type="button"
+                  onClick={() => setLanguage('th-TH')}
+                  className={`px-2 py-0.5 rounded-md font-bold transition-all text-xs ${
+                    language === 'th-TH'
+                      ? 'bg-indigo-600 text-white shadow-sm'
+                      : 'text-slate-500 hover:text-slate-800 dark:hover:text-slate-200'
+                  }`}
+                >
+                  🇹🇭 ไทย
+                </button>
+                <button
+                  type="button"
+                  onClick={() => setLanguage('en-US')}
+                  className={`px-2 py-0.5 rounded-md font-bold transition-all text-xs ${
+                    language === 'en-US'
+                      ? 'bg-indigo-600 text-white shadow-sm'
+                      : 'text-slate-500 hover:text-slate-800 dark:hover:text-slate-200'
+                  }`}
+                >
+                  🇺🇸 EN
+                </button>
+              </div>
             </div>
           </div>
 
@@ -385,7 +486,7 @@ export function VoiceCardCollectorTab({
 
             <button
               type="button"
-              onClick={toggleListening}
+              onClick={handleToggleListeningWithUnlock}
               data-testid="voice-mic-main-button"
               title={isListening ? 'แตะเพื่อหยุดฟัง' : 'แตะเพื่อเริ่มพูดสั่งการ์ด'}
               className={`relative w-20 h-20 sm:w-24 sm:h-24 rounded-full flex flex-col items-center justify-center text-white shadow-xl transition-all duration-300 transform active:scale-95 ${

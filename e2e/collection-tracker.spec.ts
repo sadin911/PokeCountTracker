@@ -259,9 +259,18 @@ test.describe('Collection Tracker Suite', () => {
     const voiceTab = modal.locator('[data-testid="voice-tab-button"]');
     await expect(voiceTab).toBeVisible();
 
-    // Verify main mic button and speech guide exist
+    // Verify main mic button, TTS toggle, and speech guide exist
     const micButton = modal.locator('[data-testid="voice-mic-main-button"]');
     await expect(micButton).toBeVisible();
+
+    const ttsToggleBtn = modal.locator('[data-testid="voice-tts-toggle-button"]');
+    await expect(ttsToggleBtn).toBeVisible();
+    await expect(ttsToggleBtn).toContainText('ขานรับ เปิด');
+    await ttsToggleBtn.click();
+    await expect(ttsToggleBtn).toContainText('ขานรับ ปิด');
+    await ttsToggleBtn.click();
+    await expect(ttsToggleBtn).toContainText('ขานรับ เปิด');
+
     await expect(modal.locator('text=ตัวอย่างคำสั่งเสียง (แตะเพื่อลอง):')).toBeVisible();
 
     // 3. Click suggestion chip to simulate speech input: "ชุด SV8 เบอร์ 25 สองใบ"

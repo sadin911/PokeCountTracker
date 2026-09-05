@@ -17,15 +17,17 @@ test.describe('English Card Catalog & Bilingual Pairing E2E Suite', () => {
     await expect(enBanner).toBeVisible({ timeout: 10000 });
 
     // 3. Verify total cards counter or set selector is populated
-    const setSelect = page.locator('select').first();
-    await expect(setSelect).toBeVisible();
-    await expect(page.locator('option:has-text("Prismatic Evolutions")')).toBeAttached();
+    const setSelectBtn = page.locator('[data-testid="searchable-set-select-btn"]');
+    await expect(setSelectBtn).toBeVisible();
+    await setSelectBtn.click();
+    await expect(page.locator('text=Prismatic Evolutions').first()).toBeVisible();
+    await page.keyboard.press('Escape');
 
     // Ensure English cards are loaded
     await expect(page.locator('[data-testid="en-card-item"]').first()).toBeVisible({ timeout: 25000 });
 
     // 4. Test searching for an English card
-    const searchInput = page.locator('input[placeholder*="ค้นหาชื่อการ์ด / เลข"]');
+    const searchInput = page.locator('[data-testid="en-search-input"]');
     await expect(searchInput).toBeVisible();
     await searchInput.fill('Pikachu');
 
@@ -131,12 +133,18 @@ test.describe('English Card Catalog & Bilingual Pairing E2E Suite', () => {
     await expect(page.locator('text=English Pokémon TCG Catalog (คลังการ์ดภาษาอังกฤษ)')).toBeVisible({ timeout: 10000 });
 
     // 2. Select Mark [J] in regulation dropdown
-    const regSelect = page.locator('select').nth(1);
+    const regSelect = page.locator('[data-testid="regulation-select"]');
+    if (!(await regSelect.isVisible())) {
+      const advBtn = page.locator('[data-testid="english-advanced-filter-btn"]');
+      if (await advBtn.isVisible()) {
+        await advBtn.click();
+      }
+    }
     await expect(regSelect).toBeVisible();
     await regSelect.selectOption('J');
 
     // 3. Search for Darkrai
-    const searchInput = page.locator('input[placeholder*="ค้นหาชื่อการ์ด / เลข"]');
+    const searchInput = page.locator('[data-testid="en-search-input"]');
     await searchInput.fill('Darkrai');
 
     // 4. Verify Mega Darkrai ex appears

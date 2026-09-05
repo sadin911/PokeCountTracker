@@ -305,3 +305,10 @@
 [2026-09-05 02:45] Major | Claude | Edit | src/utils/ptcglDeckParser.ts - cross-check deck import picks against TH/EN map; fixed Crushing Hammer matching Enhanced Hammer and Fezandipiti ex matching non-ex
 [2026-09-05 02:45] Major | Claude | Test | deckMapAssist.test.ts - 9 new tests; full suite 100/100, tsc clean, exampleENImport still 24/24 lines & 60 cards
 [2026-09-05 02:45] Major | Claude | Edit | package.json - bumped version 2.28.0 -> 2.28.1
+[2026-09-05 20:17] Major | Antigravity | Git | checkout -b feature/voice-card-collector (based on main v2.28.1)
+[2026-09-05 20:18] Major | Antigravity | Write | src/utils/voiceTts.ts - fast Web Speech TTS engine with mobile unlock
+[2026-09-05 20:18] Major | Antigravity | Write | src/utils/voiceTts.test.ts - 10 unit tests for fast voice TTS engine
+[2026-09-05 20:20] Major | Antigravity | Edit | src/hooks/useVoiceCardRecognition.ts - Android mic fix & iOS silence timeout
+[2026-09-05 20:21] Major | Antigravity | Edit | src/components/collection/VoiceCardCollectorTab.tsx - wired fast TTS feedback
+[2026-09-05 20:26] Major | Antigravity | Edit | e2e/collection-tracker.spec.ts - added TTS toggle button E2E test
+[2026-09-05 20:29] Major | Antigravity | Test | Vitest & Playwright - 110 unit tests and 82 E2E tests passed cleanly
