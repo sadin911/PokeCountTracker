@@ -365,6 +365,16 @@ export function detectCardNumberFromSpeech(text: string): {
     return { number: rawNum, cleanedText: cleaned };
   }
 
+  // 5. Standalone Thai number word phrase e.g. 'ยี่สิบห้า', 'หนึ่งร้อยยี่สิบ', 'สิบสอง', 'ห้า'
+  const thaiWordTokens = cleaned.match(/([หนึ่งสองสามสี่ห้าหกเจ็ดแปดเก้าสิบเอ็ดยี่ร้อย]+)/);
+  if (thaiWordTokens) {
+    const num = parseThaiNumberWords(thaiWordTokens[1]);
+    if (num !== null) {
+      cleaned = cleaned.replace(thaiWordTokens[0], ' ').trim();
+      return { number: String(num), cleanedText: cleaned };
+    }
+  }
+
   return { number: null, cleanedText: cleaned };
 }
 

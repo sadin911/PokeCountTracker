@@ -14,7 +14,9 @@ import {
   initTtsUnlock,
   stopVoiceFeedback,
   isTtsSupported,
+  hasThaiTtsSupport,
 } from '../../utils/voiceTts';
+import { getEnglishMatchForThaiCard } from '../../utils/thaiEnglishCardMatcher';
 import type { CardVariantKey } from '../../types/collection';
 
 export interface StagedVoiceCard {
@@ -252,11 +254,18 @@ export function VoiceCardCollectorTab({
 
       // Fast TTS confirmation
       if (ttsEnabled) {
+        const enMatch = getEnglishMatchForThaiCard(parsed.matchedCard.id);
+        const collectorNum =
+          parsed.matchedCard.collectorNumber ||
+          parsed.matchedCard.localId ||
+          parsed.parsedInfo?.detectedNumber;
         const spoken = formatCardSpokenText(
           parsed.matchedCard.name,
           parsed.quantity,
           parsed.variant,
-          language
+          language,
+          collectorNum,
+          enMatch?.enName
         );
         speakVoiceFeedback(spoken, { lang: language, rate: 1.45 });
       }
@@ -288,6 +297,9 @@ export function VoiceCardCollectorTab({
     onFinalResult: handleSpeechFinal,
     onTimeout: (reason) => {
       if (reason === 'inactivity') {
+        if (ttsEnabled) {
+          speakVoiceFeedback(formatCommandSpokenText('timeout', undefined, language), { lang: language, rate: 1.45 });
+        }
         showToast('⏳ ไม่ได้ยินเสียงพูดนานเกินไป (แตะพูดใหม่อีกครั้ง หรือแตะตัวอย่างด้านล่าง)', 'warn');
       }
     },
@@ -424,7 +436,11 @@ export function VoiceCardCollectorTab({
                   type="button"
                   data-testid="voice-tts-toggle-button"
                   onClick={() => setTtsEnabled(!ttsEnabled)}
-                  title={ttsEnabled ? 'เสียงขานรับ TTS เปิดอยู่ (แตะเพื่อปิด)' : 'เสียงขานรับ TTS ปิดอยู่ (แตะเพื่อเปิด)'}
+                  title={
+                    ttsEnabled
+                      ? `เสียงขานรับ TTS เปิดอยู่ (${hasThaiTtsSupport() ? 'รองรับเสียงไทย' : 'ใช้เสียงภาษาอังกฤษสำรอง'} - แตะเพื่อปิด)`
+                      : 'เสียงขานรับ TTS ปิดอยู่ (แตะเพื่อเปิด)'
+                  }
                   className={`px-2.5 py-1 rounded-lg font-bold transition-all text-xs flex items-center gap-1 border ${
                     ttsEnabled
                       ? 'bg-emerald-500/15 text-emerald-600 dark:text-emerald-400 border-emerald-500/30 shadow-sm'
@@ -433,6 +449,11 @@ export function VoiceCardCollectorTab({
                 >
                   <span className="text-sm">{ttsEnabled ? '🔊' : '🔈'}</span>
                   <span className="hidden sm:inline">ขานรับ {ttsEnabled ? 'เปิด' : 'ปิด'}</span>
+                  {ttsEnabled && !hasThaiTtsSupport() && (
+                    <span className="text-[10px] px-1 py-0.2 bg-amber-500/20 text-amber-600 dark:text-amber-400 rounded font-semibold">
+                      EN Voice
+                    </span>
+                  )}
                 </button>
               )}
 

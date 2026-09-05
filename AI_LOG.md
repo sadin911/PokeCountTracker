@@ -313,3 +313,4 @@
 [2026-09-05 20:26] Major | Antigravity | Edit | e2e/collection-tracker.spec.ts - added TTS toggle button E2E test
 [2026-09-05 20:29] Major | Antigravity | Test | Vitest & Playwright - 110 unit tests and 82 E2E tests passed cleanly
 [2026-09-05 21:26] Major | Antigravity | Release | v2.29.0 - Voice Card Collector with Android mic fix, iOS silence timeout, & Fast TTS verification
+[2026-09-06 06:44] Major | Antigravity | Fix | src/utils/voiceTts.ts & voiceCardParser.ts - Mac TTS English fallback & Thai number parsing

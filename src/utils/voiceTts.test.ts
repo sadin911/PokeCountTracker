@@ -6,28 +6,58 @@ import {
   speakVoiceFeedback,
   stopVoiceFeedback,
   initTtsUnlock,
+  cleanCollectorNumberForSpeech,
+  findMatchingVoice,
+  hasThaiTtsSupport,
 } from './voiceTts';
 
 describe('voiceTts', () => {
-  describe('formatCardSpokenText', () => {
-    it('formats normal card with 1 quantity in Thai', () => {
-      const result = formatCardSpokenText('พิคาชู', 1, 'normal', 'th-TH');
-      expect(result).toBe('พิคาชู 1 ใบ');
+  describe('cleanCollectorNumberForSpeech', () => {
+    it('cleans slash formatted numbers', () => {
+      expect(cleanCollectorNumberForSpeech('025/187')).toBe('25');
+      expect(cleanCollectorNumberForSpeech('004/100')).toBe('4');
     });
 
-    it('formats holo card with multiple quantities in Thai', () => {
-      const result = formatCardSpokenText('ลิซาร์ดอน ex', 2, 'holo', 'th-TH');
-      expect(result).toBe('ลิซาร์ดอน ex โฮโล 2 ใบ');
+    it('cleans dash or hash prefixed numbers', () => {
+      expect(cleanCollectorNumberForSpeech('#007')).toBe('7');
+      expect(cleanCollectorNumberForSpeech('010-B')).toBe('10');
+    });
+
+    it('handles empty or undefined values', () => {
+      expect(cleanCollectorNumberForSpeech(undefined)).toBe('');
+      expect(cleanCollectorNumberForSpeech('')).toBe('');
+    });
+  });
+
+  describe('formatCardSpokenText', () => {
+    it('formats normal card with collector number in Thai', () => {
+      const result = formatCardSpokenText('พิคาชู', 1, 'normal', 'th-TH', '025');
+      expect(result).toBe('เบอร์ 25 พิคาชู');
+    });
+
+    it('formats card without collector number in Thai', () => {
+      const result = formatCardSpokenText('พิคาชู', 1, 'normal', 'th-TH');
+      expect(result).toBe('พิคาชู');
+    });
+
+    it('formats holo card with multiple quantities and number in Thai', () => {
+      const result = formatCardSpokenText('ลิซาร์ดอน ex', 2, 'holo', 'th-TH', '006');
+      expect(result).toBe('เบอร์ 6 ลิซาร์ดอน ex โฮโล 2 ใบ');
     });
 
     it('formats reverse holo and promo variants', () => {
-      expect(formatCardSpokenText('อีวุย', 1, 'reverse', 'th-TH')).toBe('อีวุย โฮโล 1 ใบ');
-      expect(formatCardSpokenText('พิคาชู', 3, 'promo', 'th-TH')).toBe('พิคาชู โปรโม 3 ใบ');
+      expect(formatCardSpokenText('อีวุย', 1, 'reverse', 'th-TH', '133')).toBe('เบอร์ 133 อีวุย โฮโล');
+      expect(formatCardSpokenText('พิคาชู', 3, 'promo', 'th-TH', '025')).toBe('เบอร์ 25 พิคาชู โปรโม 3 ใบ');
     });
 
-    it('formats card in English', () => {
-      expect(formatCardSpokenText('Pikachu', 1, 'normal', 'en-US')).toBe('Pikachu, 1 card');
-      expect(formatCardSpokenText('Charizard ex', 2, 'holo', 'en-US')).toBe('Charizard ex holo, 2 cards');
+    it('formats card in English mode', () => {
+      expect(formatCardSpokenText('Pikachu', 1, 'normal', 'en-US', '025')).toBe('Number 25, Pikachu');
+      expect(formatCardSpokenText('Charizard ex', 2, 'holo', 'en-US', '006')).toBe('Number 6, Charizard ex holo, 2 cards');
+    });
+
+    it('falls back to English when forced or when device lacks Thai voice', () => {
+      const result = formatCardSpokenText('พิคาชู', 1, 'normal', 'th-TH', '25', 'Pikachu', true);
+      expect(result).toBe('Number 25, Pikachu');
     });
   });
 
@@ -44,10 +74,17 @@ describe('voiceTts', () => {
       expect(formatCommandSpokenText('undo', 'Pikachu', 'en-US')).toBe('Undone Pikachu');
       expect(formatCommandSpokenText('clear', undefined, 'en-US')).toBe('Cleared all');
       expect(formatCommandSpokenText('set_change', 'SV8', 'en-US')).toBe('Set SV8');
+      expect(formatCommandSpokenText('confirm', undefined, 'en-US')).toBe('Saved');
+      expect(formatCommandSpokenText('timeout', undefined, 'en-US')).toBe('Timed out');
+    });
+
+    it('falls back to English when forced', () => {
+      expect(formatCommandSpokenText('undo', 'Pikachu', 'th-TH', true)).toBe('Undone Pikachu');
+      expect(formatCommandSpokenText('timeout', undefined, 'th-TH', true)).toBe('Timed out');
     });
   });
 
-  describe('synthesis interaction in mock browser environment', () => {
+  describe('synthesis interaction and voice discovery in mock browser environment', () => {
     let mockCancel: any;
     let mockSpeak: any;
     let mockResume: any;
@@ -57,11 +94,17 @@ describe('voiceTts', () => {
       mockSpeak = vi.fn();
       mockResume = vi.fn();
 
+      const mockVoices = [
+        { name: 'Alex', lang: 'en-US' },
+        { name: 'Samantha', lang: 'en-US' },
+        { name: 'Kanya', lang: 'th-TH' },
+      ];
+
       (window as any).speechSynthesis = {
         cancel: mockCancel,
         speak: mockSpeak,
         resume: mockResume,
-        getVoices: vi.fn().mockReturnValue([]),
+        getVoices: vi.fn().mockReturnValue(mockVoices),
       };
 
       (window as any).SpeechSynthesisUtterance = class {
@@ -70,6 +113,7 @@ describe('voiceTts', () => {
         rate: number = 1;
         pitch: number = 1;
         volume: number = 1;
+        voice: any = null;
         constructor(text: string) {
           this.text = text;
         }
@@ -85,15 +129,20 @@ describe('voiceTts', () => {
       expect(isTtsSupported()).toBe(true);
     });
 
-    it('speaks feedback with fast default rate and cancels prior speech', () => {
-      speakVoiceFeedback('พิคาชู 1 ใบ');
+    it('matches Thai voice correctly when present', () => {
+      const voice = findMatchingVoice('th-TH');
+      expect(voice?.name).toBe('Kanya');
+      expect(hasThaiTtsSupport()).toBe(true);
+    });
+
+    it('speaks feedback with fast default rate and sets voice', () => {
+      speakVoiceFeedback('เบอร์ 25 พิคาชู');
 
       expect(mockCancel).toHaveBeenCalledTimes(1);
       expect(mockSpeak).toHaveBeenCalledTimes(1);
 
       const utterance = mockSpeak.mock.calls[0][0];
-      expect(utterance.text).toBe('พิคาชู 1 ใบ');
-      expect(utterance.lang).toBe('th-TH');
+      expect(utterance.text).toBe('เบอร์ 25 พิคาชู');
       expect(utterance.rate).toBeGreaterThanOrEqual(1.4); // fast speech
     });
 

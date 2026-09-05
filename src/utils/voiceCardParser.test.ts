@@ -172,6 +172,18 @@ describe('voiceCardParser', () => {
       expect(res.quantity).toBe(1);
     });
 
+    it('matches card when speaking just digits in active set', () => {
+      const res = parseVoiceInput('25', mockCatalog, 'SV8');
+      expect(res.type).toBe('card');
+      expect(res.matchedCard?.id).toBe('TH-SV8-025');
+    });
+
+    it('matches card when speaking Thai number words in active set', () => {
+      const res = parseVoiceInput('ยี่สิบห้า', mockCatalog, 'SV8');
+      expect(res.type).toBe('card');
+      expect(res.matchedCard?.id).toBe('TH-SV8-025');
+    });
+
     it('matches card by name (e.g. พิคาชู or Charizard)', () => {
       const res = parseVoiceInput('ลิซาร์ดอน ex สองใบ', mockCatalog, 'SV8');
       expect(res.type).toBe('card');
