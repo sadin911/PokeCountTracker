@@ -9,6 +9,7 @@ import { BottomNav } from './components/layout/BottomNav';
 import { OTAUpdateBanner } from './components/common/OTAUpdateBanner';
 import { trackEvent } from './utils/analytics';
 import { useThemeStore } from './store/themeStore';
+import { useCloudForegroundSync } from './hooks/useCloudForegroundSync';
 
 // Helper to determine mode from URL pathname, hash, or query params
 function getModeFromURL(): GameMode {
@@ -96,6 +97,7 @@ function App() {
   const displayMode = useGameStore((s) => s.displayMode);
   const gameMode = useGameStore((s) => s.gameMode);
   const setGameMode = useGameStore((s) => s.setGameMode);
+  useCloudForegroundSync();
 
   // Initialize mode from URL and theme on mount
   useEffect(() => {

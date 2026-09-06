@@ -55,6 +55,7 @@ interface CollectionState {
   loadUserFromCloud: (uid: string) => Promise<boolean>;
   syncProfileToCloud: (profileId: string) => Promise<void>;
   uploadLocalProfilesToCloud: (uid: string) => Promise<void>;
+  reconcileWithCloud: (uid: string) => Promise<boolean>;
   forceSyncCloud: (uid: string) => Promise<boolean>;
   resetToGuest: () => void;
 
@@ -145,6 +146,91 @@ function pruneProfile(profile: CollectionProfile): { profile: CollectionProfile;
     else cards[cardId] = entry;
   }
   return { profile: { ...profile, cards }, removed };
+}
+
+/**
+ * Two-way smart reconciliation between a local binder and a cloud binder.
+ * Prevents cross-device data loss by:
+ * 1. Preserving cards added on either device.
+ * 2. Resolving conflicts per card via updatedAt timestamps (or max quantities).
+ * 3. Pruning empty/cleared entries.
+ */
+export function reconcileProfiles(
+  localProf: CollectionProfile,
+  cloudProf: CollectionProfile
+): { merged: CollectionProfile; hasChanges: boolean } {
+  const mergedCards: Record<string, CollectionCardEntry> = {};
+  const allCardIds = new Set([
+    ...Object.keys(localProf.cards || {}),
+    ...Object.keys(cloudProf.cards || {}),
+  ]);
+
+  let hasChanges = false;
+
+  for (const cardId of allCardIds) {
+    const localEntry = localProf.cards?.[cardId];
+    const cloudEntry = cloudProf.cards?.[cardId];
+
+    if (!cloudEntry && localEntry) {
+      // Exists only locally (e.g. added offline or before sync on this device)
+      if (!isEmptyEntry(localEntry)) {
+        mergedCards[cardId] = localEntry;
+        hasChanges = true;
+      }
+    } else if (cloudEntry && !localEntry) {
+      // Exists only in cloud (e.g. imported from Chrome on another device)
+      if (!isEmptyEntry(cloudEntry)) {
+        mergedCards[cardId] = cloudEntry;
+        hasChanges = true;
+      }
+    } else if (localEntry && cloudEntry) {
+      // Exists in BOTH devices
+      const localTime = localEntry.updatedAt || localProf.updatedAt || 0;
+      const cloudTime = cloudEntry.updatedAt || cloudProf.updatedAt || 0;
+
+      if (localTime > cloudTime) {
+        // Local edit is newer
+        mergedCards[cardId] = localEntry;
+        if (JSON.stringify(localEntry.variants) !== JSON.stringify(cloudEntry.variants)) {
+          hasChanges = true;
+        }
+      } else if (cloudTime > localTime) {
+        // Cloud edit is newer
+        mergedCards[cardId] = cloudEntry;
+        if (JSON.stringify(localEntry.variants) !== JSON.stringify(cloudEntry.variants)) {
+          hasChanges = true;
+        }
+      } else {
+        // Timestamps are equal or zero: safely take maximum variant counts so no cards are lost
+        const mergedVariants = { ...emptyVariants() };
+        let anyDiff = false;
+        for (const key of ['normal', 'holo', 'reverse', 'promo'] as CardVariantKey[]) {
+          const lQty = localEntry.variants?.[key] || 0;
+          const cQty = cloudEntry.variants?.[key] || 0;
+          mergedVariants[key] = Math.max(lQty, cQty);
+          if (lQty !== cQty) anyDiff = true;
+        }
+        mergedCards[cardId] = {
+          cardId,
+          variants: mergedVariants,
+          isWishlist: localEntry.isWishlist || cloudEntry.isWishlist,
+          note: localEntry.note || cloudEntry.note,
+          updatedAt: localTime || cloudTime || Date.now(),
+        };
+        if (anyDiff) hasChanges = true;
+      }
+    }
+  }
+
+  const { profile: pruned } = pruneProfile({
+    ...cloudProf,
+    ...localProf,
+    cards: mergedCards,
+    updatedAt: Math.max(localProf.updatedAt || 0, cloudProf.updatedAt || 0, Date.now()),
+    schemaVersion: BINDER_SCHEMA_VERSION,
+  });
+
+  return { merged: pruned, hasChanges };
 }
 
 export const DEFAULT_COLLECTION_FILTERS: CollectionFilters = {
@@ -704,33 +790,125 @@ export const useCollectionStore = create<CollectionState>((set, get) => ({
     }
   },
 
-  forceSyncCloud: async (uid: string) => {
-    // Deliberately gated too. If the binders have not been read yet, the safe
-    // action is to read them, not to push whatever is in memory over the top.
-    if (get().cloudLoadedUid !== uid) {
-      console.warn('[collection] force sync skipped: binders have not been loaded yet');
-      return false;
-    }
-
+  reconcileWithCloud: async (uid: string) => {
+    if (!uid) return false;
     set({ syncStatus: 'syncing' });
-    try {
-      const { profiles, activeProfileId } = get();
-      for (const [id, p] of Object.entries(profiles)) {
-        const docRef = doc(db, 'users', uid, 'binders', id);
-        await setDoc(docRef, { ...p, schemaVersion: BINDER_SCHEMA_VERSION });
-      }
-      set({ syncStatus: 'synced', lastSyncedAt: Date.now() });
 
-      localStorage.setItem(
-        `${USER_CACHE_KEY_PREFIX}${uid}`,
-        JSON.stringify({ profiles, activeProfileId })
-      );
+    try {
+      const bindersCol = collection(db, 'users', uid, 'binders');
+      const snap = await getDocs(bindersCol);
+
+      const cloudProfiles: Record<string, CollectionProfile> = {};
+      if (!snap.empty) {
+        snap.forEach((d) => {
+          const data = d.data() as CollectionProfile;
+          if (data && data.id) {
+            cloudProfiles[data.id] = data;
+          }
+        });
+      }
+
+      // If cloud is completely empty, check if we have local cards to seed cloud
+      if (Object.keys(cloudProfiles).length === 0) {
+        const localProfiles = get().profiles;
+        const hasCards = Object.values(localProfiles).some(
+          (p) => Object.keys(p.cards || {}).length > 0
+        );
+        if (hasCards) {
+          set({ cloudLoadedUid: uid });
+          await get().uploadLocalProfilesToCloud(uid);
+        } else {
+          const defaultProf = createDefaultProfile();
+          const docRef = doc(db, 'users', uid, 'binders', defaultProf.id);
+          await setDoc(docRef, defaultProf);
+          set({
+            profiles: { [defaultProf.id]: defaultProf },
+            activeProfileId: defaultProf.id,
+            syncStatus: 'synced',
+            lastSyncedAt: Date.now(),
+            cloudLoadedUid: uid,
+          });
+        }
+        return true;
+      }
+
+      const localProfiles = get().profiles;
+      const mergedProfiles: Record<string, CollectionProfile> = {};
+      const bindersToUpload: CollectionProfile[] = [];
+
+      // 1. Reconcile all binders in cloud with local counterparts
+      for (const [id, cloudProf] of Object.entries(cloudProfiles)) {
+        const localProf = localProfiles[id];
+        if (localProf && get().cloudLoadedUid === uid) {
+          // Local binder was legitimately loaded for this user, reconcile cards
+          const { merged, hasChanges } = reconcileProfiles(localProf, cloudProf);
+          mergedProfiles[id] = merged;
+          if (hasChanges) {
+            bindersToUpload.push(merged);
+          }
+        } else {
+          // Cloud binder is authoritative
+          const { profile: pruned } = pruneProfile({
+            ...cloudProf,
+            schemaVersion: BINDER_SCHEMA_VERSION,
+          });
+          mergedProfiles[id] = pruned;
+        }
+      }
+
+      // 2. Any local binders that do not exist on cloud yet (only if already loaded for this user)
+      if (get().cloudLoadedUid === uid) {
+        for (const [id, localProf] of Object.entries(localProfiles)) {
+          if (!cloudProfiles[id]) {
+            mergedProfiles[id] = localProf;
+            bindersToUpload.push(localProf);
+          }
+        }
+      }
+
+      // Keep active binder
+      const currentActive = get().activeProfileId;
+      const activeId = mergedProfiles[currentActive]
+        ? currentActive
+        : Object.keys(mergedProfiles)[0] || DEFAULT_PROFILE_ID;
+
+      set({
+        profiles: mergedProfiles,
+        activeProfileId: activeId,
+        syncStatus: 'synced',
+        lastSyncedAt: Date.now(),
+        cloudLoadedUid: uid,
+      });
+
+      try {
+        localStorage.setItem(
+          `${USER_CACHE_KEY_PREFIX}${uid}`,
+          JSON.stringify({ profiles: mergedProfiles, activeProfileId: activeId })
+        );
+      } catch (e) {}
+
+      // Upload any binders that need syncing to Cloud
+      if (bindersToUpload.length > 0) {
+        await Promise.all(
+          bindersToUpload.map((p) =>
+            setDoc(doc(db, 'users', uid, 'binders', p.id), {
+              ...p,
+              schemaVersion: BINDER_SCHEMA_VERSION,
+            })
+          )
+        );
+      }
+
       return true;
     } catch (err) {
-      console.error('Failed to force sync binders to cloud:', err);
+      console.error('[collection] reconcileWithCloud failed:', err);
       set({ syncStatus: 'error' });
       return false;
     }
+  },
+
+  forceSyncCloud: async (uid: string) => {
+    return await get().reconcileWithCloud(uid);
   },
 
   // Reset back to Guest Mode state on Logout
@@ -1017,6 +1195,10 @@ export const useCollectionStore = create<CollectionState>((set, get) => ({
     }));
 
     triggerSave(get, profileId);
+    const user = auth.currentUser;
+    if (user && get().cloudLoadedUid === user.uid) {
+      void get().syncProfileToCloud(profileId);
+    }
 
     const finishLabels: Record<CardVariantKey, string> = {
       normal: 'Normal (ธรรมดา)',
@@ -1106,6 +1288,10 @@ export const useCollectionStore = create<CollectionState>((set, get) => ({
     }));
 
     triggerSave(get, profileId);
+    const user = auth.currentUser;
+    if (user && get().cloudLoadedUid === user.uid) {
+      void get().syncProfileToCloud(profileId);
+    }
 
     const modeLabel = mode === 'replace' ? 'แทนที่' : 'เพิ่ม';
 

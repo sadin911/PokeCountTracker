@@ -93,6 +93,7 @@ export function AccountMenu() {
   const syncStatus = useCollectionStore((s) => s.syncStatus);
   const lastSyncedAt = useCollectionStore((s) => s.lastSyncedAt);
   const forceSyncCloud = useCollectionStore((s) => s.forceSyncCloud);
+  const loadUserDecksFromCloud = useDeckStore((s) => s.loadUserDecksFromCloud);
   const uploadLocalDecksToCloud = useDeckStore((s) => s.uploadLocalDecksToCloud);
   const fetchCommunityStats = useCommunityStore((s) => s.fetchCommunityStats);
   const setGameMode = useGameStore((s) => s.setGameMode);
@@ -116,14 +117,14 @@ export function AccountMenu() {
         setIsOpen(false);
       }
     }
-    function handleEscape(event: KeyboardEvent) {
+    function handleKeyDown(event: KeyboardEvent) {
       if (event.key === 'Escape') setIsOpen(false);
     }
     document.addEventListener('mousedown', handleClickOutside);
-    document.addEventListener('keydown', handleEscape);
+    document.addEventListener('keydown', handleKeyDown);
     return () => {
       document.removeEventListener('mousedown', handleClickOutside);
-      document.removeEventListener('keydown', handleEscape);
+      document.removeEventListener('keydown', handleKeyDown);
     };
   }, [isOpen]);
 
@@ -139,15 +140,16 @@ export function AccountMenu() {
     setIsManualSyncing(true);
     try {
       const res = await forceSyncCloud(user.uid);
+      await loadUserDecksFromCloud(user.uid);
       await uploadLocalDecksToCloud(user.uid);
       await fetchCommunityStats(true);
-      setSyncFeedback(res ? 'ซิงค์สำเร็จแล้ว!' : 'ซิงค์ผิดพลาด');
+      setSyncFeedback(res ? 'ซิงค์ข้อมูลตรงกันแล้ว!' : 'ซิงค์ผิดพลาด');
     } catch (e) {
       console.error('Force sync failed:', e);
       setSyncFeedback('ซิงค์ล้มเหลว');
     } finally {
       setIsManualSyncing(false);
-      setTimeout(() => setSyncFeedback(null), 3000);
+      setTimeout(() => setSyncFeedback(null), 3500);
     }
   };
 
@@ -214,7 +216,7 @@ export function AccountMenu() {
                 <SectionLabel>คลาวด์</SectionLabel>
                 <MenuRow
                   icon={isSyncing ? '🔄' : syncStatus === 'error' ? '⚠️' : '☁️'}
-                  label={isSyncing ? 'กำลังซิงค์...' : 'ซิงค์กับคลาวด์ทันที'}
+                  label={isSyncing ? 'กำลังซิงค์สองทาง...' : 'ซิงค์กับคลาวด์ทันที'}
                   hint={syncFeedback || formatLastSynced(lastSyncedAt)}
                   onClick={handleForceSync}
                   disabled={isSyncing}
