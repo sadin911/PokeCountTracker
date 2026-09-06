@@ -143,13 +143,13 @@ export function AccountMenu() {
       await loadUserDecksFromCloud(user.uid);
       await uploadLocalDecksToCloud(user.uid);
       await fetchCommunityStats(true);
-      setSyncFeedback(res ? 'ซิงค์ข้อมูลตรงกันแล้ว!' : 'ซิงค์ผิดพลาด');
-    } catch (e) {
+      setSyncFeedback(res ? 'ซิงค์ข้อมูลตรงกันแล้ว!' : 'ซิงค์ไม่สำเร็จ (ลองใหม่อีกครั้ง)');
+    } catch (e: any) {
       console.error('Force sync failed:', e);
-      setSyncFeedback('ซิงค์ล้มเหลว');
+      setSyncFeedback('ซิงค์ล้มเหลว: ' + (e?.message || 'เชื่อมต่อขัดข้อง'));
     } finally {
       setIsManualSyncing(false);
-      setTimeout(() => setSyncFeedback(null), 3500);
+      setTimeout(() => setSyncFeedback(null), 4000);
     }
   };
 

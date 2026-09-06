@@ -148,12 +148,29 @@ function pruneProfile(profile: CollectionProfile): { profile: CollectionProfile;
   return { profile: { ...profile, cards }, removed };
 }
 
+export const SAFEGUARD_STORAGE_KEY = 'pokecount_safeguard_backup';
+
+/**
+ * Deep sanitization for Firestore payloads.
+ * Strips all `undefined` values, non-serializable fields, and ensures
+ * pure JSON compatibility so Firestore's setDoc never throws unsupported field errors.
+ */
+export function sanitizeForFirestore<T>(data: T): T {
+  return JSON.parse(
+    JSON.stringify(data, (_key, value) => {
+      if (value === undefined) return undefined;
+      return value;
+    })
+  );
+}
+
 /**
  * Two-way smart reconciliation between a local binder and a cloud binder.
  * Prevents cross-device data loss by:
  * 1. Preserving cards added on either device.
- * 2. Resolving conflicts per card via updatedAt timestamps (or max quantities).
- * 3. Pruning empty/cleared entries.
+ * 2. Resolving conflicts per card via Math.max quantities so no copies are lost.
+ * 3. Never setting `undefined` on optional attributes (isWishlist, note, condition).
+ * 4. Pruning empty/cleared entries.
  */
 export function reconcileProfiles(
   localProf: CollectionProfile,
@@ -174,51 +191,67 @@ export function reconcileProfiles(
     if (!cloudEntry && localEntry) {
       // Exists only locally (e.g. added offline or before sync on this device)
       if (!isEmptyEntry(localEntry)) {
-        mergedCards[cardId] = localEntry;
+        const cleanEntry: CollectionCardEntry = {
+          cardId,
+          variants: { ...emptyVariants(), ...localEntry.variants },
+          updatedAt: localEntry.updatedAt || Date.now(),
+        };
+        if (localEntry.isWishlist) cleanEntry.isWishlist = true;
+        if (localEntry.note && localEntry.note.trim()) cleanEntry.note = localEntry.note.trim();
+        if (localEntry.condition) cleanEntry.condition = localEntry.condition;
+
+        mergedCards[cardId] = cleanEntry;
         hasChanges = true;
       }
     } else if (cloudEntry && !localEntry) {
       // Exists only in cloud (e.g. imported from Chrome on another device)
       if (!isEmptyEntry(cloudEntry)) {
-        mergedCards[cardId] = cloudEntry;
+        const cleanEntry: CollectionCardEntry = {
+          cardId,
+          variants: { ...emptyVariants(), ...cloudEntry.variants },
+          updatedAt: cloudEntry.updatedAt || Date.now(),
+        };
+        if (cloudEntry.isWishlist) cleanEntry.isWishlist = true;
+        if (cloudEntry.note && cloudEntry.note.trim()) cleanEntry.note = cloudEntry.note.trim();
+        if (cloudEntry.condition) cleanEntry.condition = cloudEntry.condition;
+
+        mergedCards[cardId] = cleanEntry;
         hasChanges = true;
       }
     } else if (localEntry && cloudEntry) {
       // Exists in BOTH devices
-      const localTime = localEntry.updatedAt || localProf.updatedAt || 0;
-      const cloudTime = cloudEntry.updatedAt || cloudProf.updatedAt || 0;
-
-      if (localTime > cloudTime) {
-        // Local edit is newer
-        mergedCards[cardId] = localEntry;
-        if (JSON.stringify(localEntry.variants) !== JSON.stringify(cloudEntry.variants)) {
-          hasChanges = true;
-        }
-      } else if (cloudTime > localTime) {
-        // Cloud edit is newer
-        mergedCards[cardId] = cloudEntry;
-        if (JSON.stringify(localEntry.variants) !== JSON.stringify(cloudEntry.variants)) {
-          hasChanges = true;
-        }
-      } else {
-        // Timestamps are equal or zero: safely take maximum variant counts so no cards are lost
-        const mergedVariants = { ...emptyVariants() };
-        let anyDiff = false;
-        for (const key of ['normal', 'holo', 'reverse', 'promo'] as CardVariantKey[]) {
-          const lQty = localEntry.variants?.[key] || 0;
-          const cQty = cloudEntry.variants?.[key] || 0;
-          mergedVariants[key] = Math.max(lQty, cQty);
-          if (lQty !== cQty) anyDiff = true;
-        }
-        mergedCards[cardId] = {
-          cardId,
-          variants: mergedVariants,
-          isWishlist: localEntry.isWishlist || cloudEntry.isWishlist,
-          note: localEntry.note || cloudEntry.note,
-          updatedAt: localTime || cloudTime || Date.now(),
-        };
-        if (anyDiff) hasChanges = true;
+      // Safely take maximum variant counts so no copies of any card are lost
+      const mergedVariants = { ...emptyVariants() };
+      let anyDiff = false;
+      for (const key of ['normal', 'holo', 'reverse', 'promo'] as CardVariantKey[]) {
+        const lQty = Number(localEntry.variants?.[key]) || 0;
+        const cQty = Number(cloudEntry.variants?.[key]) || 0;
+        const maxQty = Math.max(lQty, cQty);
+        mergedVariants[key] = maxQty;
+        if (lQty !== cQty) anyDiff = true;
       }
+
+      const mergedEntry: CollectionCardEntry = {
+        cardId,
+        variants: mergedVariants,
+        updatedAt: Math.max(localEntry.updatedAt || 0, cloudEntry.updatedAt || 0, Date.now()),
+      };
+
+      // Ensure NO undefined properties are ever produced
+      if (localEntry.isWishlist || cloudEntry.isWishlist) {
+        mergedEntry.isWishlist = true;
+      }
+      const note = (localEntry.note || cloudEntry.note || '').trim();
+      if (note) {
+        mergedEntry.note = note;
+      }
+      const condition = localEntry.condition || cloudEntry.condition;
+      if (condition) {
+        mergedEntry.condition = condition;
+      }
+
+      mergedCards[cardId] = mergedEntry;
+      if (anyDiff) hasChanges = true;
     }
   }
 
@@ -231,6 +264,69 @@ export function reconcileProfiles(
   });
 
   return { merged: pruned, hasChanges };
+}
+
+/**
+ * Gathers all local profiles across in-memory state, user localStorage cache,
+ * and guest localStorage to ensure NO cards imported offline or prior to auth are ever lost.
+ */
+export function harvestAllLocalProfiles(
+  uid: string,
+  currentProfiles: Record<string, CollectionProfile>
+): Record<string, CollectionProfile> {
+  const result: Record<string, CollectionProfile> = { ...currentProfiles };
+
+  const mergeIn = (otherProfiles?: Record<string, CollectionProfile>) => {
+    if (!otherProfiles) return;
+    for (const [id, prof] of Object.entries(otherProfiles)) {
+      if (!result[id]) {
+        result[id] = prof;
+      } else {
+        const { merged } = reconcileProfiles(result[id], prof);
+        result[id] = merged;
+      }
+    }
+  };
+
+  // 1. Check user cache in localStorage
+  try {
+    const userRaw = localStorage.getItem(`${USER_CACHE_KEY_PREFIX}${uid}`);
+    if (userRaw) {
+      const parsed = JSON.parse(userRaw);
+      if (parsed?.profiles && typeof parsed.profiles === 'object') {
+        mergeIn(parsed.profiles);
+      } else if (parsed && typeof parsed === 'object') {
+        mergeIn(parsed);
+      }
+    }
+  } catch (e) {}
+
+  // 2. Check guest cache in localStorage
+  try {
+    const guestRaw = localStorage.getItem(GUEST_STORAGE_KEY);
+    if (guestRaw) {
+      const parsed = JSON.parse(guestRaw);
+      if (parsed?.profiles && typeof parsed.profiles === 'object') {
+        mergeIn(parsed.profiles);
+      } else if (parsed && typeof parsed === 'object') {
+        mergeIn(parsed);
+      }
+    }
+  } catch (e) {}
+
+  // 3. Create durable local safeguard snapshot before any sync touches the device
+  try {
+    localStorage.setItem(
+      SAFEGUARD_STORAGE_KEY,
+      JSON.stringify({
+        timestamp: Date.now(),
+        uid,
+        profiles: result,
+      })
+    );
+  } catch (e) {}
+
+  return result;
 }
 
 export const DEFAULT_COLLECTION_FILTERS: CollectionFilters = {
@@ -613,6 +709,7 @@ export const useCollectionStore = create<CollectionState>((set, get) => ({
   },
 
   // Cloud Sync Implementation
+  // Cloud Sync Implementation
   syncProfileToCloud: async (profileId: string) => {
     const user = auth.currentUser;
     if (!user) return;
@@ -633,11 +730,10 @@ export const useCollectionStore = create<CollectionState>((set, get) => ({
     set({ syncStatus: 'syncing' });
     try {
       const docRef = doc(db, 'users', user.uid, 'binders', profileId);
-      // Whole-document write, NOT { merge: true }: a merge cannot remove cards
-      // the user cleared. The trade-off is that two devices editing the same
-      // binder at once become last-write-wins per binder rather than per card,
-      // which is the right side of the trade for a personal collection.
-      await setDoc(docRef, { ...profile, schemaVersion: BINDER_SCHEMA_VERSION });
+      await setDoc(
+        docRef,
+        sanitizeForFirestore({ ...profile, schemaVersion: BINDER_SCHEMA_VERSION })
+      );
       set({ syncStatus: 'synced', lastSyncedAt: Date.now() });
     } catch (err) {
       console.error('Failed to sync binder to Firestore:', err);
@@ -646,128 +742,24 @@ export const useCollectionStore = create<CollectionState>((set, get) => ({
   },
 
   loadUserFromCloud: async (uid: string) => {
-    set({ syncStatus: 'syncing' });
-    try {
-      // 1. Try to load from user local cache first for instant UI response
-      let cachedActiveId: string | null = null;
-      const cached = localStorage.getItem(`${USER_CACHE_KEY_PREFIX}${uid}`);
-      if (cached) {
-        try {
-          const parsed = JSON.parse(cached);
-          if (parsed.profiles && Object.keys(parsed.profiles).length > 0) {
-            cachedActiveId = parsed.activeProfileId || null;
-            set({
-              profiles: parsed.profiles,
-              activeProfileId: parsed.activeProfileId || Object.keys(parsed.profiles)[0],
-            });
-          }
-        } catch (e) {}
-      }
-
-      // 2. Fetch ground truth from Firestore
-      const bindersCol = collection(db, 'users', uid, 'binders');
-      const snap = await getDocs(bindersCol);
-
-      if (!snap.empty) {
-        const cloudProfiles: Record<string, CollectionProfile> = {};
-        snap.forEach((d) => {
-          const data = d.data() as CollectionProfile;
-          if (data && data.id) {
-            cloudProfiles[data.id] = data;
-          }
-        });
-
-        if (Object.keys(cloudProfiles).length > 0) {
-          // One-time migration of pre-v2 binders. Each is pruned of entries
-          // that carry no information and rewritten as a whole document, which
-          // both cleans up the junk merges accumulated and stamps the binder so
-          // this never runs for it again.
-          //
-          // It cannot undo the damage already done: a card cleared before the
-          // fix looks identical to one the user genuinely owns, because the
-          // merge preserved its original counts. That intent is not recoverable.
-          // What this does is stop the drift and remove the empty entries.
-          const stale = Object.values(cloudProfiles).filter(
-            (p) => (p.schemaVersion ?? 1) < BINDER_SCHEMA_VERSION
-          );
-
-          if (stale.length > 0) {
-            let removedTotal = 0;
-            await Promise.all(
-              stale.map(async (p) => {
-                const { profile, removed } = pruneProfile(p);
-                removedTotal += removed;
-                const migrated = { ...profile, schemaVersion: BINDER_SCHEMA_VERSION };
-                cloudProfiles[p.id] = migrated;
-                await setDoc(doc(db, 'users', uid, 'binders', p.id), migrated);
-              })
-            ).catch((err) => {
-              // A failed migration is not fatal — the binders still load, and
-              // the next sign-in retries. Don't block the user on it.
-              console.warn('Binder migration failed, will retry next sign-in:', err);
-            });
-            console.info(
-              `[collection] migrated ${stale.length} binder(s) to schema v${BINDER_SCHEMA_VERSION}` +
-                (removedTotal ? `, pruned ${removedTotal} empty entr${removedTotal === 1 ? 'y' : 'ies'}` : '')
-            );
-          }
-
-          // Keep the binder the user was last looking at. Unconditionally
-          // taking the first key reset their selection on every sign-in, in
-          // whatever order Firestore happened to return the documents.
-          const activeId =
-            cachedActiveId && cloudProfiles[cachedActiveId]
-              ? cachedActiveId
-              : Object.keys(cloudProfiles)[0];
+    // 1. Instantly display user local cache if present, eliminating UI blanking
+    const cached = localStorage.getItem(`${USER_CACHE_KEY_PREFIX}${uid}`);
+    if (cached) {
+      try {
+        const parsed = JSON.parse(cached);
+        if (parsed.profiles && Object.keys(parsed.profiles).length > 0) {
           set({
-            profiles: cloudProfiles,
-            activeProfileId: activeId,
-            syncStatus: 'synced',
-            lastSyncedAt: Date.now(),
-            cloudLoadedUid: uid,
+            profiles: parsed.profiles,
+            activeProfileId: parsed.activeProfileId || Object.keys(parsed.profiles)[0],
           });
-
-          // Save to user local cache
-          localStorage.setItem(
-            `${USER_CACHE_KEY_PREFIX}${uid}`,
-            JSON.stringify({ profiles: cloudProfiles, activeProfileId: activeId })
-          );
-          return true;
         }
-      }
-
-      // 3. If cloud has no binders yet, check if we should upload local profiles
-      const current = get().profiles;
-      const hasCards = Object.values(current).some(
-        (p) => Object.keys(p.cards || {}).length > 0
-      );
-
-      if (hasCards) {
-        // Local edits made before signing in are the only thing there is, so
-        // seeding the cloud from them is correct — and makes the store
-        // authoritative from here on.
-        set({ cloudLoadedUid: uid });
-        await get().uploadLocalProfilesToCloud(uid);
-      } else {
-        // Create initial default profile on cloud
-        const defaultProf = createDefaultProfile();
-        const docRef = doc(db, 'users', uid, 'binders', defaultProf.id);
-        await setDoc(docRef, defaultProf);
-        set({
-          profiles: { [defaultProf.id]: defaultProf },
-          activeProfileId: defaultProf.id,
-          syncStatus: 'synced',
-          lastSyncedAt: Date.now(),
-          cloudLoadedUid: uid,
-        });
-      }
-
-      return true;
-    } catch (err) {
-      console.error('Failed to load user binders from cloud:', err);
-      set({ syncStatus: 'error' });
-      return false;
+      } catch (e) {}
     }
+
+    // 2. Perform two-way reconciliation with Cloud ground truth
+    // This pulls down any updates from other devices while guaranteeing
+    // that cards newly imported on this device are merged and preserved!
+    return await get().reconcileWithCloud(uid);
   },
 
   uploadLocalProfilesToCloud: async (uid: string) => {
@@ -776,9 +768,12 @@ export const useCollectionStore = create<CollectionState>((set, get) => ({
       const { profiles } = get();
       for (const [id, p] of Object.entries(profiles)) {
         const docRef = doc(db, 'users', uid, 'binders', id);
-        await setDoc(docRef, { ...p, schemaVersion: BINDER_SCHEMA_VERSION });
+        await setDoc(
+          docRef,
+          sanitizeForFirestore({ ...p, schemaVersion: BINDER_SCHEMA_VERSION })
+        );
       }
-      set({ syncStatus: 'synced', lastSyncedAt: Date.now() });
+      set({ syncStatus: 'synced', lastSyncedAt: Date.now(), cloudLoadedUid: uid });
 
       localStorage.setItem(
         `${USER_CACHE_KEY_PREFIX}${uid}`,
@@ -795,6 +790,10 @@ export const useCollectionStore = create<CollectionState>((set, get) => ({
     set({ syncStatus: 'syncing' });
 
     try {
+      // 1. Gather all local profiles across in-memory state, user cache, and guest cache
+      const localProfiles = harvestAllLocalProfiles(uid, get().profiles);
+
+      // 2. Fetch ground truth from Firestore
       const bindersCol = collection(db, 'users', uid, 'binders');
       const snap = await getDocs(bindersCol);
 
@@ -810,17 +809,16 @@ export const useCollectionStore = create<CollectionState>((set, get) => ({
 
       // If cloud is completely empty, check if we have local cards to seed cloud
       if (Object.keys(cloudProfiles).length === 0) {
-        const localProfiles = get().profiles;
         const hasCards = Object.values(localProfiles).some(
           (p) => Object.keys(p.cards || {}).length > 0
         );
         if (hasCards) {
-          set({ cloudLoadedUid: uid });
+          set({ cloudLoadedUid: uid, profiles: localProfiles });
           await get().uploadLocalProfilesToCloud(uid);
         } else {
           const defaultProf = createDefaultProfile();
           const docRef = doc(db, 'users', uid, 'binders', defaultProf.id);
-          await setDoc(docRef, defaultProf);
+          await setDoc(docRef, sanitizeForFirestore(defaultProf));
           set({
             profiles: { [defaultProf.id]: defaultProf },
             activeProfileId: defaultProf.id,
@@ -832,22 +830,21 @@ export const useCollectionStore = create<CollectionState>((set, get) => ({
         return true;
       }
 
-      const localProfiles = get().profiles;
       const mergedProfiles: Record<string, CollectionProfile> = {};
       const bindersToUpload: CollectionProfile[] = [];
 
-      // 1. Reconcile all binders in cloud with local counterparts
+      // 3. Reconcile all binders in cloud with local counterparts
       for (const [id, cloudProf] of Object.entries(cloudProfiles)) {
         const localProf = localProfiles[id];
-        if (localProf && get().cloudLoadedUid === uid) {
-          // Local binder was legitimately loaded for this user, reconcile cards
+        if (localProf) {
+          // Reconcile cards between local and cloud (additive merge)
           const { merged, hasChanges } = reconcileProfiles(localProf, cloudProf);
           mergedProfiles[id] = merged;
           if (hasChanges) {
             bindersToUpload.push(merged);
           }
         } else {
-          // Cloud binder is authoritative
+          // Cloud binder only
           const { profile: pruned } = pruneProfile({
             ...cloudProf,
             schemaVersion: BINDER_SCHEMA_VERSION,
@@ -856,13 +853,15 @@ export const useCollectionStore = create<CollectionState>((set, get) => ({
         }
       }
 
-      // 2. Any local binders that do not exist on cloud yet (only if already loaded for this user)
-      if (get().cloudLoadedUid === uid) {
-        for (const [id, localProf] of Object.entries(localProfiles)) {
-          if (!cloudProfiles[id]) {
-            mergedProfiles[id] = localProf;
-            bindersToUpload.push(localProf);
-          }
+      // 4. Any local binders that do not exist on cloud yet
+      for (const [id, localProf] of Object.entries(localProfiles)) {
+        if (!cloudProfiles[id]) {
+          const { profile: pruned } = pruneProfile({
+            ...localProf,
+            schemaVersion: BINDER_SCHEMA_VERSION,
+          });
+          mergedProfiles[id] = pruned;
+          bindersToUpload.push(pruned);
         }
       }
 
@@ -887,14 +886,17 @@ export const useCollectionStore = create<CollectionState>((set, get) => ({
         );
       } catch (e) {}
 
-      // Upload any binders that need syncing to Cloud
+      // 5. Upload any binders that need syncing to Cloud with deep sanitization
       if (bindersToUpload.length > 0) {
         await Promise.all(
           bindersToUpload.map((p) =>
-            setDoc(doc(db, 'users', uid, 'binders', p.id), {
-              ...p,
-              schemaVersion: BINDER_SCHEMA_VERSION,
-            })
+            setDoc(
+              doc(db, 'users', uid, 'binders', p.id),
+              sanitizeForFirestore({
+                ...p,
+                schemaVersion: BINDER_SCHEMA_VERSION,
+              })
+            )
           )
         );
       }
@@ -997,6 +999,10 @@ export const useCollectionStore = create<CollectionState>((set, get) => ({
           }));
 
           triggerSave(get, newId);
+          const user = auth.currentUser;
+          if (user && get().cloudLoadedUid === user.uid) {
+            void get().syncProfileToCloud(newId);
+          }
 
           return {
             success: true,
@@ -1059,6 +1065,10 @@ export const useCollectionStore = create<CollectionState>((set, get) => ({
         }));
 
         triggerSave(get, targetProfile.id);
+        const user = auth.currentUser;
+        if (user && get().cloudLoadedUid === user.uid) {
+          void get().syncProfileToCloud(targetProfile.id);
+        }
 
         const actionText = mode === 'replace' ? 'แทนที่' : 'รวมเข้า';
         return {
@@ -1111,6 +1121,10 @@ export const useCollectionStore = create<CollectionState>((set, get) => ({
 
       // Trigger save for current context (User Cloud or Guest)
       triggerSave(get, newActive);
+      const user = auth.currentUser;
+      if (user && get().cloudLoadedUid === user.uid) {
+        void get().syncProfileToCloud(newActive);
+      }
 
       return {
         success: true,
